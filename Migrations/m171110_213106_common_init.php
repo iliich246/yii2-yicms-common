@@ -1,0 +1,596 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Class m171110_213106_common_init
+ */
+class m171110_213106_common_init extends Migration
+{
+    /**
+     * @inheritdoc
+     */
+    public function safeUp()
+    {
+        //////////////////////////////////////////////////////////////////
+        // Common functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_languages table
+         */
+        $this->createTable('{{%common_languages}}', [
+            'id' => $this->primaryKey(),
+            'code' => $this->string(5)->notNull(),
+            'name' => $this->string()->notNull(),
+            'used' => $this->boolean()->notNull(),
+        ]);
+
+        /**
+         * common_config table
+         */
+        $this->createTable('{{%common_config}}', [
+            'id' => $this->primaryKey(),
+            'defaultLanguage' => $this->string(),
+            'languageMethod' => $this->string(),
+        ]);
+
+        $this->insert('{{%common_config}}', [
+            'id' => 1,
+            'defaultLanguage' => 'en-EU',
+            'languageMethod' => 0, //TODO: insert method of Language
+        ]);
+
+
+
+        //////////////////////////////////////////////////////////////////
+        // Fields functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_fields_templates table
+         */
+        $this->createTable('{{%common_fields_templates}}', [
+            'id' => $this->primaryKey(),
+            'field_template_reference' => $this->integer(),
+            'program_name' => $this->string(50),
+            'type' => $this->smallInteger(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+            'is_main' => $this->boolean(),
+        ]);
+
+        /**
+         * common_fields_represents table
+         */
+        $this->createTable('{{%common_fields_represents}}', [
+            'id' => $this->primaryKey(),
+            'common_fields_template_id' => $this->integer(),
+            'field_reference' => $this->integer(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+        ]);
+
+        $this->addForeignKey('common_fields_represents-to-common_fields_templates',
+            '{{%common_fields_represents}}',
+            'common_fields_template_id',
+            '{{%common_fields_templates}}',
+            'id'
+        );
+
+        /**
+         * common_field_translates table
+         */
+        $this->createTable('{{%common_field_translates}}', [
+            'id' => $this->primaryKey(),
+            'common_fields_represent_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'value' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_field_translates-to-common_fields_represents',
+            '{{%common_field_translates}}',
+            'common_fields_represent_id',
+            '{{%common_fields_represents}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_field_translates-to-common_languages',
+            '{{%common_field_translates}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        /**
+         * common_field_validators table
+         */
+        $this->createTable('{{%common_field_validators}}', [
+            'id' => $this->primaryKey(),
+            'common_fields_template_id' => $this->integer(),
+            'validator' => $this->string(),
+            'params' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_field_validators-to-common_fields_templates',
+            '{{%common_field_validators}}',
+            'common_fields_template_id',
+            '{{%common_fields_templates}}',
+            'id'
+        );
+
+        /**
+         * common_field_names table
+         */
+        $this->createTable('{{%common_field_names}}', [
+            'id' => $this->primaryKey(),
+            'common_fields_template_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+            'description' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_field_names-to-common_fields_templates',
+            '{{%common_field_names}}',
+            'common_fields_template_id',
+            '{{%common_fields_templates}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_field_names-to-common_languages',
+            '{{%common_field_names}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        //////////////////////////////////////////////////////////////////
+        // Files functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_files_templates table
+         */
+        $this->createTable('{{%common_files_templates}}', [
+            'id' => $this->primaryKey(),
+            'file_template_reference' => $this->integer(),
+            'field_template_reference' => $this->integer(),
+            'program_name' => $this->string(50),
+            'type' => $this->smallInteger(),
+            'language_type' => $this->smallInteger(),
+            'max_files' => $this->integer(),
+            'max_size' => $this->integer(),
+            'allow_files' => $this->string(),
+        ]);
+
+        /**
+         * common_files table
+         */
+        $this->createTable('{{%common_files}}', [
+            'id' => $this->primaryKey(),
+            'common_files_template_id' => $this->integer(),
+            'file_reference' => $this->integer(),
+            'field_reference' => $this->integer(),
+            'system_name' => $this->string(),
+            'original_name' => $this->string(),
+            'size' => $this->integer(),
+            'type' => $this->string(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+            'created_at' => $this->integer(),
+            'updated_at' => $this->integer(),
+        ]);
+
+        $this->addForeignKey('common_files-to-common_files_templates',
+            '{{%common_files}}',
+            'common_files_template_id',
+            '{{%common_files_templates}}',
+            'id'
+        );
+
+        /**
+         * common_file_translates table
+         */
+        $this->createTable('{{%common_file_translates}}', [
+            'id' => $this->primaryKey(),
+            'common_file_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'system_name' => $this->string(),
+            'original_name' => $this->string(),
+            'size' => $this->integer(),
+            'type' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_file_translates-to-common_files',
+            '{{%common_file_translates}}',
+            'common_file_id',
+            '{{%common_files}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_file_translates-to-common_languages',
+            '{{%common_file_translates}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        /**
+         * common_file_validators table
+         */
+        $this->createTable('{{%common_files_validators}}', [
+            'id' => $this->primaryKey(),
+            'common_files_template_id' => $this->integer(),
+            'validator' => $this->string(),
+            'params' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_files_validators-to-common_files_templates',
+            '{{%common_files_validators}}',
+            'common_files_template_id',
+            '{{%common_files_templates}}',
+            'id'
+        );
+
+        /**
+         * common_file_names table
+         */
+        $this->createTable('{{%common_file_names}}', [
+            'id' => $this->primaryKey(),
+            'common_files_template_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+            'description' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_file_names-to-common_files_templates',
+            '{{%common_file_names}}',
+            'common_files_template_id',
+            '{{%common_file_translates}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_file_names-to-common_languages',
+            '{{%common_file_names}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        //////////////////////////////////////////////////////////////////
+        // Images functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_images_templates table
+         */
+        $this->createTable('{{%common_images_templates}}', [
+            'id' => $this->primaryKey(),
+            'image_template_reference' => $this->integer(),
+            'field_template_reference' => $this->integer(),
+            'program_name' => $this->string(50),
+            'type' => $this->smallInteger(),
+            'language_type' => $this->smallInteger(),
+            'crop_type' => $this->smallInteger(),
+            'max_images' => $this->integer(),
+            'max_size' => $this->integer(),
+            'allow_files' => $this->string(),
+            'crop_height' => $this->integer(),
+            'crop_width' => $this->integer(),
+        ]);
+
+        /**
+         * common_images table
+         */
+        $this->createTable('{{%common_images}}', [
+            'id' => $this->primaryKey(),
+            'common_images_templates_id' => $this->integer(),
+            'image_reference' => $this->integer(),
+            'field_reference' => $this->integer(),
+            'system_name' => $this->string(),
+            'original_name' => $this->string(),
+            'size' => $this->integer(),
+            'type' => $this->string(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+            'created_at' => $this->integer(),
+            'updated_at' => $this->integer(),
+        ]);
+
+        $this->addForeignKey('common_images-to-common_images_templates',
+            '{{%common_images}}',
+            'common_images_templates_id',
+            '{{%common_images_templates}}',
+            'id'
+        );
+
+        /**
+         * common_images_translates table
+         */
+        $this->createTable('{{%common_images_translates}}', [
+            'id' => $this->primaryKey(),
+            'common_image_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'system_name' => $this->string(),
+            'original_name' => $this->string(),
+            'size' => $this->integer(),
+            'type' => $this->string(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+            'created_at' => $this->integer(),
+            'updated_at' => $this->integer(),
+        ]);
+
+        $this->addForeignKey('common_images_translates-to-common_images',
+            '{{%common_images_translates}}',
+            'common_image_id',
+            '{{%common_images}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_images_translates-to-common_languages',
+            '{{%common_images_translates}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        /**
+         * common_images_validators table
+         */
+        $this->createTable('{{%common_images_validators}}', [
+            'id' => $this->primaryKey(),
+            'common_images_templates_id' => $this->integer(),
+            'validator' => $this->string(),
+            'params' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_images_validators-to-common_images_templates',
+            '{{%common_images_validators}}',
+            'common_images_templates_id',
+            '{{%common_images_templates}}',
+            'id'
+        );
+
+        /**
+         * common_images_names table
+         */
+        $this->createTable('{{%common_images_names}}', [
+            'id' => $this->primaryKey(),
+            'common_images_templates_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+            'description' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_images_names-to-common_images_templates',
+            '{{%common_images_names}}',
+            'common_images_templates_id',
+            '{{%common_images_templates}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_images_names-to-common_languages',
+            '{{%common_images_names}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        /**
+         * common_images_thumbnails table
+         */
+        $this->createTable('{{%common_images_thumbnails}}', [
+            'id' => $this->primaryKey(),
+            'common_images_templates_id' => $this->integer(),
+            'program_mane' => $this->string(50),
+            'divider' => $this->smallInteger(),
+            'quality' => $this->smallInteger(),
+        ]);
+
+        $this->addForeignKey('common_images_thumbnails-to-common_images_templates',
+            '{{%common_images_thumbnails}}',
+            'common_images_templates_id',
+            '{{%common_images_templates}}',
+            'id'
+        );
+
+        //////////////////////////////////////////////////////////////////
+        // Conditions functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_conditions_templates table
+         */
+        $this->createTable('{{%common_conditions_templates}}', [
+            'id' => $this->primaryKey(),
+            'condition_template_reference' => $this->integer(),
+            'type' => $this->smallInteger(),
+        ]);
+
+        /**
+         * common_conditions table
+         */
+        $this->createTable('{{%common_conditions}}', [
+            'id' => $this->primaryKey(),
+            'common_condition_template_id' => $this->integer(),
+            'condition_reference' => $this->integer(),
+            'common_value_id' => $this->integer(),
+        ]);
+
+        $this->addForeignKey('common_conditions-to-common_conditions_templates',
+            '{{%common_conditions}}',
+            'common_condition_template_id',
+            '{{%common_conditions_templates}}',
+            'id'
+        );
+
+        /**
+         * common_conditions_validators table
+         */
+        $this->createTable('{{%common_condition_validators}}', [
+            'id' => $this->primaryKey(),
+            'common_condition_template_id' => $this->integer(),
+            'validator' => $this->string(),
+            'params' => $this->text(),
+        ]);
+
+        $this->addForeignKey('common_condition_validators-to-common_conditions_templates',
+            '{{%common_condition_validators}}',
+            'common_condition_template_id',
+            '{{%common_conditions_templates}}',
+            'id'
+        );
+
+        /**
+         * common_conditions_values table
+         */
+        $this->createTable('{{%common_conditions_values}}', [
+            'id' => $this->primaryKey(),
+            'common_condition_template_id' => $this->integer(),
+            'value_name' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_conditions_values-to-common_conditions_templates',
+            '{{%common_conditions_values}}',
+            'common_condition_template_id',
+            '{{%common_conditions_templates}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_conditions-to-common_conditions_values',
+            '{{%common_conditions}}',
+            'common_value_id',
+            '{{%common_conditions_values}}',
+            'id'
+        );
+
+        /**
+         * common_conditions_value_names table
+         */
+        $this->createTable('{{%common_conditions_value_names}}', [
+            'id' => $this->primaryKey(),
+            'common_condition_value_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_conditions_value_names-to-common_conditions_values',
+            '{{%common_conditions_value_names}}',
+            'common_condition_value_id',
+            '{{%common_conditions_values}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_conditions_value_names-to-common_languages',
+            '{{%common_conditions_value_names}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+
+        /**
+         * common_conditions_names table
+         */
+        $this->createTable('{{%common_conditions_names}}', [
+            'id' => $this->primaryKey(),
+            'common_condition_template_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+            'description' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_conditions_names-to-common_conditions_templates',
+            '{{%common_conditions_names}}',
+            'common_condition_template_id',
+            '{{%common_conditions_templates}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_conditions_names-to-common_languages',
+            '{{%common_conditions_names}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function safeDown()
+    {
+        //conditions functionality
+        $this->dropForeignKey('common_conditions_names-to-common_languages', '{{%common_conditions_names}}');
+        $this->dropForeignKey('common_conditions_names-to-common_conditions_templates', '{{%common_conditions_names}}');
+        $this->dropTable('{{%common_conditions_names}}');
+
+        $this->dropForeignKey('common_conditions_value_names-to-common_languages', '{{%common_conditions_value_names}}');
+        $this->dropForeignKey('common_conditions_value_names-to-common_conditions_values', '{{%common_conditions_value_names}}');
+        $this->dropTable('{{%common_conditions_value_names}}');
+
+        $this->dropForeignKey('common_conditions-to-common_conditions_values', '{{%common_conditions}}');
+        $this->dropForeignKey('common_conditions_values-to-common_conditions_templates', '{{%common_conditions_values}}');
+        $this->dropTable('{{%common_conditions_values}}');
+
+        $this->dropForeignKey('common_condition_validators-to-common_conditions_templates', '{{%common_condition_validators}}');
+        $this->dropTable('{{%common_condition_validators}}');
+
+        $this->dropForeignKey('common_conditions-to-common_conditions_templates', '{{%common_conditions}}');
+        $this->dropTable('{{%common_conditions}}');
+
+        $this->dropTable('{{%common_conditions_templates}}');
+
+        //images functionality
+        $this->dropForeignKey('common_images_thumbnails-to-common_images_templates', '{{%common_images_thumbnails}}');
+        $this->dropTable('{{%common_images_thumbnails}}');
+
+        $this->dropForeignKey('common_images_names-to-common_languages', '{{%common_images_names}}');
+        $this->dropForeignKey('common_images_names-to-common_images_templates', '{{%common_images_names}}');
+        $this->dropTable('{{%common_images_names}}');
+
+        $this->dropForeignKey('common_images_validators-to-common_images_templates', '{{%common_images_validators}}');
+        $this->dropTable('{{%common_images_validators}}');
+
+        $this->dropForeignKey('common_images_translates-to-common_languages', '{{%common_images_translates}}');
+        $this->dropForeignKey('common_images_translates-to-common_images', '{{%common_images_translates}}');
+        $this->dropTable('{{%common_images_translates}}');
+
+        $this->dropForeignKey('common_images-to-common_images_templates', '{{%common_images}}');
+        $this->dropTable('{{%common_images}}');
+
+        $this->dropTable('{{%common_images_templates}}');
+
+        //files functionality
+        $this->dropForeignKey('common_file_names-to-common_languages', '{{%common_file_names}}');
+        $this->dropForeignKey('common_file_names-to-common_files_templates', '{{%common_file_names}}');
+        $this->dropTable('{{%common_file_names}}');
+
+        $this->dropForeignKey('common_files_validators-to-common_files_templates', '{{%common_files_validators}}');
+        $this->dropTable('{{%common_files_validators}}');
+
+        $this->dropForeignKey('common_file_translates-to-common_languages', '{{%common_file_translates}}');
+        $this->dropForeignKey('common_file_translates-to-common_files', '{{%common_file_translates}}');
+        $this->dropTable('{{%common_file_translates}}');
+
+        $this->dropForeignKey('common_files-to-common_files_templates', '{{%common_files}}');
+        $this->dropTable('{{%common_files}}');
+        $this->dropTable('{{%common_files_templates}}');
+
+        //fields functionality
+        $this->dropForeignKey('common_field_names-to-common_languages', '{{%common_field_names}}');
+        $this->dropForeignKey('common_field_names-to-common_fields_templates', '{{%common_field_names}}');
+        $this->dropTable('{{%common_field_names}}');
+
+        $this->dropForeignKey('common_field_validators-to-common_fields_templates', '{{%common_field_validators}}');
+        $this->dropTable('{{%common_field_validators}}');
+
+        $this->dropForeignKey('common_field_translates-to-common_languages', '{{%common_field_translates}}');
+        $this->dropForeignKey('common_field_translates-to-common_fields_represents', '{{%common_field_translates}}');
+        $this->dropTable('{{%common_field_translates}}');
+
+        $this->dropForeignKey('common_fields_represents-to-common_fields_templates', '{{%common_fields_represents}}');
+        $this->dropTable('{{%common_fields_represents}}');
+
+        $this->dropTable('{{%common_fields_templates}}');
+
+        //common functionality
+        $this->dropTable('{{%common_languages}}');
+        $this->dropTable('{{%common_config}}');
+    }
+}
