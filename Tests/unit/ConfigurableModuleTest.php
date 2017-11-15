@@ -24,9 +24,7 @@ class ConfigurableModuleTest extends \Codeception\Test\Unit
 
     public function testConfiguratorsDb()
     {
-        /** @var AbstractModuleConfiguratorDb $configurator1 */
         $configurator1 = \Iliich246\YicmsCommon\Tests\_testEssences\configurableModule\Base\Test1ConfigDb::getInstance();
-        /** @var AbstractModuleConfiguratorDb $configurator2 */
         $configurator2 = \Iliich246\YicmsCommon\Tests\_testEssences\configurableModule\Base\Test2ConfigDb::getInstance();
 
         $this->tester->assertInstanceOf(\Iliich246\YicmsCommon\Base\AbstractModuleConfiguratorDb::className(),

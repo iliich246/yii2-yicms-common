@@ -1,0 +1,31 @@
+<?php
+
+namespace Iliich246\YicmsCommon\Fields;
+
+use Iliich246\YicmsCommon\Base\AbstractHandler;
+
+/**
+ * Class FieldsHandler
+ *
+ * Object of this class must aggregate any object, that must implement fields functionality.
+ *
+ * @property FieldReferenceInterface $aggregator
+ *
+ * @author iliich246 <iliich246@gmail.com>
+ */
+class FieldsHandler extends AbstractHandler
+{
+    /**
+     * FieldsHandler constructor.
+     * @param FieldReferenceInterface $aggregator
+     */
+    public function __construct(FieldReferenceInterface $aggregator)
+    {
+        $this->aggregator = $aggregator;
+    }
+
+    public function getField($name)
+    {
+
+    }
+}
