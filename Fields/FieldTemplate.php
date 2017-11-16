@@ -11,6 +11,9 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  */
 class FieldTemplate extends AbstractTemplate
 {
+    /**
+     * @inheritdoc
+     */
     private static $buffer = [];
 
     /**
@@ -27,6 +30,14 @@ class FieldTemplate extends AbstractTemplate
     protected static function getBuffer()
     {
         return self::$buffer;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function setBuffer($buffer)
+    {
+        self::$buffer = $buffer;
     }
 
     /**

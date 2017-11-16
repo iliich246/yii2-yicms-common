@@ -33,6 +33,8 @@ abstract class AbstractConfigurableModule extends Module
      */
     protected $configurator;
 
+    private $instance;
+
     /**
      * @inheritdoc
      */

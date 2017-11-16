@@ -5,6 +5,9 @@ namespace Iliich246\YicmsCommon\Base;
 /**
  * Class CommonConfigDb
  *
+ * @property string $defaultLanguage
+ * @property integer $languageMethod
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 class CommonConfigDb extends AbstractModuleConfiguratorDb
