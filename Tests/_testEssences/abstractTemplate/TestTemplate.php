@@ -3,6 +3,8 @@
 namespace Iliich246\YicmsCommon\Tests\_testEssences\abstractTemplate;
 
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
+use yii\base\Event;
+use yii\db\ActiveRecord;
 
 /**
  * Class TestTemplate
@@ -14,6 +16,20 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
 class TestTemplate extends AbstractTemplate
 {
     private static $buffer = [];
+
+    public static $accessesToDb = 0;
+
+    /**
+     * This method needed for test
+     */
+    public static function eventToDataFetch()
+    {
+        if (self::$accessesToDb != 0) return;
+
+        Event::on(TestTemplate::className(), TestTemplate::EVENT_BEFORE_FETCH, function($event) {
+            self::$accessesToDb++;
+        });
+    }
 
     /**
      * @inheritdoc

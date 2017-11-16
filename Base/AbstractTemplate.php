@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
+use yii\base\Event;
 use yii\db\ActiveRecord;
 
 /**
@@ -24,13 +25,15 @@ use yii\db\ActiveRecord;
  *       'programName2' => <object>
  *        ...
  *       'programNameN' => <object>
- *     ]
+ *     ],
  * ]
  *
  * @author iliich246 <iliich246@gmail.com>
  */
 abstract class AbstractTemplate extends ActiveRecord
 {
+    const EVENT_BEFORE_FETCH = 0x99;
+
     /**
      * Returns instance of template object with data fetched from database;
      * @param $templateReference
@@ -60,6 +63,10 @@ abstract class AbstractTemplate extends ActiveRecord
         return [];
     }
 
+    /**
+     * This method must be overridden in child and return him static buffer
+     * @param $buffer
+     */
     protected static function setBuffer($buffer)
     {
         static::setBuffer($buffer);
@@ -84,7 +91,7 @@ abstract class AbstractTemplate extends ActiveRecord
      * Stores a value identified by a key into cache.
      * @param integer $templateReference
      * @param string $programName
-     * @param static $value
+     * @param self $value
      * @return void
      */
     private static function setToCache($templateReference, $programName, $value)
@@ -95,26 +102,29 @@ abstract class AbstractTemplate extends ActiveRecord
         self::setBuffer($buffer);
     }
 
-
-
     /**
      * Fetch from data base template object
      * @param $templateReference
      * @param $programName
-     * @return static|null
+     * @return static
      */
     private static function fetchTemplate($templateReference, $programName)
     {
+        Event::trigger(self::className(), self::EVENT_BEFORE_FETCH);
+        \Yii::warning('FETCHING DATA = ');
         return static::find()->where([
             static::getTemplateReferenceName() => $templateReference,
             'program_name' => $programName
-        ])->one();//->one();
+        ])->one();
     }
 
     /**
+     * This method must be overridden in child and return name of db field with template reference
+     * (abstract static methods violates the PHP strict standards)
      * @return string
      */
-    protected static function getTemplateReferenceName() {
-        return [];
+    protected static function getTemplateReferenceName()
+    {
+        return '';
     }
 }
