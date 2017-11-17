@@ -25,6 +25,20 @@ class m171110_213106_common_init extends Migration
             'used' => $this->boolean()->notNull(),
         ]);
 
+        $this->insert('{{%common_languages}}', [
+            'id' => 1,
+            'code' => 'en-EU',
+            'name' => 'English',
+            'used' => true,
+        ]);
+
+        $this->insert('{{%common_languages}}', [
+            'id' => 2,
+            'code' => 'ru-RU',
+            'name' => 'Русский',
+            'used' => false,
+        ]);
+
         /**
          * common_config table
          */

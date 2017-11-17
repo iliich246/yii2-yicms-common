@@ -17,5 +17,11 @@
         "psr-4": {
             "iliich246\\yicms_common\\": ""
         }
+    },
+    "extra": {
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
     }
 }

@@ -110,8 +110,8 @@ abstract class AbstractTemplate extends ActiveRecord
      */
     private static function fetchTemplate($templateReference, $programName)
     {
-        Event::trigger(self::className(), self::EVENT_BEFORE_FETCH);
-        \Yii::warning('FETCHING DATA = ');
+        Event::trigger(static::className(), self::EVENT_BEFORE_FETCH);
+        //\Yii::warning('FETCHING DATA = ');
         return static::find()->where([
             static::getTemplateReferenceName() => $templateReference,
             'program_name' => $programName

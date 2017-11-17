@@ -27,7 +27,7 @@ CREATE TABLE `common_condition_validators` (
   PRIMARY KEY (`id`),
   KEY `common_condition_validators-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
   CONSTRAINT `common_condition_validators_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_condition_validators
@@ -47,7 +47,7 @@ CREATE TABLE `common_conditions` (
   KEY `common_conditions-to-common_conditions_values` (`common_value_id`) USING BTREE,
   CONSTRAINT `common_conditions_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
   CONSTRAINT `common_conditions_ibfk_2` FOREIGN KEY (`common_value_id`) REFERENCES `common_conditions_values` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_conditions
@@ -68,7 +68,7 @@ CREATE TABLE `common_conditions_names` (
   KEY `common_conditions_names-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_conditions_names_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
   CONSTRAINT `common_conditions_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_conditions_names
@@ -83,7 +83,7 @@ CREATE TABLE `common_conditions_templates` (
   `condition_template_reference` int(11) DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_conditions_templates
@@ -103,7 +103,7 @@ CREATE TABLE `common_conditions_value_names` (
   KEY `common_conditions_value_names-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_conditions_value_names_ibfk_1` FOREIGN KEY (`common_condition_value_id`) REFERENCES `common_conditions_values` (`id`),
   CONSTRAINT `common_conditions_value_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_conditions_value_names
@@ -120,7 +120,7 @@ CREATE TABLE `common_conditions_values` (
   PRIMARY KEY (`id`),
   KEY `common_conditions_values-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
   CONSTRAINT `common_conditions_values_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_conditions_values
@@ -135,7 +135,7 @@ CREATE TABLE `common_config` (
   `defaultLanguage` varchar(255) DEFAULT NULL,
   `languageMethod` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_config
@@ -157,7 +157,7 @@ CREATE TABLE `common_field_names` (
   KEY `common_field_names-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_field_names_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`),
   CONSTRAINT `common_field_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_field_names
@@ -177,7 +177,7 @@ CREATE TABLE `common_field_translates` (
   KEY `common_field_translates-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_field_translates_ibfk_1` FOREIGN KEY (`common_fields_represent_id`) REFERENCES `common_fields_represents` (`id`),
   CONSTRAINT `common_field_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_field_translates
@@ -195,7 +195,7 @@ CREATE TABLE `common_field_validators` (
   PRIMARY KEY (`id`),
   KEY `common_field_validators-to-common_fields_templates` (`common_fields_template_id`) USING BTREE,
   CONSTRAINT `common_field_validators_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_field_validators
@@ -214,7 +214,7 @@ CREATE TABLE `common_fields_represents` (
   PRIMARY KEY (`id`),
   KEY `common_fields_represents-to-common_fields_templates` (`common_fields_template_id`) USING BTREE,
   CONSTRAINT `common_fields_represents_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_fields_represents
@@ -233,7 +233,7 @@ CREATE TABLE `common_fields_templates` (
   `visible` tinyint(1) DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_fields_templates
@@ -254,7 +254,7 @@ CREATE TABLE `common_file_names` (
   KEY `common_file_names-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_file_names_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_file_translates` (`id`),
   CONSTRAINT `common_file_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_file_names
@@ -277,7 +277,7 @@ CREATE TABLE `common_file_translates` (
   KEY `common_file_translates-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_file_translates_ibfk_1` FOREIGN KEY (`common_file_id`) REFERENCES `common_files` (`id`),
   CONSTRAINT `common_file_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_file_translates
@@ -303,7 +303,7 @@ CREATE TABLE `common_files` (
   PRIMARY KEY (`id`),
   KEY `common_files-to-common_files_templates` (`common_files_template_id`) USING BTREE,
   CONSTRAINT `common_files_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_files
@@ -324,7 +324,7 @@ CREATE TABLE `common_files_templates` (
   `max_size` int(11) DEFAULT NULL,
   `allow_files` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_files_templates
@@ -342,7 +342,7 @@ CREATE TABLE `common_files_validators` (
   PRIMARY KEY (`id`),
   KEY `common_files_validators-to-common_files_templates` (`common_files_template_id`) USING BTREE,
   CONSTRAINT `common_files_validators_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_files_validators
@@ -368,7 +368,7 @@ CREATE TABLE `common_images` (
   PRIMARY KEY (`id`),
   KEY `common_images-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
   CONSTRAINT `common_images_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images
@@ -389,7 +389,7 @@ CREATE TABLE `common_images_names` (
   KEY `common_images_names-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_images_names_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`),
   CONSTRAINT `common_images_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images_names
@@ -413,7 +413,7 @@ CREATE TABLE `common_images_templates` (
   `crop_height` int(11) DEFAULT NULL,
   `crop_width` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images_templates
@@ -432,7 +432,7 @@ CREATE TABLE `common_images_thumbnails` (
   PRIMARY KEY (`id`),
   KEY `common_images_thumbnails-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
   CONSTRAINT `common_images_thumbnails_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images_thumbnails
@@ -459,7 +459,7 @@ CREATE TABLE `common_images_translates` (
   KEY `common_images_translates-to-common_languages` (`common_language_id`) USING BTREE,
   CONSTRAINT `common_images_translates_ibfk_1` FOREIGN KEY (`common_image_id`) REFERENCES `common_images` (`id`),
   CONSTRAINT `common_images_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images_translates
@@ -477,7 +477,7 @@ CREATE TABLE `common_images_validators` (
   PRIMARY KEY (`id`),
   KEY `common_images_validators-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
   CONSTRAINT `common_images_validators_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_images_validators
@@ -493,7 +493,7 @@ CREATE TABLE `common_languages` (
   `name` varchar(255) NOT NULL,
   `used` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_languages
@@ -507,7 +507,7 @@ CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of migration
@@ -527,7 +527,7 @@ CREATE TABLE `test_config_module1` (
   `field4` varchar(255) DEFAULT NULL,
   `field5` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of test_config_module1
@@ -543,7 +543,7 @@ CREATE TABLE `test_config_module2` (
   `field1` varchar(255) DEFAULT NULL,
   `field2` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of test_config_module2
@@ -563,7 +563,7 @@ CREATE TABLE `test_templates` (
   `visible` varchar(45) DEFAULT NULL,
   `is_main` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of test_templates
@@ -589,7 +589,7 @@ CREATE TABLE `test_templates2` (
   `test_template_reference` varchar(255) NOT NULL,
   `program_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of test_templates2
