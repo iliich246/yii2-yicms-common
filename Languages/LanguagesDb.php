@@ -78,7 +78,6 @@ class LanguagesDb extends ActiveRecord
                             $query->andWhere(['not in', 'name', $this->name]);
                         return $query;
                     }
-
                 ],
                 [
                     ['code'], 'unique', 'skipOnError' => true, 'skipOnEmpty' => true,
@@ -127,4 +126,7 @@ class LanguagesDb extends ActiveRecord
         if ($languageFacade->getCurrentLanguage()->id === $this->id) return true;
         return false;
     }
+
+    public function create()
+    {}
 }

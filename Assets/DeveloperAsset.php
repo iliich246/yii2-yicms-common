@@ -24,5 +24,6 @@ class DeveloperAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapPluginAsset',
+        'Iliich246\YicmsCommon\Assets\BootboxAsset',
     ];
 }

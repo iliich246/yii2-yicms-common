@@ -39,9 +39,26 @@ class DefaultLanguageForm extends Model
     public function rules()
     {
         return [
-            [['defaultLanguage', 'languageMethod'], 'integer', 'min' => 100]
+            [['defaultLanguage', 'languageMethod'], 'integer'],
+            ['defaultLanguage', 'validateProgramName'],
+
 
         ];
+    }
+
+    /**
+     * Validates the program name.
+     * This method serves as the inline validation for page program name.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateProgramName($attribute, $params)
+    {
+        //if (!$this->hasErrors()) {
+
+            //$this->addError($attribute, 'Error sample at' . $attribute);
+        //}
     }
 
     /**

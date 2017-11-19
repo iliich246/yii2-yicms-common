@@ -11,6 +11,32 @@ use yii\widgets\Pjax;
 /* @var $languages LanguagesDb[] */
 /* @var $defaultLanguageModel \Iliich246\YicmsCommon\Languages\DefaultLanguageForm */
 
+$js = <<<EOL
+
+;(function(){
+    $(document).on('pjax:complete', function(xhr, textStatus, error, options) {
+        var errorId = '#yicms-pjax-error-' + xhr.target.id;
+        var errorValue = $(errorId).val();
+        bootbox.alert("This is the default alert! val = " + errorValue);
+    })
+    $(document).on('pjax:error', function(xhr, textStatus, error, options) {
+      //console.log($('#pj').val());
+      bootbox.alert("This is the default alert! val = " + $('#pj').val());
+    })
+
+    $('#bbb').on('click', function() {
+        bootbox.dialog({
+            message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Loading...</div>',
+            title: '<h4>Test title</h4>',
+            className: 'error-modal',
+        });
+    });
+})();
+
+EOL;
+
+$this->registerJs($js);
+
 ?>
 <div class="col-sm-9 content">
     <div class="row content-block content-header">
@@ -22,18 +48,21 @@ use yii\widgets\Pjax;
     <div class="row content-block form-block">
         <div class="col-xs-12">
             <div class="content-block-title">
-                <h3>Language settings</h3>
+                <h3 id="bbb">Language settings</h3>
             </div>
-            <?php Pjax::begin(); ?>
+            <?php $pjax1 = Pjax::begin(); ?>
+            <?php if (isset($success)): ?>
+                <h3>Сохранено успешно</h3>
+            <?php endif; ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'set-language-config-form',
                 'options' => [
-                    'class' => 'form-horizontal',
                     'data-pjax' => true,
                 ],
-                //'enableAjaxValidation' => true,
-                //'validationUrl' => 'validate',
             ]); ?>
+            <?= Html::hiddenInput('pjax-error', $pjaxError, [
+                'id' => 'yicms-pjax-error-' . $pjax1->id ,
+                'disabled' => true]) ?>
             <div class="row">
                 <div class="col-xs-12">
                     <?= $form->field($defaultLanguageModel, 'defaultLanguage')->dropDownList(
@@ -64,6 +93,11 @@ use yii\widgets\Pjax;
     </div>
 
     <div class="row content-block">
+        <?php $w1 = Pjax::begin([
+            'timeout' => 100,
+        ]); ?>
+            <h1><?= $w1->id ?></h1>
+        <?php Pjax::end() ?>
         <div class="col-xs-12">
             <div class="row control-buttons">
                 <div class="col-xs-12">
@@ -93,7 +127,6 @@ use yii\widgets\Pjax;
                     </div>
                 <?php endforeach; ?>
             </div>
-
         </div>
     </div>
 </div>
