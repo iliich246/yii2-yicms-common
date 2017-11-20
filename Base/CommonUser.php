@@ -8,7 +8,10 @@ use yii\web\NotFoundHttpException;
 
 /**
  * Class CommonUser
- * @package Iliich246\YicmsCommon\Base
+ *
+ * Basic yicms user class (define developer and admin roles)
+ *
+ * @author iliich246 <iliich246@gmail.com>
  */
 class CommonUser implements
     IdentityInterface,
