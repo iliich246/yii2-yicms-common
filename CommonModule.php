@@ -24,6 +24,7 @@ class CommonModule extends AbstractConfigurableModule implements BootstrapInterf
      */
     public $languageMethod = Language::COOKIE_TYPE;
 
+    /** @inheritdoc */
     public $controllerMap = [
         'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController'
     ];

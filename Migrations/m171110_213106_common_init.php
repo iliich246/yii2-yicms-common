@@ -1,15 +1,18 @@
 <?php
 
 use yii\db\Migration;
+use Iliich246\YicmsCommon\Languages\Language;
 
 /**
  * Class m171110_213106_common_init
+ *
+ * ALTER DATABASE <database_name> CHARACTER SET utf8 COLLATE utf8_unicode_ci;
  */
 class m171110_213106_common_init extends Migration
 {
     /**
-     * @inheritdoc
-     */
+ * @inheritdoc
+ */
     public function safeUp()
     {
         //////////////////////////////////////////////////////////////////
@@ -51,10 +54,8 @@ class m171110_213106_common_init extends Migration
         $this->insert('{{%common_config}}', [
             'id' => 1,
             'defaultLanguage' => 'en-EU',
-            'languageMethod' => 0, //TODO: insert method of Language
+            'languageMethod' => 1,
         ]);
-
-
 
         //////////////////////////////////////////////////////////////////
         // Fields functionality
@@ -64,7 +65,7 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_fields_templates}}', [
             'id' => $this->primaryKey(),
-            'field_template_reference' => $this->integer(),
+            'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'editable' => $this->boolean(),
@@ -72,16 +73,28 @@ class m171110_213106_common_init extends Migration
             'is_main' => $this->boolean(),
         ]);
 
+        $this->createIndex(
+            'field_template_reference-index',
+            '{{%common_fields_templates}}',
+            'field_template_reference'
+        );
+
         /**
          * common_fields_represents table
          */
         $this->createTable('{{%common_fields_represents}}', [
             'id' => $this->primaryKey(),
             'common_fields_template_id' => $this->integer(),
-            'field_reference' => $this->integer(),
+            'field_reference' => $this->string(),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
         ]);
+
+        $this->createIndex(
+            'field_reference-index',
+            '{{%common_fields_represents}}',
+            'field_reference'
+        );
 
         $this->addForeignKey('common_fields_represents-to-common_fields_templates',
             '{{%common_fields_represents}}',
@@ -164,15 +177,23 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_files_templates}}', [
             'id' => $this->primaryKey(),
-            'file_template_reference' => $this->integer(),
-            'field_template_reference' => $this->integer(),
+            'file_template_reference' => $this->string(),
+            'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'language_type' => $this->smallInteger(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
             'max_files' => $this->integer(),
             'max_size' => $this->integer(),
             'allow_files' => $this->string(),
         ]);
+
+        $this->createIndex(
+            'file_template_reference-index',
+            '{{%common_files_templates}}',
+            'file_template_reference'
+        );
 
         /**
          * common_files table
@@ -180,8 +201,8 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_files}}', [
             'id' => $this->primaryKey(),
             'common_files_template_id' => $this->integer(),
-            'file_reference' => $this->integer(),
-            'field_reference' => $this->integer(),
+            'file_reference' => $this->string(),
+            'field_reference' => $this->string(),
             'system_name' => $this->string(),
             'original_name' => $this->string(),
             'size' => $this->integer(),
@@ -191,6 +212,12 @@ class m171110_213106_common_init extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ]);
+
+        $this->createIndex(
+            'file_reference-index',
+            '{{%common_files}}',
+            'file_reference'
+        );
 
         $this->addForeignKey('common_files-to-common_files_templates',
             '{{%common_files}}',
@@ -276,11 +303,13 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_images_templates}}', [
             'id' => $this->primaryKey(),
-            'image_template_reference' => $this->integer(),
-            'field_template_reference' => $this->integer(),
+            'image_template_reference' => $this->string(),
+            'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'language_type' => $this->smallInteger(),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
             'crop_type' => $this->smallInteger(),
             'max_images' => $this->integer(),
             'max_size' => $this->integer(),
@@ -289,14 +318,20 @@ class m171110_213106_common_init extends Migration
             'crop_width' => $this->integer(),
         ]);
 
+        $this->createIndex(
+            'image_template_reference-index',
+            '{{%common_images_templates}}',
+            'image_template_reference'
+        );
+
         /**
          * common_images table
          */
         $this->createTable('{{%common_images}}', [
             'id' => $this->primaryKey(),
             'common_images_templates_id' => $this->integer(),
-            'image_reference' => $this->integer(),
-            'field_reference' => $this->integer(),
+            'image_reference' => $this->string(),
+            'field_reference' => $this->string(),
             'system_name' => $this->string(),
             'original_name' => $this->string(),
             'size' => $this->integer(),
@@ -306,6 +341,12 @@ class m171110_213106_common_init extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ]);
+
+        $this->createIndex(
+            'image_reference-index',
+            '{{%common_images}}',
+            'image_reference'
+        );
 
         $this->addForeignKey('common_images-to-common_images_templates',
             '{{%common_images}}',
@@ -413,9 +454,15 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_conditions_templates}}', [
             'id' => $this->primaryKey(),
-            'condition_template_reference' => $this->integer(),
+            'condition_template_reference' => $this->string(),
             'type' => $this->smallInteger(),
         ]);
+
+        $this->createIndex(
+            'condition_template_reference-index',
+            '{{%common_conditions_templates}}',
+            'condition_template_reference'
+        );
 
         /**
          * common_conditions table
@@ -423,9 +470,15 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_conditions}}', [
             'id' => $this->primaryKey(),
             'common_condition_template_id' => $this->integer(),
-            'condition_reference' => $this->integer(),
+            'condition_reference' => $this->string(),
             'common_value_id' => $this->integer(),
         ]);
+
+        $this->createIndex(
+            'condition_reference-index',
+            '{{%common_conditions}}',
+            'condition_reference'
+        );
 
         $this->addForeignKey('common_conditions-to-common_conditions_templates',
             '{{%common_conditions}}',
@@ -546,8 +599,10 @@ class m171110_213106_common_init extends Migration
         $this->dropTable('{{%common_condition_validators}}');
 
         $this->dropForeignKey('common_conditions-to-common_conditions_templates', '{{%common_conditions}}');
+        $this->dropIndex('condition_reference-index', '{{%common_conditions}}');
         $this->dropTable('{{%common_conditions}}');
 
+        $this->dropIndex('condition_template_reference-index', '{{%common_conditions_templates}}');
         $this->dropTable('{{%common_conditions_templates}}');
 
         //images functionality
@@ -566,8 +621,10 @@ class m171110_213106_common_init extends Migration
         $this->dropTable('{{%common_images_translates}}');
 
         $this->dropForeignKey('common_images-to-common_images_templates', '{{%common_images}}');
+        $this->dropIndex('image_reference-index', '{{%common_images}}');
         $this->dropTable('{{%common_images}}');
 
+        $this->dropIndex('image_template_reference-index', '{{%common_images_templates}}');
         $this->dropTable('{{%common_images_templates}}');
 
         //files functionality
@@ -583,7 +640,10 @@ class m171110_213106_common_init extends Migration
         $this->dropTable('{{%common_file_translates}}');
 
         $this->dropForeignKey('common_files-to-common_files_templates', '{{%common_files}}');
+        $this->dropIndex('file_reference-index', '{{%common_files}}');
         $this->dropTable('{{%common_files}}');
+
+        $this->dropIndex('file_template_reference-index', '{{%common_files_templates}}');
         $this->dropTable('{{%common_files_templates}}');
 
         //fields functionality
@@ -599,8 +659,10 @@ class m171110_213106_common_init extends Migration
         $this->dropTable('{{%common_field_translates}}');
 
         $this->dropForeignKey('common_fields_represents-to-common_fields_templates', '{{%common_fields_represents}}');
+        $this->dropIndex('field_reference-index', '{{%common_fields_represents}}');
         $this->dropTable('{{%common_fields_represents}}');
 
+        $this->dropIndex('field_template_reference-index', '{{%common_fields_templates}}');
         $this->dropTable('{{%common_fields_templates}}');
 
         //common functionality

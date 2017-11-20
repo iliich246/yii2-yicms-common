@@ -2,13 +2,14 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
+use Yii;
 use yii\base\Event;
 use yii\db\ActiveRecord;
 
 /**
  * Class AbstractTemplate
  *
- * All templates must inherit this class. This class implements methods for buffering.
+ * All templates must inherit this class. This class implements methods for buffering and basic CRUD methods.
  *
  * @property array $buffer variable that must be declared as static property in child classes;
  * It`s used for buffering templates and reduce database accesses
@@ -34,6 +35,74 @@ abstract class AbstractTemplate extends ActiveRecord
 {
     const EVENT_BEFORE_FETCH = 0x99;
 
+    const SCENARIO_CREATE = 0x00;
+    const SCENARIO_UPDATE = 0x01;
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'program_name' => 'Program name',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'programName'
+            ],
+            self::SCENARIO_UPDATE => [
+                'programName'
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['programName', 'required', 'message' => 'Obligatory input field'],
+            ['programName', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
+            ['programName', 'validateProgramName'],
+
+        ];
+    }
+
+    /**
+     * Validates the program name.
+     * This method checks, that for group of "template reference" program name is unique.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateProgramName($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+
+//            $fieldQuery = PagesFieldsDb::find()->where([
+//                'page_id' => $this->_pagesDb->id,
+//                'program_name' => $this->programName,
+//            ]);
+//
+//            if ($this->scenario == self::SCENARIO_UPDATE)
+//                $fieldQuery->andWhere(['not in', 'program_name', $this->_fieldDb->program_name]);
+//
+//            $fields = $fieldQuery->all();
+//
+//            if ($fields)$this->addError($attribute, 'Field with same name already exist for current page ('.
+//                $this->_pagesDb->program_name . ')'
+//            );
+        }
+    }
+
     /**
      * Returns instance of template object with data fetched from database;
      * @param $templateReference
@@ -51,6 +120,37 @@ abstract class AbstractTemplate extends ActiveRecord
         self::setToCache($templateReference, $programName, $value);
 
         return $value;
+    }
+
+    /**
+     * Generates template reference key
+     * @return string
+     * @throws CommonException
+     */
+    protected static function getTemplateReference()
+    {
+        $value = strrev(uniqid());
+
+        $coincidence = true;
+        $counter = 0;
+
+        while($coincidence) {
+            if (!static::find()->where([
+                static::getTemplateReferenceName() => $value
+            ])->one()) return $value;
+
+            if ($counter++ > 100) {
+                Yii::error('Looping', __METHOD__);
+                throw new CommonException('Looping in ' . __METHOD__);
+            }
+        }
+
+        throw new CommonException('Can`t reach there 0_0' . __METHOD__);
+    }
+
+    public static function create($templateReference, $programName)
+    {
+
     }
 
     /**

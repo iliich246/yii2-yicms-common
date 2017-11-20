@@ -90,6 +90,4 @@ class Field extends ActiveRecord
         $this->mode = self::MODE_USER;
         return $this;
     }
-
-    
 }

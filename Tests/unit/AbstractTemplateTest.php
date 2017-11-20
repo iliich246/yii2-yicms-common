@@ -160,10 +160,6 @@ class AbstractTemplateTest  extends \Codeception\Test\Unit
         //$this->tester->assertEquals($countAccesses, TestTemplate2::$accessesToDb);
     }
 
-
-
-
-
     public function dataProviderIssetInDb()
     {
         return [

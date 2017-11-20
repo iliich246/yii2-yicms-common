@@ -52,7 +52,7 @@ $this->registerJs($js);
             </div>
             <?php $pjax1 = Pjax::begin(); ?>
             <?php if (isset($success)): ?>
-                <h3>Сохранено успешно</h3>
+                <h3>success saved</h3>
             <?php endif; ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'set-language-config-form',

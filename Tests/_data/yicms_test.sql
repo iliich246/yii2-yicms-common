@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : yicms
 Source Server Version : 50720
 Source Host           : localhost:3306
-Source Database       : yicms_test
+Source Database       : yicms
 
 Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2017-11-16 15:41:49
+Date: 2017-11-20 12:10:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,11 +22,11 @@ DROP TABLE IF EXISTS `common_condition_validators`;
 CREATE TABLE `common_condition_validators` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_condition_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) DEFAULT NULL,
-  `params` text,
+  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `params` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_condition_validators-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
-  CONSTRAINT `common_condition_validators_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
+  KEY `common_condition_validators-to-common_conditions_templates` (`common_condition_template_id`),
+  CONSTRAINT `common_condition_validators-to-common_conditions_templates` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -40,13 +40,14 @@ DROP TABLE IF EXISTS `common_conditions`;
 CREATE TABLE `common_conditions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_condition_template_id` int(11) DEFAULT NULL,
-  `condition_reference` int(11) DEFAULT NULL,
+  `condition_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `common_value_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_conditions-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
-  KEY `common_conditions-to-common_conditions_values` (`common_value_id`) USING BTREE,
-  CONSTRAINT `common_conditions_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
-  CONSTRAINT `common_conditions_ibfk_2` FOREIGN KEY (`common_value_id`) REFERENCES `common_conditions_values` (`id`)
+  KEY `condition_reference-index` (`condition_reference`),
+  KEY `common_conditions-to-common_conditions_templates` (`common_condition_template_id`),
+  KEY `common_conditions-to-common_conditions_values` (`common_value_id`),
+  CONSTRAINT `common_conditions-to-common_conditions_templates` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
+  CONSTRAINT `common_conditions-to-common_conditions_values` FOREIGN KEY (`common_value_id`) REFERENCES `common_conditions_values` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -61,13 +62,13 @@ CREATE TABLE `common_conditions_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_condition_template_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_conditions_names-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
-  KEY `common_conditions_names-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_conditions_names_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
-  CONSTRAINT `common_conditions_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_conditions_names-to-common_conditions_templates` (`common_condition_template_id`),
+  KEY `common_conditions_names-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_conditions_names-to-common_conditions_templates` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`),
+  CONSTRAINT `common_conditions_names-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -80,9 +81,10 @@ CREATE TABLE `common_conditions_names` (
 DROP TABLE IF EXISTS `common_conditions_templates`;
 CREATE TABLE `common_conditions_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `condition_template_reference` int(11) DEFAULT NULL,
+  `condition_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `condition_template_reference-index` (`condition_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -97,12 +99,12 @@ CREATE TABLE `common_conditions_value_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_condition_value_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_conditions_value_names-to-common_conditions_values` (`common_condition_value_id`) USING BTREE,
-  KEY `common_conditions_value_names-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_conditions_value_names_ibfk_1` FOREIGN KEY (`common_condition_value_id`) REFERENCES `common_conditions_values` (`id`),
-  CONSTRAINT `common_conditions_value_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_conditions_value_names-to-common_conditions_values` (`common_condition_value_id`),
+  KEY `common_conditions_value_names-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_conditions_value_names-to-common_conditions_values` FOREIGN KEY (`common_condition_value_id`) REFERENCES `common_conditions_values` (`id`),
+  CONSTRAINT `common_conditions_value_names-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -116,10 +118,10 @@ DROP TABLE IF EXISTS `common_conditions_values`;
 CREATE TABLE `common_conditions_values` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_condition_template_id` int(11) DEFAULT NULL,
-  `value_name` varchar(255) DEFAULT NULL,
+  `value_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_conditions_values-to-common_conditions_templates` (`common_condition_template_id`) USING BTREE,
-  CONSTRAINT `common_conditions_values_ibfk_1` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
+  KEY `common_conditions_values-to-common_conditions_templates` (`common_condition_template_id`),
+  CONSTRAINT `common_conditions_values-to-common_conditions_templates` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -132,15 +134,15 @@ CREATE TABLE `common_conditions_values` (
 DROP TABLE IF EXISTS `common_config`;
 CREATE TABLE `common_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `defaultLanguage` varchar(255) DEFAULT NULL,
-  `languageMethod` varchar(255) DEFAULT NULL,
+  `defaultLanguage` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `languageMethod` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_config
 -- ----------------------------
-INSERT INTO `common_config` VALUES ('1', 'en-EU', '0');
+INSERT INTO `common_config` VALUES ('1', 'en-EU', '1');
 
 -- ----------------------------
 -- Table structure for common_field_names
@@ -150,13 +152,13 @@ CREATE TABLE `common_field_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_fields_template_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_field_names-to-common_fields_templates` (`common_fields_template_id`) USING BTREE,
-  KEY `common_field_names-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_field_names_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`),
-  CONSTRAINT `common_field_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_field_names-to-common_fields_templates` (`common_fields_template_id`),
+  KEY `common_field_names-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_field_names-to-common_fields_templates` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`),
+  CONSTRAINT `common_field_names-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -171,12 +173,12 @@ CREATE TABLE `common_field_translates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_fields_represent_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `value` text,
+  `value` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_field_translates-to-common_fields_represents` (`common_fields_represent_id`) USING BTREE,
-  KEY `common_field_translates-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_field_translates_ibfk_1` FOREIGN KEY (`common_fields_represent_id`) REFERENCES `common_fields_represents` (`id`),
-  CONSTRAINT `common_field_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_field_translates-to-common_fields_represents` (`common_fields_represent_id`),
+  KEY `common_field_translates-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_field_translates-to-common_fields_represents` FOREIGN KEY (`common_fields_represent_id`) REFERENCES `common_fields_represents` (`id`),
+  CONSTRAINT `common_field_translates-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -190,11 +192,11 @@ DROP TABLE IF EXISTS `common_field_validators`;
 CREATE TABLE `common_field_validators` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_fields_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) DEFAULT NULL,
-  `params` text,
+  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `params` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_field_validators-to-common_fields_templates` (`common_fields_template_id`) USING BTREE,
-  CONSTRAINT `common_field_validators_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
+  KEY `common_field_validators-to-common_fields_templates` (`common_fields_template_id`),
+  CONSTRAINT `common_field_validators-to-common_fields_templates` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -208,12 +210,13 @@ DROP TABLE IF EXISTS `common_fields_represents`;
 CREATE TABLE `common_fields_represents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_fields_template_id` int(11) DEFAULT NULL,
-  `field_reference` int(11) DEFAULT NULL,
+  `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_fields_represents-to-common_fields_templates` (`common_fields_template_id`) USING BTREE,
-  CONSTRAINT `common_fields_represents_ibfk_1` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
+  KEY `field_reference-index` (`field_reference`),
+  KEY `common_fields_represents-to-common_fields_templates` (`common_fields_template_id`),
+  CONSTRAINT `common_fields_represents-to-common_fields_templates` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -226,13 +229,14 @@ CREATE TABLE `common_fields_represents` (
 DROP TABLE IF EXISTS `common_fields_templates`;
 CREATE TABLE `common_fields_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `field_template_reference` int(11) DEFAULT NULL,
-  `program_name` varchar(50) DEFAULT NULL,
+  `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `field_template_reference-index` (`field_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -247,13 +251,13 @@ CREATE TABLE `common_file_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_files_template_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_file_names-to-common_files_templates` (`common_files_template_id`) USING BTREE,
-  KEY `common_file_names-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_file_names_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_file_translates` (`id`),
-  CONSTRAINT `common_file_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_file_names-to-common_files_templates` (`common_files_template_id`),
+  KEY `common_file_names-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_file_names-to-common_files_templates` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_file_translates` (`id`),
+  CONSTRAINT `common_file_names-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -268,15 +272,15 @@ CREATE TABLE `common_file_translates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_file_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
+  `system_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `original_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `size` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_file_translates-to-common_files` (`common_file_id`) USING BTREE,
-  KEY `common_file_translates-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_file_translates_ibfk_1` FOREIGN KEY (`common_file_id`) REFERENCES `common_files` (`id`),
-  CONSTRAINT `common_file_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_file_translates-to-common_files` (`common_file_id`),
+  KEY `common_file_translates-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_file_translates-to-common_files` FOREIGN KEY (`common_file_id`) REFERENCES `common_files` (`id`),
+  CONSTRAINT `common_file_translates-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -290,19 +294,20 @@ DROP TABLE IF EXISTS `common_files`;
 CREATE TABLE `common_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_files_template_id` int(11) DEFAULT NULL,
-  `file_reference` int(11) DEFAULT NULL,
-  `field_reference` int(11) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
+  `file_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `system_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `original_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `size` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_files-to-common_files_templates` (`common_files_template_id`) USING BTREE,
-  CONSTRAINT `common_files_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
+  KEY `file_reference-index` (`file_reference`),
+  KEY `common_files-to-common_files_templates` (`common_files_template_id`),
+  CONSTRAINT `common_files-to-common_files_templates` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -315,15 +320,18 @@ CREATE TABLE `common_files` (
 DROP TABLE IF EXISTS `common_files_templates`;
 CREATE TABLE `common_files_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `file_template_reference` int(11) DEFAULT NULL,
-  `field_template_reference` int(11) DEFAULT NULL,
-  `program_name` varchar(50) DEFAULT NULL,
+  `file_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `language_type` smallint(6) DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
+  `visible` tinyint(1) DEFAULT NULL,
   `max_files` int(11) DEFAULT NULL,
   `max_size` int(11) DEFAULT NULL,
-  `allow_files` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `allow_files` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `file_template_reference-index` (`file_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -337,11 +345,11 @@ DROP TABLE IF EXISTS `common_files_validators`;
 CREATE TABLE `common_files_validators` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_files_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) DEFAULT NULL,
-  `params` text,
+  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `params` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_files_validators-to-common_files_templates` (`common_files_template_id`) USING BTREE,
-  CONSTRAINT `common_files_validators_ibfk_1` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
+  KEY `common_files_validators-to-common_files_templates` (`common_files_template_id`),
+  CONSTRAINT `common_files_validators-to-common_files_templates` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -355,19 +363,20 @@ DROP TABLE IF EXISTS `common_images`;
 CREATE TABLE `common_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_images_templates_id` int(11) DEFAULT NULL,
-  `image_reference` int(11) DEFAULT NULL,
-  `field_reference` int(11) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
+  `image_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `system_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `original_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `size` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_images-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
-  CONSTRAINT `common_images_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
+  KEY `image_reference-index` (`image_reference`),
+  KEY `common_images-to-common_images_templates` (`common_images_templates_id`),
+  CONSTRAINT `common_images-to-common_images_templates` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -382,13 +391,13 @@ CREATE TABLE `common_images_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_images_templates_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_images_names-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
-  KEY `common_images_names-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_images_names_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`),
-  CONSTRAINT `common_images_names_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_images_names-to-common_images_templates` (`common_images_templates_id`),
+  KEY `common_images_names-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_images_names-to-common_images_templates` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`),
+  CONSTRAINT `common_images_names-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -401,18 +410,21 @@ CREATE TABLE `common_images_names` (
 DROP TABLE IF EXISTS `common_images_templates`;
 CREATE TABLE `common_images_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image_template_reference` int(11) DEFAULT NULL,
-  `field_template_reference` int(11) DEFAULT NULL,
-  `program_name` varchar(50) DEFAULT NULL,
+  `image_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `language_type` smallint(6) DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
+  `visible` tinyint(1) DEFAULT NULL,
   `crop_type` smallint(6) DEFAULT NULL,
   `max_images` int(11) DEFAULT NULL,
   `max_size` int(11) DEFAULT NULL,
-  `allow_files` varchar(255) DEFAULT NULL,
+  `allow_files` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `crop_height` int(11) DEFAULT NULL,
   `crop_width` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `image_template_reference-index` (`image_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -426,12 +438,12 @@ DROP TABLE IF EXISTS `common_images_thumbnails`;
 CREATE TABLE `common_images_thumbnails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_images_templates_id` int(11) DEFAULT NULL,
-  `program_mane` varchar(50) DEFAULT NULL,
+  `program_mane` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `divider` smallint(6) DEFAULT NULL,
   `quality` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_images_thumbnails-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
-  CONSTRAINT `common_images_thumbnails_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
+  KEY `common_images_thumbnails-to-common_images_templates` (`common_images_templates_id`),
+  CONSTRAINT `common_images_thumbnails-to-common_images_templates` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -446,19 +458,19 @@ CREATE TABLE `common_images_translates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_image_id` int(11) DEFAULT NULL,
   `common_language_id` int(11) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
+  `system_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `original_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `size` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `common_images_translates-to-common_images` (`common_image_id`) USING BTREE,
-  KEY `common_images_translates-to-common_languages` (`common_language_id`) USING BTREE,
-  CONSTRAINT `common_images_translates_ibfk_1` FOREIGN KEY (`common_image_id`) REFERENCES `common_images` (`id`),
-  CONSTRAINT `common_images_translates_ibfk_2` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+  KEY `common_images_translates-to-common_images` (`common_image_id`),
+  KEY `common_images_translates-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_images_translates-to-common_images` FOREIGN KEY (`common_image_id`) REFERENCES `common_images` (`id`),
+  CONSTRAINT `common_images_translates-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -472,11 +484,11 @@ DROP TABLE IF EXISTS `common_images_validators`;
 CREATE TABLE `common_images_validators` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_images_templates_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) DEFAULT NULL,
-  `params` text,
+  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `params` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `common_images_validators-to-common_images_templates` (`common_images_templates_id`) USING BTREE,
-  CONSTRAINT `common_images_validators_ibfk_1` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
+  KEY `common_images_validators-to-common_images_templates` (`common_images_templates_id`),
+  CONSTRAINT `common_images_validators-to-common_images_templates` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -489,22 +501,24 @@ CREATE TABLE `common_images_validators` (
 DROP TABLE IF EXISTS `common_languages`;
 CREATE TABLE `common_languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(5) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `code` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `used` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of common_languages
 -- ----------------------------
+INSERT INTO `common_languages` VALUES ('1', 'en-EU', 'English', '1');
+INSERT INTO `common_languages` VALUES ('2', 'ru-RU', 'Русский', '0');
 
 -- ----------------------------
 -- Table structure for migration
 -- ----------------------------
 DROP TABLE IF EXISTS `migration`;
 CREATE TABLE `migration` (
-  `version` varchar(180) NOT NULL,
+  `version` varchar(180) COLLATE utf8_unicode_ci NOT NULL,
   `apply_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -512,9 +526,73 @@ CREATE TABLE `migration` (
 -- ----------------------------
 -- Records of migration
 -- ----------------------------
-INSERT INTO `migration` VALUES ('m000000_000000_base', '1510573199');
-INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1510573212');
+INSERT INTO `migration` VALUES ('m000000_000000_base', '1511168330');
+INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1511168362');
+INSERT INTO `migration` VALUES ('m171114_174807_pages_init', '1511168376');
 
+-- ----------------------------
+-- Table structure for pages
+-- ----------------------------
+DROP TABLE IF EXISTS `pages`;
+CREATE TABLE `pages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
+  `visible` tinyint(1) DEFAULT NULL,
+  `system_route` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ruled_route` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_template_reference` int(11) DEFAULT NULL,
+  `field_reference` int(11) DEFAULT NULL,
+  `file_template_reference` int(11) DEFAULT NULL,
+  `file_reference` int(11) DEFAULT NULL,
+  `image_template_reference` int(11) DEFAULT NULL,
+  `image_reference` int(11) DEFAULT NULL,
+  `condition_template_reference` int(11) DEFAULT NULL,
+  `condition_reference` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of pages
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for pages_config
+-- ----------------------------
+DROP TABLE IF EXISTS `pages_config`;
+CREATE TABLE `pages_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `imagesPatch` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `filesPatch` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `thumbNailsDirectoryName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of pages_config
+-- ----------------------------
+INSERT INTO `pages_config` VALUES ('1', '/web/files/pages/', '/web/images/pages/', 'thumb');
+
+-- ----------------------------
+-- Table structure for pages_names_translates
+-- ----------------------------
+DROP TABLE IF EXISTS `pages_names_translates`;
+CREATE TABLE `pages_names_translates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `page_id` int(11) DEFAULT NULL,
+  `common_language_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pages_names_translates-to-pages` (`page_id`),
+  KEY `pages_names_translates-to-common_languages` (`common_language_id`),
+  CONSTRAINT `pages_names_translates-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`),
+  CONSTRAINT `pages_names_translates-to-pages` FOREIGN KEY (`page_id`) REFERENCES `pages` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of pages_names_translates
+-- ----------------------------
 -- ----------------------------
 -- Table structure for test_config_module1
 -- ----------------------------
