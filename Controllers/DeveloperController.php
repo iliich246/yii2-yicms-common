@@ -51,7 +51,7 @@ class DeveloperController extends Controller
         if ($defaultLanguageForm->load(Yii::$app->request->post()) && $defaultLanguageForm->validate()) {
             if ($defaultLanguageForm->save())
             {
-                return $this->render('/developer/languages-list', [
+                return $this->render('/developer/languages_list', [
                     'pjaxError' => 'Was pjax error',
                     'defaultLanguageModel' => $defaultLanguageForm,
                     'success' => true,
@@ -61,7 +61,7 @@ class DeveloperController extends Controller
 
         $languages = LanguagesDb::find()->all();
 
-        return $this->render('/developer/languages-list', [
+        return $this->render('/developer/languages_list', [
             'pjaxError' => false,
             'languages' => $languages,
             'defaultLanguageModel' => $defaultLanguageForm
@@ -111,7 +111,7 @@ class DeveloperController extends Controller
             }
         }
 
-        return $this->render('/developer/create-update-language', [
+        return $this->render('/developer/create_update_language', [
             'model' => $model,
         ]);
     }
@@ -157,7 +157,7 @@ class DeveloperController extends Controller
                 return $this->redirect(Url::toRoute('languages-list'));
         }
 
-        return $this->render('/developer/change-hash', [
+        return $this->render('/developer/change_hash', [
             'model' => $model
         ]);
     }
@@ -176,7 +176,7 @@ class DeveloperController extends Controller
                 return $this->redirect(Url::toRoute('languages-list'));
         }
 
-        return $this->render('/developer/change-hash', [
+        return $this->render('/developer/change_hash', [
             'model' => $model
         ]);
     }

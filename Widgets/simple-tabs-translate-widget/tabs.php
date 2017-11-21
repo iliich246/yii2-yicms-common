@@ -2,8 +2,8 @@
 
 /* @var $this \yii\web\View */
 /* @var $widget \Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget */
-/* @var $translateModels \Iliich246\YicmsCommon\Base\AbstractTranslate[] */
-/* @var $translateModel \Iliich246\YicmsCommon\Base\AbstractTranslate */
+/* @var $translateModels \Iliich246\YicmsCommon\Base\AbstractTranslateForm[] */
+/* @var $translateModel \Iliich246\YicmsCommon\Base\AbstractTranslateForm */
 
 ?>
 
@@ -34,6 +34,3 @@
         <?php endforeach; ?>
     </div>
 </div>
-<pre>
-    <?php print_r(count($widget->translateModels))?>
-</pre>

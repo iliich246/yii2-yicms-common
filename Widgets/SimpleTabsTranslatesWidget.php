@@ -5,10 +5,10 @@ namespace Iliich246\YicmsCommon\Widgets;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Yii;
 use yii\base\Widget;
-use Iliich246\YicmsCommon\Base\AbstractTranslate;
+use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 
 /**
- * Class TabsTranslatesWidget
+ * Class SimpleTabsTranslatesWidget
  *
  * This widget must be used to render translate tabs for simple translate models with predefined
  * count of fields. This models used commonly in developer section.
@@ -22,13 +22,13 @@ class SimpleTabsTranslatesWidget extends Widget
      */
     public $form;
     /**
-     * @var AbstractTranslate[] array of translate models
+     * @var AbstractTranslateForm[] array of translate models
      * This array represented as:
      * $this->translateModels = [
-     *     <language-id1> => AbstractTranslate(for language-id1),
-     *     <language-id2> => AbstractTranslate(for language-id2),
+     *     <language-id1> => AbstractTranslateForm(for language-id1),
+     *     <language-id2> => AbstractTranslateForm(for language-id2),
      *     ...
-     *     <language-idN> => AbstractTranslate(for language-idN),
+     *     <language-idN> => AbstractTranslateForm(for language-idN),
      * ]
      */
     public $translateModels;
@@ -66,10 +66,10 @@ class SimpleTabsTranslatesWidget extends Widget
     {
         if ($this->translateView) return $this->translateView;
 
-        /** @var AbstractTranslate $translate */
+        /** @var AbstractTranslateForm $translate */
         $translate = current($this->translateModels);
 
-        if (!($translate instanceof AbstractTranslate)) {
+        if (!($translate instanceof AbstractTranslateForm)) {
             Yii::error('Try to use in widget models, that are not descendants of AbstractTranslate', __METHOD__);
             throw new CommonException('Try to use in widget models, that are not descendants of AbstractTranslate');
         }

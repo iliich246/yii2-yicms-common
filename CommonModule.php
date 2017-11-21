@@ -15,10 +15,14 @@ use Iliich246\YicmsCommon\Languages\Language;
 class CommonModule extends AbstractConfigurableModule implements BootstrapInterface
 {
     /**
+     * @var string path to yicms files, changeable by developers; Also in that place code generators and annotators
+     * will place generated code
+     */
+    public $yicmsLocation = '@app/yicms';
+    /**
      * @var string default user language, there using language codes like 'ru-RU' or 'en-EU'
      */
     public $defaultLanguage = 'en-EU';
-
     /**
      * @var int method that used for store information about language between requests
      */

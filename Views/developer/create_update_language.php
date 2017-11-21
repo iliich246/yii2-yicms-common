@@ -23,9 +23,9 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
     <div class="row content-block breadcrumbs">
         <a href="<?= Url::toRoute(['languages-list']) ?>"><span>Languages list</span></a> <span> / </span>
         <?php if ($model->scenario == LanguagesDb::SCENARIO_CREATE): ?>
-            <span>create language</span>
+            <span>Create language</span>
         <?php else: ?>
-            <span>update language</span>
+            <span>Update language</span>
         <?php endif; ?>
     </div>
 

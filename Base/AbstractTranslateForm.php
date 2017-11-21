@@ -2,12 +2,13 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
-use yii\base\Controller;
+use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
- * Class AbstractTranslate
+ * Class AbstractTranslateForm model
  *
  * This class must be inherited by all descendants, which realize work with translates.
  *
@@ -15,20 +16,20 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-abstract class AbstractTranslate extends ActiveRecord
+abstract class AbstractTranslateForm extends Model
 {
     /**
      * @var LanguagesDb instance of language that associated with model
      */
     protected $language;
     /**
+     * @var ActiveRecord instance of translate db associated with model
+     */
+    protected $currentTranslateDb;
+    /**
      * @var string keep name of model for id
      */
     private $idName;
-    /**
-     * @var Controller needed for correct search view files of translates
-     */
-    private $controller;
 
     /**
      * Language setter
@@ -73,17 +74,8 @@ abstract class AbstractTranslate extends ActiveRecord
     public function getIdName()
     {
         if ($this->idName) return $this->idName;
-        $this->idName = $this->formName() . $this->language->id;
+        $this->idName = $this->formName() . '_' . $this->language->id;
         return $this->idName;
-    }
-
-    /**
-     * Controller setter
-     * @param Controller $controller
-     */
-    public function setController(Controller $controller)
-    {
-        $this->controller = $controller;
     }
 
     /**
@@ -111,7 +103,33 @@ abstract class AbstractTranslate extends ActiveRecord
      */
     protected function isCorrectConfigured()
     {
-        if (!$this->language || !$this->controller) return false;
+        if (!$this->language) return false;
         return true;
     }
+
+    /**
+     * Loads translate from db, if cant find existed create new correct record in db
+     * @throws CommonException
+     */
+    public function loadFromDb()
+    {
+        if (!$this->isCorrectConfigured()) {
+            Yii::error('Wrong initialization of ' . $this::className() . 'object');
+            throw new CommonException('Wrong initialization of ' . $this::className() . 'object');
+        }
+
+        $this->getCurrentTranslateDb();
+    }
+
+    /**
+     * Return translate db object associated with this model
+     * @return bool
+     */
+    abstract function getCurrentTranslateDb();
+
+    /**
+     * Creates new translate db object associated with this model
+     * @return bool
+     */
+    abstract protected function createTranslateDb();
 }
