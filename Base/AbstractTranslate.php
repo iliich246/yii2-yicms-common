@@ -11,6 +11,8 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  *
  * This class must be inherited by all descendants, which realize work with translates.
  *
+ * @property integer $key
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 abstract class AbstractTranslate extends ActiveRecord
@@ -71,7 +73,7 @@ abstract class AbstractTranslate extends ActiveRecord
     public function getIdName()
     {
         if ($this->idName) return $this->idName;
-        $this->idName = basename($this::className()) . $this->language->id;
+        $this->idName = $this->formName() . $this->language->id;
         return $this->idName;
     }
 
@@ -92,6 +94,15 @@ abstract class AbstractTranslate extends ActiveRecord
     public function getKey()
     {
         return $this->language->id;
+    }
+
+    /**
+     * Returns view name, that`s must be defined in descendants
+     * @return string
+     */
+    public static function getViewName()
+    {
+        return static::getViewName();
     }
 
     /**
