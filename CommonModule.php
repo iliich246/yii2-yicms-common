@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use Iliich246\YicmsCommon\Base\YicmsModuleInterface;
 use Iliich246\YicmsCommon\Base\AbstractConfigurableModule;
 use Iliich246\YicmsCommon\Languages\Language;
 
@@ -12,7 +13,9 @@ use Iliich246\YicmsCommon\Languages\Language;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class CommonModule extends AbstractConfigurableModule implements BootstrapInterface
+class CommonModule extends AbstractConfigurableModule implements
+    BootstrapInterface,
+    YicmsModuleInterface
 {
     /**
      * @var string path to yicms files, changeable by developers; Also in that place code generators and annotators
@@ -52,7 +55,7 @@ class CommonModule extends AbstractConfigurableModule implements BootstrapInterf
     /**
      * @inherited
      */
-    public function getModuleName()
+    public static function getModuleName()
     {
         return 'Common';
     }

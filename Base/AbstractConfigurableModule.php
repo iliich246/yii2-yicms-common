@@ -33,8 +33,6 @@ abstract class AbstractConfigurableModule extends Module
      */
     protected $configurator;
 
-    private $instance;
-
     /**
      * @inheritdoc
      */
@@ -69,5 +67,8 @@ abstract class AbstractConfigurableModule extends Module
      * Return name of module
      * @return string
      */
-    abstract public function getModuleName();
+    public static function getModuleName()
+    {
+        return static::getModuleName();
+    }
 }

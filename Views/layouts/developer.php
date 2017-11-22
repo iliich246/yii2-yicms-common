@@ -48,10 +48,9 @@ DeveloperAsset::register($this);
                     <div class="menu-logo">
                         <a href="/">
                             LOGO
-<!--                            <img alt="Brand" src="img/logo.svg">-->
                         </a>
                     </div>
-
+                    <?= \Iliich246\YicmsCommon\Widgets\TopDevMenuWidget::widget() ?>
                     <!-- There will be inserted template -->
                 </div>
             </div>
@@ -61,9 +60,9 @@ DeveloperAsset::register($this);
 </main>
 
 <?php $this->endBody() ?>
-<!--<script type="text/template" id="menu-template">-->
-<!--    --><?//= \app\modules\common\widgets\MainRootMenuWidget::widget() ?>
-<!--</script>-->
+<script type="text/template" id="menu-template">
+    <?= \Iliich246\YicmsCommon\Widgets\TopDevMenuWidget::widget() ?>
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>
