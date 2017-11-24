@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  *
  * All templates must inherit this class. This class implements methods for buffering and basic CRUD methods.
  *
+ * @property integer $id
+ * @property string $program_name
  * @property array $buffer variable that must be declared as static property in child classes;
  * It`s used for buffering templates and reduce database accesses
  * self::$buffer = [

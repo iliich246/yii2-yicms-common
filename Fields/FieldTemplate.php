@@ -8,6 +8,7 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  * Class FieldTemplate
  *
  * @property integer
+ * @property string $field_template_reference
  * @property integer type
  * @property bool is_main
  *

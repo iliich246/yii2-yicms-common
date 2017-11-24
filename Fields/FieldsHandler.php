@@ -24,8 +24,19 @@ class FieldsHandler extends AbstractHandler
         $this->aggregator = $aggregator;
     }
 
+    /**
+     * Return instance of field by name
+     * @param $name
+     * @return bool|object
+     */
     public function getField($name)
     {
-
+        return $this->getOrSet($name, function() use($name) {
+           return Field::getInstance(
+               $this->aggregator->getTemplateFieldReference(),
+               $this->aggregator->getFieldReference(),
+               $name
+           );
+        });
     }
 }

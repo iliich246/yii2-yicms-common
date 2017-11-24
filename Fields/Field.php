@@ -90,4 +90,22 @@ class Field extends ActiveRecord
         $this->mode = self::MODE_USER;
         return $this;
     }
+
+    /**
+     * Return fetched from db instance of field
+     * @param $fieldTemplateReference
+     * @param $fieldReference
+     * @param $programName
+     * @return array|null|ActiveRecord
+     */
+    public static function getInstance($fieldTemplateReference, $fieldReference, $programName)
+    {
+        //TODO: may be better to return empty field object
+        if (is_null($template = FieldTemplate::getInstance($fieldTemplateReference, $programName))) return null;
+
+        return $field = self::find()->where([
+            'common_fields_template_id' => $template->id,
+            'field_reference' => $fieldReference
+        ])->one();
+    }
 }
