@@ -9,17 +9,56 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  *
  * @property integer
  * @property string $field_template_reference
- * @property integer type
- * @property bool is_main
+ * @property integer $type
+ * @property bool $visible
+ * @property bool $editable
+ * @property bool $is_main
  *
  * @author iliich246 <iliich246@gmail.com>
  */
 class FieldTemplate extends AbstractTemplate
 {
     /**
+     * Types of fields
+     *
+     * Type define style of render of field
+     */
+    const TYPE_INPUT = 0;
+    const TYPE_TEXT = 1;
+    const TYPE_REDACTOR = 2;
+
+    /**
      * @inheritdoc
      */
     private static $buffer = [];
+
+    /**
+     * Return array of field types
+     * @return array
+     */
+    public static function getTypes()
+    {
+        static $array = false;
+
+        if ($array) return $array;
+
+        $array = [
+            self::TYPE_INPUT => 'Input type',
+            self::TYPE_TEXT => 'Text area type',
+            self::TYPE_REDACTOR => 'Redactor type',
+        ];
+
+        return $array;
+    }
+
+    /**
+     * Return name of type of concrete field
+     * @return mixed
+     */
+    public function getTypeName()
+    {
+        return self::getTypes()[$this->type];
+    }
 
     /**
      * @inheritdoc

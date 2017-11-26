@@ -18,15 +18,6 @@ use yii\db\ActiveRecord;
 class Field extends ActiveRecord
 {
     /**
-     * Types of fields
-     *
-     * Type define style of render of field
-     */
-    const TYPE_INPUT = 0;
-    const TYPE_TEXT = 1;
-    const TYPE_REDACTOR = 2;
-
-    /**
      * Modes of field
      *
      * In user mode returns translation only in active language. If can not found translation, returns false.

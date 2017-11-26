@@ -37,8 +37,8 @@ abstract class AbstractTemplate extends ActiveRecord
 {
     const EVENT_BEFORE_FETCH = 0x99;
 
-    const SCENARIO_CREATE = 0x00;
-    const SCENARIO_UPDATE = 0x01;
+    //const SCENARIO_CREATE = 0x00;
+    //const SCENARIO_UPDATE = 0x01;
 
     /**
      * @inheritdoc
@@ -53,17 +53,17 @@ abstract class AbstractTemplate extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
-        return [
-            self::SCENARIO_CREATE => [
-                'programName'
-            ],
-            self::SCENARIO_UPDATE => [
-                'programName'
-            ],
-        ];
-    }
+//    public function scenarios()
+//    {
+//        return [
+//            self::SCENARIO_CREATE => [
+//                'programName'
+//            ],
+//            self::SCENARIO_UPDATE => [
+//                'programName'
+//            ],
+//        ];
+//    }
 
     /**
      * @inheritdoc
@@ -71,9 +71,9 @@ abstract class AbstractTemplate extends ActiveRecord
     public function rules()
     {
         return [
-            ['programName', 'required', 'message' => 'Obligatory input field'],
-            ['programName', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
-            ['programName', 'validateProgramName'],
+            ['program_name', 'required', 'message' => 'Obligatory input field'],
+            ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
+            ['program_name', 'validateProgramName'],
 
         ];
     }
@@ -150,9 +150,17 @@ abstract class AbstractTemplate extends ActiveRecord
         throw new CommonException('Can`t reach there 0_0' . __METHOD__);
     }
 
-    public static function create($templateReference, $programName)
+    /**
+     * Return list of templates
+     * @param $templateReference
+     * @return $this
+     * @throws CommonException
+     */
+    public static function getList($templateReference)
     {
-
+        return static::find()->where([
+            static::getTemplateReferenceName() => $templateReference,
+        ])->all();
     }
 
     /**

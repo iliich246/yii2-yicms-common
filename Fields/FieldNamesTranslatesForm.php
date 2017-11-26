@@ -54,7 +54,7 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
      */
     public static function getViewName()
     {
-        return '@yicms-pages/Views/translates/field_name_translate';
+        return '@yicms-common/Views/translates/field_name_translate';
     }
 
     /**

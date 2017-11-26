@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Languages\Language;
+use yii\base\Model;
 
 /**
  * Class DevFieldsGroup
@@ -21,7 +22,7 @@ class DevFieldsGroup extends AbstractGroup
     public $fieldTemplate;
 
     /**
-     * @var FieldNamesTranslatesForm
+     * @var FieldNamesTranslatesForm[]
      */
     public $fieldNameTranslates;
 
@@ -45,18 +46,19 @@ class DevFieldsGroup extends AbstractGroup
         foreach($languages as $key => $language) {
 
             $fieldNameTranslate = new FieldNamesTranslatesForm();
-            $this->fieldNameTranslates = $fieldNameTranslate;
+            $fieldNameTranslate->setLanguage($language);
+            $this->fieldNameTranslates[] = $fieldNameTranslate;
         }
     }
 
     public function validate()
     {
-
+        return ($this->fieldTemplate->validate() && Model::validateMultiple($this->fieldNameTranslates));
     }
 
     public function load($data)
     {
-
+        return ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data));
     }
 
     public function render()
