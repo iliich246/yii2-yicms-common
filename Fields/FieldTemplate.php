@@ -32,11 +32,37 @@ class FieldTemplate extends AbstractTemplate
      */
     private static $buffer = [];
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->visible = true;
         $this->editable = true;
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return array_merge(parent::rules(), [
+            ['type', 'integer'],
+            [['visible', 'editable', 'is_main'], 'boolean'],
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        $prevScenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],['type', 'visible', 'editable', 'is_main']);
+        $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],['type', 'visible', 'editable', 'is_main']);
+
+        return $scenarios;
     }
 
     /**
@@ -58,13 +84,6 @@ class FieldTemplate extends AbstractTemplate
         return $array;
     }
 
-    public function rules()
-    {
-        return array_merge(parent::rules(), [
-            ['type', 'integer'],
-            [['visible', 'editable', 'is_main'], 'boolean'],
-        ]);
-    }
 
     /**
      * Return name of type of concrete field

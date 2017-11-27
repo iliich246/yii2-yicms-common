@@ -66,6 +66,10 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
         $this->fieldTemplate = $fieldTemplate;
     }
 
+    /**
+     * Saves record in data base
+     * @return bool
+     */
     public function save()
     {
         $this->getCurrentTranslateDb()->name = $this->name;
@@ -73,7 +77,7 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
         $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
         $this->getCurrentTranslateDb()->common_fields_template_id = $this->fieldTemplate->id;
 
-        $this->getCurrentTranslateDb()->save();
+        return $this->getCurrentTranslateDb()->save();
     }
 
     /**

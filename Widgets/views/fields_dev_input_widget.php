@@ -12,14 +12,18 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 /** @var $widget FieldsDevInputWidget */
 
+
+/** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
+$bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
+
 ?>
 
 <div class="modal fade" id="<?= FieldsDevInputWidget::getModalWindowName() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
+
         <?php Pjax::begin([
             'options' => [
-                //'data-pjax-container' => 'test-pjax',
-                'id' => 'test-pjax',
+                'id' => FieldsDevInputWidget::getPjaxContainerId(),
             ]
         ]); ?>
         <?php $form = ActiveForm::begin([
@@ -68,6 +72,9 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
+        <pre>
+            <?php print_r($widget->devFieldGroup->fieldTemplate)?>
+        </pre>
         <?php ActiveForm::end(); ?>
         <?php Pjax::end() ?>
     </div>

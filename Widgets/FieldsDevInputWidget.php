@@ -34,6 +34,15 @@ class FieldsDevInputWidget extends Widget
     }
 
     /**
+     * Returns name of pjax container for this widget
+     * @return string
+     */
+    public static function getPjaxContainerId()
+    {
+        return 'fields-pjax-container';
+    }
+
+    /**
      * @inheritdoc
      */
     public function run()

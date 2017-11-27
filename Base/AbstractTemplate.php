@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Base;
 
 use Yii;
 use yii\base\Event;
+use yii\base\Exception;
 use yii\db\ActiveRecord;
 
 /**
@@ -37,8 +38,8 @@ abstract class AbstractTemplate extends ActiveRecord
 {
     const EVENT_BEFORE_FETCH = 0x99;
 
-    //const SCENARIO_CREATE = 0x00;
-    //const SCENARIO_UPDATE = 0x01;
+    const SCENARIO_CREATE = 0x00;
+    const SCENARIO_UPDATE = 0x01;
 
     /**
      * @inheritdoc
@@ -53,17 +54,17 @@ abstract class AbstractTemplate extends ActiveRecord
     /**
      * @inheritdoc
      */
-//    public function scenarios()
-//    {
-//        return [
-//            self::SCENARIO_CREATE => [
-//                'programName'
-//            ],
-//            self::SCENARIO_UPDATE => [
-//                'programName'
-//            ],
-//        ];
-//    }
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'program_name'
+            ],
+            self::SCENARIO_UPDATE => [
+                'program_name'
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -93,25 +94,15 @@ abstract class AbstractTemplate extends ActiveRecord
                 'program_name' => $this->program_name
             ]);
 
+            if ($this->scenario == self::SCENARIO_UPDATE)
+                $query->andWhere(['not in', 'program_name', $this->getOldAttribute('program_name')]);
 
+//            if ($this->id)
+//                $query->andWhere(['not in', 'program_name', $this->program_name]);
 
-            $count = $query->count();
+            $count = $query->all();
 
             if ($count)$this->addError($attribute, 'Field with same name already existed');
-
-//            $fieldQuery = PagesFieldsDb::find()->where([
-//                'page_id' => $this->_pagesDb->id,
-//                'program_name' => $this->programName,
-//            ]);
-//
-//            if ($this->scenario == self::SCENARIO_UPDATE)
-//                $fieldQuery->andWhere(['not in', 'program_name', $this->_fieldDb->program_name]);
-//
-//            $fields = $fieldQuery->all();
-//
-//            if ($fields)$this->addError($attribute, 'Field with same name already exist for current page ('.
-//                $this->_pagesDb->program_name . ')'
-//            );
         }
     }
 

@@ -2,9 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use yii\base\Model;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Languages\Language;
-use yii\base\Model;
+//use Iliich246\YicmsCommon\Fields\FieldNamesTranslatesForm
 
 /**
  * Class DevFieldsGroup
@@ -39,8 +40,10 @@ class DevFieldsGroup extends AbstractGroup
         if (!$fieldTemplateReference) {
             $this->fieldTemplate = new FieldTemplate();
             $this->fieldTemplate->field_template_reference = $this->referenceAble->getTemplateFieldReference();
+            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
         } else {
             $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateReference);
+            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
         }
 
         $languages = Language::getInstance()->usedLanguages();
@@ -70,10 +73,46 @@ class DevFieldsGroup extends AbstractGroup
 
     public function save()
     {
-        $this->fieldTemplate->save(false);
+        $needSaveFieldTemplate = false;
 
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('program_name') != $this->fieldTemplate->program_name)
+            $needSaveFieldTemplate = true;
+
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('type') != $this->fieldTemplate->type)
+            $needSaveFieldTemplate = true;
+
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('visible') != $this->fieldTemplate->visible)
+            $needSaveFieldTemplate = true;
+
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('editable') != $this->fieldTemplate->editable)
+            $needSaveFieldTemplate = true;
+
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('is_main') != $this->fieldTemplate->is_main)
+            $needSaveFieldTemplate = true;
+
+        if ($needSaveFieldTemplate)
+            $this->fieldTemplate->save(false);
+
+        /** @var FieldNamesTranslatesForm $fieldNameTranslate */
         foreach($this->fieldNameTranslates as $fieldNameTranslate) {
-            $fieldNameTranslate->save();
+
+            $needSaveFieldTemplateName = false;
+
+            if (!$needSaveFieldTemplateName &&
+                $fieldNameTranslate->name != $fieldNameTranslate->getCurrentTranslateDb()->name)
+                $needSaveFieldTemplateName = true;
+
+            if (!$needSaveFieldTemplateName &&
+                $fieldNameTranslate->description != $fieldNameTranslate->getCurrentTranslateDb()->description)
+                $needSaveFieldTemplateName = true;
+
+            if ($needSaveFieldTemplateName)
+                $fieldNameTranslate->save();
         }
     }
 
