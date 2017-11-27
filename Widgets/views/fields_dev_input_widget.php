@@ -14,11 +14,16 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 
 ?>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="<?= FieldsDevInputWidget::getModalWindowName() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <?php Pjax::begin(); ?>
+        <?php Pjax::begin([
+            'options' => [
+                //'data-pjax-container' => 'test-pjax',
+                'id' => 'test-pjax',
+            ]
+        ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => 'create-update-page-form',
+            'id' => FieldsDevInputWidget::getFormName(),
             'options' => [
                 'data-pjax' => true,
             ],
@@ -62,8 +67,8 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
-            <?php ActiveForm::end(); ?>
-            <?php Pjax::end() ?>
         </div>
+        <?php ActiveForm::end(); ?>
+        <?php Pjax::end() ?>
     </div>
 </div>

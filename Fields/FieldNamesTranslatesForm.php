@@ -58,6 +58,25 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
     }
 
     /**
+     * Sets FieldTemplate associated with this object
+     * @param FieldTemplate $fieldTemplate
+     */
+    public function setFieldTemplate(FieldTemplate $fieldTemplate)
+    {
+        $this->fieldTemplate = $fieldTemplate;
+    }
+
+    public function save()
+    {
+        $this->getCurrentTranslateDb()->name = $this->name;
+        $this->getCurrentTranslateDb()->description = $this->description;
+        $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
+        $this->getCurrentTranslateDb()->common_fields_template_id = $this->fieldTemplate->id;
+
+        $this->getCurrentTranslateDb()->save();
+    }
+
+    /**
      * @inheritdoc
      */
     protected function isCorrectConfigured()

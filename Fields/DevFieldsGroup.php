@@ -34,10 +34,14 @@ class DevFieldsGroup extends AbstractGroup
         $this->referenceAble = $referenceAble;
     }
 
-    public function initialize()
+    public function initialize($fieldTemplateReference = null)
     {
-        $this->fieldTemplate = new FieldTemplate();
-        $this->fieldTemplate->field_template_reference = $this->referenceAble->getTemplateFieldReference();
+        if (!$fieldTemplateReference) {
+            $this->fieldTemplate = new FieldTemplate();
+            $this->fieldTemplate->field_template_reference = $this->referenceAble->getTemplateFieldReference();
+        } else {
+            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateReference);
+        }
 
         $languages = Language::getInstance()->usedLanguages();
 
@@ -47,7 +51,10 @@ class DevFieldsGroup extends AbstractGroup
 
             $fieldNameTranslate = new FieldNamesTranslatesForm();
             $fieldNameTranslate->setLanguage($language);
-            $this->fieldNameTranslates[] = $fieldNameTranslate;
+            $fieldNameTranslate->setFieldTemplate($this->fieldTemplate);
+            $fieldNameTranslate->loadFromDb();
+
+            $this->fieldNameTranslates[$key] = $fieldNameTranslate;
         }
     }
 
@@ -59,6 +66,15 @@ class DevFieldsGroup extends AbstractGroup
     public function load($data)
     {
         return ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data));
+    }
+
+    public function save()
+    {
+        $this->fieldTemplate->save(false);
+
+        foreach($this->fieldNameTranslates as $fieldNameTranslate) {
+            $fieldNameTranslate->save();
+        }
     }
 
     public function render()

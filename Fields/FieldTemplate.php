@@ -32,6 +32,13 @@ class FieldTemplate extends AbstractTemplate
      */
     private static $buffer = [];
 
+    public function init()
+    {
+        $this->visible = true;
+        $this->editable = true;
+        parent::init();
+    }
+
     /**
      * Return array of field types
      * @return array
@@ -51,6 +58,14 @@ class FieldTemplate extends AbstractTemplate
         return $array;
     }
 
+    public function rules()
+    {
+        return array_merge(parent::rules(), [
+            ['type', 'integer'],
+            [['visible', 'editable', 'is_main'], 'boolean'],
+        ]);
+    }
+
     /**
      * Return name of type of concrete field
      * @return mixed
@@ -63,9 +78,9 @@ class FieldTemplate extends AbstractTemplate
     /**
      * @inheritdoc
      */
-    public static function getTemplateReference()
+    public static function generateTemplateReference()
     {
-        return parent::getTemplateReference();
+        return parent::generateTemplateReference();
     }
 
     /**

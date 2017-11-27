@@ -74,7 +74,6 @@ abstract class AbstractTemplate extends ActiveRecord
             ['program_name', 'required', 'message' => 'Obligatory input field'],
             ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
             ['program_name', 'validateProgramName'],
-
         ];
     }
 
@@ -88,6 +87,17 @@ abstract class AbstractTemplate extends ActiveRecord
     public function validateProgramName($attribute, $params)
     {
         if (!$this->hasErrors()) {
+
+            $query = static::find()->where([
+                static::getTemplateReferenceName() => $this->getTemplateReference(),
+                'program_name' => $this->program_name
+            ]);
+
+
+
+            $count = $query->count();
+
+            if ($count)$this->addError($attribute, 'Field with same name already existed');
 
 //            $fieldQuery = PagesFieldsDb::find()->where([
 //                'page_id' => $this->_pagesDb->id,
@@ -129,7 +139,7 @@ abstract class AbstractTemplate extends ActiveRecord
      * @return string
      * @throws CommonException
      */
-    protected static function getTemplateReference()
+    protected static function generateTemplateReference()
     {
         $value = strrev(uniqid());
 
@@ -236,5 +246,15 @@ abstract class AbstractTemplate extends ActiveRecord
     protected static function getTemplateReferenceName()
     {
         return '';
+    }
+
+    /**
+     * Return template reference associated with this object
+     * @return string
+     */
+    public function getTemplateReference()
+    {
+        $attribute = static::getTemplateReferenceName();
+        return $this->$attribute;
     }
 }
