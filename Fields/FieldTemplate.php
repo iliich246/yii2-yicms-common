@@ -84,7 +84,6 @@ class FieldTemplate extends AbstractTemplate
         return $array;
     }
 
-
     /**
      * Return name of type of concrete field
      * @return mixed

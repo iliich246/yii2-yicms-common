@@ -9,28 +9,25 @@ use yii\base\Component;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class AbstractGroup extends Component
+abstract class AbstractGroup extends Component
 {
-    /** @var   */
+    const SCENARIO_DEFAULT = 0x00;
+    const SCENARIO_CREATE = 0x01;
+    const SCENARIO_UPDATE = 0x02;
+
+    public $scenario = self::SCENARIO_DEFAULT;
+
+    /** @var */
     protected $referenceAble;
 
-    public function initialize()
-    {
+    abstract public function initialize();
 
-    }
 
-    public function load($data)
-    {
+    abstract public function load($data);
 
-    }
 
-    public function validate()
-    {
+    abstract public function validate();
 
-    }
+    abstract public function render();
 
-    public function render()
-    {
-
-    }
 }

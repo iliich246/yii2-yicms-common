@@ -10,36 +10,45 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
+
 /** @var $widget FieldsDevInputWidget */
-
-
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
 ?>
 
-<div class="modal fade" id="<?= FieldsDevInputWidget::getModalWindowName() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-
+<div class="modal fade"
+     id="<?= FieldsDevInputWidget::getModalWindowName() ?>"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
                 'id' => FieldsDevInputWidget::getPjaxContainerId(),
-            ]
+            ],
         ]); ?>
         <?php $form = ActiveForm::begin([
             'id' => FieldsDevInputWidget::getFormName(),
             'options' => [
                 'data-pjax' => true,
+                'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);
         ?>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Название модали</h4>
+                <h3 class="modal-title" id="myModalLabel">
+                    <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_CREATE): ?>
+                        Create new field
+                    <?php else: ?>
+                        Update existed field (<?= $widget->devFieldGroup->fieldTemplate->program_name ?>)
+                    <?php endif; ?>
+                </h3>
             </div>
             <div class="modal-body">
-
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
                         <?= $form->field($widget->devFieldGroup->fieldTemplate, 'program_name') ?>
@@ -72,9 +81,6 @@ $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
-        <pre>
-            <?php print_r($widget->devFieldGroup->fieldTemplate)?>
-        </pre>
         <?php ActiveForm::end(); ?>
         <?php Pjax::end() ?>
     </div>

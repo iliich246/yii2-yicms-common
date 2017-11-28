@@ -41,9 +41,12 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate = new FieldTemplate();
             $this->fieldTemplate->field_template_reference = $this->referenceAble->getTemplateFieldReference();
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
+            $this->scenario = self::SCENARIO_CREATE;
+
         } else {
             $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateReference);
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
+            $this->scenario = self::SCENARIO_UPDATE;
         }
 
         $languages = Language::getInstance()->usedLanguages();

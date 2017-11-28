@@ -14,6 +14,8 @@ class FieldsDevInputWidget extends Widget
 {
     /** @var DevFieldsGroup  */
     public $devFieldGroup;
+    /** @var bool true means that widget initialized after success data save in devFieldGroup */
+    public $dataSaved = false;
 
     /**
      * Returns name of form name of widget
