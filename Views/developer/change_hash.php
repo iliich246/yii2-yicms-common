@@ -8,6 +8,10 @@ use Iliich246\YicmsCommon\Base\CommonHashForm;
 /* @var $this \yii\web\View */
 /* @var $model CommonHashForm */
 
+    if ($model->scenario == CommonHashForm::SCENARIO_CHANGE_DEV)
+        $this->title = 'Change developer hash';
+    else
+        $this->title = 'Change admin hash';
 ?>
 
 <div class="col-sm-9 content">

@@ -11,6 +11,8 @@ use yii\widgets\Pjax;
 /* @var $languages LanguagesDb[] */
 /* @var $defaultLanguageModel \Iliich246\YicmsCommon\Languages\DefaultLanguageForm */
 
+$this->title = 'Languages list';
+
 $js = <<<EOL
 
 ;(function(){
@@ -96,7 +98,7 @@ $this->registerJs($js);
         <?php $w1 = Pjax::begin([
             'timeout' => 100,
         ]); ?>
-            <h1><?= $w1->id ?></h1>
+            <h3>List of languages</h3>
         <?php Pjax::end() ?>
         <div class="col-xs-12">
             <div class="row control-buttons">

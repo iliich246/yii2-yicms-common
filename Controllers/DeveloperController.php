@@ -84,7 +84,7 @@ class DeveloperController extends Controller
             //TODO: add bootbox error
         }
 
-        return $this->render('/developer/create-update-language', [
+        return $this->render('/developer/create_update_language', [
             'model' => $model,
         ]);
     }

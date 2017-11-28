@@ -85,6 +85,27 @@ class FieldTemplate extends AbstractTemplate
     }
 
     /**
+     * @inheritdoc
+     */
+    public function save($runValidation = true, $attributes = null)
+    {
+        if ($this->is_main) {
+            /** @var self $other */
+            foreach(self::find()->where([
+                self::getTemplateReferenceName() => self::getTemplateReference(),
+            ])->all() as $other)
+            {
+                if (!$other->is_main) continue;
+
+                $other->is_main = false;
+                $other->save(false);
+            }
+        }
+
+        parent::save($runValidation, $attributes);
+    }
+
+    /**
      * Return name of type of concrete field
      * @return mixed
      */

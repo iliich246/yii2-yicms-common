@@ -22,9 +22,9 @@ use yii\helpers\Url;
             href="<?= Url::toRoute('/common/dev/create-language') ?>">
             Create/update language
         </a>
-        <a <?php if ($widget->route == 'common/dev/change-root-hash'): ?> class="active" <?php endif; ?>
-            href="<?= Url::toRoute('/common/dev/change-root-hash') ?>">
-            Change root hash
+        <a <?php if ($widget->route == 'common/dev/change-dev-hash'): ?> class="active" <?php endif; ?>
+            href="<?= Url::toRoute('/common/dev/change-dev-hash') ?>">
+            Change dev hash
         </a>
         <a <?php if ($widget->route == 'common/dev/change-admin-hash'): ?> class="active" <?php endif; ?>
             href="<?= Url::toRoute('/common/dev/change-admin-hash') ?>">

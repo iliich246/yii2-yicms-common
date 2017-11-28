@@ -8,6 +8,11 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /* @var $this \yii\web\View */
 /* @var $model Iliich246\YicmsCommon\Languages\LanguagesDb */
+    if ($model->scenario == LanguagesDb::SCENARIO_CREATE)
+        $this->title = 'Create new language';
+    else
+        $this->title = 'Update language';
+
 
 ?>
 
