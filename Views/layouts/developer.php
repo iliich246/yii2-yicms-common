@@ -58,7 +58,7 @@ DeveloperAsset::register($this);
         </div>
     </div>
 </main>
-
+<?= \Iliich246\YicmsCommon\Widgets\ReloadAlertWidget::widget() ?>
 <?php $this->endBody() ?>
 <script type="text/template" id="menu-template">
     <?= \Iliich246\YicmsCommon\Widgets\TopDevMenuWidget::widget() ?>

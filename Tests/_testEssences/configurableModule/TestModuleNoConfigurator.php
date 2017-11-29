@@ -39,7 +39,7 @@ class TestModuleNoConfigurator extends AbstractConfigurableModule
     /**
      * @inherited
      */
-    public function getModuleName()
+    public static function getModuleName()
     {
         return 'No_configurator';
     }

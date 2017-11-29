@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 /**
  * Lodash asset bundle
  *
- * @package Iliich246\YicmsCommon\Assets
+ * @author iliich246 <iliich246@gmail.com>
  */
 class LodashAsset extends AssetBundle
 {

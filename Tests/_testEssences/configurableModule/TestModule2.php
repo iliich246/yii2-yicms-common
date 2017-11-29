@@ -40,7 +40,7 @@ class TestModule2 extends AbstractConfigurableModule
     /**
      * @inherited
      */
-    public function getModuleName()
+    public static function getModuleName()
     {
         return 'Test2';
     }

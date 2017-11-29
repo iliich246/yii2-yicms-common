@@ -18,7 +18,7 @@ class CommonHashForm extends Model
     const SCENARIO_CHANGE_DEV = 0;
     const SCENARIO_CHANGE_ADMIN = 1;
 
-    const DEV_HASH = '$2y$13$5VxFYkeg9yB1d1EP1Mc1QucJmOvnIVwKRtK4T1Fvg948MLFiCBtAq';
+    const DEV_HASH = '$2y$13$Vdo6Rp..By4JXPh8NJbhOuOLLba./Ad9Y7buPNY6dWjFQupki66l6';
     const ADMIN_HASH = '$2y$13$ddZgXX5ZAxJf2HwJhaY9.eZ3VDnLyNQxXC075GFWF0PRorevfQBoi';
 
     /** @var string new hash */
@@ -34,14 +34,14 @@ class CommonHashForm extends Model
         if ($this->scenario == self::SCENARIO_CHANGE_DEV) {
             return [
                 'hash' => 'Developer Hash',
-                'confirmHash' => 'Confirm Root Hash'
+                'confirmHash' => 'Confirm developer hash'
             ];
         }
 
         if ($this->scenario == self::SCENARIO_CHANGE_ADMIN) {
             return [
                 'hash' => 'Admin Hash',
-                'confirmHash' => 'Confirm admin Hash'
+                'confirmHash' => 'Confirm admin hash'
             ];
         }
 

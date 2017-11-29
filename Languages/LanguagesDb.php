@@ -126,7 +126,4 @@ class LanguagesDb extends ActiveRecord
         if ($languageFacade->getCurrentLanguage()->id === $this->id) return true;
         return false;
     }
-
-    public function create()
-    {}
 }

@@ -10,31 +10,35 @@ use yii\widgets\Pjax;
 /* @var $this \yii\web\View */
 /* @var $languages LanguagesDb[] */
 /* @var $defaultLanguageModel \Iliich246\YicmsCommon\Languages\DefaultLanguageForm */
-
+/* @var $success bool */
 $this->title = 'Languages list';
 
 $js = <<<EOL
-
 ;(function(){
-    $(document).on('pjax:complete', function(xhr, textStatus, error, options) {
-        var errorId = '#yicms-pjax-error-' + xhr.target.id;
-        var errorValue = $(errorId).val();
-        bootbox.alert("This is the default alert! val = " + errorValue);
-    })
-    $(document).on('pjax:error', function(xhr, textStatus, error, options) {
-      //console.log($('#pj').val());
-      bootbox.alert("This is the default alert! val = " + $('#pj').val());
-    })
+    var pjaxContainer = $('#pjax-language-config-container');
 
-    $('#bbb').on('click', function() {
-        bootbox.dialog({
-            message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Loading...</div>',
-            title: '<h4>Test title</h4>',
-            className: 'error-modal',
+    $(pjaxContainer).on('pjax:success', function() {
+
+        $(".alert").hide().slideDown(500).fadeTo(500, 1);
+
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 3000);
+    });
+
+    $(pjaxContainer).on('pjax:error', function(xhr, textStatus) {
+        bootbox.alert({
+            size: 'large',
+            title: "There are some error on ajax request!",
+            message: textStatus.responseText,
+            className: 'bootbox-error'
         });
+
+        console.log(textStatus);
     });
 })();
-
 EOL;
 
 $this->registerJs($js);
@@ -50,21 +54,28 @@ $this->registerJs($js);
     <div class="row content-block form-block">
         <div class="col-xs-12">
             <div class="content-block-title">
-                <h3 id="bbb">Language settings</h3>
+                <h3>Language settings</h3>
             </div>
-            <?php $pjax1 = Pjax::begin(); ?>
-            <?php if (isset($success)): ?>
-                <h3>success saved</h3>
-            <?php endif; ?>
+            <?php Pjax::begin([
+                'options' => [
+                    'id' => 'pjax-language-config-container',
+                ]
+            ]); ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'set-language-config-form',
                 'options' => [
                     'data-pjax' => true,
                 ],
             ]); ?>
-            <?= Html::hiddenInput('pjax-error', $pjaxError, [
-                'id' => 'yicms-pjax-error-' . $pjax1->id ,
-                'disabled' => true]) ?>
+
+            <?php if (isset($success) && $success): ?>
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                    <strong>Success!</strong> Language configuration updated.
+                </div>
+            <?php endif; ?>
+
             <div class="row">
                 <div class="col-xs-12">
                     <?= $form->field($defaultLanguageModel, 'defaultLanguage')->dropDownList(
@@ -95,11 +106,7 @@ $this->registerJs($js);
     </div>
 
     <div class="row content-block">
-        <?php $w1 = Pjax::begin([
-            'timeout' => 100,
-        ]); ?>
-            <h3>List of languages</h3>
-        <?php Pjax::end() ?>
+        <h3>List of languages</h3>
         <div class="col-xs-12">
             <div class="row control-buttons">
                 <div class="col-xs-12">

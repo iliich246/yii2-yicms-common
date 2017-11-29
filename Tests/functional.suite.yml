@@ -9,3 +9,5 @@ modules:
     enabled:
         # add framework module here
         - \Helper\Functional
+        - Filesystem
+        - Yii2

@@ -3,15 +3,17 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
-use yii\helpers\Url;
 use Iliich246\YicmsCommon\Base\DevFilter;
 use Iliich246\YicmsCommon\Base\CommonUser;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Languages\DefaultLanguageForm;
+use Iliich246\YicmsCommon\Widgets\ReloadAlertWidget;
 
 /**
  * Class DeveloperController
@@ -43,6 +45,7 @@ class DeveloperController extends Controller
     /**
      * Return list of languages and some language configs
      * @return string
+     * @throws CommonException
      */
     public function actionLanguagesList()
     {
@@ -50,13 +53,12 @@ class DeveloperController extends Controller
 
         if ($defaultLanguageForm->load(Yii::$app->request->post()) && $defaultLanguageForm->validate()) {
             if ($defaultLanguageForm->save())
-            {
                 return $this->render('/developer/languages_list', [
-                    'pjaxError' => 'Was pjax error',
                     'defaultLanguageModel' => $defaultLanguageForm,
                     'success' => true,
                 ]);
-            }
+            else
+                throw new CommonException('Can`t save data in database');
         }
 
         $languages = LanguagesDb::find()->all();
@@ -70,18 +72,22 @@ class DeveloperController extends Controller
 
     /**
      * Creates new system language
-     * @return string
+     * @return string|\yii\web\Response
+     * @throws CommonException
      */
     public function actionCreateLanguage()
     {
         $model = new LanguagesDb();
         $model->scenario = LanguagesDb::SCENARIO_CREATE;
 
-        if ($model->load(Yii::$app->request->post()) && !$model->validate()) {
-            if ($model->save())
-                return $this->redirect(Url::toRoute(['languages-list']));
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->save()) {
+                ReloadAlertWidget::setSuccessModal('Language created',
+                    'Language successfully created');
 
-            //TODO: add bootbox error
+                return $this->redirect(Url::toRoute(['languages-list'])); }
+            else
+                throw new CommonException('Can`t save data in database');
         }
 
         return $this->render('/developer/create_update_language', [
@@ -92,8 +98,9 @@ class DeveloperController extends Controller
     /**
      * Updates system language
      * @param $id
-     * @return string|\yii\web\Response
+     * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
     public function actionUpdateLanguage($id)
     {
@@ -106,10 +113,16 @@ class DeveloperController extends Controller
         $model->scenario = LanguagesDb::SCENARIO_UPDATE;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if (!$model->save()) {
-                //TODO: add bootbox error
-            }
+            if ($model->save()) {
+                return $this->render('/developer/create_update_language', [
+                    'model' => $model,
+                    'success' => true,
+                ]);
+            } else
+                throw new CommonException('Can`t save data in database');
         }
+
+        Url::remember(Url::toRoute(['update-language', 'id' => $id]), 'update-language');
 
         return $this->render('/developer/create_update_language', [
             'model' => $model,
@@ -117,15 +130,31 @@ class DeveloperController extends Controller
     }
 
     /**
-     * Delete language
      * @param $id
-     * @return string
+     * @return \yii\web\Response
+     * @throws CommonException
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function actionDeleteLanguage($id)
     {
-//        return $this->render('languagesList', [
-//
-//        ]);
+        if (!Yii::$app->request->isPjax)
+            return $this->redirect(Url::previous('update-language'));
+
+        /** @var LanguagesDb $language */
+        $language = LanguagesDb::findOne($id);
+
+        if (!$language)
+            return $this->redirect(Url::previous('update-language'));
+
+        if ($language->delete()) {
+            ReloadAlertWidget::setSuccessModal('Language deleted',
+                'Language successfully deleted');
+
+            return $this->redirect(Url::toRoute('languages-list'));
+        }
+
+        throw new CommonException();
     }
 
     /**
@@ -137,6 +166,7 @@ class DeveloperController extends Controller
     public function actionLoginAsDev()
     {
         $commonUser = new CommonUser();
+
         if ($commonUser->loginAsDev())
             return $this->redirect(Url::toRoute('languages-list'));
 
@@ -145,7 +175,8 @@ class DeveloperController extends Controller
 
     /**
      * Action for change dev hash
-     * @return string
+     * @return string|\yii\web\Response
+     * @throws CommonException
      */
     public function actionChangeDevHash()
     {
@@ -153,8 +184,13 @@ class DeveloperController extends Controller
         $model->scenario = CommonHashForm::SCENARIO_CHANGE_DEV;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->changeDev())
+            if ($model->changeDev()) {
+                ReloadAlertWidget::setSuccessModal('Dev hash changed',
+                    'Dev hash successfully changes');
+
                 return $this->redirect(Url::toRoute('languages-list'));
+            }
+            throw new CommonException('Can`t change dev hash');
         }
 
         return $this->render('/developer/change_hash', [
@@ -165,6 +201,7 @@ class DeveloperController extends Controller
     /**
      * Action for change admin hash
      * @return string|\yii\web\Response
+     * @throws CommonException
      */
     public function actionChangeAdminHash()
     {
@@ -172,8 +209,13 @@ class DeveloperController extends Controller
         $model->scenario = CommonHashForm::SCENARIO_CHANGE_ADMIN;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->changeAdmin())
+            if ($model->changeAdmin()) {
+                ReloadAlertWidget::setSuccessModal('Admin hash changed',
+                    'Admin hash successfully changes');
+
                 return $this->redirect(Url::toRoute('languages-list'));
+            }
+            throw new CommonException('Can`t change admin hash');
         }
 
         return $this->render('/developer/change_hash', [

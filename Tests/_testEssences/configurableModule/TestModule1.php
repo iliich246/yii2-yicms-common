@@ -13,7 +13,6 @@ use Iliich246\YicmsCommon\Base\AbstractConfigurableModule;
  */
 class TestModule1 extends AbstractConfigurableModule
 {
-
     public $field1 = 'not_configured';
 
     public $field2 = 'not_configured';
@@ -45,7 +44,7 @@ class TestModule1 extends AbstractConfigurableModule
     /**
      * @inherited
      */
-    public function getModuleName()
+    public static function getModuleName()
     {
         return 'Test1';
     }
