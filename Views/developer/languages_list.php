@@ -47,10 +47,8 @@ $this->registerJs($js);
 <div class="col-sm-9 content">
     <div class="row content-block content-header">
         <h1>List of languages</h1>
-
         <h2>List of all languages, existing in system</h2>
     </div>
-
     <div class="row content-block form-block">
         <div class="col-xs-12">
             <div class="content-block-title">

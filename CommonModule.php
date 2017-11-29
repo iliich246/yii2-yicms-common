@@ -7,6 +7,7 @@ use yii\base\BootstrapInterface;
 use Iliich246\YicmsCommon\Base\YicmsModuleInterface;
 use Iliich246\YicmsCommon\Base\AbstractConfigurableModule;
 use Iliich246\YicmsCommon\Languages\Language;
+use yii\base\Exception;
 
 /**
  * Class CommonModule
@@ -32,6 +33,12 @@ class CommonModule extends AbstractConfigurableModule implements
     public $languageMethod = Language::COOKIE_TYPE;
 
     /** @inheritdoc */
+    public $configurable = [
+        'defaultLanguage',
+        'languageMethod',
+    ];
+
+    /** @inheritdoc */
     public $controllerMap = [
         'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController'
     ];
@@ -42,6 +49,9 @@ class CommonModule extends AbstractConfigurableModule implements
     public function bootstrap($app)
     {
         //Yii::setAlias('@yicms-common', '@vendor/iliich246/yii2-yicms/common');
+
+        Yii::$app->sourceLanguage = $this->defaultLanguage;
+        Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
     }
 
     /**

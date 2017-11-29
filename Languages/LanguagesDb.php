@@ -71,11 +71,11 @@ class LanguagesDb extends ActiveRecord
                     ['name'], 'unique', 'skipOnError' => true, 'skipOnEmpty' => true,
                     'targetClass' => LanguagesDb::className(),
                     'targetAttribute' => ['name'],
-                    'message' => 'This value has already isset in languages table',
+                    'message' => 'This value has already exist in languages table',
                     'filter' => function($query) {
                         /** @var $query ActiveQuery */
                         if ($this->scenario == self::SCENARIO_UPDATE)
-                            $query->andWhere(['not in', 'name', $this->name]);
+                            $query->andWhere(['not in', 'name', $this->getOldAttribute('name')]);
                         return $query;
                     }
                 ],
@@ -83,11 +83,11 @@ class LanguagesDb extends ActiveRecord
                     ['code'], 'unique', 'skipOnError' => true, 'skipOnEmpty' => true,
                     'targetClass' => LanguagesDb::className(),
                     'targetAttribute' => ['code'],
-                    'message' => 'This value has already been taken in languages table',
+                    'message' => 'This value has already exist in languages table',
                     'filter' => function($query) {
                         /** @var $query ActiveQuery */
                         if ($this->scenario == self::SCENARIO_UPDATE)
-                            $query->andWhere(['not in', 'code', $this->code]);
+                            $query->andWhere(['not in', 'code', $this->getOldAttribute('code')]);
                         return $query;
                     }
                 ],
@@ -108,7 +108,7 @@ class LanguagesDb extends ActiveRecord
 
             $config = CommonConfigDb::getInstance();
 
-            if ($config->defaultLanguage == $this->code)
+            if ($config->defaultLanguage == $this->code && $this->used == 0)
                 $this->addError($attribute, 'It is forbidden to deactivate default language. You can change default
                 language and deactivate this language.');
         }

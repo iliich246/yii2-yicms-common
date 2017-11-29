@@ -21,4 +21,7 @@ modules:
             dsn: 'mysql:host=localhost;dbname=yicms_test'
             user: 'root'
             password: ''
-            dump: tests/_data/dump.sql
+            populate: true # run populator before all test
+            #cleanup: true # run populator before each test
+            populator: 'mysql -u $user $dbname < tests/_data/yicms_test.sql'
+            #dump: tests/_data/yicms_test.sql

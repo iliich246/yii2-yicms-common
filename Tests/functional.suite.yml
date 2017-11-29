@@ -11,3 +11,4 @@ modules:
         - \Helper\Functional
         - Filesystem
         - Yii2
+        - Db
