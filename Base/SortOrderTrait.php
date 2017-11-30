@@ -1,6 +1,7 @@
 <?php
 
 namespace Iliich246\YicmsCommon\Base;
+
 use yii\db\ActiveRecord;
 
 /**
@@ -79,7 +80,10 @@ trait SortOrderTrait
         $orderAble->setOrderValue($minOrderNode->getOrderValue());
         $minOrderNode->setOrderValue($tempOrderValue);
 
-        if ($orderAble->save(false) && $minOrderNode->save(false)) return true;
+        $minOrderNode->configToChangeOfOrder();
+        $orderAble->configToChangeOfOrder();
+
+        if ($orderAble->save(false) & $minOrderNode->save(false)) return true;
 
         return false;
     }
@@ -90,6 +94,7 @@ trait SortOrderTrait
      */
     public function upOrder()
     {
+        //throw new Exception(print_r(1,true));
         if (!$this->canUpOrder()) return false;
 
         $orderAble = $this->getOrderAble();
@@ -114,7 +119,10 @@ trait SortOrderTrait
         $orderAble->setOrderValue($maxOrderNode->getOrderValue());
         $maxOrderNode->setOrderValue($tempOrderValue);
 
-        if ($orderAble->save(false) && $maxOrderNode->save(false)) return true;
+        $maxOrderNode->configToChangeOfOrder();
+        $orderAble->configToChangeOfOrder();
+
+        if ($orderAble->save(false) & $maxOrderNode->save(false)) return true;
 
         return false;
     }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Iliich246\YicmsCommon\Base;
+
 use yii\db\ActiveQuery;
 
 /**
@@ -37,4 +38,10 @@ interface SortOrderInterface
      * @return mixed
      */
     public function setOrderValue($value);
+
+    /**
+     * This method configs object to mode compatible with change of order
+     * @return void
+     */
+    public function configToChangeOfOrder();
 }

@@ -5,6 +5,7 @@ namespace Iliich246\YicmsCommon\Fields;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use yii\base\Exception;
 
 /**
  * Class FieldTemplate
@@ -22,9 +23,9 @@ use Iliich246\YicmsCommon\Base\SortOrderTrait;
 class FieldTemplate extends AbstractTemplate implements SortOrderInterface
 {
     use SortOrderTrait;
+
     /**
      * Types of fields
-     *
      * Type define style of render of field
      */
     const TYPE_INPUT = 0;
@@ -106,6 +107,11 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
             }
         }
 
+        if ($this->scenario == self::SCENARIO_CREATE) {
+            throw new Exception(print_r($this, true));
+            $this->field_order = $this->maxOrder();
+        }
+
         parent::save($runValidation, $attributes);
     }
 
@@ -166,6 +172,14 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     public function setOrderValue($value)
     {
         $this->field_order = $value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function configToChangeOfOrder()
+    {
+        $this->scenario = self::SCENARIO_UPDATE;
     }
 
     /**

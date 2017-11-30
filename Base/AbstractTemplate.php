@@ -15,7 +15,7 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id
  * @property string $program_name
- * @property $buffer variable that must be declared as static property in child classes;
+ * $buffer variable that must be declared as static property in child classes;
  * It`s used for buffering templates and reduce database accesses
  * self::$buffer = [
  *     'templateReference1' => [

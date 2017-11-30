@@ -5,7 +5,6 @@ namespace Iliich246\YicmsCommon\Fields;
 use yii\base\Model;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Languages\Language;
-//use Iliich246\YicmsCommon\Fields\FieldNamesTranslatesForm
 
 /**
  * Class DevFieldsGroup
@@ -48,6 +47,8 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
             $this->scenario = self::SCENARIO_UPDATE;
         }
+
+        //throw new Exception(print_r($this->fieldTemplate, true));
 
         $languages = Language::getInstance()->usedLanguages();
 
@@ -101,6 +102,7 @@ class DevFieldsGroup extends AbstractGroup
         if ($needSaveFieldTemplate)
             $this->fieldTemplate->save(false);
 
+
         /** @var FieldNamesTranslatesForm $fieldNameTranslate */
         foreach($this->fieldNameTranslates as $fieldNameTranslate) {
 
@@ -117,6 +119,9 @@ class DevFieldsGroup extends AbstractGroup
             if ($needSaveFieldTemplateName)
                 $fieldNameTranslate->save();
         }
+
+        //TODO: makes error handling
+        return true;
     }
 
     public function render()
