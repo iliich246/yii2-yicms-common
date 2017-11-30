@@ -5,6 +5,7 @@ namespace Iliich246\YicmsCommon\Base;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -14,7 +15,7 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id
  * @property string $program_name
- * @property array $buffer variable that must be declared as static property in child classes;
+ * @property $buffer variable that must be declared as static property in child classes;
  * It`s used for buffering templates and reduce database accesses
  * self::$buffer = [
  *     'templateReference1' => [
@@ -36,10 +37,24 @@ use yii\db\ActiveRecord;
  */
 abstract class AbstractTemplate extends ActiveRecord
 {
+    private static $buffer = null;
+
     const EVENT_BEFORE_FETCH = 0x99;
 
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        //TODO: delete this method in production
+        if (!isset(static::$buffer))
+            throw new CommonException('public static variable $buffer must be declared in child class');
+
+        parent::init();
+    }
 
     /**
      * @inheritdoc
@@ -97,9 +112,6 @@ abstract class AbstractTemplate extends ActiveRecord
             if ($this->scenario == self::SCENARIO_UPDATE)
                 $query->andWhere(['not in', 'program_name', $this->getOldAttribute('program_name')]);
 
-//            if ($this->id)
-//                $query->andWhere(['not in', 'program_name', $this->program_name]);
-
             $count = $query->all();
 
             if ($count)$this->addError($attribute, 'Field with same name already existed');
@@ -154,33 +166,14 @@ abstract class AbstractTemplate extends ActiveRecord
     /**
      * Return list of templates
      * @param $templateReference
-     * @return $this
+     * @return ActiveQuery
      * @throws CommonException
      */
-    public static function getList($templateReference)
+    public static function getListQuery($templateReference)
     {
         return static::find()->where([
             static::getTemplateReferenceName() => $templateReference,
-        ])->all();
-    }
-
-    /**
-     * This method must be overridden in child and return him static buffer
-     * (abstract static methods violates the PHP strict standards)
-     * @return array
-     */
-    protected static function getBuffer()
-    {
-        return [];
-    }
-
-    /**
-     * This method must be overridden in child and return him static buffer
-     * @param $buffer
-     */
-    protected static function setBuffer($buffer)
-    {
-        static::setBuffer($buffer);
+        ]);
     }
 
     /**
@@ -190,10 +183,8 @@ abstract class AbstractTemplate extends ActiveRecord
      */
     private static function getFromCache($templateReference, $programName)
     {
-        $buffer = static::getBuffer();
-
-        if (isset($buffer[$templateReference]) && array_key_exists($programName, $buffer[$templateReference]))
-            return $buffer[$templateReference][$programName];
+        if (isset(static::$buffer[$templateReference]) && array_key_exists($programName, static::$buffer[$templateReference]))
+            return static::$buffer[$templateReference][$programName];
 
         return false;
     }
@@ -207,10 +198,7 @@ abstract class AbstractTemplate extends ActiveRecord
      */
     private static function setToCache($templateReference, $programName, $value)
     {
-        $buffer = static::getBuffer();
-        $buffer[$templateReference][$programName] = $value;
-
-        self::setBuffer($buffer);
+        static::$buffer[$templateReference][$programName] = $value;
     }
 
     /**

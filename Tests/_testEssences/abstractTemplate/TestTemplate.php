@@ -2,9 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Tests\_testEssences\abstractTemplate;
 
-use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use yii\base\Event;
-use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Base\AbstractTemplate;
 
 /**
  * Class TestTemplate
@@ -15,7 +14,7 @@ use yii\db\ActiveRecord;
  */
 class TestTemplate extends AbstractTemplate
 {
-    private static $buffer = [];
+    protected static $buffer = [];
 
     public static $accessesToDb = 0;
 
@@ -37,19 +36,6 @@ class TestTemplate extends AbstractTemplate
     public static function tableName()
     {
         return '{{%test_templates}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function getBuffer()
-    {
-        return self::$buffer;
-    }
-
-    protected static function setBuffer($buffer)
-    {
-        self::$buffer = $buffer;
     }
 
     /**

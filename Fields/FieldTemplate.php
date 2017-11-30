@@ -3,6 +3,8 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
+use Iliich246\YicmsCommon\Base\SortOrderInterface;
+use Iliich246\YicmsCommon\Base\SortOrderTrait;
 
 /**
  * Class FieldTemplate
@@ -10,14 +12,16 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  * @property integer
  * @property string $field_template_reference
  * @property integer $type
+ * @property integer $field_order
  * @property bool $visible
  * @property bool $editable
  * @property bool $is_main
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTemplate extends AbstractTemplate
+class FieldTemplate extends AbstractTemplate implements SortOrderInterface
 {
+    use SortOrderTrait;
     /**
      * Types of fields
      *
@@ -30,7 +34,7 @@ class FieldTemplate extends AbstractTemplate
     /**
      * @inheritdoc
      */
-    private static $buffer = [];
+    protected static $buffer = [];
 
     /**
      * @inheritdoc
@@ -133,17 +137,43 @@ class FieldTemplate extends AbstractTemplate
     /**
      * @inheritdoc
      */
-    protected static function getBuffer()
+    public function getOrderQuery()
     {
-        return self::$buffer;
+        return self::find()->where([
+            'field_template_reference' => $this->field_template_reference
+        ]);
     }
 
     /**
      * @inheritdoc
      */
-    protected static function setBuffer($buffer)
+    public static function getOrderFieldName()
     {
-        self::$buffer = $buffer;
+        return 'field_order';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderValue()
+    {
+        return $this->field_order;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setOrderValue($value)
+    {
+        $this->field_order = $value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderAble()
+    {
+        return $this;
     }
 
     /**
