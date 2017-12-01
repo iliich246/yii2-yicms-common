@@ -23,6 +23,7 @@ class CommonModule extends AbstractConfigurableModule implements
      * will place generated code
      */
     public $yicmsLocation = '@app/yicms';
+
     /**
      * @var string default user language, there using language codes like 'ru-RU' or 'en-EU'
      */
@@ -40,8 +41,17 @@ class CommonModule extends AbstractConfigurableModule implements
 
     /** @inheritdoc */
     public $controllerMap = [
-        'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController'
+        'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
     ];
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        $this->controllerMap['admin'] = $this->yicmsLocation . '/Common/Controllers/AdminController';
+        parent::init();
+    }
 
     /**
      * @inheritdoc
