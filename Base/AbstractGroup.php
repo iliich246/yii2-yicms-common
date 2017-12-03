@@ -22,12 +22,9 @@ abstract class AbstractGroup extends Component
 
     abstract public function initialize();
 
-
     abstract public function load($data);
-
 
     abstract public function validate();
 
     abstract public function render();
-
 }

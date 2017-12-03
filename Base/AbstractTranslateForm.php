@@ -19,6 +19,12 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 abstract class AbstractTranslateForm extends Model
 {
     /**
+     * Scenarios
+     */
+    const SCENARIO_CREATE = 0;
+    const SCENARIO_UPDATE = 1;
+
+    /**
      * @var LanguagesDb instance of language that associated with model
      */
     protected $language;

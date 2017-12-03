@@ -6,6 +6,7 @@ use Yii;
 use yii\base\ActionFilter;
 use yii\web\NotFoundHttpException;
 
+
 /**
  * Class AdminFilter
  *
@@ -31,7 +32,7 @@ class AdminFilter extends ActionFilter
             throw new NotFoundHttpException();
         }
 
-        /** @var CommonUser $user */
+        /** @var YicmsUserInterface $user */
         $user = Yii::$app->user->identity;
 
         if ($user->isDev()) return parent::beforeAction($action);

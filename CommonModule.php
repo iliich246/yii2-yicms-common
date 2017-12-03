@@ -4,10 +4,12 @@ namespace Iliich246\YicmsCommon;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use yii\web\IdentityInterface;
+use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\YicmsUserInterface;
 use Iliich246\YicmsCommon\Base\YicmsModuleInterface;
 use Iliich246\YicmsCommon\Base\AbstractConfigurableModule;
 use Iliich246\YicmsCommon\Languages\Language;
-use yii\base\Exception;
 
 /**
  * Class CommonModule
@@ -23,6 +25,11 @@ class CommonModule extends AbstractConfigurableModule implements
      * will place generated code
      */
     public $yicmsLocation = '@app/yicms';
+
+    //public $
+
+    /** @var IdentityInterface|YicmsUserInterface  */
+    public $user;
 
     /**
      * @var string default user language, there using language codes like 'ru-RU' or 'en-EU'
@@ -58,10 +65,40 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function bootstrap($app)
     {
-        //Yii::setAlias('@yicms-common', '@vendor/iliich246/yii2-yicms/common');
+        $interfaces = class_implements(Yii::$app->user->identityClass);
+
+        if(!$interfaces || !in_array('Iliich246\YicmsCommon\Base\YicmsUserInterface', $interfaces))
+            throw new CommonException(
+            'For yicms user class must implements interface YicmsUserInterface, you can use this config
+                \'user\' => [
+                \'identityClass\' => \'Iliich246\YicmsCommon\Base\CommonUser\',
+                \'enableAutoLogin\' => true,
+            ],');
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;
         Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
+    }
+
+    /**
+     * Returns true is current user is dev
+     * @return bool
+     */
+    public static function isUnderDev()
+    {
+        /** @var IdentityInterface|YicmsUserInterface $class */
+        $class = Yii::$app->user->identityClass;
+        return $class::isDev();
+    }
+
+    /**
+     * Returns true is current user is admin
+     * @return bool
+     */
+    public static function isUnderAdmin()
+    {
+        /** @var IdentityInterface|YicmsUserInterface $class */
+        $class = Yii::$app->user->identityClass;
+        return $class::isAdmin();
     }
 
     /**
