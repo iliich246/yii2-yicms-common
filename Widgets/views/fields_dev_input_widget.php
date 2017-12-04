@@ -15,35 +15,47 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
-
-$js = <<<EOT
-
+$modalName = FieldsDevInputWidget::getModalWindowName();
+$deleteLink = $widget->deleteLink . '&fieldTemplateId=';
+$js = <<<JS
 (function() {
-    var firstOpen = true;
-
     $(document).on('click', '#field-delete', function() {
+        var button = ('#field-delete');
+
+        if (!$(button).is('[data-field-template-id]')) return;
+
+        var fieldTemplateId = $(button).data('fieldTemplateId');
 
         if (!($(this).hasClass('field-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('field-confirm-state');
         } else {
+            $.pjax({
+                url: '{$deleteLink}' + fieldTemplateId,
+                container: '#update-fields-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
 
-            alert(1);
-        //    $.pjax({
-        //        url: '{3$3urlFieldOrderDown}&fieldTemplateId=' + $(this).data('fieldTemplateId'),
-        //        container: '#update-fields-list-container',
-        //        scrollTo: false,
-        //        push: false,
-        //        type: "POST",
-        //        timeout: 2500
-        //    });
+            var deleteActived = true;
+
+            $('#update-fields-list-container').on('pjax:success', function(event) {
+
+                if (!deleteActived) return false;
+
+                $('#{$modalName}').modal('hide');
+                deleteActived = false;
+            });
         }
     });
 })();
-EOT;
+JS;
 
 $this->registerJs($js, $this::POS_READY);
+
 ?>
 
 <div class="modal fade"
@@ -111,7 +123,12 @@ $this->registerJs($js, $this::POS_READY);
                 ?>
                 <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
                     <p>IMPORTANT! Do not delete fields without serious reason!</p>
-                    <button type="button" class="btn btn-danger" id="field-delete">Delete field</button>
+                    <button type="button"
+                            class="btn btn-danger"
+                            id="field-delete"
+                            data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>">
+                        Delete field
+                    </button>
                 <?php endif; ?>
             </div>
             <div class="modal-footer">

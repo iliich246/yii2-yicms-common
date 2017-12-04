@@ -83,6 +83,18 @@ class Field extends ActiveRecord
     }
 
     /**
+     * @inheritdoc
+     */
+    public function delete()
+    {
+        $fieldTranslates = FieldTranslate::find()->where([
+
+        ])->all();
+
+        parent::delete();
+    }
+
+    /**
      * Return fetched from db instance of field
      * @param $fieldTemplateReference
      * @param $fieldReference

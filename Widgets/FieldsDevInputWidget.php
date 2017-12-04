@@ -16,6 +16,8 @@ class FieldsDevInputWidget extends Widget
     public $devFieldGroup;
     /** @var bool true means that widget initialized after success data save in devFieldGroup */
     public $dataSaved = false;
+    /** @var string part of link for delete field template  */
+    public $deleteLink;
 
     /**
      * Returns name of form name of widget

@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use yii\base\Exception;
 use yii\base\Model;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -50,8 +51,6 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
             $this->scenario = self::SCENARIO_UPDATE;
         }
-
-        //throw new Exception(print_r($this->fieldTemplate, true));
 
         $languages = Language::getInstance()->usedLanguages();
 

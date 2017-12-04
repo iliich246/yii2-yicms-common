@@ -135,12 +135,36 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
             }
         }
 
-        if ($this->scenario == self::SCENARIO_CREATE) {
-            //throw new Exception(print_r($this, true));
+        if ($this->scenario == self::SCENARIO_CREATE && $this->scenario != self::SCENARIO_DEFAULT) {
+            throw new Exception(print_r($this, true));
             $this->field_order = $this->maxOrder();
         }
 
         parent::save($runValidation, $attributes);
+    }
+
+    public function isConstraints()
+    {
+        if (Field::find()->where([
+            'common_fields_template_id' => $this->id
+        ])->one()) return true;
+
+        return false;
+    }
+
+    public function delete()
+    {
+        $fields = Field::find()->where([
+            'common_fields_template_id' => $this->id
+        ])->all();
+
+        if (!$fields) parent::delete();
+
+        foreach($fields as $field) {
+            $field->delete();
+        }
+
+        parent::delete();
     }
 
     /**
