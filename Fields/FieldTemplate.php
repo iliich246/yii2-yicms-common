@@ -13,6 +13,7 @@ use yii\base\Exception;
  * @property integer
  * @property string $field_template_reference
  * @property integer $type
+ * @property integer $language_type
  * @property integer $field_order
  * @property bool $visible
  * @property bool $editable
@@ -31,6 +32,13 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     const TYPE_INPUT = 0;
     const TYPE_TEXT = 1;
     const TYPE_REDACTOR = 2;
+
+    /**
+     * Language types of fields
+     * Type define is field have translates or field has one value independent of languages
+     */
+    const LANGUAGE_TYPE_TRANSLATABLE = 0;
+    const LANGUAGE_TYPE_SINGLE = 1;
 
     /**
      * @inheritdoc
@@ -53,7 +61,7 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
-            ['type', 'integer'],
+            [['type', 'language_type'], 'integer'],
             [['visible', 'editable', 'is_main'], 'boolean'],
         ]);
     }
@@ -64,8 +72,10 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     public function scenarios()
     {
         $prevScenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],['type', 'visible', 'editable', 'is_main']);
-        $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],['type', 'visible', 'editable', 'is_main']);
+        $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
+            ['type', 'language_type', 'visible', 'editable', 'is_main']);
+        $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
+            ['type','language_type' ,'visible', 'editable', 'is_main']);
 
         return $scenarios;
     }
@@ -90,6 +100,24 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     }
 
     /**
+     * Return array of field language types
+     * @return array
+     */
+    public static function getLanguageTypes()
+    {
+        static $array = false;
+
+        if ($array) return $array;
+
+        $array = [
+            self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
+            self::LANGUAGE_TYPE_SINGLE => 'Single type',
+        ];
+
+        return $array;
+    }
+
+    /**
      * @inheritdoc
      */
     public function save($runValidation = true, $attributes = null)
@@ -108,7 +136,7 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
         }
 
         if ($this->scenario == self::SCENARIO_CREATE) {
-            throw new Exception(print_r($this, true));
+            //throw new Exception(print_r($this, true));
             $this->field_order = $this->maxOrder();
         }
 
@@ -122,6 +150,15 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     public function getTypeName()
     {
         return self::getTypes()[$this->type];
+    }
+
+    /**
+     * Return name of language type of concrete field
+     * @return mixed
+     */
+    public function getLanguageTypeName()
+    {
+        return self::getLanguageTypes()[$this->language_type];
     }
 
     /**
@@ -146,7 +183,8 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
     public function getOrderQuery()
     {
         return self::find()->where([
-            'field_template_reference' => $this->field_template_reference
+            'field_template_reference' => $this->field_template_reference,
+            'language_type' => $this->language_type,
         ]);
     }
 

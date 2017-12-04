@@ -70,10 +70,14 @@ class CommonModule extends AbstractConfigurableModule implements
         if(!$interfaces || !in_array('Iliich246\YicmsCommon\Base\YicmsUserInterface', $interfaces))
             throw new CommonException(
             'For yicms user class must implements interface YicmsUserInterface, you can use this config
+                ...
                 \'user\' => [
                 \'identityClass\' => \'Iliich246\YicmsCommon\Base\CommonUser\',
                 \'enableAutoLogin\' => true,
-            ],');
+            ],
+            ...
+            or define yourself user class that will be implements YicmsUserInterface interface
+            ');
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;
         Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;

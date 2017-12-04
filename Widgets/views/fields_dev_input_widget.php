@@ -15,6 +15,35 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
+
+$js = <<<EOT
+
+(function() {
+    var firstOpen = true;
+
+    $(document).on('click', '#field-delete', function() {
+
+        if (!($(this).hasClass('field-confirm-state'))) {
+            $(this).before('<span>Are you sure? </span>');
+            $(this).text('Yes, I`am sure!');
+            $(this).addClass('field-confirm-state');
+        } else {
+
+            alert(1);
+        //    $.pjax({
+        //        url: '{3$3urlFieldOrderDown}&fieldTemplateId=' + $(this).data('fieldTemplateId'),
+        //        container: '#update-fields-list-container',
+        //        scrollTo: false,
+        //        push: false,
+        //        type: "POST",
+        //        timeout: 2500
+        //    });
+        }
+    });
+})();
+EOT;
+
+$this->registerJs($js, $this::POS_READY);
 ?>
 
 <div class="modal fade"
@@ -50,12 +79,17 @@ $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
                         <?= $form->field($widget->devFieldGroup->fieldTemplate, 'program_name') ?>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
                         <?= $form->field($widget->devFieldGroup->fieldTemplate, 'type')->dropDownList(
                             FieldTemplate::getTypes())
+                        ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devFieldGroup->fieldTemplate, 'language_type')->dropDownList(
+                            FieldTemplate::getLanguageTypes())
                         ?>
                     </div>
                 </div>
@@ -75,10 +109,14 @@ $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
                     'translateModels' => $widget->devFieldGroup->fieldNameTranslates,
                 ])
                 ?>
+                <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
+                    <p>IMPORTANT! Do not delete fields without serious reason!</p>
+                    <button type="button" class="btn btn-danger" id="field-delete">Delete field</button>
+                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

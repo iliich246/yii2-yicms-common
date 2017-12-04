@@ -34,6 +34,9 @@ class DevFieldsGroup extends AbstractGroup
         $this->referenceAble = $referenceAble;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function initialize($fieldTemplateReference = null)
     {
         if (!$fieldTemplateReference) {
@@ -59,22 +62,33 @@ class DevFieldsGroup extends AbstractGroup
             $fieldNameTranslate = new FieldNamesTranslatesForm();
             $fieldNameTranslate->setLanguage($language);
             $fieldNameTranslate->setFieldTemplate($this->fieldTemplate);
-            $fieldNameTranslate->loadFromDb();
+
+            if ($this->fieldTemplate->id)
+                $fieldNameTranslate->loadFromDb();
 
             $this->fieldNameTranslates[$key] = $fieldNameTranslate;
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function validate()
     {
         return ($this->fieldTemplate->validate() && Model::validateMultiple($this->fieldNameTranslates));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function load($data)
     {
         return ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function save()
     {
         $needSaveFieldTemplate = false;
@@ -85,6 +99,10 @@ class DevFieldsGroup extends AbstractGroup
 
         if (!$needSaveFieldTemplate &&
             $this->fieldTemplate->getOldAttribute('type') != $this->fieldTemplate->type)
+            $needSaveFieldTemplate = true;
+
+        if (!$needSaveFieldTemplate &&
+            $this->fieldTemplate->getOldAttribute('language_type') != $this->fieldTemplate->language_type)
             $needSaveFieldTemplate = true;
 
         if (!$needSaveFieldTemplate &&
@@ -99,9 +117,11 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate->getOldAttribute('is_main') != $this->fieldTemplate->is_main)
             $needSaveFieldTemplate = true;
 
+        if ($this->fieldTemplate->getOldAttribute('language_type') != $this->fieldTemplate->language_type)
+            $this->fieldTemplate->field_order = $this->fieldTemplate->maxOrder();
+
         if ($needSaveFieldTemplate)
             $this->fieldTemplate->save(false);
-
 
         /** @var FieldNamesTranslatesForm $fieldNameTranslate */
         foreach($this->fieldNameTranslates as $fieldNameTranslate) {
@@ -124,6 +144,9 @@ class DevFieldsGroup extends AbstractGroup
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function render()
     {
 

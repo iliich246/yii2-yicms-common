@@ -68,6 +68,8 @@ class m171110_213106_common_init extends Migration
             'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
+            'language_type' => $this->smallInteger(),
+            'field_order' => $this->integer(),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
             'is_main' => $this->boolean(),
@@ -86,6 +88,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'common_fields_template_id' => $this->integer(),
             'field_reference' => $this->string(),
+            'value' => $this->text()->defaultValue(null),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
         ]);
@@ -181,6 +184,7 @@ class m171110_213106_common_init extends Migration
             'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
+            'file_order' => $this->integer(),
             'language_type' => $this->smallInteger(),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
@@ -307,6 +311,7 @@ class m171110_213106_common_init extends Migration
             'field_template_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
+            'image_order' => $this->integer(),
             'language_type' => $this->smallInteger(),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
@@ -456,6 +461,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'condition_template_reference' => $this->string(),
             'type' => $this->smallInteger(),
+            'condition_order' => $this->integer(),
         ]);
 
         $this->createIndex(
