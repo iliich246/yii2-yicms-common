@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon;
 
+use Iliich246\YicmsCommon\Base\CommonUser;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
@@ -79,6 +80,16 @@ class CommonModule extends AbstractConfigurableModule implements
             or define yourself user class that will be implements YicmsUserInterface interface
             ');
 
+        /** TODO: This is debug code; Important to delete this in production */
+
+        $dev = -1;
+        $admin = 0;
+
+        $user = CommonUser::findIdentity($admin);
+        Yii::$app->user->login($user);
+
+        /** END OF DEBUG CODE */
+
         Yii::$app->sourceLanguage = $this->defaultLanguage;
         Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
     }
@@ -89,9 +100,11 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public static function isUnderDev()
     {
+        if (Yii::$app->user->isGuest) return false;
         /** @var IdentityInterface|YicmsUserInterface $class */
-        $class = Yii::$app->user->identityClass;
-        return $class::isDev();
+        /** @var $user IdentityInterface|YicmsUserInterface */
+        $user = Yii::$app->user->identity;
+        return $user->isThisDev();
     }
 
     /**
@@ -100,9 +113,10 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public static function isUnderAdmin()
     {
-        /** @var IdentityInterface|YicmsUserInterface $class */
-        $class = Yii::$app->user->identityClass;
-        return $class::isAdmin();
+        if (Yii::$app->user->isGuest) return false;
+        /** @var $user IdentityInterface|YicmsUserInterface */
+        $user = Yii::$app->user->identity;
+        return $user->isThisAdmin();
     }
 
     /**

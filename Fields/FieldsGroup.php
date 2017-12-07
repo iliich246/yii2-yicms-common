@@ -30,7 +30,7 @@ class FieldsGroup extends AbstractGroup
     /** @var FieldTemplate[] instances without translates  */
     public $singleFieldTemplates;
 
-    /** @var array of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
+    /** @var FieldTranslateForm[] of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
      * [key1] => FieldTranslateForm1
      * ...
      * [keyN] => FieldTranslateFormN
@@ -81,14 +81,14 @@ class FieldsGroup extends AbstractGroup
             FieldTemplate::getOrderFieldName() => SORT_ASC
         ])->indexBy('id');
 
-        //throw new CommonException(print_r($fieldTemplatesQuery,true));
+        $templateQuery = clone($fieldTemplatesQuery);
 
         /** @var FieldTemplate $fieldTemplates */
         $this->translateAbleFieldTemplates = $fieldTemplatesQuery->andWhere([
             'language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE
         ])->all();
 
-        $this->singleFieldTemplates = $fieldTemplatesQuery->andWhere([
+        $this->singleFieldTemplates = $templateQuery->andWhere([
             'language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE
         ])->all();
 
@@ -98,6 +98,7 @@ class FieldsGroup extends AbstractGroup
             foreach($this->translateAbleFieldTemplates as $fieldTemplateKey=>$fieldTemplate) {
 
                 $fieldTranslate = new FieldTranslateForm();
+                $fieldTranslate->scenario = FieldTranslateForm::SCENARIO_UPDATE;
                 $fieldTranslate->setFieldTemplate($fieldTemplate);
                 $fieldTranslate->setLanguage($language);
                 $fieldTranslate->setFieldAble($this->referenceAble);
@@ -151,6 +152,13 @@ class FieldsGroup extends AbstractGroup
     public function save()
     {
 
+        foreach($this->translateForms as $translateForm) {
+            $translateForm->save();
+        }
+
+        foreach($this->singleFields as $singleField) {
+            $singleField->save(false);
+        }
     }
 
     /**
@@ -161,6 +169,11 @@ class FieldsGroup extends AbstractGroup
         $result = FieldsRenderWidget::widget([
             'form' => $form,
             'fieldsArray' => $this->translateFormsArray
+        ]);
+
+        $result .= FieldsRenderWidget::widget([
+            'form' => $form,
+            'fieldsArray' => [$this->singleFields]
         ]);
 
         return $result;

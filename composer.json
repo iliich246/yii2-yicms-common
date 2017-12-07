@@ -12,6 +12,10 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
+        "yiisoft/yii2-bootstrap": "*",
+        "yiisoft/yii2-swiftmailer": "*",
+        "yiisoft/yii2-imagine": "*",
+        "yiidoc/yii2-redactor": "*",
         "npm-asset/bootbox": "~4.4.0",
         "npm-asset/lodash": "~4.17.4"
     },

@@ -4,22 +4,11 @@
 ?>
 
 
-<?php foreach($fieldsArray as $field) ?>
+<?php foreach($fieldsArray as $field): ?>
 
     <?= \Iliich246\YicmsCommon\Fields\FieldTypeWidget::widget([
         'form' => $widget->form,
-        'fieldsArray' => $field
+        'fieldModel' => $field
     ]) ?>
 
-<?php /* foreach($translateModelList as $fieldKey => $fieldTranslateModel): ?>
-
-    <?= PageFieldWidget::widget([
-        'form' => $form,
-        'languageKey' => $languageKey,
-        'fieldKey' => $fieldKey,
-        'fieldTranslateModel' => $fieldTranslateModel
-    ]) ?>
-
-<?php endforeach; */ ?>
-
-
+<?php endforeach; ?>

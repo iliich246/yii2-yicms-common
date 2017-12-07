@@ -39,4 +39,43 @@ class FieldsRenderWidget extends Widget
             'widget' => $this,
         ]);
     }
+
+    /**
+     * Proxy isActive method from PagesFieldTranslateModel
+     * @param array $modelsList
+     * @return bool
+     */
+    public function isActive(array $modelsList)
+    {
+        /** @var $translateModel FieldTranslateForm */
+        $translateModel = current($modelsList);
+
+        return $translateModel->isActive();
+    }
+
+    /**
+     * Proxy getIdName method from PagesFieldTranslateModel
+     * @param array $modelsList
+     * @return string
+     */
+    public function getIdName(array $modelsList)
+    {
+        /** @var $translateModel FieldTranslateForm */
+        $translateModel = current($modelsList);
+
+        return $translateModel->getIdName();
+    }
+
+    /**
+     * Proxy getLanguageName method from PagesFieldTranslateModel
+     * @param array $modelsList
+     * @return string
+     */
+    public function getLanguageName(array $modelsList)
+    {
+        /** @var $translateModel FieldTranslateForm */
+        $translateModel = current($modelsList);
+
+        return $translateModel->getLanguageName();
+    }
 }
