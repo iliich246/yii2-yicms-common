@@ -48,7 +48,7 @@ class ReloadAlertWidget extends Widget
      */
     public function run()
     {
-        return $this->render('reload-alert', [
+        return $this->render('reload_alert', [
                 'widget' => $this,
             ]
         );

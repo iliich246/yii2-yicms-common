@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $common_fields_template_id
  * @property integer $field_reference
+ * @property string $value
  * @property integer $editable
  * @property integer $visible
  *
@@ -88,8 +89,11 @@ class Field extends ActiveRecord
     public function delete()
     {
         $fieldTranslates = FieldTranslate::find()->where([
-
+            'common_fields_represent_id' => $this->id
         ])->all();
+
+        foreach($fieldTranslates as $fieldTranslate)
+            $fieldTranslate->delete();
 
         parent::delete();
     }

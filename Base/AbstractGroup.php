@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Base;
 
 use yii\base\Component;
+use yii\widgets\ActiveForm;
 
 /**
  * Class AbstractGroup
@@ -20,11 +21,37 @@ abstract class AbstractGroup extends Component
     /** @var */
     protected $referenceAble;
 
+    /**
+     * Initializes all group for correct work
+     * @return void
+     */
     abstract public function initialize();
 
+    /**
+     * Load data to group
+     * @see Model::load($data)
+     * @param $data
+     * @return bool
+     */
     abstract public function load($data);
 
+    /**
+     * Validates group
+     * @see Model::validate()
+     * @return bool
+     */
     abstract public function validate();
 
-    abstract public function render();
+    /**
+     * Render group
+     * @param ActiveForm $form
+     * @return string
+     */
+    abstract public function render(ActiveForm $form);
+
+    /**
+     * Saves group
+     * @return bool
+     */
+    abstract public function save();
 }

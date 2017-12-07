@@ -6,6 +6,8 @@ use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\Language;
+use yii\base\Model;
+use yii\widgets\ActiveForm;
 
 /**
  * Class FieldsGroup
@@ -18,6 +20,45 @@ class FieldsGroup extends AbstractGroup
     protected $referenceAble;
 
     /**
+     * @var array of fields program names that`s will not rendered by standard render method
+     * this field will not be visible or must be rendered manually
+     */
+    public $renderFieldsExceptions = [];
+
+    /** @var FieldTemplate[] instances that`s must has translates  */
+    public $translateAbleFieldTemplates;
+    /** @var FieldTemplate[] instances without translates  */
+    public $singleFieldTemplates;
+
+    /** @var array of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
+     * [key1] => FieldTranslateForm1
+     * ...
+     * [keyN] => FieldTranslateFormN
+     *
+     * Where key is value that`s used for associate models with data of form in POST array
+     */
+    public $translateForms = [];
+
+    /**
+     * @var array of FieldTranslateForms comfortable for traversable by yicms methods in format
+     * [languageId1] => [
+     *      [fieldTemplateId1] => FieldTranslateForm1_1
+     *      [fieldTemplateId2] => FieldTranslateForm1_2
+     *      ...
+     * ]
+     * [languageId2] => [
+     *      [fieldTemplateId1] => FieldTranslateForm2_1
+     *      [fieldTemplateId2] => FieldTranslateForm2_2
+     *      ...
+     * ]
+     * ...
+     */
+    public $translateFormsArray = [];
+
+    /** @var Field[] array of fields without translates */
+    public $singleFields;
+
+    /**
      * @param FieldReferenceInterface $referenceAble
      */
     public function setFieldsReferenceAble(FieldReferenceInterface $referenceAble)
@@ -25,6 +66,9 @@ class FieldsGroup extends AbstractGroup
         $this->referenceAble = $referenceAble;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function initialize($fieldTemplateReference = null)
     {
         $fieldTemplatesQuery = FieldTemplate::getListQuery($this->referenceAble->getTemplateFieldReference());
@@ -40,15 +84,18 @@ class FieldsGroup extends AbstractGroup
         //throw new CommonException(print_r($fieldTemplatesQuery,true));
 
         /** @var FieldTemplate $fieldTemplates */
-        $fieldTemplates = $fieldTemplatesQuery->all();
+        $this->translateAbleFieldTemplates = $fieldTemplatesQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE
+        ])->all();
+
+        $this->singleFieldTemplates = $fieldTemplatesQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE
+        ])->all();
 
         $languages = Language::getInstance()->usedLanguages();
 
-        $translateModels = [];
-        $splitArray = [];
-
         foreach($languages as $languageKey => $language) {
-            foreach($fieldTemplates as $fieldKey=>$fieldTemplate) {
+            foreach($this->translateAbleFieldTemplates as $fieldTemplateKey=>$fieldTemplate) {
 
                 $fieldTranslate = new FieldTranslateForm();
                 $fieldTranslate->setFieldTemplate($fieldTemplate);
@@ -56,29 +103,66 @@ class FieldsGroup extends AbstractGroup
                 $fieldTranslate->setFieldAble($this->referenceAble);
                 $fieldTranslate->loadFromDb();
 
-                $translateModels["$languageKey-$fieldKey"] = $fieldTranslate;
-                $splitArray[$languageKey][$fieldKey] = $fieldTranslate;
+                $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
+                $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
             }
         }
 
+        foreach($this->singleFieldTemplates as $singleFieldTemplate) {
+            $singleField = Field::find()->where([
+                'field_reference' => $this->referenceAble->getFieldReference(),
+                'common_fields_template_id' => $singleFieldTemplate->id
+            ])->one();
 
-        return $fieldTemplates;
+            if (!$singleField) {
+                $singleField = new Field();
+                $singleField->field_reference = $this->referenceAble->getFieldReference();
+                $singleField->common_fields_template_id = $singleFieldTemplate->id;
+                $singleField->value = null;
+                $singleField->visible = true;
+                $singleField->editable = true;
+
+                $singleField->save();
+            }
+
+            $this->singleFields[$singleFieldTemplate->id] = $singleField;
+        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function validate()
     {
-
+        return (Model::validateMultiple($this->translateForms) && Model::validateMultiple($this->singleFields));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function load($data)
     {
-
+        return (Model::loadMultiple($this->translateForms, $data) && Model::loadMultiple($this->singleFields, $data));
     }
 
-    public function render()
+    /**
+     * @inheritdoc
+     */
+    public function save()
     {
 
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function render(ActiveForm $form)
+    {
+        $result = FieldsRenderWidget::widget([
+            'form' => $form,
+            'fieldsArray' => $this->translateFormsArray
+        ]);
 
+        return $result;
+    }
 }

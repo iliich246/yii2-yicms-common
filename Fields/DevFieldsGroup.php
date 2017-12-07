@@ -2,10 +2,11 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
-use yii\base\Exception;
 use yii\base\Model;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
+use yii\widgets\ActiveForm;
 
 /**
  * Class DevFieldsGroup
@@ -146,8 +147,8 @@ class DevFieldsGroup extends AbstractGroup
     /**
      * @inheritdoc
      */
-    public function render()
+    public function render(ActiveForm $form)
     {
-
+        throw new CommonException('Not implemented for developer fields group (not necessary)');
     }
 }

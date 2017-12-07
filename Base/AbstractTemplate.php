@@ -35,14 +35,17 @@ use yii\db\ActiveRecord;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-abstract class AbstractTemplate extends ActiveRecord
+abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterface
 {
+    use SortOrderTrait;
+
     private static $buffer = null;
 
     const EVENT_BEFORE_FETCH = 0x99;
 
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
+    const SCENARIO_CHANGE_ORDER = 0x02;
 
     /**
      * @inheritdoc
@@ -78,6 +81,9 @@ abstract class AbstractTemplate extends ActiveRecord
             self::SCENARIO_UPDATE => [
                 'program_name'
             ],
+            self::SCENARIO_CHANGE_ORDER => [
+                static::getOrderFieldName()
+            ]
         ];
     }
 

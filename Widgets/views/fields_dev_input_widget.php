@@ -30,6 +30,7 @@ $js = <<<JS
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('field-confirm-state');
+            //$(this).css('float', 'right')
         } else {
             $.pjax({
                 url: '{$deleteLink}' + fieldTemplateId,

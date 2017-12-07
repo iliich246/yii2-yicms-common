@@ -134,12 +134,6 @@ class FieldTranslateForm extends AbstractTranslateForm
 
             $field->save(false);
         }
-
-
-
-
-
-
     }
 
     /**

@@ -83,7 +83,7 @@ class LinkWithConfirmationWidget extends Widget
      */
     public function run()
     {
-        return $this->render('link-with-confirmation',[
+        return $this->render('link_with_confirmation',[
             'widget' => $this,
         ]);
     }

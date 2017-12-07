@@ -21,10 +21,8 @@ use yii\base\Exception;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTemplate extends AbstractTemplate implements SortOrderInterface
+class FieldTemplate extends AbstractTemplate
 {
-    use SortOrderTrait;
-
     /**
      * Types of fields
      * Type define style of render of field
@@ -122,7 +120,8 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
      */
     public function save($runValidation = true, $attributes = null)
     {
-        if ($this->is_main) {
+        if ($this->is_main && ($this->scenario === self::SCENARIO_CREATE || $this->scenario === self::SCENARIO_UPDATE)) {
+
             /** @var self $other */
             foreach(self::find()->where([
                 self::getTemplateReferenceName() => self::getTemplateReference(),
@@ -130,19 +129,27 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
             {
                 if (!$other->is_main) continue;
 
+                $other->scenario = self::SCENARIO_UPDATE;
                 $other->is_main = false;
                 $other->save(false);
             }
         }
 
-        if ($this->scenario == self::SCENARIO_CREATE && $this->scenario != self::SCENARIO_DEFAULT) {
-            throw new Exception(print_r($this, true));
+        //TODO: delete this in production, it`s needed only for debug
+        if ( $this->scenario === self::SCENARIO_DEFAULT) {
+            throw new \yii\base\Exception('DEFUALT SCENARIO IT`S WRONG');
+        }
+
+        if ($this->scenario === self::SCENARIO_CREATE) {
             $this->field_order = $this->maxOrder();
         }
 
         parent::save($runValidation, $attributes);
     }
 
+    /**
+     * @return bool
+     */
     public function isConstraints()
     {
         if (Field::find()->where([
@@ -152,17 +159,29 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
         return false;
     }
 
+    /**
+     * @throws \Exception
+     * @throws \Throwable
+     */
     public function delete()
     {
         $fields = Field::find()->where([
             'common_fields_template_id' => $this->id
         ])->all();
 
-        if (!$fields) parent::delete();
-
         foreach($fields as $field) {
             $field->delete();
         }
+
+        $fieldNames = FieldsNamesTranslatesDb::find()->where([
+           'common_fields_template_id' => $this->id,
+        ])->all();
+
+        foreach($fieldNames as $fieldName) {
+            $fieldName->delete();
+        }
+
+        //TODO: handle fields validators
 
         parent::delete();
     }
@@ -241,7 +260,7 @@ class FieldTemplate extends AbstractTemplate implements SortOrderInterface
      */
     public function configToChangeOfOrder()
     {
-        $this->scenario = self::SCENARIO_UPDATE;
+        $this->scenario = self::SCENARIO_CHANGE_ORDER;
     }
 
     /**
