@@ -9,6 +9,8 @@ use Iliich246\YicmsCommon\CommonModule;
 /**
  * Class FieldTranslateForm
  *
+ * @property FieldTranslate $currentTranslateDb
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInterface
@@ -99,6 +101,11 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      */
     public function save()
     {
+        /** @var FieldTranslate $translate */
+        $translate = $this->getCurrentTranslateDb();
+        $translate->value = $this->value;
+
+        return $translate->save(false);
 
     }
 
@@ -118,6 +125,29 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     {
         if ($this->currentTranslateDb) return $this->currentTranslateDb;
 
+        $this->currentTranslateDb = FieldTranslate::find()
+            ->where([
+                'common_fields_represent_id' => $this->getField()->id,
+                'common_language_id' => $this->language->id
+        ])->one();
+
+        if (!$this->currentTranslateDb)
+            $this->createTranslateDb();
+        else {
+            $this->value = $this->currentTranslateDb->value;
+        }
+
+        return $this->currentTranslateDb;
+    }
+
+    /**
+     * Returns Field associated with this form
+     * @return Field
+     */
+    private function getField()
+    {
+        if ($this->field) return $this->field;
+
         if (!($field = $this->fieldAble->getField($this->fieldTemplate->program_name))) {
 
             $field = new Field();
@@ -131,13 +161,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
 
         $this->field = $field;
 
-        $this->currentTranslateDb = FieldsNamesTranslatesDb::find()
-            ->where([
-                'common_fields_template_id' => $this->fieldTemplate->id,
-                'common_language_id' => $this->language->id
-        ])->one();
-
-        return $this->currentTranslateDb;
+        return $this->field;
     }
 
     /**
@@ -145,7 +169,12 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      */
     protected function createTranslateDb()
     {
-        throw new CommonException('From there we down`t need to create FieldsNamesTranslatesDb');
+        $this->currentTranslateDb = new FieldTranslate();
+        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb->common_fields_represent_id = $this->getField()->id;
+        $this->currentTranslateDb->value = null;
+
+        return $this->currentTranslateDb->save();
     }
 
     /**
@@ -170,7 +199,11 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     public function getFieldName()
     {
         /** @var FieldsNamesTranslatesDb $fieldName */
-        $fieldName = $this->getCurrentTranslateDb();
+        $fieldName = FieldsNamesTranslatesDb::find()
+                            ->where([
+                                'common_fields_template_id' => $this->fieldTemplate->id,
+                                'common_language_id' => $this->language->id
+                            ])->one();
 
         if ($fieldName && trim($fieldName->name) && CommonModule::isUnderAdmin()) return $fieldName->name;
 

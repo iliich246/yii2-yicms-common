@@ -581,6 +581,53 @@ class m171110_213106_common_init extends Migration
             '{{%common_languages}}',
             'id'
         );
+
+        //////////////////////////////////////////////////////////////////
+        // Free essences functionality
+        //////////////////////////////////////////////////////////////////
+        /**
+         * common_conditions_value_names table
+         */
+        $this->createTable('{{%common_free_essences}}', [
+            'id' => $this->primaryKey(),
+            'program_name' => $this->string(50),
+            'editable' => $this->boolean(),
+            'visible' => $this->boolean(),
+            'free_essences_order' => $this->integer(),
+            'field_template_reference' => $this->string(),
+            'field_reference' => $this->string(),
+            'file_template_reference' => $this->string(),
+            'file_reference' => $this->string(),
+            'image_template_reference' => $this->string(),
+            'image_reference' => $this->string(),
+            'condition_template_reference' => $this->string(),
+            'condition_reference' => $this->string(),
+        ]);
+
+        /**
+         * common_free_essence_name_translates table
+         */
+        $this->createTable('{{%common_free_essence_name_translates}}', [
+            'id' => $this->primaryKey(),
+            'common_free_essence_id' => $this->integer(),
+            'common_language_id' => $this->integer(),
+            'name' => $this->string(),
+            'description' => $this->string(),
+        ]);
+
+        $this->addForeignKey('common_free_essence_name_translates-to-common_free_essences',
+            '{{%common_free_essence_name_translates}}',
+            'common_free_essence_id',
+            '{{%common_free_essences}}',
+            'id'
+        );
+
+        $this->addForeignKey('common_free_essence_name_translates-to-common_languages',
+            '{{%common_free_essence_name_translates}}',
+            'common_language_id',
+            '{{%common_languages}}',
+            'id'
+        );
     }
 
     /**
@@ -588,6 +635,14 @@ class m171110_213106_common_init extends Migration
      */
     public function safeDown()
     {
+        //free essences functionality
+        $this->dropForeignKey('common_free_essence_name_translates-to-common_languages',
+            '{{%common_free_essence_name_translates}}');
+        $this->dropForeignKey('common_free_essence_name_translates-to-common_free_essences',
+            '{{%common_free_essence_name_translates}}');
+        $this->dropTable('{{%common_free_essence_name_translates}}');
+        $this->dropTable('{{%common_free_essences}}');
+
         //conditions functionality
         $this->dropForeignKey('common_conditions_names-to-common_languages', '{{%common_conditions_names}}');
         $this->dropForeignKey('common_conditions_names-to-common_conditions_templates', '{{%common_conditions_names}}');

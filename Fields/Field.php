@@ -2,10 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\Language;
-use PHPUnit\Runner\Exception;
-use yii\db\ActiveRecord;
 
 /**
  * Class Field
@@ -54,9 +53,6 @@ class Field extends ActiveRecord implements FieldRenderInterface
     /** @var FieldTemplate instance of field template */
     private $template;
 
-    private $fieldReference;
-
-    private $fieldTemplateReference;
 
     /**
      * @inheritdoc
@@ -69,14 +65,27 @@ class Field extends ActiveRecord implements FieldRenderInterface
     /**
      * @inheritdoc
      */
+    public function rules()
+    {
+        return [
+            ['value', 'string'],
+            ['field_reference', 'string'],
+            [
+                ['common_fields_template_id'], 'exist', 'skipOnError' => true,
+                'targetClass' => FieldTemplate::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
             'value' => $this->getFieldName(),
         ];
     }
-
-
 
     /**
      * Sets object in admin mode
@@ -116,12 +125,12 @@ class Field extends ActiveRecord implements FieldRenderInterface
     /**
      * @inheritdoc
      */
-    public function save($runValidation = true, $attributeNames = null)
-    {
-
-
-        parent::save($runValidation, $attributeNames);
-    }
+//    public function save($runValidation = true, $attributeNames = null)
+//    {
+//
+//
+//        parent::save($runValidation, $attributeNames);
+//    }
 
     /**
      * Return fetched from db instance of field

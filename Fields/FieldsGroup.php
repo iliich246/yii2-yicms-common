@@ -2,17 +2,18 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
-use Iliich246\YicmsCommon\Base\AbstractGroup;
-use Iliich246\YicmsCommon\Base\CommonException;
-use Iliich246\YicmsCommon\CommonModule;
-use Iliich246\YicmsCommon\Languages\Language;
 use yii\base\Model;
 use yii\widgets\ActiveForm;
+use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\AbstractGroup;
+use Iliich246\YicmsCommon\Languages\Language;
 
 /**
  * Class FieldsGroup
  *
- * @package Iliich246\YicmsCommon\Fields
+ * This class implements field group for admin part
+ *
+ * @author iliich246 <iliich246@gmail.com>
  */
 class FieldsGroup extends AbstractGroup
 {
@@ -126,7 +127,7 @@ class FieldsGroup extends AbstractGroup
                 $singleField->save();
             }
 
-            $this->singleFields[$singleFieldTemplate->id] = $singleField;
+            $this->singleFields["$singleFieldTemplate->id"] = $singleField;
         }
     }
 
@@ -151,14 +152,19 @@ class FieldsGroup extends AbstractGroup
      */
     public function save()
     {
+        $success = true;
 
         foreach($this->translateForms as $translateForm) {
-            $translateForm->save();
+            if (!$success) return false;
+            $success = $translateForm->save();
         }
 
         foreach($this->singleFields as $singleField) {
-            $singleField->save(false);
+            if (!$success) return false;
+            $success = $singleField->save();
         }
+
+        return true;
     }
 
     /**
@@ -166,15 +172,21 @@ class FieldsGroup extends AbstractGroup
      */
     public function render(ActiveForm $form)
     {
-        $result = FieldsRenderWidget::widget([
-            'form' => $form,
-            'fieldsArray' => $this->translateFormsArray
-        ]);
+        $result = '';
 
-        $result .= FieldsRenderWidget::widget([
-            'form' => $form,
-            'fieldsArray' => [$this->singleFields]
-        ]);
+        if ($this->translateFormsArray) {
+            $result = FieldsRenderWidget::widget([
+                'form' => $form,
+                'fieldsArray' => $this->translateFormsArray
+            ]);
+        }
+
+        if ($this->singleFields) {
+            $result .= FieldsRenderWidget::widget([
+                'form' => $form,
+                'fieldsArray' => [$this->singleFields]
+            ]);
+        }
 
         return $result;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Fields;
+namespace Iliich246\YicmsCommon\FreeEssences;
 
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
@@ -9,21 +9,21 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  * Class FieldsNamesTranslatesDb
  *
  * @property integer $id
- * @property integer $common_fields_template_id
+ * @property integer $common_free_essence_id
  * @property integer $common_language_id
  * @property string $name
  * @property string $description
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldsNamesTranslatesDb extends ActiveRecord
+class FreeEssenceNamesTranslatesDb extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%common_field_names}}';
+        return '{{%common_free_essence_name_translates}}';
     }
 
     /**
@@ -39,8 +39,8 @@ class FieldsNamesTranslatesDb extends ActiveRecord
                 'targetClass' => LanguagesDb::className(), 'targetAttribute' => ['common_language_id' => 'id']
             ],
             [
-                ['common_fields_template_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => FieldTemplate::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
+                ['common_free_essence_id'], 'exist', 'skipOnError' => true,
+                'targetClass' => FreeEssences::className(), 'targetAttribute' => ['common_free_essence_id' => 'id']
             ],
         ];
     }

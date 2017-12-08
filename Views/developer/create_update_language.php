@@ -14,7 +14,7 @@ if ($model->scenario == LanguagesDb::SCENARIO_CREATE)
 else
     $this->title = 'Update language';
 
-$js = <<<EOL
+$js = <<<JS
 ;(function(){
     var pjaxContainer = $('#pjax-language-create-update-container');
     var pjaxDeleteContainer = $('#pjax-language-delete-container');
@@ -48,7 +48,7 @@ $js = <<<EOL
         });
     });
 })();
-EOL;
+JS;
 
 $this->registerJs($js);
 ?>
