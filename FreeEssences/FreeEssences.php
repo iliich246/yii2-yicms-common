@@ -3,6 +3,10 @@
 namespace Iliich246\YicmsCommon\FreeEssences;
 
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Fields\FieldsHandler;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\Fields\FieldsInterface;
+use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
  * Class FreeEssences
@@ -23,8 +27,16 @@ use yii\db\ActiveRecord;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FreeEssences extends ActiveRecord
+class FreeEssences extends ActiveRecord implements
+    FieldsInterface,
+    FieldReferenceInterface
 {
+    const SCENARIO_CREATE = 0;
+    const SCENARIO_UPDATE = 1;
+
+    /** @var FieldsHandler instance of field handler object */
+    private $fieldHandler;
+
     /**
      * @inheritdoc
      */
@@ -36,10 +48,108 @@ class FreeEssences extends ActiveRecord
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return [
+            'program_name' => 'Program name',
+            'editable' => 'Editable',
+            'visible' => 'Visible',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'program_name', 'editable', 'visible',
+            ],
+            self::SCENARIO_UPDATE => [
+                'program_name', 'editable', 'visible',
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-
+            ['program_name', 'required', 'message' => 'Obligatory input field'],
+            ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
+            ['program_name', 'validateProgramName'],
         ];
+    }
+
+    /**
+     * Validates the program name.
+     * This method serves as the inline validation for page program name.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateProgramName($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+
+            $pagesQuery = self::find()->where(['program_name' => $this->program_name]);
+
+            if ($this->scenario == self::SCENARIO_UPDATE)
+                $pagesQuery->andWhere(['not in', 'program_name', $this->getOldAttribute('program_name')]);
+
+            $pages = $pagesQuery->all();
+            if ($pages)$this->addError($attribute, 'Free essence with same name already exist in system');
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) return;
+
+        if ($this->scenario == self::SCENARIO_CREATE) {
+            $this->field_template_reference = FieldTemplate::generateTemplateReference();
+            $this->field_reference = $this->field_template_reference;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldHandler()
+    {
+        if (!$this->fieldHandler)
+            $this->fieldHandler = new FieldsHandler($this);
+
+        return $this->fieldHandler;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getField($name)
+    {
+        return $this->getFieldHandler()->getField($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTemplateFieldReference()
+    {
+        return $this->field_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldReference()
+    {
+        return $this->field_reference;
     }
 }

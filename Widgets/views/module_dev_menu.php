@@ -30,6 +30,18 @@ use yii\helpers\Url;
             href="<?= Url::toRoute('/common/dev/change-admin-hash') ?>">
             Change admin hash
         </a>
+        <a <?php if ($widget->route == 'common/dev/free-essences-list'): ?> class="active" <?php endif; ?>
+            href="<?= Url::toRoute('/common/dev/free-essences-list') ?>">
+            Free essences list
+        </a>
+        <a <?php if (
+            ($widget->route == 'common/dev/create-free-essences')
+            ||
+            ($widget->route == 'common/dev/update-free-essences')
+        ):?> class="active" <?php endif; ?>
+            href="<?= Url::toRoute('/common/dev/create-free-essences') ?>">
+            Create/update free essence
+        </a>
     </div>
 </div>
 <hr>

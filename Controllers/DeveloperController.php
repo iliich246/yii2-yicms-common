@@ -2,6 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
+use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
+use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -222,4 +226,116 @@ class DeveloperController extends Controller
             'model' => $model
         ]);
     }
+
+    /**
+     * Render list of all free essences
+     * @return string
+     */
+    public function actionFreeEssencesList()
+    {
+        $freeEssences = FreeEssences::find()->all();
+
+        return $this->render('/developer/free_essences_list', [
+            'freeEssences' => $freeEssences,
+        ]);
+    }
+
+    /**
+     * Creates new free essence
+     * @return string|\yii\web\Response
+     */
+    public function actionCreateFreeEssence()
+    {
+        $freeEssence = new FreeEssences();
+        $freeEssence->scenario = FreeEssences::SCENARIO_CREATE;
+
+        if ($freeEssence->load(Yii::$app->request->post()) && $freeEssence->validate()) {
+
+            if ($freeEssence->save()) {
+                return $this->redirect(Url::toRoute(['update-free-essence', 'id' => $freeEssence->id]));
+            } else {
+                //TODO: add bootbox error
+            }
+        }
+
+        return $this->render('/developer/create_update_free_essence', [
+            'freeEssence' => $freeEssence,
+        ]);
+
+    }
+
+    /**
+     * Updates free essence
+     * @param $id
+     * @param null $fieldTemplateReference
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     */
+    public function actionUpdateFreeEssence($id, $fieldTemplateReference = null)
+    {
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($id);
+
+        if (!$freeEssence)
+            throw new NotFoundHttpException('Wrong page ID');
+
+        $freeEssence->scenario = FreeEssences::SCENARIO_UPDATE;
+
+        //update page via pjax
+        if ($freeEssence->load(Yii::$app->request->post()) && $freeEssence->validate()) {
+
+            if ($freeEssence->save()) {
+                $success = true;
+            } else {
+                $success = false;
+            }
+
+            return $this->render('/developer/create_update_free_essence', [
+                'freeEssence' => $freeEssence,
+                'success' => $success
+            ]);
+        }
+
+        //initialize fields group
+        $devFieldGroup = new DevFieldsGroup();
+        $devFieldGroup->setFieldsReferenceAble($freeEssence);
+        $devFieldGroup->initialize($fieldTemplateReference);
+
+        //try to load validate and save field via pjax
+        if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {
+
+            if (!$devFieldGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            return FieldsDevInputWidget::widget([
+                'devFieldGroup' => $devFieldGroup,
+                'dataSaved' => true,
+            ]);
+        }
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($freeEssence->field_template_reference)
+                                        ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+                                        ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+                                        ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($freeEssence->field_template_reference)
+                                        ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+                                        ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+                                        ->all();
+
+        return $this->render('/developer/create_update_free_essence', [
+            'freeEssence' => $freeEssence,
+            'devFieldGroup' => $devFieldGroup,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle' => $fieldTemplatesSingle
+        ]);
+    }
+
+    public function actionDeleteFreeEssence($id)
+    {
+
+    }
+
 }
