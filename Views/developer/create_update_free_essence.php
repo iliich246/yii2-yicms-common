@@ -15,6 +15,38 @@ use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 /* @var $success bool */
 
+$modalName = FieldsDevInputWidget::getModalWindowName();
+$formName  = FieldsDevInputWidget::getFormName();
+$pjaxName  = FieldsDevInputWidget::getPjaxContainerId();
+
+$js = <<<JS
+;(function() {
+    var pjaxContainer = $('#update-free-essence-container');
+
+    $(pjaxContainer).on('pjax:success', function() {
+        $(".alert").hide().slideDown(500).fadeTo(500, 1);
+
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 3000);
+    });
+
+    $(pjaxContainer).on('pjax:error', function(xhr, textStatus) {
+        bootbox.alert({
+            size: 'large',
+            title: "There are some error on ajax request!",
+            message: textStatus.responseText,
+            className: 'bootbox-error'
+        });
+
+        console.log(textStatus);
+    });
+})();
+JS;
+
+$this->registerJs($js, $this::POS_READY);
 ?>
 
 <div class="col-sm-9 content">
@@ -28,7 +60,7 @@ use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
     </div>
 
     <div class="row content-block breadcrumbs">
-        <a href="<?= Url::toRoute(['list']) ?>"><span>Pages list</span></a> <span> / </span>
+        <a href="<?= Url::toRoute(['free-essences-list']) ?>"><span>Free essences list</span></a> <span> / </span>
         <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): ?>
             <span>Create free essence</span>
         <?php else: ?>

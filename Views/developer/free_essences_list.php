@@ -31,10 +31,13 @@ use yii\helpers\Url;
                             </a>
                         </div>
                         <div class="col-xs-2 list-controls">
-                            <?php if ($freeEssence->editable): ?>
+                            <?php if ($freeEssence->visible): ?>
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             <?php else: ?>
                                 <span class="glyphicon glyphicon-eye-close"></span>
+                            <?php endif; ?>
+                            <?php if ($freeEssence->editable): ?>
+                                <span class="glyphicon glyphicon-pencil"></span>
                             <?php endif; ?>
                         </div>
                     </div>

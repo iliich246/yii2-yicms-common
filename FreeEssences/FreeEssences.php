@@ -3,6 +3,8 @@
 namespace Iliich246\YicmsCommon\FreeEssences;
 
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
@@ -29,13 +31,26 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  */
 class FreeEssences extends ActiveRecord implements
     FieldsInterface,
-    FieldReferenceInterface
+    FieldReferenceInterface,
+    SortOrderInterface
 {
+    use SortOrderTrait;
+
     const SCENARIO_CREATE = 0;
     const SCENARIO_UPDATE = 1;
 
     /** @var FieldsHandler instance of field handler object */
     private $fieldHandler;
+
+    /**
+     * @param array $config
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->visible = true;
+        $this->editable = true;
+    }
 
     /**
      * @inheritdoc
@@ -151,5 +166,53 @@ class FreeEssences extends ActiveRecord implements
     public function getFieldReference()
     {
         return $this->field_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderQuery()
+    {
+        return self::find()->all();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getOrderFieldName()
+    {
+        return 'free_essences_order';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderValue()
+    {
+        return $this->free_essences_order;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setOrderValue($value)
+    {
+        $this->free_essences_order = $value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function configToChangeOfOrder()
+    {
+        //$this->scenario = self::SCENARIO_CHANGE_ORDER;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderAble()
+    {
+        return $this;
     }
 }

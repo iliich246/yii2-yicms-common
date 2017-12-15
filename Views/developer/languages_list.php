@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 /* @var $success bool */
 $this->title = 'Languages list';
 
-$js = <<<EOL
+$js = <<<JS
 ;(function(){
     var pjaxContainer = $('#pjax-language-config-container');
 
@@ -39,7 +39,7 @@ $js = <<<EOL
         console.log(textStatus);
     });
 })();
-EOL;
+JS;
 
 $this->registerJs($js);
 
