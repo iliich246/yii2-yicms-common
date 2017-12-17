@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
  */
 class DevFieldsGroup extends AbstractGroup
 {
+    //This
     /** @var FieldReferenceInterface  */
     protected $referenceAble;
 
@@ -30,6 +31,7 @@ class DevFieldsGroup extends AbstractGroup
 
     /**
      * @param FieldReferenceInterface $referenceAble
+     * //old method
      */
     public function setFieldsReferenceAble(FieldReferenceInterface $referenceAble)
     {

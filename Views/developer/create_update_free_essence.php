@@ -46,7 +46,58 @@ $js = <<<JS
 })();
 JS;
 
+$loadModal = Url::toRoute([
+    '/common/dev-fields/load-modal'
+]);
+
+$emptyModal = Url::toRoute([
+    '/common/dev-fields/empty-modal'
+]);
+
+$bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
+$src = $bundle->baseUrl . '/loader.svg';
+
+$js2 = <<<JS
+$('#{$pjaxName}').on('pjax:send', function() {
+  $('#{$modalName}').find('.modal-content').empty().append('<img src="{$src}" style="text-align:center">');
+});
+
+    $(document).on('click', '.field-item p', function(event) {
+
+        console.log($(this).data('field-template-id'));
+
+        var templateData = $(this).data('field-template-id');
+
+        $.pjax({
+            url: '{$loadModal}?fieldTemplateReference=' + templateData,
+            container: '#{$pjaxName}',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+
+        $('#{$modalName}').modal('show');
+    });
+
+    $('.add-field').on('click', function() {
+        $.pjax({
+            url: '{$emptyModal}',
+            container: '#{$pjaxName}',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+JS;
+
+
 $this->registerJs($js, $this::POS_READY);
+$this->registerJs($js2, $this::POS_READY);
+
+
+//$this->registerJsFile('@web/js/fields.js');
 ?>
 
 <div class="col-sm-9 content">
@@ -141,7 +192,7 @@ $this->registerJs($js, $this::POS_READY);
     <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): return; endif;?>
 
     <?= $this->render('/pjax/update-fields-list-container', [
-        'page' => $freeEssence,
+        'templateFieldReference' => $freeEssence->getTemplateFieldReference(),
         'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
         'fieldTemplatesSingle' => $fieldTemplatesSingle
     ]) ?>

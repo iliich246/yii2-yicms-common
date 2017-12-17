@@ -3,8 +3,7 @@
 use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 
-/* @var $page \Iliich246\YicmsPages\Base\Pages */
-/* @var $devFieldGroup \Iliich246\YicmsCommon\Fields\DevFieldsGroup */
+/* @var $templateFieldReference integer */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 
@@ -17,7 +16,10 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
         </div>
         <div class="row control-buttons">
             <div class="col-xs-12">
-                <button class="btn btn-primary add-field" data-toggle="modal" data-target="#fieldsDevModal">
+                <button class="btn btn-primary add-field"
+                        data-toggle="modal"
+                        data-target="#fieldsDevModal"
+                        data-template-field-reference="<?= $templateFieldReference ?>">
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new field
                 </button>
             </div>

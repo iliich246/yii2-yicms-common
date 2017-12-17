@@ -17,6 +17,7 @@ $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
 $modalName = FieldsDevInputWidget::getModalWindowName();
 $deleteLink = $widget->deleteLink . '&fieldTemplateId=';
+
 $js = <<<JS
 (function() {
     $(document).on('click', '#field-delete', function() {
