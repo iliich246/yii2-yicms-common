@@ -16,7 +16,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
 $modalName = FieldsDevInputWidget::getModalWindowName();
-$deleteLink = $widget->deleteLink . '&fieldTemplateId=';
+$deleteLink = $widget->deleteLink . '?fieldTemplateId=';
 
 $js = <<<JS
 (function() {
@@ -74,6 +74,7 @@ $this->registerJs($js, $this::POS_READY);
         ]); ?>
         <?php $form = ActiveForm::begin([
             'id' => FieldsDevInputWidget::getFormName(),
+            'action' => $widget->action,
             'options' => [
                 'data-pjax' => true,
                 'data-yicms-saved' => $widget->dataSaved,
@@ -138,6 +139,9 @@ $this->registerJs($js, $this::POS_READY);
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
+        <pre>
+            <?php print_r($widget->devFieldGroup->fieldTemplate->scenario)?>
+        </pre>
         <?php ActiveForm::end(); ?>
         <?php Pjax::end() ?>
     </div>

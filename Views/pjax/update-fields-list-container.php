@@ -2,8 +2,9 @@
 
 use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 
-/* @var $templateFieldReference integer */
+/* @var $fieldTemplateReference integer */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 
@@ -19,7 +20,11 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
                 <button class="btn btn-primary add-field"
                         data-toggle="modal"
                         data-target="#fieldsDevModal"
-                        data-template-field-reference="<?= $templateFieldReference ?>">
+                        data-field-template-reference="<?= $fieldTemplateReference ?>"
+                        data-home-url="<?= \yii\helpers\Url::base() ?>"
+                        data-pjax-container-name="<?= FieldsDevInputWidget::getPjaxContainerId() ?>"
+                        data-fields-modal-name="<?= FieldsDevInputWidget::getModalWindowName() ?>"
+                    >
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new field
                 </button>
             </div>
@@ -57,7 +62,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
                                 <?php if ($fieldTemplate->is_main): ?>
                                     <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
-                                <?php if ($fieldTemplate->canUpOrder()): ?>
+                                <?php /* if ($fieldTemplate->canUpOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-up"
                                           data-page-id="<?= $page->id ?>"
                                           data-field-template-id="<?= $fieldTemplate->id ?>">
@@ -68,7 +73,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
                                           data-page-id="<?= $page->id ?>"
                                           data-field-template-id="<?= $fieldTemplate->id ?>">
                                 </span>
-                                <?php endif; ?>
+                                <?php endif; */ ?>
                             </div>
                         </div>
                     <?php endforeach; ?>

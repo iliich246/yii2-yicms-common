@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Widgets;
 
 use yii\bootstrap\Widget;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
+use yii\helpers\Url;
 
 /**
  * Class FieldsDevInputWidget
@@ -18,6 +19,16 @@ class FieldsDevInputWidget extends Widget
     public $dataSaved = false;
     /** @var string part of link for delete field template  */
     public $deleteLink;
+    /** @var string keeps current form action  */
+    public $action;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        $this->deleteLink = Url::toRoute(['/common/dev-fields/delete-field-template']);
+    }
 
     /**
      * Returns name of form name of widget

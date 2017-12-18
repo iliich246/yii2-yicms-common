@@ -267,12 +267,12 @@ class DeveloperController extends Controller
     /**
      * Updates free essence
      * @param $id
-     * @param null $fieldTemplateReference
+     * @param null $fieldTemplateId
      * @return string
      * @throws NotFoundHttpException
      * @throws \Exception
      */
-    public function actionUpdateFreeEssence($id, $fieldTemplateReference = null)
+    public function actionUpdateFreeEssence($id, $fieldTemplateId = null)
     {
         /** @var FreeEssences $freeEssence */
         $freeEssence = FreeEssences::findOne($id);
@@ -299,8 +299,8 @@ class DeveloperController extends Controller
 
         //initialize fields group
         $devFieldGroup = new DevFieldsGroup();
-        $devFieldGroup->setFieldsReferenceAble($freeEssence);
-        $devFieldGroup->initialize($fieldTemplateReference);
+        $devFieldGroup->setFieldTemplateReference($freeEssence->field_template_reference);
+        $devFieldGroup->initialize($fieldTemplateId);
 
         //try to load validate and save field via pjax
         if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {

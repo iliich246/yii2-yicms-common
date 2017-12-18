@@ -19,7 +19,7 @@ interface FieldReferenceInterface
      * Returns templateFieldReference
      * @return integer
      */
-    public function getTemplateFieldReference();
+    public function getFieldTemplateReference();
 
     /**
      * Returns fieldReference

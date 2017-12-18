@@ -18,9 +18,6 @@ abstract class AbstractGroup extends Component
 
     public $scenario = self::SCENARIO_DEFAULT;
 
-    /** @var */
-    protected $referenceAble;
-
     /**
      * Initializes all group for correct work
      * @return void

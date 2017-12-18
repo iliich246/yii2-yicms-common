@@ -40,8 +40,6 @@ $js = <<<JS
             message: textStatus.responseText,
             className: 'bootbox-error'
         });
-
-        console.log(textStatus);
     });
 })();
 JS;
@@ -58,46 +56,72 @@ $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';
 
 $js2 = <<<JS
-$('#{$pjaxName}').on('pjax:send', function() {
-  $('#{$modalName}').find('.modal-content').empty().append('<img src="{$src}" style="text-align:center">');
-});
+
+;(function() {
+    var addField = $('.add-field');
+    var homeUrl = $(addField).data('homeUrl');
+    var emptyModalUrl = homeUrl + '/common/dev-fields/empty-modal';
+    var loadModalUrl = homeUrl + '/common/dev-fields/load-modal';
+    var updateFieldsListUrl = homeUrl + '/common/dev-fields/update-fields-list-container';
+
+    var fieldTemplateReference = $(addField).data('fieldTemplateReference');
+    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
+    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
+
+    $(pjaxContainerName).on('pjax:send', function() {
+         $(pjaxFieldsModalName)
+              .find('.modal-content')
+              .empty()
+              .append('<img src="{$src}" style="text-align:center">');
+    });
+
+    $(pjaxContainerName).on('pjax:success', function(event) {
+        if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
+
+        $.pjax({
+            url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
+            container: '#update-fields-list-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+
+        $(pjaxFieldsModalName).modal('hide');
+    });
 
     $(document).on('click', '.field-item p', function(event) {
-
-        console.log($(this).data('field-template-id'));
 
         var templateData = $(this).data('field-template-id');
 
         $.pjax({
-            url: '{$loadModal}?fieldTemplateReference=' + templateData,
-            container: '#{$pjaxName}',
+            url: loadModalUrl + '?fieldTemplateId=' + templateData,
+            container: pjaxContainerName,
             scrollTo: false,
             push: false,
             type: "POST",
             timeout: 2500
         });
 
-        $('#{$modalName}').modal('show');
+        $(pjaxFieldsModalName).modal('show');
     });
 
-    $('.add-field').on('click', function() {
+    $(addField).on('click', function() {
         $.pjax({
-            url: '{$emptyModal}',
-            container: '#{$pjaxName}',
+            url: emptyModalUrl + '?fieldTemplateReference=' + fieldTemplateReference ,
+            container: pjaxContainerName,
             scrollTo: false,
             push: false,
             type: "POST",
             timeout: 2500
         });
     });
+})();
 JS;
-
 
 $this->registerJs($js, $this::POS_READY);
 $this->registerJs($js2, $this::POS_READY);
 
-
-//$this->registerJsFile('@web/js/fields.js');
 ?>
 
 <div class="col-sm-9 content">
@@ -192,13 +216,13 @@ $this->registerJs($js2, $this::POS_READY);
     <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): return; endif;?>
 
     <?= $this->render('/pjax/update-fields-list-container', [
-        'templateFieldReference' => $freeEssence->getTemplateFieldReference(),
+        'fieldTemplateReference' => $freeEssence->getFieldTemplateReference(),
         'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
         'fieldTemplatesSingle' => $fieldTemplatesSingle
     ]) ?>
 
     <?= FieldsDevInputWidget::widget([
         'devFieldGroup' => $devFieldGroup,
-        'deleteLink' => Url::toRoute(['delete-field-template', 'id' => $freeEssence->id])
+        'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ])
     ?>

@@ -16,8 +16,8 @@ use yii\widgets\ActiveForm;
 class DevFieldsGroup extends AbstractGroup
 {
     //This
-    /** @var FieldReferenceInterface  */
-    protected $referenceAble;
+    /** @var integer fieldTemplateReference value for current group   */
+    protected $fieldTemplateReference;
 
     /**
      * @var FieldTemplate
@@ -29,31 +29,75 @@ class DevFieldsGroup extends AbstractGroup
      */
     public $fieldNameTranslates;
 
+    /** @var bool if used in pjax controller initialization will be changed */
+    private $pjaxMode = false;
+
     /**
-     * @param FieldReferenceInterface $referenceAble
-     * //old method
+     * @param integer $fieldTemplateReference
      */
-    public function setFieldsReferenceAble(FieldReferenceInterface $referenceAble)
+    public function setFieldTemplateReference($fieldTemplateReference)
     {
-        $this->referenceAble = $referenceAble;
+        $this->fieldTemplateReference = $fieldTemplateReference;
+    }
+
+    /**
+     * Sets pjax mode in true
+     */
+    public function setPjaxMode()
+    {
+        $this->pjaxMode = true;
+    }
+
+    /**
+     * Sets update scenario
+     */
+    public function setUpdateScenario()
+    {
+        $this->scenario = self::SCENARIO_UPDATE;
+        $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
     }
 
     /**
      * @inheritdoc
      */
-    public function initialize($fieldTemplateReference = null)
+    public function initialize($fieldTemplateId = null)
     {
-        if (!$fieldTemplateReference) {
+        if (!$fieldTemplateId) {
             $this->fieldTemplate = new FieldTemplate();
-            $this->fieldTemplate->field_template_reference = $this->referenceAble->getTemplateFieldReference();
+            $this->fieldTemplate->field_template_reference = $this->fieldTemplateReference;
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
             $this->scenario = self::SCENARIO_CREATE;
-
         } else {
-            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateReference);
+            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
             $this->scenario = self::SCENARIO_UPDATE;
         }
+//        if ($this->scenario == self::SCENARIO_CREATE) {
+//            $this->fieldTemplate = new FieldTemplate();
+//            $this->fieldTemplate->field_template_reference = $this->fieldTemplateReference;
+//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
+//            //$this->scenario = self::SCENARIO_CREATE;
+//        } else {
+//            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
+//           // $this->scenario = self::SCENARIO_UPDATE;
+//        }
+//        if (!$fieldTemplateReference && !$fieldTemplateId) {
+//            $this->fieldTemplate = new FieldTemplate();
+//            $this->fieldTemplate->field_template_reference = $this->referenceAble->getFieldTemplateReference();
+//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
+//
+//        } elseif (!$fieldTemplateReference && $fieldTemplateId) {
+//            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
+//            $this->scenario = self::SCENARIO_UPDATE;
+//
+//        } else {
+//            $this->fieldTemplate = new FieldTemplate();
+//            $this->fieldTemplate->field_template_reference = $fieldTemplateReference;
+//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
+//            $this->scenario = self::SCENARIO_CREATE;
+//        }
 
         $languages = Language::getInstance()->usedLanguages();
 
@@ -85,7 +129,12 @@ class DevFieldsGroup extends AbstractGroup
      */
     public function load($data)
     {
-        return ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data));
+        if ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data)) {
+            $this->setUpdateScenario();
+            return true;
+        }
+
+        return false;
     }
 
     /**
