@@ -44,9 +44,7 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
                     <?php foreach ($fieldTemplatesTranslatable as $fieldTemplate): ?>
                         <div class="row list-items field-item">
                             <div class="col-xs-10 list-title">
-                                <p data-field-template="<?= $fieldTemplate->field_template_reference ?>"
-                                   data-field-template-id="<?= $fieldTemplate->id ?>"
-                                    >
+                                <p data-field-template-id="<?= $fieldTemplate->id ?>">
                                     <?= $fieldTemplate->program_name ?> (<?= $fieldTemplate->getTypeName() ?>)
                                 </p>
                             </div>

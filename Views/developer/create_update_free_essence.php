@@ -59,6 +59,8 @@ $js2 = <<<JS
 
 ;(function() {
     var addField = $('.add-field');
+    var fieldTemplateIdHidden = $('#field-template-id-hidden');
+
     var homeUrl = $(addField).data('homeUrl');
     var emptyModalUrl = homeUrl + '/common/dev-fields/empty-modal';
     var loadModalUrl = homeUrl + '/common/dev-fields/load-modal';
@@ -171,6 +173,7 @@ $this->registerJs($js2, $this::POS_READY);
             ]) ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'create-update-free-essence-form',
+                //'action' => ['/common/dev/update-free-essence', 'id' => $freeEssence->id, ''],
                 'options' => [
                     'data-pjax' => true,
                 ],

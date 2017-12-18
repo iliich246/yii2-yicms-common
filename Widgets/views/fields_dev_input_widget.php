@@ -25,7 +25,8 @@ $js = <<<JS
 
         if (!$(button).is('[data-field-template-id]')) return;
 
-        var fieldTemplateId = $(button).data('fieldTemplateId');
+        //var fieldTemplateId = $(button).data('fieldTemplateId');
+        var fieldTemplateReference = $(button).data('fieldTemplateReference');
 
         if (!($(this).hasClass('field-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
@@ -34,7 +35,7 @@ $js = <<<JS
             //$(this).css('float', 'right')
         } else {
             $.pjax({
-                url: '{$deleteLink}' + fieldTemplateId,
+                url: '{$deleteLink}' + fieldTemplateReference,
                 container: '#update-fields-list-container',
                 scrollTo: false,
                 push: false,
@@ -81,6 +82,13 @@ $this->registerJs($js, $this::POS_READY);
             ],
         ]);
         ?>
+
+        <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
+        <?= Html::hiddenInput('_fieldTemplateId', $widget->devFieldGroup->fieldTemplate->id, [
+            'id' => 'field-template-id-hidden'
+        ]) ?>
+        <?php endif; ?>
+
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -129,6 +137,7 @@ $this->registerJs($js, $this::POS_READY);
                     <button type="button"
                             class="btn btn-danger"
                             id="field-delete"
+                            data-field-template-reference="<?= $widget->devFieldGroup->fieldTemplate->field_template_reference ?>"
                             data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>">
                         Delete field
                     </button>

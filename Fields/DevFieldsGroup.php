@@ -20,7 +20,7 @@ class DevFieldsGroup extends AbstractGroup
     protected $fieldTemplateReference;
 
     /**
-     * @var FieldTemplate
+     * @var FieldTemplate current field template with group is working (create or update)
      */
     public $fieldTemplate;
 
@@ -29,8 +29,10 @@ class DevFieldsGroup extends AbstractGroup
      */
     public $fieldNameTranslates;
 
-    /** @var bool if used in pjax controller initialization will be changed */
-    private $pjaxMode = false;
+    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
+    public $fieldTemplatesTranslatable;
+    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
+    public $fieldTemplatesSingle;
 
     /**
      * @param integer $fieldTemplateReference
@@ -69,35 +71,12 @@ class DevFieldsGroup extends AbstractGroup
             $this->scenario = self::SCENARIO_CREATE;
         } else {
             $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+            if (!$this->fieldTemplate) throw new CommonException("Wrong fieldTemplateId = $fieldTemplateId");
+
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
             $this->scenario = self::SCENARIO_UPDATE;
         }
-//        if ($this->scenario == self::SCENARIO_CREATE) {
-//            $this->fieldTemplate = new FieldTemplate();
-//            $this->fieldTemplate->field_template_reference = $this->fieldTemplateReference;
-//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
-//            //$this->scenario = self::SCENARIO_CREATE;
-//        } else {
-//            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
-//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
-//           // $this->scenario = self::SCENARIO_UPDATE;
-//        }
-//        if (!$fieldTemplateReference && !$fieldTemplateId) {
-//            $this->fieldTemplate = new FieldTemplate();
-//            $this->fieldTemplate->field_template_reference = $this->referenceAble->getFieldTemplateReference();
-//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
-//
-//        } elseif (!$fieldTemplateReference && $fieldTemplateId) {
-//            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
-//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
-//            $this->scenario = self::SCENARIO_UPDATE;
-//
-//        } else {
-//            $this->fieldTemplate = new FieldTemplate();
-//            $this->fieldTemplate->field_template_reference = $fieldTemplateReference;
-//            $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
-//            $this->scenario = self::SCENARIO_CREATE;
-//        }
 
         $languages = Language::getInstance()->usedLanguages();
 
@@ -114,6 +93,16 @@ class DevFieldsGroup extends AbstractGroup
 
             $this->fieldNameTranslates[$key] = $fieldNameTranslate;
         }
+
+//        $this->fieldTemplatesTranslatable = FieldTemplate::getListQuery($this->fieldTemplateReference)
+//                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+//                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+//                            ->all();
+//
+//        $fieldTemplatesSingle = FieldTemplate::getListQuery($this->fieldTemplateReference)
+//                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+//                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+//                            ->all();
     }
 
     /**
@@ -129,12 +118,7 @@ class DevFieldsGroup extends AbstractGroup
      */
     public function load($data)
     {
-        if ($this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data)) {
-            $this->setUpdateScenario();
-            return true;
-        }
-
-        return false;
+        return $this->fieldTemplate->load($data) && Model::loadMultiple($this->fieldNameTranslates, $data);
     }
 
     /**

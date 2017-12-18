@@ -68,8 +68,8 @@ class DeveloperFieldsController extends Controller
             Yii::$app->request->post('_pjax') == '#'.FieldsDevInputWidget::getPjaxContainerId())
         {
             $devFieldGroup = new DevFieldsGroup();
-            $devFieldGroup->setPjaxMode();
-            $devFieldGroup->initialize($fieldTemplateReference);
+            $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
+            $devFieldGroup->initialize();
 
             return FieldsDevInputWidget::widget([
                 'devFieldGroup' => $devFieldGroup
@@ -101,6 +101,7 @@ class DeveloperFieldsController extends Controller
                 ->all();
 
             return $this->render('/pjax/update-fields-list-container', [
+                'fieldTemplateReference' => $fieldTemplateReference,
                 'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
                 'fieldTemplatesSingle' => $fieldTemplatesSingle
             ]);

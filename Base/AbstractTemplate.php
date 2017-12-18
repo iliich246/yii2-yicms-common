@@ -4,7 +4,6 @@ namespace Iliich246\YicmsCommon\Base;
 
 use Yii;
 use yii\base\Event;
-use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
