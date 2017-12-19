@@ -17,7 +17,9 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class FieldsGroup extends AbstractGroup
 {
-    /** @var FieldReferenceInterface|FieldsInterface  */
+    /**
+     * @var FieldReferenceInterface|FieldsInterface fieldTemplateReference value for current group
+     */
     protected $referenceAble;
 
     /**
@@ -26,9 +28,14 @@ class FieldsGroup extends AbstractGroup
      */
     public $renderFieldsExceptions = [];
 
-    /** @var FieldTemplate[] instances that`s must has translates  */
+    /**
+     * @var FieldTemplate[] instances that`s must has translates
+     */
     public $translateAbleFieldTemplates;
-    /** @var FieldTemplate[] instances without translates  */
+
+    /**
+     * @var FieldTemplate[] instances without translates
+     */
     public $singleFieldTemplates;
 
     /** @var FieldTranslateForm[] of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
@@ -56,7 +63,9 @@ class FieldsGroup extends AbstractGroup
      */
     public $translateFormsArray = [];
 
-    /** @var Field[] array of fields without translates */
+    /**
+     * @var Field[] array of fields without translates
+     */
     public $singleFields;
 
     /**
@@ -72,7 +81,7 @@ class FieldsGroup extends AbstractGroup
      */
     public function initialize($fieldTemplateReference = null)
     {
-        $fieldTemplatesQuery = FieldTemplate::getListQuery($this->referenceAble->getTemplateFieldReference());
+        $fieldTemplatesQuery = FieldTemplate::getListQuery($this->referenceAble->getFieldTemplateReference());
 
         if (!CommonModule::isUnderDev()) $fieldTemplatesQuery->andWhere([
             'editable' => true,
@@ -136,7 +145,15 @@ class FieldsGroup extends AbstractGroup
      */
     public function validate()
     {
-        return (Model::validateMultiple($this->translateForms) && Model::validateMultiple($this->singleFields));
+        $success = true;
+
+        if ($this->translateForms)
+            $success = Model::validateMultiple($this->translateForms);
+
+        if ($success && $this->singleFields)
+            $success = Model::validateMultiple($this->singleFields);
+
+        return $success;
     }
 
     /**
@@ -144,7 +161,15 @@ class FieldsGroup extends AbstractGroup
      */
     public function load($data)
     {
-        return (Model::loadMultiple($this->translateForms, $data) && Model::loadMultiple($this->singleFields, $data));
+        $success = true;
+
+        if ($this->translateForms)
+            $success = Model::loadMultiple($this->translateForms, $data);
+
+        if ($success && $this->singleFields)
+            $success = Model::loadMultiple($this->singleFields, $data);
+
+        return $success;
     }
 
     /**
@@ -154,15 +179,17 @@ class FieldsGroup extends AbstractGroup
     {
         $success = true;
 
-        foreach($this->translateForms as $translateForm) {
-            if (!$success) return false;
-            $success = $translateForm->save();
-        }
+        if ($this->translateForms)
+            foreach($this->translateForms as $translateForm) {
+                if (!$success) return false;
+                $success = $translateForm->save();
+            }
 
-        foreach($this->singleFields as $singleField) {
-            if (!$success) return false;
-            $success = $singleField->save();
-        }
+        if ($success && $this->singleFields)
+            foreach($this->singleFields as $singleField) {
+                if (!$success) return false;
+                $success = $singleField->save();
+            }
 
         return true;
     }

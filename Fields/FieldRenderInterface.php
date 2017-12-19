@@ -13,10 +13,16 @@ namespace Iliich246\YicmsCommon\Fields;
 interface FieldRenderInterface
 {
     /**
-     * Returns type of field
+     * Returns type of field essence
      * @return integer
      */
     public function getType();
+
+    /**
+     * Returns language type of field essence
+     * @return integer
+     */
+    public function getLanguageType();
 
     /**
      * Returns form key of field

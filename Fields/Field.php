@@ -158,6 +158,14 @@ class Field extends ActiveRecord implements FieldRenderInterface
     /**
      * @inheritdoc
      */
+    public function getLanguageType()
+    {
+        return $this->getTemplate()->language_type;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getKey()
     {
        return '[' . $this->getTemplate()->id . ']value';

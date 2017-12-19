@@ -188,6 +188,14 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     /**
      * @inheritdoc
      */
+    public function getLanguageType()
+    {
+        return $this->fieldTemplate->language_type;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getKey()
     {
         return '[' . $this->language->id . '-' . $this->fieldTemplate->id . ']value';

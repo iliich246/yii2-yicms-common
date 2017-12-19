@@ -15,8 +15,9 @@ use yii\widgets\ActiveForm;
  */
 class DevFieldsGroup extends AbstractGroup
 {
-    //This
-    /** @var integer fieldTemplateReference value for current group   */
+    /**
+     * @var integer fieldTemplateReference value for current group
+     */
     protected $fieldTemplateReference;
 
     /**
@@ -29,9 +30,14 @@ class DevFieldsGroup extends AbstractGroup
      */
     public $fieldNameTranslates;
 
-    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
+    /**
+     * @var FieldTemplate[] array associated with object with current $fieldTemplateReference
+     */
     public $fieldTemplatesTranslatable;
-    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
+
+    /**
+     * @var FieldTemplate[] array associated with object with current $fieldTemplateReference
+     */
     public $fieldTemplatesSingle;
 
     /**
@@ -40,14 +46,6 @@ class DevFieldsGroup extends AbstractGroup
     public function setFieldTemplateReference($fieldTemplateReference)
     {
         $this->fieldTemplateReference = $fieldTemplateReference;
-    }
-
-    /**
-     * Sets pjax mode in true
-     */
-    public function setPjaxMode()
-    {
-        $this->pjaxMode = true;
     }
 
     /**

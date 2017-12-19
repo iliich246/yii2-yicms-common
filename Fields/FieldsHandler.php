@@ -33,7 +33,7 @@ class FieldsHandler extends AbstractHandler
     {
         return $this->getOrSet($name, function() use($name) {
            return Field::getInstance(
-               $this->aggregator->getTemplateFieldReference(),
+               $this->aggregator->getFieldTemplateReference(),
                $this->aggregator->getFieldReference(),
                $name
            );
