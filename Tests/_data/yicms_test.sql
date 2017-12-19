@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2017-11-20 12:10:33
+Date: 2017-12-19 14:20:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -83,6 +83,7 @@ CREATE TABLE `common_conditions_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `condition_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
+  `condition_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `condition_template_reference-index` (`condition_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -164,7 +165,6 @@ CREATE TABLE `common_field_names` (
 -- ----------------------------
 -- Records of common_field_names
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for common_field_translates
 -- ----------------------------
@@ -184,7 +184,6 @@ CREATE TABLE `common_field_translates` (
 -- ----------------------------
 -- Records of common_field_translates
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for common_field_validators
 -- ----------------------------
@@ -211,6 +210,7 @@ CREATE TABLE `common_fields_represents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `common_fields_template_id` int(11) DEFAULT NULL,
   `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `value` text COLLATE utf8_unicode_ci,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -222,7 +222,6 @@ CREATE TABLE `common_fields_represents` (
 -- ----------------------------
 -- Records of common_fields_represents
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for common_fields_templates
 -- ----------------------------
@@ -232,6 +231,8 @@ CREATE TABLE `common_fields_templates` (
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
+  `language_type` smallint(6) DEFAULT NULL,
+  `field_order` int(11) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT NULL,
@@ -242,7 +243,6 @@ CREATE TABLE `common_fields_templates` (
 -- ----------------------------
 -- Records of common_fields_templates
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for common_file_names
 -- ----------------------------
@@ -324,6 +324,7 @@ CREATE TABLE `common_files_templates` (
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
+  `file_order` int(11) DEFAULT NULL,
   `language_type` smallint(6) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
@@ -356,6 +357,51 @@ CREATE TABLE `common_files_validators` (
 -- Records of common_files_validators
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for common_free_essence_name_translates
+-- ----------------------------
+DROP TABLE IF EXISTS `common_free_essence_name_translates`;
+CREATE TABLE `common_free_essence_name_translates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `common_free_essence_id` int(11) DEFAULT NULL,
+  `common_language_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `common_free_essence_name_translates-to-common_free_essences` (`common_free_essence_id`),
+  KEY `common_free_essence_name_translates-to-common_languages` (`common_language_id`),
+  CONSTRAINT `common_free_essence_name_translates-to-common_free_essences` FOREIGN KEY (`common_free_essence_id`) REFERENCES `common_free_essences` (`id`),
+  CONSTRAINT `common_free_essence_name_translates-to-common_languages` FOREIGN KEY (`common_language_id`) REFERENCES `common_languages` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of common_free_essence_name_translates
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for common_free_essences
+-- ----------------------------
+DROP TABLE IF EXISTS `common_free_essences`;
+CREATE TABLE `common_free_essences` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
+  `visible` tinyint(1) DEFAULT NULL,
+  `free_essences_order` int(11) DEFAULT NULL,
+  `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `condition_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `condition_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of common_free_essences
+-- ----------------------------
 -- ----------------------------
 -- Table structure for common_images
 -- ----------------------------
@@ -414,6 +460,7 @@ CREATE TABLE `common_images_templates` (
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
+  `image_order` int(11) DEFAULT NULL,
   `language_type` smallint(6) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
@@ -527,8 +574,8 @@ CREATE TABLE `migration` (
 -- Records of migration
 -- ----------------------------
 INSERT INTO `migration` VALUES ('m000000_000000_base', '1511168330');
-INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1511168362');
-INSERT INTO `migration` VALUES ('m171114_174807_pages_init', '1511168376');
+INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1512734626');
+INSERT INTO `migration` VALUES ('m171114_174807_pages_init', '1512734626');
 
 -- ----------------------------
 -- Table structure for pages
@@ -541,21 +588,21 @@ CREATE TABLE `pages` (
   `visible` tinyint(1) DEFAULT NULL,
   `system_route` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ruled_route` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `field_template_reference` int(11) DEFAULT NULL,
-  `field_reference` int(11) DEFAULT NULL,
-  `file_template_reference` int(11) DEFAULT NULL,
-  `file_reference` int(11) DEFAULT NULL,
-  `image_template_reference` int(11) DEFAULT NULL,
-  `image_reference` int(11) DEFAULT NULL,
-  `condition_template_reference` int(11) DEFAULT NULL,
-  `condition_reference` int(11) DEFAULT NULL,
+  `pages_order` int(11) DEFAULT NULL,
+  `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `condition_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `condition_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of pages
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for pages_config
 -- ----------------------------
@@ -566,13 +613,11 @@ CREATE TABLE `pages_config` (
   `filesPatch` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `thumbNailsDirectoryName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of pages_config
 -- ----------------------------
-INSERT INTO `pages_config` VALUES ('1', '/web/files/pages/', '/web/images/pages/', 'thumb');
-
 -- ----------------------------
 -- Table structure for pages_names_translates
 -- ----------------------------
@@ -590,6 +635,9 @@ CREATE TABLE `pages_names_translates` (
   CONSTRAINT `pages_names_translates-to-pages` FOREIGN KEY (`page_id`) REFERENCES `pages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- ----------------------------
+-- Records of pages_names_translates
+-- ----------------------------
 -- ----------------------------
 -- Records of pages_names_translates
 -- ----------------------------

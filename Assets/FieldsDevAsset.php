@@ -20,5 +20,6 @@ class FieldsDevAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapPluginAsset',
+        'yii\widgets\PjaxAsset',
     ];
 }

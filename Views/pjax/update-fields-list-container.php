@@ -8,6 +8,9 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 
+$bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
+$src = $bundle->baseUrl . '/loader.svg';
+
 ?>
 
 <div class="row content-block form-block">
@@ -24,6 +27,7 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
                         data-home-url="<?= \yii\helpers\Url::base() ?>"
                         data-pjax-container-name="<?= FieldsDevInputWidget::getPjaxContainerId() ?>"
                         data-fields-modal-name="<?= FieldsDevInputWidget::getModalWindowName() ?>"
+                        data-loader-image-src="<?= $src ?>"
                     >
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new field
                 </button>
@@ -60,18 +64,18 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
                                 <?php if ($fieldTemplate->is_main): ?>
                                     <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
-                                <?php /* if ($fieldTemplate->canUpOrder()): ?>
+                                <?php if ($fieldTemplate->canUpOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-up"
-                                          data-page-id="<?= $page->id ?>"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>">
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"
+                                        >
                                 </span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-down"
-                                          data-page-id="<?= $page->id ?>"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>">
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"
+                                        >
                                 </span>
-                                <?php endif; */ ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -103,16 +107,16 @@ use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
                                     <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
-                                    <span class="glyphicon glyphicon-arrow-up"
-                                          data-page-id="<?= $page->id ?>"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>">
-                                </span>
+                                <span class="glyphicon glyphicon-arrow-up"
+                                      data-field-template-id="<?= $fieldTemplate->id ?>"
+                                >
+                              </span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-down"
-                                          data-page-id="<?= $page->id ?>"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>">
-                                </span>
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"
+                                    >
+                              </span>
                                 <?php endif; ?>
                             </div>
                         </div>

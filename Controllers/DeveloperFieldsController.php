@@ -145,19 +145,79 @@ class DeveloperFieldsController extends Controller
                                             ->all();
 
         return $this->render('/pjax/update-fields-list-container', [
+            'fieldTemplateReference' => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle' => $fieldTemplatesSingle
         ]);
-
     }
 
-    public function actionFieldTemplateUpOrder()
+    /**
+     * Action for up field template order
+     * @param $fieldTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFieldTemplateUpOrder($fieldTemplateId)
     {
-        throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FieldTemplate $fieldTemplate */
+        $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+        if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
+
+        $fieldTemplate->upOrder();
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-fields-list-container', [
+            'fieldTemplateReference' => $fieldTemplate->field_template_reference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle' => $fieldTemplatesSingle
+        ]);
     }
 
-    public function actionFieldTemplateDownOrder()
+    /**
+     * Action for down field template order
+     * @param $fieldTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFieldTemplateDownOrder($fieldTemplateId)
     {
-        throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FieldTemplate $fieldTemplate */
+        $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+        if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
+
+        $fieldTemplate->downOrder();
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-fields-list-container', [
+            'fieldTemplateReference' => $fieldTemplate->field_template_reference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle' => $fieldTemplatesSingle
+        ]);
     }
 }

@@ -123,16 +123,6 @@ class Field extends ActiveRecord implements FieldRenderInterface
     }
 
     /**
-     * @inheritdoc
-     */
-//    public function save($runValidation = true, $attributeNames = null)
-//    {
-//
-//
-//        parent::save($runValidation, $attributeNames);
-//    }
-
-    /**
      * Return fetched from db instance of field
      * @param $fieldTemplateReference
      * @param $fieldReference

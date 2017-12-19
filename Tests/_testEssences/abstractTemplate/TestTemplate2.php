@@ -3,7 +3,9 @@
 namespace Iliich246\YicmsCommon\Tests\_testEssences\abstractTemplate;
 
 use yii\base\Event;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
+
 
 /**
  * Class TestTemplate
@@ -47,5 +49,53 @@ class TestTemplate2 extends AbstractTemplate
     protected static function getTemplateReferenceName()
     {
         return 'test_template_reference';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderAble()
+    {
+        throw new CommonException('Not implemented for test class');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function configToChangeOfOrder()
+    {
+        throw new CommonException('Not implemented for test class');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setOrderValue($value)
+    {
+        throw new CommonException('Not implemented for test class');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getOrderFieldName()
+    {
+        throw new CommonException('Not implemented for test class');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderValue()
+    {
+        throw new CommonException('Not implemented for test class');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderQuery()
+    {
+        throw new CommonException('Not implemented for test class');
     }
 }

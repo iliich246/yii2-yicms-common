@@ -136,7 +136,7 @@ class FieldTemplate extends AbstractTemplate
         }
 
         //TODO: delete this in production, it`s needed only for debug
-        if ( $this->scenario === self::SCENARIO_DEFAULT) {
+        if ($this->scenario === self::SCENARIO_DEFAULT) {
             throw new \yii\base\Exception('DEFUALT SCENARIO IT`S WRONG');
         }
 
@@ -144,7 +144,7 @@ class FieldTemplate extends AbstractTemplate
             $this->field_order = $this->maxOrder();
         }
 
-        parent::save($runValidation, $attributes);
+        return parent::save($runValidation, $attributes);
     }
 
     /**
@@ -183,7 +183,7 @@ class FieldTemplate extends AbstractTemplate
 
         //TODO: handle fields validators
 
-        parent::delete();
+        return parent::delete();
     }
 
     /**

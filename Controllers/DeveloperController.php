@@ -261,7 +261,6 @@ class DeveloperController extends Controller
         return $this->render('/developer/create_update_free_essence', [
             'freeEssence' => $freeEssence,
         ]);
-
     }
 
     /**
@@ -298,7 +297,7 @@ class DeveloperController extends Controller
 
         //initialize fields group
         $devFieldGroup = new DevFieldsGroup();
-        $devFieldGroup->setFieldTemplateReference($freeEssence->field_template_reference);
+        $devFieldGroup->setFieldTemplateReference($freeEssence->getFieldTemplateReference());
         $devFieldGroup->initialize(Yii::$app->request->post('_fieldTemplateId'));
 
         //try to load validate and save field via pjax
@@ -314,12 +313,12 @@ class DeveloperController extends Controller
             ]);
         }
 
-        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($freeEssence->field_template_reference)
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($freeEssence->getFieldTemplateReference())
                                         ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
                                         ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
                                         ->all();
 
-        $fieldTemplatesSingle = FieldTemplate::getListQuery($freeEssence->field_template_reference)
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($freeEssence->getFieldTemplateReference())
                                         ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
                                         ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
                                         ->all();

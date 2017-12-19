@@ -19,23 +19,22 @@ $modalName = FieldsDevInputWidget::getModalWindowName();
 $deleteLink = $widget->deleteLink . '?fieldTemplateId=';
 
 $js = <<<JS
-(function() {
+;(function() {
     $(document).on('click', '#field-delete', function() {
         var button = ('#field-delete');
 
         if (!$(button).is('[data-field-template-id]')) return;
 
         //var fieldTemplateId = $(button).data('fieldTemplateId');
-        var fieldTemplateReference = $(button).data('fieldTemplateReference');
+        var fieldTemplateId = $(button).data('fieldTemplateId');
 
         if (!($(this).hasClass('field-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('field-confirm-state');
-            //$(this).css('float', 'right')
         } else {
             $.pjax({
-                url: '{$deleteLink}' + fieldTemplateReference,
+                url: '{$deleteLink}' + fieldTemplateId,
                 container: '#update-fields-list-container',
                 scrollTo: false,
                 push: false,
