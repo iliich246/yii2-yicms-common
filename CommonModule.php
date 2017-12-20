@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon;
 
 use Iliich246\YicmsCommon\Base\CommonUser;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
@@ -59,7 +60,7 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function init()
     {
-        $this->controllerMap['admin'] = $this->yicmsLocation . '/Common/Controllers/AdminController';
+        $this->controllerMap['admin'] = 'app\yicms\Common\Controllers\AdminController';
         parent::init();
     }
 
@@ -87,13 +88,16 @@ class CommonModule extends AbstractConfigurableModule implements
         $dev = -1;
         $admin = 0;
 
-        $user = CommonUser::findIdentity($admin);
+        $user = CommonUser::findIdentity($dev);
         Yii::$app->user->login($user);
 
         /** END OF DEBUG CODE */
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;
-        Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
+        //Language::getInstance()->setLanguage(LanguagesDb::instanceByCode('ru-RU'));
+        Yii::$app->language = LanguagesDb::instanceByCode('ru-RU')->code;
+        //Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
+
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace Iliich246\YicmsCommon\FreeEssences;
 
+use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
@@ -15,9 +17,9 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  *
  * @property integer $id
  * @property string $program_name
- * @property bool $editable
- * @property bool $visible
- * @property bool $free_essences_order
+ * @property boolean $editable
+ * @property boolean $visible
+ * @property integer $free_essences_order
  * @property string $field_template_reference
  * @property string $field_reference
  * @property string $file_template_reference
@@ -97,6 +99,30 @@ class FreeEssences extends ActiveRecord implements
             ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
             ['program_name', 'validateProgramName'],
         ];
+    }
+
+    /**
+     * Return instance of page by her name
+     * @param $programName
+     * @return self
+     * @throws CommonException
+     */
+    public static function getByName($programName)
+    {
+        /** @var self $page */
+        $freeEssence = self::find()
+            ->where(['program_name' => $programName])
+            ->one();
+
+        if ($freeEssence) return $freeEssence;
+
+        Yii::error("Сan not find free essence with name " . $freeEssence, __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException('Сan not find free essence with name ' . $programName);
+        }
+
+        return new self();
     }
 
     /**

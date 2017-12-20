@@ -196,9 +196,33 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     /**
      * @inheritdoc
      */
+    public function isEditable()
+    {
+        return (bool)$this->getField()->editable;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isVisible()
+    {
+        return (bool)$this->getField()->visible;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getKey()
     {
         return '[' . $this->language->id . '-' . $this->fieldTemplate->id . ']value';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTemplate()
+    {
+        return $this->fieldTemplate;
     }
 
     /**

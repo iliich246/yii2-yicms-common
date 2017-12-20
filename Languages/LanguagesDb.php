@@ -126,4 +126,16 @@ class LanguagesDb extends ActiveRecord
         if ($languageFacade->getCurrentLanguage()->id === $this->id) return true;
         return false;
     }
+
+    /**
+     * Returns instance of language by his code
+     * @param $code
+     * @return self|null
+     */
+    public static function instanceByCode($code)
+    {
+        return self::find()->where([
+            'code' => $code
+        ])->one();
+    }
 }

@@ -25,6 +25,24 @@ interface FieldRenderInterface
     public function getLanguageType();
 
     /**
+     * Returns true is field is editable
+     * @return bool
+     */
+    public function isEditable();
+
+    /**
+     * Return true is field is visible
+     * @return bool
+     */
+    public function isVisible();
+
+    /**
+     * Returns instance of field template associated with object
+     * @return FieldTemplate
+     */
+    public function getTemplate();
+
+    /**
      * Returns form key of field
      * example $form->field($model, <key>)->...
      * @return string
