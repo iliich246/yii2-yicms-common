@@ -79,7 +79,7 @@ class FieldsGroup extends AbstractGroup
     /**
      * @inheritdoc
      */
-    public function initialize($fieldTemplateReference = null)
+    public function initialize()
     {
         $fieldTemplatesQuery = FieldTemplate::getListQuery($this->referenceAble->getFieldTemplateReference());
 
@@ -135,6 +135,61 @@ class FieldsGroup extends AbstractGroup
 
                 $singleField->save();
             }
+
+            $this->singleFields["$singleFieldTemplate->id"] = $singleField;
+        }
+    }
+
+    /**
+     * This method must be used in pjax actions when do not created FieldReferenceInterface object
+     * @param string $fieldTemplateReference
+     * @param Field $field
+     */
+    public function initializePjax($fieldTemplateReference, Field $field)
+    {
+        $fieldTemplatesQuery = FieldTemplate::getListQuery($fieldTemplateReference);
+
+        if (!CommonModule::isUnderDev()) $fieldTemplatesQuery->andWhere([
+            'editable' => true,
+        ]);
+
+        $fieldTemplatesQuery->orderBy([
+            FieldTemplate::getOrderFieldName() => SORT_ASC
+        ])->indexBy('id');
+
+        $templateQuery = clone($fieldTemplatesQuery);
+
+        /** @var FieldTemplate $fieldTemplates */
+        $this->translateAbleFieldTemplates = $fieldTemplatesQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE
+        ])->all();
+
+        $this->singleFieldTemplates = $templateQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE
+        ])->all();
+
+        $languages = Language::getInstance()->usedLanguages();
+
+        foreach($languages as $languageKey => $language) {
+            foreach($this->translateAbleFieldTemplates as $fieldTemplateKey=>$fieldTemplate) {
+
+                $fieldTranslate = new FieldTranslateForm();
+                $fieldTranslate->scenario = FieldTranslateForm::SCENARIO_UPDATE;
+                $fieldTranslate->setFieldTemplate($fieldTemplate);
+                $fieldTranslate->setLanguage($language);
+                $fieldTranslate->setField($field);
+                $fieldTranslate->loadFromDb();
+
+                $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
+                $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
+            }
+        }
+
+        foreach($this->singleFieldTemplates as $singleFieldTemplate) {
+            $singleField = Field::find()->where([
+                'field_reference' => $field->field_reference,
+                'common_fields_template_id' => $singleFieldTemplate->id
+            ])->one();
 
             $this->singleFields["$singleFieldTemplate->id"] = $singleField;
         }

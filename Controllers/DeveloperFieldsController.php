@@ -7,10 +7,13 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
+use Iliich246\YicmsCommon\Fields\Field;
+use Iliich246\YicmsCommon\Fields\FieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
+use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 
 /**
  * Class DeveloperFieldsController
@@ -218,6 +221,34 @@ class DeveloperFieldsController extends Controller
             'fieldTemplateReference' => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle' => $fieldTemplatesSingle
+        ]);
+    }
+
+    /**
+     * This action invert field editable value
+     * @param $fieldTemplateReference
+     * @param $fieldId
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function actionChangeFieldEditable($fieldTemplateReference, $fieldId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        /** @var Field $field */
+        $field = Field::findOne($fieldId);
+
+        if (!$field) throw new BadRequestHttpException('Wrong fieldId = ' . $fieldId);
+
+        $field->editable = !$field->editable;
+        $field->save(false);
+
+        $fieldsGroup = new FieldsGroup();
+        $fieldsGroup->initializePjax($fieldTemplateReference, $field);
+
+        return $this->render(CommonModule::getInstance()->yicmsLocation  . '/Common/Views/pjax/fields', [
+            'fieldsGroup' => $fieldsGroup,
+            'fieldTemplateReference' => $fieldTemplateReference,
+            'success' => true,
         ]);
     }
 }

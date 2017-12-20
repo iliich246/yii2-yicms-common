@@ -319,6 +319,14 @@ class Field extends ActiveRecord implements FieldRenderInterface
     /**
      * @inheritdoc
      */
+    public function getFieldId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldName()
     {
         /** @var FieldsNamesTranslatesDb $fieldName */

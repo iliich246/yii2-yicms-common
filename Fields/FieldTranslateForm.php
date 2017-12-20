@@ -96,6 +96,15 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     }
 
     /**
+     * Sets field (used only for pjax actions)
+     * @param Field $field
+     */
+    public function setField(Field $field)
+    {
+        $this->field = $field;
+    }
+
+    /**
      * Saves record in data base
      * @return bool
      */
@@ -114,7 +123,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      */
     protected function isCorrectConfigured()
     {
-        if (!parent::isCorrectConfigured() || !$this->fieldTemplate || !$this->fieldAble) return false;
+        if (!parent::isCorrectConfigured() || !$this->fieldTemplate || !($this->fieldAble || $this->field)) return false;
         return true;
     }
 
@@ -223,6 +232,14 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     public function getTemplate()
     {
         return $this->fieldTemplate;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldId()
+    {
+        return $this->getField()->id;
     }
 
     /**

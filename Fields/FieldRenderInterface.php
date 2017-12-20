@@ -54,4 +54,10 @@ interface FieldRenderInterface
      * @return string
      */
     public function getFieldName();
+
+    /**
+     * Returns id of field object
+     * @return integer
+     */
+    public function getFieldId();
 }

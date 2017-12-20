@@ -51,15 +51,31 @@ $optionsTemplate = '<div class="dropdown field-dropdown" style="display: inline;
                         <ul class="dropdown-menu" aria-labelledby="dLabel">';
 
 if ($widget->fieldModel->isVisible())
-    $optionsTemplate .= '<li><a href="' . Url::toRoute(['xxx']) . '">Change to invisible</a></li>';
+    $optionsTemplate .=
+        '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+             class="field-visible-link">
+            <p href="' . Url::toRoute(['xxx']) . '">Change to invisible</p>
+        </li>';
 else
-    $optionsTemplate .= '<li><a href="' . Url::toRoute(['xxx']) . '">Change to visible</a></li>';
+    $optionsTemplate .=
+        '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+             class="field-visible-link">
+            <p href="' . Url::toRoute(['xxx']) . '">Change to visible</p>
+        </li>';
 
 if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
     if ($widget->fieldModel->isEditable())
-        $optionsTemplate .= '<li><a href="' . Url::toRoute(['xxx']) . '">Change to not editable(Dev)</a></li>';
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+                 class="field-editable-link">
+                <p href="' . Url::toRoute(['xxx']) . '">Change to not editable(Dev)</p>
+            </li>';
     else
-        $optionsTemplate .= '<li><a href="' . Url::toRoute(['xxx']) . '">Change to editable(Dev)</a></li>';
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+                 class="field-editable-link">
+                 <p href="' . Url::toRoute(['xxx']) . '">Change to editable(Dev)</p>
+            </li>';
 }
 
 $optionsTemplate .= '   </ul>
