@@ -1,9 +1,12 @@
 <?php
 
 use yii\helpers\Url;
+use Iliich246\YicmsCommon\Assets\FreeEssencesDevAsset;
 
 /* @var $this \yii\web\View */
 /* @var $freeEssences \Iliich246\YicmsCommon\FreeEssences\FreeEssences[] */
+
+FreeEssencesDevAsset::register($this);
 ?>
 
 <div class="col-sm-9 content">
@@ -14,35 +17,18 @@ use yii\helpers\Url;
         <div class="col-xs-12">
             <div class="row control-buttons">
                 <div class="col-xs-12">
-                    <a href="<?= Url::toRoute(['create-free-essence']) ?>" class="btn btn-primary">
+                    <a href="<?= Url::toRoute(['create-free-essence']) ?>"
+                       class="btn btn-primary create-essence-button"
+                       data-home-url="<?= Url::base() ?>" >
                         Create new free essence
                     </a>
                 </div>
             </div>
 
-            <div class="list-block">
-                <?php foreach($freeEssences as $freeEssence): ?>
-                    <div class="row list-items">
-                        <div class="col-xs-10 list-title">
-                            <a href="<?= Url::toRoute(['update-free-essence', 'id' => $freeEssence->id]) ?>">
-                                <p>
-                                    <?= $freeEssence->program_name ?>
-                                </p>
-                            </a>
-                        </div>
-                        <div class="col-xs-2 list-controls">
-                            <?php if ($freeEssence->visible): ?>
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            <?php else: ?>
-                                <span class="glyphicon glyphicon-eye-close"></span>
-                            <?php endif; ?>
-                            <?php if ($freeEssence->editable): ?>
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+            <?= $this->render('/pjax/update-free-essence-list-container', [
+                'freeEssences' => $freeEssences
+            ]) ?>
+
         </div>
     </div>
 </div>

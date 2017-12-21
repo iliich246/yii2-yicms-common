@@ -66,15 +66,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-up"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>"
-                                        >
-                                </span>
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-down"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>"
-                                        >
-                                </span>
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -108,15 +104,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
                                 <span class="glyphicon glyphicon-arrow-up"
-                                      data-field-template-id="<?= $fieldTemplate->id ?>"
-                                >
-                              </span>
+                                      data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
                                     <span class="glyphicon glyphicon-arrow-down"
-                                          data-field-template-id="<?= $fieldTemplate->id ?>"
-                                    >
-                              </span>
+                                          data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                             </div>
                         </div>

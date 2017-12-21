@@ -3,10 +3,10 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Yii;
-use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
  * Class Field

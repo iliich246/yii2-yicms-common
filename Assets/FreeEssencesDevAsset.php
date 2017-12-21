@@ -5,16 +5,16 @@ namespace Iliich246\YicmsCommon\Assets;
 use yii\web\AssetBundle;
 
 /**
- * Class FieldsAsset
+ * Class FreeEssencesDevAsset
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldsAsset extends AssetBundle
+class FreeEssencesDevAsset extends AssetBundle
 {
-    public $sourcePath = '@yicms-common/Assets/fields';
+    public $sourcePath = '@yicms-common/Assets/free-essences-dev';
 
     public $js = [
-        'fields.js'
+        'free-essences-dev.js'
     ];
 
     public $depends = [

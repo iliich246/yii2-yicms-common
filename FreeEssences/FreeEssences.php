@@ -162,6 +162,18 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->scenario === self::SCENARIO_CREATE) {
+            $this->free_essences_order = $this->maxOrder();
+        }
+
+        return parent::save($runValidation = true, $attributeNames = null);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldHandler()
     {
         if (!$this->fieldHandler)
@@ -199,7 +211,7 @@ class FreeEssences extends ActiveRecord implements
      */
     public function getOrderQuery()
     {
-        return self::find()->all();
+        return self::find();
     }
 
     /**
@@ -231,7 +243,7 @@ class FreeEssences extends ActiveRecord implements
      */
     public function configToChangeOfOrder()
     {
-        //$this->scenario = self::SCENARIO_CHANGE_ORDER;
+        $this->scenario = self::SCENARIO_UPDATE;
     }
 
     /**

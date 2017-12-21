@@ -233,7 +233,9 @@ class DeveloperController extends Controller
      */
     public function actionFreeEssencesList()
     {
-        $freeEssences = FreeEssences::find()->all();
+        $freeEssences = FreeEssences::find()->orderBy([
+            'free_essences_order' => SORT_ASC
+        ])->all();
 
         return $this->render('/developer/free_essences_list', [
             'freeEssences' => $freeEssences,
@@ -333,7 +335,60 @@ class DeveloperController extends Controller
 
     public function actionDeleteFreeEssence($id)
     {
-
+        //TODO: make this action
     }
 
+    /**
+     * @param $freeEssenceId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFreeEssenceUpOrder($freeEssenceId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($freeEssenceId);
+
+        if (!$freeEssence) throw new NotFoundHttpException('Wrong freeEssenceId = ' . $freeEssenceId);
+
+        $freeEssence->configToChangeOfOrder();
+        $freeEssence->upOrder();
+
+        $freeEssences = FreeEssences::find()->orderBy([
+            'free_essences_order' => SORT_ASC
+        ])->all();
+
+        return $this->render('/pjax/update-free-essence-list-container', [
+            'freeEssences' => $freeEssences
+        ]);
+    }
+
+    /**
+     * @param $freeEssenceId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFreeEssenceDownOrder($freeEssenceId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($freeEssenceId);
+
+        if (!$freeEssence) throw new NotFoundHttpException('Wrong freeEssenceId = ' . $freeEssenceId);
+
+        $freeEssence->configToChangeOfOrder();
+        $freeEssence->downOrder();
+
+        $freeEssences = FreeEssences::find()->orderBy([
+            'free_essences_order' => SORT_ASC
+        ])->all();
+
+        return $this->render('/pjax/update-free-essence-list-container', [
+            'freeEssences' => $freeEssences
+        ]);
+    }
 }

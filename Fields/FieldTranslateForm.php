@@ -15,6 +15,8 @@ use Iliich246\YicmsCommon\CommonModule;
  */
 class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInterface
 {
+    const SCENARIO_LOAD_VIA_PJAX = 0x02;
+
     /**
      * @var string value of translated field
      */
@@ -31,6 +33,11 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      * @var FieldsInterface|FieldReferenceInterface
      */
     private $fieldAble;
+
+    /**
+     * @var string value of field reference
+     */
+    private $fieldReference;
 
     /**
      * @inheritdoc
@@ -52,6 +59,9 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
                 'value'
             ],
             self::SCENARIO_UPDATE => [
+                'value'
+            ],
+            self::SCENARIO_LOAD_VIA_PJAX => [
                 'value'
             ],
         ];
@@ -97,11 +107,11 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
 
     /**
      * Sets field (used only for pjax actions)
-     * @param Field $field
+     * @param string $fieldReference
      */
-    public function setField(Field $field)
+    public function setFieldReference($fieldReference)
     {
-        $this->field = $field;
+        $this->fieldReference = $fieldReference;
     }
 
     /**
@@ -123,7 +133,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      */
     protected function isCorrectConfigured()
     {
-        if (!parent::isCorrectConfigured() || !$this->fieldTemplate || !($this->fieldAble || $this->field)) return false;
+        if (!parent::isCorrectConfigured() || !$this->fieldTemplate || !($this->fieldAble || $this->fieldReference)) return false;
         return true;
     }
 
@@ -133,6 +143,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     public function getCurrentTranslateDb()
     {
         if ($this->currentTranslateDb) return $this->currentTranslateDb;
+
+        if ($this->scenario == self::SCENARIO_LOAD_VIA_PJAX) return $this->getCurrentTranslatePjax();
 
         $this->currentTranslateDb = FieldTranslate::find()
             ->where([
@@ -147,6 +159,26 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
         }
 
         return $this->currentTranslateDb;
+    }
+
+    /**
+     * Variant of translate loader for pjax using of this class
+     * @return FieldTranslate|null
+     */
+    public function getCurrentTranslatePjax()
+    {
+        $this->field = Field::getInstance($this->fieldTemplate->field_template_reference,
+            $this->fieldReference, $this->fieldTemplate->program_name);
+
+        $this->currentTranslateDb = FieldTranslate::find()
+            ->where([
+                'common_fields_represent_id' => $this->field->id,
+                'common_language_id' => $this->language->id
+            ])->one();
+
+        $this->value = $this->currentTranslateDb->value;
+
+        return  $this->currentTranslateDb;
     }
 
     /**

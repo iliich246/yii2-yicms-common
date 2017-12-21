@@ -107,7 +107,6 @@ class CommonModule extends AbstractConfigurableModule implements
     public static function isUnderDev()
     {
         if (Yii::$app->user->isGuest) return false;
-        /** @var IdentityInterface|YicmsUserInterface $class */
         /** @var $user IdentityInterface|YicmsUserInterface */
         $user = Yii::$app->user->identity;
         return $user->isThisDev();

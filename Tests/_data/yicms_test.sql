@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : yicms
 Source Server Version : 50720
 Source Host           : localhost:3306
-Source Database       : yicms
+Source Database       : yicms_test
 
 Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2017-12-19 14:20:37
+Date: 2017-12-21 14:52:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -165,6 +165,7 @@ CREATE TABLE `common_field_names` (
 -- ----------------------------
 -- Records of common_field_names
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for common_field_translates
 -- ----------------------------
@@ -184,6 +185,7 @@ CREATE TABLE `common_field_translates` (
 -- ----------------------------
 -- Records of common_field_translates
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for common_field_validators
 -- ----------------------------
@@ -222,6 +224,7 @@ CREATE TABLE `common_fields_represents` (
 -- ----------------------------
 -- Records of common_fields_represents
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for common_fields_templates
 -- ----------------------------
@@ -243,6 +246,7 @@ CREATE TABLE `common_fields_templates` (
 -- ----------------------------
 -- Records of common_fields_templates
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for common_file_names
 -- ----------------------------
@@ -402,6 +406,7 @@ CREATE TABLE `common_free_essences` (
 -- ----------------------------
 -- Records of common_free_essences
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for common_images
 -- ----------------------------
@@ -603,6 +608,7 @@ CREATE TABLE `pages` (
 -- ----------------------------
 -- Records of pages
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for pages_config
 -- ----------------------------
@@ -618,6 +624,7 @@ CREATE TABLE `pages_config` (
 -- ----------------------------
 -- Records of pages_config
 -- ----------------------------
+
 -- ----------------------------
 -- Table structure for pages_names_translates
 -- ----------------------------
@@ -638,20 +645,18 @@ CREATE TABLE `pages_names_translates` (
 -- ----------------------------
 -- Records of pages_names_translates
 -- ----------------------------
--- ----------------------------
--- Records of pages_names_translates
--- ----------------------------
+
 -- ----------------------------
 -- Table structure for test_config_module1
 -- ----------------------------
 DROP TABLE IF EXISTS `test_config_module1`;
 CREATE TABLE `test_config_module1` (
   `id` int(11) NOT NULL,
-  `field1` varchar(255) DEFAULT NULL,
-  `field2` varchar(255) DEFAULT NULL,
-  `field3` varchar(255) DEFAULT NULL,
-  `field4` varchar(255) DEFAULT NULL,
-  `field5` varchar(255) DEFAULT NULL,
+  `field1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field3` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field4` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field5` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -666,8 +671,8 @@ INSERT INTO `test_config_module1` VALUES ('1', 'field1_value', 'field2_value', '
 DROP TABLE IF EXISTS `test_config_module2`;
 CREATE TABLE `test_config_module2` (
   `id` int(11) NOT NULL,
-  `field1` varchar(255) DEFAULT NULL,
-  `field2` varchar(255) DEFAULT NULL,
+  `field1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `field2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -677,17 +682,31 @@ CREATE TABLE `test_config_module2` (
 INSERT INTO `test_config_module2` VALUES ('1', 'field1_value', '2');
 
 -- ----------------------------
+-- Table structure for test_sort_order
+-- ----------------------------
+DROP TABLE IF EXISTS `test_sort_order`;
+CREATE TABLE `test_sort_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `test_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of test_sort_order
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for test_templates
 -- ----------------------------
 DROP TABLE IF EXISTS `test_templates`;
 CREATE TABLE `test_templates` (
   `id` int(11) NOT NULL,
-  `test_template_reference` varchar(45) DEFAULT NULL,
-  `program_name` varchar(45) DEFAULT NULL,
-  `type` varchar(45) DEFAULT NULL,
-  `editable` varchar(45) DEFAULT NULL,
-  `visible` varchar(45) DEFAULT NULL,
-  `is_main` varchar(45) DEFAULT NULL,
+  `test_template_reference` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `program_name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `editable` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `visible` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `is_main` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -712,8 +731,8 @@ INSERT INTO `test_templates` VALUES ('11', '912233', 'name99', null, null, null,
 DROP TABLE IF EXISTS `test_templates2`;
 CREATE TABLE `test_templates2` (
   `id` int(255) NOT NULL,
-  `test_template_reference` varchar(255) NOT NULL,
-  `program_name` varchar(255) DEFAULT NULL,
+  `test_template_reference` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `program_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

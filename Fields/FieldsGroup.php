@@ -174,10 +174,10 @@ class FieldsGroup extends AbstractGroup
             foreach($this->translateAbleFieldTemplates as $fieldTemplateKey=>$fieldTemplate) {
 
                 $fieldTranslate = new FieldTranslateForm();
-                $fieldTranslate->scenario = FieldTranslateForm::SCENARIO_UPDATE;
+                $fieldTranslate->scenario = FieldTranslateForm::SCENARIO_LOAD_VIA_PJAX;
                 $fieldTranslate->setFieldTemplate($fieldTemplate);
                 $fieldTranslate->setLanguage($language);
-                $fieldTranslate->setField($field);
+                $fieldTranslate->setFieldReference($field->field_reference);
                 $fieldTranslate->loadFromDb();
 
                 $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;

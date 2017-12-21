@@ -2,7 +2,7 @@
 
 /** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget*/
 
-$infoString = ' ';
+$infoString = '';
 
 if ($widget->fieldModel->isVisible())
     $infoString .= '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"
@@ -40,6 +40,43 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
     else
         $infoString .= '<span class="glyphicon glyphicon-remove" aria-hidden="true"
                           data-toggle="tooltip" data-placement="top" title="Field template editable only for developer"></span>';
+
+    $optionsTemplate = '<div class="dropdown field-dropdown" style="display: inline; float: right">
+                        <a id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            options<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel">';
+
+    if ($widget->fieldModel->isVisible())
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+             class="field-visible-link">
+            <p>Change to invisible</p>
+        </li>';
+    else
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+             class="field-visible-link">
+            <p>Change to visible</p>
+        </li>';
+
+    if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
+        if ($widget->fieldModel->isEditable())
+            $optionsTemplate .=
+                '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+                 class="field-editable-link">
+                <p>Change to not editable(Dev)</p>
+            </li>';
+        else
+            $optionsTemplate .=
+                '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+                 class="field-editable-link">
+                 <p>Change to editable(Dev)</p>
+            </li>';
+    }
+
+    $optionsTemplate .= '   </ul>
+                    </div>';
 }
 
 ?>
@@ -47,7 +84,7 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
 <?= $widget->form->field($widget->fieldModel, $widget->fieldModel->getKey(), [
     'template' => '
         {label}
-        ' . $infoString . '
+        ' . $infoString . $optionsTemplate . '
         {input}
         {error}
     ',

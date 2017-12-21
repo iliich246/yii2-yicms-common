@@ -30,7 +30,7 @@ class DeveloperFieldsController extends Controller
         return [
 //            'root' => [
 //                'class' => DevFilter::className(),
-//                'except' => ['login-as-root'],
+//                'except' => ['change-field-editable'],
 //            ],
         ];
     }
@@ -234,12 +234,44 @@ class DeveloperFieldsController extends Controller
     public function actionChangeFieldEditable($fieldTemplateReference, $fieldId)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
         /** @var Field $field */
         $field = Field::findOne($fieldId);
 
         if (!$field) throw new BadRequestHttpException('Wrong fieldId = ' . $fieldId);
 
         $field->editable = !$field->editable;
+        $field->save(false);
+
+        $fieldsGroup = new FieldsGroup();
+        $fieldsGroup->initializePjax($fieldTemplateReference, $field);
+
+        return $this->render(CommonModule::getInstance()->yicmsLocation  . '/Common/Views/pjax/fields', [
+            'fieldsGroup' => $fieldsGroup,
+            'fieldTemplateReference' => $fieldTemplateReference,
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * This action invert field visible value
+     * @param $fieldTemplateReference
+     * @param $fieldId
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function actionChangeFieldVisible($fieldTemplateReference, $fieldId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        if (!CommonModule::isUnderDev() && !CommonModule::isUnderAdmin()) throw new BadRequestHttpException();
+
+        /** @var Field $field */
+        $field = Field::findOne($fieldId);
+
+        if (!$field) throw new BadRequestHttpException('Wrong fieldId = ' . $fieldId);
+
+        $field->visible = !$field->visible;
         $field->save(false);
 
         $fieldsGroup = new FieldsGroup();

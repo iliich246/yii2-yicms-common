@@ -7,17 +7,14 @@ use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
+use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 
 /* @var $this \yii\web\View */
-/* @var $freeEssence FreeEssences*/
+/* @var $freeEssence FreeEssences */
 /* @var $devFieldGroup \Iliich246\YicmsCommon\Fields\DevFieldsGroup */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 /* @var $success bool */
-
-$modalName = FieldsDevInputWidget::getModalWindowName();
-$formName  = FieldsDevInputWidget::getFormName();
-$pjaxName  = FieldsDevInputWidget::getPjaxContainerId();
 
 $js = <<<JS
 ;(function() {
@@ -44,111 +41,9 @@ $js = <<<JS
 })();
 JS;
 
-$loadModal = Url::toRoute([
-    '/common/dev-fields/load-modal'
-]);
-
-$emptyModal = Url::toRoute([
-    '/common/dev-fields/empty-modal'
-]);
-
-
-
-$js2 = <<<JS
-
-;(function() {
-    var addField = $('.add-field');
-
-    var homeUrl = $(addField).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-fields/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-fields/load-modal';
-    var updateFieldsListUrl = homeUrl + '/common/dev-fields/update-fields-list-container';
-    var fieldTemplateUpUrl = homeUrl + '/common/dev-fields/field-template-up-order';
-    var fieldTemplateDownUrl = homeUrl + '/common/dev-fields/field-template-down-order';
-
-    var fieldTemplateReference = $(addField).data('fieldTemplateReference');
-    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
-    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
-    var imageLoaderScr = $(addField).data('loaderImageSrc');
-
-    $(pjaxContainerName).on('pjax:send', function() {
-         $(pjaxFieldsModalName)
-              .find('.modal-content')
-              .empty()
-              .append('<img src="' + imageLoaderScr + '" style="text-align:center">');
-    });
-
-    $(pjaxContainerName).on('pjax:success', function(event) {
-
-        if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
-
-        $.pjax({
-            url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-
-        $(pjaxFieldsModalName).modal('hide');
-    });
-
-    $(document).on('click', '.field-item p', function(event) {
-
-        var templateData = $(this).data('field-template-id');
-
-        $.pjax({
-            url: loadModalUrl + '?fieldTemplateId=' + templateData,
-            container: pjaxContainerName,
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-
-        $(pjaxFieldsModalName).modal('show');
-    });
-
-    $(addField).on('click', function() {
-        $.pjax({
-            url: emptyModalUrl + '?fieldTemplateReference=' + fieldTemplateReference ,
-            container: pjaxContainerName,
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-
-    $(document).on('click', '.glyphicon-arrow-up', function() {
-        $.pjax({
-            url: fieldTemplateUpUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-
-    $(document).on('click', '.glyphicon-arrow-down', function() {
-        $.pjax({
-            url: fieldTemplateDownUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-})();
-JS;
-
 $this->registerJs($js, $this::POS_READY);
-//$this->registerJs($js2, $this::POS_READY);
 
-\Iliich246\YicmsCommon\Assets\FieldsDevAsset::register($this);
+FieldsDevAsset::register($this);
 
 ?>
 
@@ -199,7 +94,6 @@ $this->registerJs($js, $this::POS_READY);
             ]) ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'create-update-free-essence-form',
-                //'action' => ['/common/dev/update-free-essence', 'id' => $freeEssence->id, ''],
                 'options' => [
                     'data-pjax' => true,
                 ],
@@ -208,7 +102,8 @@ $this->registerJs($js, $this::POS_READY);
 
             <?php if (isset($success) && $success): ?>
                 <div class="alert alert-success alert-dismissible fade in" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                     <strong>Success!</strong> Free essence data updated.
                 </div>
             <?php endif; ?>
@@ -242,7 +137,7 @@ $this->registerJs($js, $this::POS_READY);
         </div>
     </div>
 
-    <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): return; endif;?>
+    <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): return; endif; ?>
 
     <?= $this->render('/pjax/update-fields-list-container', [
         'fieldTemplateReference' => $freeEssence->getFieldTemplateReference(),

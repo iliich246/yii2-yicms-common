@@ -4,7 +4,7 @@ use yii\helpers\Url;
 
 /** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget*/
 
-$infoString = ' ';
+$infoString = '';
 
 if ($widget->fieldModel->isVisible())
     $infoString .= '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"
@@ -54,13 +54,13 @@ if ($widget->fieldModel->isVisible())
     $optionsTemplate .=
         '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
              class="field-visible-link">
-            <p href="' . Url::toRoute(['xxx']) . '">Change to invisible</p>
+            <p>Change to invisible</p>
         </li>';
 else
     $optionsTemplate .=
         '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
              class="field-visible-link">
-            <p href="' . Url::toRoute(['xxx']) . '">Change to visible</p>
+            <p>Change to visible</p>
         </li>';
 
 if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
@@ -68,13 +68,13 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
         $optionsTemplate .=
             '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
                  class="field-editable-link">
-                <p href="' . Url::toRoute(['xxx']) . '">Change to not editable(Dev)</p>
+                <p>Change to not editable(Dev)</p>
             </li>';
     else
         $optionsTemplate .=
             '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
                  class="field-editable-link">
-                 <p href="' . Url::toRoute(['xxx']) . '">Change to editable(Dev)</p>
+                 <p>Change to editable(Dev)</p>
             </li>';
 }
 
@@ -95,4 +95,3 @@ $optionsTemplate .= '   </ul>
             'class' => 'penis',
         ]
     ])->textInput() ?>
-
