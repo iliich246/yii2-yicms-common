@@ -7,6 +7,9 @@ use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
+use yii\validators\NumberValidator;
+use yii\validators\RequiredValidator;
 
 /**
  * Class Field
@@ -20,7 +23,9 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class Field extends ActiveRecord implements FieldRenderInterface
+class Field extends ActiveRecord implements
+    FieldRenderInterface,
+    ValidatorBuilderInterface
 {
     /**
      * Modes of field
@@ -41,12 +46,19 @@ class Field extends ActiveRecord implements FieldRenderInterface
     private $mode = self::MODE_DEFAULT;
 
     /**
-     * @var
+     * @var FieldTranslate[] array of field translations
      */
     private $translation = null;
 
-    /** @var FieldTemplate instance of field template */
+    /**
+     * @var FieldTemplate instance of field template
+     */
     private $template;
+
+    /**
+     * @var
+     */
+    private $validatorBuilder;
 
 
     /**
@@ -78,6 +90,17 @@ class Field extends ActiveRecord implements FieldRenderInterface
     public function init()
     {
         if (defined('YICMS_ALERTS')) $this->setAlertMode();
+
+        $this->validators[] = new RequiredValidator([
+            'attributes' => 'value',
+
+        ]);
+
+        $this->validators[] = new NumberValidator([
+            'attributes' => 'value',
+            'message' => 'This is penis dominator'
+        ]);
+
         parent::init();
     }
 
@@ -348,5 +371,17 @@ class Field extends ActiveRecord implements FieldRenderInterface
             return 'No translate for field \'' . $this->getTemplate()->program_name . '\'';
 
         return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorBuilder()
+    {
+        if ($this->validatorBuilder) return $this->validatorBuilder;
+
+        $this->validatorBuilder = new FieldsValidatorBuilder($this);
+
+        return $this->validatorBuilder;
     }
 }

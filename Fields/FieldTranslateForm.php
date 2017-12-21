@@ -2,9 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
-use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
-use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 
 /**
  * Class FieldTranslateForm
