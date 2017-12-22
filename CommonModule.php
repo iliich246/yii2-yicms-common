@@ -51,7 +51,8 @@ class CommonModule extends AbstractConfigurableModule implements
     /** @inheritdoc */
     public $controllerMap = [
         'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
-        'dev-fields' => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController'
+        'dev-fields' => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController',
+        'dev-validators' => 'Iliich246\YicmsCommon\Controllers\DeveloperValidatorsController',
 
     ];
 

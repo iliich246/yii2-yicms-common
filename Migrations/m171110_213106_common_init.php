@@ -57,6 +57,19 @@ class m171110_213106_common_init extends Migration
             'languageMethod' => 1,
         ]);
 
+        /**
+         * common_validators table
+         */
+        $this->createTable('{{%common_validators}}', [
+            'id' => $this->primaryKey(),
+            'validator_reference' => $this->string(),
+            'validator' => $this->string(),
+            'is_active' => $this->boolean(),
+            'params' => $this->text(),
+        ]);
+
+
+
         //////////////////////////////////////////////////////////////////
         // Fields functionality
         //////////////////////////////////////////////////////////////////
@@ -66,6 +79,7 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_fields_templates}}', [
             'id' => $this->primaryKey(),
             'field_template_reference' => $this->string(),
+            'validator_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'language_type' => $this->smallInteger(),
@@ -131,23 +145,6 @@ class m171110_213106_common_init extends Migration
         );
 
         /**
-         * common_field_validators table
-         */
-        $this->createTable('{{%common_field_validators}}', [
-            'id' => $this->primaryKey(),
-            'common_fields_template_id' => $this->integer(),
-            'validator' => $this->string(),
-            'params' => $this->text(),
-        ]);
-
-        $this->addForeignKey('common_field_validators-to-common_fields_templates',
-            '{{%common_field_validators}}',
-            'common_fields_template_id',
-            '{{%common_fields_templates}}',
-            'id'
-        );
-
-        /**
          * common_field_names table
          */
         $this->createTable('{{%common_field_names}}', [
@@ -182,6 +179,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'file_template_reference' => $this->string(),
             'field_template_reference' => $this->string(),
+            'validator_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'file_order' => $this->integer(),
@@ -258,23 +256,6 @@ class m171110_213106_common_init extends Migration
         );
 
         /**
-         * common_file_validators table
-         */
-        $this->createTable('{{%common_files_validators}}', [
-            'id' => $this->primaryKey(),
-            'common_files_template_id' => $this->integer(),
-            'validator' => $this->string(),
-            'params' => $this->text(),
-        ]);
-
-        $this->addForeignKey('common_files_validators-to-common_files_templates',
-            '{{%common_files_validators}}',
-            'common_files_template_id',
-            '{{%common_files_templates}}',
-            'id'
-        );
-
-        /**
          * common_file_names table
          */
         $this->createTable('{{%common_file_names}}', [
@@ -309,6 +290,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'image_template_reference' => $this->string(),
             'field_template_reference' => $this->string(),
+            'validator_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'image_order' => $this->integer(),
@@ -392,23 +374,6 @@ class m171110_213106_common_init extends Migration
         );
 
         /**
-         * common_images_validators table
-         */
-        $this->createTable('{{%common_images_validators}}', [
-            'id' => $this->primaryKey(),
-            'common_images_templates_id' => $this->integer(),
-            'validator' => $this->string(),
-            'params' => $this->text(),
-        ]);
-
-        $this->addForeignKey('common_images_validators-to-common_images_templates',
-            '{{%common_images_validators}}',
-            'common_images_templates_id',
-            '{{%common_images_templates}}',
-            'id'
-        );
-
-        /**
          * common_images_names table
          */
         $this->createTable('{{%common_images_names}}', [
@@ -460,8 +425,10 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_conditions_templates}}', [
             'id' => $this->primaryKey(),
             'condition_template_reference' => $this->string(),
+            'validator_reference' => $this->string(),
             'type' => $this->smallInteger(),
             'condition_order' => $this->integer(),
+            'editable' => $this->boolean(),
         ]);
 
         $this->createIndex(
@@ -478,6 +445,7 @@ class m171110_213106_common_init extends Migration
             'common_condition_template_id' => $this->integer(),
             'condition_reference' => $this->string(),
             'common_value_id' => $this->integer(),
+            'editable' => $this->boolean(),
         ]);
 
         $this->createIndex(
@@ -488,23 +456,6 @@ class m171110_213106_common_init extends Migration
 
         $this->addForeignKey('common_conditions-to-common_conditions_templates',
             '{{%common_conditions}}',
-            'common_condition_template_id',
-            '{{%common_conditions_templates}}',
-            'id'
-        );
-
-        /**
-         * common_conditions_validators table
-         */
-        $this->createTable('{{%common_condition_validators}}', [
-            'id' => $this->primaryKey(),
-            'common_condition_template_id' => $this->integer(),
-            'validator' => $this->string(),
-            'params' => $this->text(),
-        ]);
-
-        $this->addForeignKey('common_condition_validators-to-common_conditions_templates',
-            '{{%common_condition_validators}}',
             'common_condition_template_id',
             '{{%common_conditions_templates}}',
             'id'
@@ -656,9 +607,6 @@ class m171110_213106_common_init extends Migration
         $this->dropForeignKey('common_conditions_values-to-common_conditions_templates', '{{%common_conditions_values}}');
         $this->dropTable('{{%common_conditions_values}}');
 
-        $this->dropForeignKey('common_condition_validators-to-common_conditions_templates', '{{%common_condition_validators}}');
-        $this->dropTable('{{%common_condition_validators}}');
-
         $this->dropForeignKey('common_conditions-to-common_conditions_templates', '{{%common_conditions}}');
         $this->dropIndex('condition_reference-index', '{{%common_conditions}}');
         $this->dropTable('{{%common_conditions}}');
@@ -673,9 +621,6 @@ class m171110_213106_common_init extends Migration
         $this->dropForeignKey('common_images_names-to-common_languages', '{{%common_images_names}}');
         $this->dropForeignKey('common_images_names-to-common_images_templates', '{{%common_images_names}}');
         $this->dropTable('{{%common_images_names}}');
-
-        $this->dropForeignKey('common_images_validators-to-common_images_templates', '{{%common_images_validators}}');
-        $this->dropTable('{{%common_images_validators}}');
 
         $this->dropForeignKey('common_images_translates-to-common_languages', '{{%common_images_translates}}');
         $this->dropForeignKey('common_images_translates-to-common_images', '{{%common_images_translates}}');
@@ -693,9 +638,6 @@ class m171110_213106_common_init extends Migration
         $this->dropForeignKey('common_file_names-to-common_files_templates', '{{%common_file_names}}');
         $this->dropTable('{{%common_file_names}}');
 
-        $this->dropForeignKey('common_files_validators-to-common_files_templates', '{{%common_files_validators}}');
-        $this->dropTable('{{%common_files_validators}}');
-
         $this->dropForeignKey('common_file_translates-to-common_languages', '{{%common_file_translates}}');
         $this->dropForeignKey('common_file_translates-to-common_files', '{{%common_file_translates}}');
         $this->dropTable('{{%common_file_translates}}');
@@ -712,9 +654,6 @@ class m171110_213106_common_init extends Migration
         $this->dropForeignKey('common_field_names-to-common_fields_templates', '{{%common_field_names}}');
         $this->dropTable('{{%common_field_names}}');
 
-        $this->dropForeignKey('common_field_validators-to-common_fields_templates', '{{%common_field_validators}}');
-        $this->dropTable('{{%common_field_validators}}');
-
         $this->dropForeignKey('common_field_translates-to-common_languages', '{{%common_field_translates}}');
         $this->dropForeignKey('common_field_translates-to-common_fields_represents', '{{%common_field_translates}}');
         $this->dropTable('{{%common_field_translates}}');
@@ -727,6 +666,7 @@ class m171110_213106_common_init extends Migration
         $this->dropTable('{{%common_fields_templates}}');
 
         //common functionality
+        $this->dropTable('{{%common_validators}}');
         $this->dropTable('{{%common_languages}}');
         $this->dropTable('{{%common_config}}');
     }

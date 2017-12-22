@@ -83,9 +83,9 @@ $this->registerJs($js, $this::POS_READY);
         ?>
 
         <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-        <?= Html::hiddenInput('_fieldTemplateId', $widget->devFieldGroup->fieldTemplate->id, [
-            'id' => 'field-template-id-hidden'
-        ]) ?>
+            <?= Html::hiddenInput('_fieldTemplateId', $widget->devFieldGroup->fieldTemplate->id, [
+                'id' => 'field-template-id-hidden'
+            ]) ?>
         <?php endif; ?>
 
         <div class="modal-content">
@@ -132,14 +132,26 @@ $this->registerJs($js, $this::POS_READY);
                 ])
                 ?>
                 <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-                    <p>IMPORTANT! Do not delete fields without serious reason!</p>
-                    <button type="button"
-                            class="btn btn-danger"
-                            id="field-delete"
-                            data-field-template-reference="<?= $widget->devFieldGroup->fieldTemplate->field_template_reference ?>"
-                            data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>">
-                        Delete field
-                    </button>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <br>
+
+                            <p>IMPORTANT! Do not delete fields without serious reason!</p>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    id="field-delete"
+                                    data-field-template-reference="<?= $widget->devFieldGroup->fieldTemplate->field_template_reference ?>"
+                                    data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>">
+                                Delete field
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <?= \Iliich246\YicmsCommon\Fields\FieldsDevValidatorWidget::widget([
+                        'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id
+                    ]) ?>
+
                 <?php endif; ?>
             </div>
             <div class="modal-footer">
@@ -147,9 +159,6 @@ $this->registerJs($js, $this::POS_READY);
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-        <pre>
-            <?php print_r($widget->devFieldGroup->fieldTemplate->scenario)?>
-        </pre>
         <?php ActiveForm::end(); ?>
         <?php Pjax::end() ?>
     </div>

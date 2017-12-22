@@ -12,6 +12,7 @@ use yii\base\Exception;
  *
  * @property integer
  * @property string $field_template_reference
+ * @property string $validator_reference
  * @property integer $type
  * @property integer $language_type
  * @property integer $field_order

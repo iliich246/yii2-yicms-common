@@ -4,34 +4,16 @@ Navicat MySQL Data Transfer
 Source Server         : yicms
 Source Server Version : 50720
 Source Host           : localhost:3306
-Source Database       : yicms_test
+Source Database       : yicms
 
 Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2017-12-21 14:52:40
+Date: 2017-12-22 14:12:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for common_condition_validators
--- ----------------------------
-DROP TABLE IF EXISTS `common_condition_validators`;
-CREATE TABLE `common_condition_validators` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `common_condition_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  KEY `common_condition_validators-to-common_conditions_templates` (`common_condition_template_id`),
-  CONSTRAINT `common_condition_validators-to-common_conditions_templates` FOREIGN KEY (`common_condition_template_id`) REFERENCES `common_conditions_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of common_condition_validators
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for common_conditions
@@ -42,6 +24,7 @@ CREATE TABLE `common_conditions` (
   `common_condition_template_id` int(11) DEFAULT NULL,
   `condition_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `common_value_id` int(11) DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `condition_reference-index` (`condition_reference`),
   KEY `common_conditions-to-common_conditions_templates` (`common_condition_template_id`),
@@ -82,8 +65,10 @@ DROP TABLE IF EXISTS `common_conditions_templates`;
 CREATE TABLE `common_conditions_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `condition_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validator_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `condition_order` int(11) DEFAULT NULL,
+  `editable` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `condition_template_reference-index` (`condition_template_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -187,24 +172,6 @@ CREATE TABLE `common_field_translates` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for common_field_validators
--- ----------------------------
-DROP TABLE IF EXISTS `common_field_validators`;
-CREATE TABLE `common_field_validators` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `common_fields_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  KEY `common_field_validators-to-common_fields_templates` (`common_fields_template_id`),
-  CONSTRAINT `common_field_validators-to-common_fields_templates` FOREIGN KEY (`common_fields_template_id`) REFERENCES `common_fields_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of common_field_validators
--- ----------------------------
-
--- ----------------------------
 -- Table structure for common_fields_represents
 -- ----------------------------
 DROP TABLE IF EXISTS `common_fields_represents`;
@@ -232,6 +199,7 @@ DROP TABLE IF EXISTS `common_fields_templates`;
 CREATE TABLE `common_fields_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validator_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `language_type` smallint(6) DEFAULT NULL,
@@ -326,6 +294,7 @@ CREATE TABLE `common_files_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `file_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validator_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `file_order` int(11) DEFAULT NULL,
@@ -341,24 +310,6 @@ CREATE TABLE `common_files_templates` (
 
 -- ----------------------------
 -- Records of common_files_templates
--- ----------------------------
-
--- ----------------------------
--- Table structure for common_files_validators
--- ----------------------------
-DROP TABLE IF EXISTS `common_files_validators`;
-CREATE TABLE `common_files_validators` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `common_files_template_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  KEY `common_files_validators-to-common_files_templates` (`common_files_template_id`),
-  CONSTRAINT `common_files_validators-to-common_files_templates` FOREIGN KEY (`common_files_template_id`) REFERENCES `common_files_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of common_files_validators
 -- ----------------------------
 
 -- ----------------------------
@@ -463,6 +414,7 @@ CREATE TABLE `common_images_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `image_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `field_template_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validator_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `program_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `image_order` int(11) DEFAULT NULL,
@@ -530,24 +482,6 @@ CREATE TABLE `common_images_translates` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for common_images_validators
--- ----------------------------
-DROP TABLE IF EXISTS `common_images_validators`;
-CREATE TABLE `common_images_validators` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `common_images_templates_id` int(11) DEFAULT NULL,
-  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  KEY `common_images_validators-to-common_images_templates` (`common_images_templates_id`),
-  CONSTRAINT `common_images_validators-to-common_images_templates` FOREIGN KEY (`common_images_templates_id`) REFERENCES `common_images_templates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of common_images_validators
--- ----------------------------
-
--- ----------------------------
 -- Table structure for common_languages
 -- ----------------------------
 DROP TABLE IF EXISTS `common_languages`;
@@ -566,6 +500,23 @@ INSERT INTO `common_languages` VALUES ('1', 'en-EU', 'English', '1');
 INSERT INTO `common_languages` VALUES ('2', 'ru-RU', 'Русский', '0');
 
 -- ----------------------------
+-- Table structure for common_validators
+-- ----------------------------
+DROP TABLE IF EXISTS `common_validators`;
+CREATE TABLE `common_validators` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `validator_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validator` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT NULL,
+  `params` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of common_validators
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for migration
 -- ----------------------------
 DROP TABLE IF EXISTS `migration`;
@@ -578,9 +529,9 @@ CREATE TABLE `migration` (
 -- ----------------------------
 -- Records of migration
 -- ----------------------------
-INSERT INTO `migration` VALUES ('m000000_000000_base', '1511168330');
-INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1512734626');
-INSERT INTO `migration` VALUES ('m171114_174807_pages_init', '1512734626');
+INSERT INTO `migration` VALUES ('m000000_000000_base', '1513941059');
+INSERT INTO `migration` VALUES ('m171110_213106_common_init', '1513941083');
+INSERT INTO `migration` VALUES ('m171114_174807_pages_init', '1513941083');
 
 -- ----------------------------
 -- Table structure for pages
@@ -619,11 +570,12 @@ CREATE TABLE `pages_config` (
   `filesPatch` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `thumbNailsDirectoryName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of pages_config
 -- ----------------------------
+INSERT INTO `pages_config` VALUES ('1', '/web/files/pages/', '/web/images/pages/', 'thumb');
 
 -- ----------------------------
 -- Table structure for pages_names_translates

@@ -11,7 +11,7 @@ interface ValidatorBuilderInterface
 {
     /**
      * Returns instance of AbstractValidatorDb
-     * @return AbstractValidatorDb
+     * @return AbstractValidatorBuilder
      */
     public function getValidatorBuilder();
 }

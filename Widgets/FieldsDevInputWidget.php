@@ -2,9 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Widgets;
 
+use yii\helpers\Url;
 use yii\bootstrap\Widget;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
-use yii\helpers\Url;
 
 /**
  * Class FieldsDevInputWidget
