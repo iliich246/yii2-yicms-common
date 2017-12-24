@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Widgets;
+namespace Iliich246\YicmsCommon\Fields;
 
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldsDevInputWidget extends Widget
+class FieldsDevModalWidget extends Widget
 {
     /** @var DevFieldsGroup  */
     public $devFieldGroup;
@@ -62,7 +62,7 @@ class FieldsDevInputWidget extends Widget
      */
     public function run()
     {
-        return $this->render('fields_dev_input_widget', [
+        return $this->render('fields_dev_modal_widget', [
             'widget' => $this
         ]);
     }

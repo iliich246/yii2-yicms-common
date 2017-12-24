@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Event;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class AbstractTemplate
@@ -34,7 +35,9 @@ use yii\db\ActiveRecord;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterface
+abstract class AbstractTemplate extends ActiveRecord implements
+    SortOrderInterface,
+    ValidatorReferenceInterface
 {
     use SortOrderTrait;
 

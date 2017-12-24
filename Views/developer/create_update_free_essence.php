@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\ActiveForm;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
+use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
-use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /* @var $this \yii\web\View */
 /* @var $freeEssence FreeEssences */
@@ -145,7 +145,7 @@ FieldsDevAsset::register($this);
         'fieldTemplatesSingle' => $fieldTemplatesSingle
     ]) ?>
 
-    <?= FieldsDevInputWidget::widget([
+    <?= FieldsDevModalWidget::widget([
         'devFieldGroup' => $devFieldGroup,
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ])

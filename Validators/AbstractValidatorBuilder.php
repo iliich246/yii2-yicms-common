@@ -18,7 +18,7 @@ abstract class AbstractValidatorBuilder extends Component
      * @return string
      * @throws CommonException
      */
-    public static function generateTemplateReference()
+    public static function generateValidatorReference()
     {
         $value = strrev(uniqid());
 

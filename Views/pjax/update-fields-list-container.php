@@ -2,7 +2,7 @@
 
 use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /* @var $fieldTemplateReference integer */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
@@ -25,8 +25,8 @@ $src = $bundle->baseUrl . '/loader.svg';
                         data-target="#fieldsDevModal"
                         data-field-template-reference="<?= $fieldTemplateReference ?>"
                         data-home-url="<?= \yii\helpers\Url::base() ?>"
-                        data-pjax-container-name="<?= FieldsDevInputWidget::getPjaxContainerId() ?>"
-                        data-fields-modal-name="<?= FieldsDevInputWidget::getModalWindowName() ?>"
+                        data-pjax-container-name="<?= FieldsDevModalWidget::getPjaxContainerId() ?>"
+                        data-fields-modal-name="<?= FieldsDevModalWidget::getModalWindowName() ?>"
                         data-loader-image-src="<?= $src ?>"
                     >
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new field

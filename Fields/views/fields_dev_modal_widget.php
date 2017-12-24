@@ -4,18 +4,16 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
-use Iliich246\YicmsCommon\Fields\FieldNamesTranslatesForm;
-use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
-use Iliich246\YicmsCommon\Fields\Field;
-use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
-
-/** @var $widget FieldsDevInputWidget */
+use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
+use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
+use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
+/** @var $widget FieldsDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
-$modalName = FieldsDevInputWidget::getModalWindowName();
+$modalName = FieldsDevModalWidget::getModalWindowName();
 $deleteLink = $widget->deleteLink . '?fieldTemplateId=';
 
 $js = <<<JS
@@ -61,7 +59,7 @@ $this->registerJs($js, $this::POS_READY);
 ?>
 
 <div class="modal fade"
-     id="<?= FieldsDevInputWidget::getModalWindowName() ?>"
+     id="<?= FieldsDevModalWidget::getModalWindowName() ?>"
      tabindex="-1"
      role="dialog"
      aria-labelledby="myModalLabel"
@@ -69,11 +67,11 @@ $this->registerJs($js, $this::POS_READY);
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => FieldsDevInputWidget::getPjaxContainerId(),
+                'id' => FieldsDevModalWidget::getPjaxContainerId(),
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => FieldsDevInputWidget::getFormName(),
+            'id' => FieldsDevModalWidget::getFormName(),
             'action' => $widget->action,
             'options' => [
                 'data-pjax' => true,
@@ -148,8 +146,8 @@ $this->registerJs($js, $this::POS_READY);
                     </div>
                     <hr>
 
-                    <?= \Iliich246\YicmsCommon\Fields\FieldsDevValidatorWidget::widget([
-                        'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id
+                    <?= ValidatorsListWidget::widget([
+                        'validatorReference' => $widget->devFieldGroup->fieldTemplate
                     ]) ?>
 
                 <?php endif; ?>

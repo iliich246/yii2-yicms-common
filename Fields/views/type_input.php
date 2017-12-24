@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 
+/** @var $this \yii\web\View */
 /** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget*/
 
 $infoString = '';

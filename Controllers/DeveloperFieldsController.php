@@ -13,7 +13,7 @@ use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /**
  * Class DeveloperFieldsController
@@ -45,12 +45,12 @@ class DeveloperFieldsController extends Controller
     public function actionLoadModal($fieldTemplateId)
     {
         if (Yii::$app->request->isPjax &&
-            Yii::$app->request->post('_pjax') == '#'.FieldsDevInputWidget::getPjaxContainerId())
+            Yii::$app->request->post('_pjax') == '#'.FieldsDevModalWidget::getPjaxContainerId())
         {
             $devFieldGroup = new DevFieldsGroup();
             $devFieldGroup->initialize($fieldTemplateId);
 
-            return FieldsDevInputWidget::widget([
+            return FieldsDevModalWidget::widget([
                 'devFieldGroup' => $devFieldGroup
             ]);
         }
@@ -68,13 +68,13 @@ class DeveloperFieldsController extends Controller
     public function actionEmptyModal($fieldTemplateReference)
     {
         if (Yii::$app->request->isPjax &&
-            Yii::$app->request->post('_pjax') == '#'.FieldsDevInputWidget::getPjaxContainerId())
+            Yii::$app->request->post('_pjax') == '#'.FieldsDevModalWidget::getPjaxContainerId())
         {
             $devFieldGroup = new DevFieldsGroup();
             $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
             $devFieldGroup->initialize();
 
-            return FieldsDevInputWidget::widget([
+            return FieldsDevModalWidget::widget([
                 'devFieldGroup' => $devFieldGroup
             ]);
         }

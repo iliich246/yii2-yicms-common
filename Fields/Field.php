@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Validators\AbstractValidatorBuilder;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
@@ -383,5 +384,20 @@ class Field extends ActiveRecord implements
         $this->validatorBuilder = new FieldsValidatorBuilder($this);
 
         return $this->validatorBuilder;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorReference()
+    {
+        $fieldTemplate = $this->getTemplate();
+
+        if (!$fieldTemplate->validator_reference) {
+            $fieldTemplate->validator_reference = AbstractValidatorBuilder::generateValidatorReference();
+            $fieldTemplate->save(false);
+        }
+
+        return  $fieldTemplate->validator_reference;
     }
 }

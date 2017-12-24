@@ -279,4 +279,12 @@ class FieldTemplate extends AbstractTemplate
     {
         return 'field_template_reference';
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorReference()
+    {
+        return $this->validator_reference;
+    }
 }
