@@ -17,7 +17,7 @@ use Iliich246\YicmsCommon\Widgets\ReloadAlertWidget;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
-use Iliich246\YicmsCommon\Widgets\FieldsDevInputWidget;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /**
  * Class DeveloperController
@@ -309,7 +309,7 @@ class DeveloperController extends Controller
                 //TODO: bootbox error
             }
 
-            return FieldsDevInputWidget::widget([
+            return FieldsDevModalWidget::widget([
                 'devFieldGroup' => $devFieldGroup,
                 'dataSaved' => true,
             ]);

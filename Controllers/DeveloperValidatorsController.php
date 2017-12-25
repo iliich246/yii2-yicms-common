@@ -2,12 +2,13 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
-use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
-use Iliich246\YicmsCommon\Validators\RequireValidatorForm;
 use Yii;
-use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\BadRequestHttpException;
+use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Validators\ValidatorDb;
+use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
 
 /**
  * Class DeveloperValidatorController
@@ -29,21 +30,54 @@ class DeveloperValidatorsController extends Controller
         ];
     }
 
+    /**
+     * Action for load and update concrete validator form info
+     * @param $validatorId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
     public function actionUpdateValidator($validatorId)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('no pjax');
 
         $validatorForm = AbstractValidatorForm::getConcreteInstance($validatorId);
 
-        //throw new \Exception(print_r($validatorId,true));
         if ($validatorForm->load(Yii::$app->request->post()) && $validatorForm->validate()) {
             $validatorForm->save();
         }
 
-
-        return $this->renderAjax('@yicms-common/Validators/views/require_form.php', [
+        return $this->renderAjax($validatorForm->getRenderView(), [
             'validatorForm' => $validatorForm
         ]);
+    }
 
+    /**
+     * Add new validator to concrete reference
+     * @param $validatorReference
+     * @param $validator
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     */
+    public function actionAddValidator($validatorReference, $validator)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('no pjax');
+
+        $validatorClass = AbstractValidatorForm::$builtInValidators[$validator];
+
+        if (!$validatorClass)
+            return Html::hiddenInput('validator', true, ['class' => 'validator-response']);
+
+        /** @var ValidatorDb $validatorDb */
+        $validatorDb = new ValidatorDb();
+        $validatorDb->is_active = false;
+        $validatorDb->validator = $validatorClass;
+        $validatorDb->validator_reference = $validatorReference;
+        $validatorDb->params = null;
+
+        if (!$validatorDb->save()) throw new CommonException('Can`t save validator');
+
+        return Html::hiddenInput('validator', true, ['class' => 'validator-response']);
     }
 }

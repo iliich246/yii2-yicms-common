@@ -77,17 +77,17 @@ class NumberValidatorForm extends AbstractValidatorForm
     /**
      * @inheritdoc
      */
-    protected function getValidatorClass()
+    public function getRenderView()
     {
-        return 'yii\validators\NumberValidator';
+        return '@yicms-common/Validators/views/number_form';
     }
 
     /**
      * @inheritdoc
      */
-    protected function getRenderView()
+    protected function getValidatorClass()
     {
-        return '@yicms-common/Validators/views/number_form';
+        return 'yii\validators\NumberValidator';
     }
 
     /**

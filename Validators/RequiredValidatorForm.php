@@ -34,17 +34,17 @@ class RequiredValidatorForm extends AbstractValidatorForm
     /**
      * @inheritdoc
      */
-    protected function getValidatorClass()
+    public function getRenderView()
     {
-        return 'yii\validators\RequiredValidator';
+        return '@yicms-common/Validators/views/require_form';
     }
 
     /**
      * @inheritdoc
      */
-    protected function getRenderView()
+    protected function getValidatorClass()
     {
-        return '@yicms-common/Validators/views/require_form';
+        return 'yii\validators\RequiredValidator';
     }
 
     /**

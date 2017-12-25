@@ -6,37 +6,39 @@ use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
 
 $js = <<<JS
 ;(function() {
-    var addField = $('.add-field');
-    var addValidator = $('.add-validator');
 
-    var homeUrl = $(addField).data('homeUrl');
-    var fieldTemplateReference = $(addField).data('fieldTemplateReference');
-    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
-    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
-    var imageLoaderScr = $(addField).data('loaderImageSrc');
+    var validatorsBlock = $('.validators-block');
+    var addValidator = $('.add-validator');
+    var validatorsList = $('.validators-list');
+
+    var homeUrl = $(validatorsBlock).data('homeUrl');
+    var pjaxContainerName = '#' + $(validatorsBlock).data('ownerPjaxContainerName');
+
+
+    //var imageLoaderScr = $(addValidator).data('loaderImageSrc');
 
     var updateValidatorUrl = homeUrl + '/common/dev-validators/update-validator?';
-
-
-
-    //$(document).on('click', '.validator-button', function() {
-    //    $.pjax({
-    //        url: testUrl,
-    //        container: pjaxContainerName,
-    //        scrollTo: false,
-    //        push: false,
-    //        type: "POST",
-    //        timeout: 2500
-    //    });
-    //});
+    var addValidatorUrl = homeUrl + '/common/dev-validators/add-validator?';
 
     $(addValidator).on('click', function() {
-        //alert(1);
+
+        $(validatorsList).find(":selected").text();
+
+        console.log($(validatorsList).find(":selected").text());
+
+        $.pjax({
+            url: addValidatorUrl + 'validatorReference=' + $(this).data('validatorReference') +
+                '&validator=' + $(validatorsList).find(":selected").text(),
+            container: pjaxContainerName,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
     });
 
     $('.validator-button').on('click', function() {
 
-        //console.log($(this).data('validatorId'));
         $.pjax({
             url: updateValidatorUrl + 'validatorId=' + $(this).data('validatorId') ,
             container: pjaxContainerName,
@@ -55,15 +57,17 @@ $this->registerJs($js, $this::POS_READY);
 <div class="row">
     <div class="col-xs-12">
         <h3>Validators</h3>
-
+        <?php if (AbstractValidatorForm::canAddNewValidator($widget->validatorReference->getValidatorReference())): ?>
         <div class="row">
             <div class="col-xs-3">
-                <button type="button" class="btn btn-primary add-validator">
+                <button type="button"
+                        class="btn btn-primary add-validator"
+                        data-validator-reference="<?= $widget->validatorReference->getValidatorReference() ?>">
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new validator
                 </button>
             </div>
             <div class="col-xs-9">
-                <div class="form-group field-fieldtemplate-type has-success">
+                <div class="form-group has-success">
                     <?= Html::dropDownList(
                         'list-of-validators',
                         null,
@@ -71,23 +75,27 @@ $this->registerJs($js, $this::POS_READY);
                             $widget->validatorReference->getValidatorReference()
                         ),
                         [
-                            'class' => 'form-control'
-
+                            'class' => 'form-control validators-list'
                         ]
                     );
                     ?>
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 validators-block"
+                 data-return-url="<?= $widget->returnUrl ?>"
+                 data-owner-pjax-container-name="<?= $widget->ownerPjaxContainerName ?>"
+                 data-home-url="<?= \yii\helpers\Url::base() ?>"
+                >
                 <?php foreach(AbstractValidatorForm::getValidatorsDb($widget->validatorReference->getValidatorReference()) as $validatorDb): ?>
                     <button type="button"
-                            class="btn btn-success validator-button
+                            class="btn validator-button
                             <?php if ($validatorDb->is_active): ?>btn-success <?php else: ?>btn-default<?php endif ?>"
                             data-validator-id="<?= $validatorDb->id ?>"
                     >
-                        <?= $validatorDb->validator ?>
+                        <?= AbstractValidatorForm::validatorNameByClass($validatorDb->validator) ?>
                     </button>
                 <?php endforeach; ?>
 

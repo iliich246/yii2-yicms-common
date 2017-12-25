@@ -35,8 +35,5 @@ use Iliich246\YicmsCommon\Languages\Language;
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
     </div>
-    <pre>
-        <?php print_r($validatorForm)?>
-    </pre>
 </div>
 <?php ActiveForm::end(); ?>

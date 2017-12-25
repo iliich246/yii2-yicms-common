@@ -28,6 +28,7 @@ $src = $bundle->baseUrl . '/loader.svg';
                         data-pjax-container-name="<?= FieldsDevModalWidget::getPjaxContainerId() ?>"
                         data-fields-modal-name="<?= FieldsDevModalWidget::getModalWindowName() ?>"
                         data-loader-image-src="<?= $src ?>"
+                        data-current-selected-field-template="null"
                     >
                     <span class="glyphicon glyphicon-plus-sign"></span> Add new field
                 </button>

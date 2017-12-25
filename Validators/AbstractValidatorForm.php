@@ -14,62 +14,34 @@ use yii\widgets\ActiveForm;
  */
 abstract class AbstractValidatorForm extends Model
 {
+    /**
+     * @var array of build in validators forms
+     */
     public static $builtInValidators = [
         'required' => 'Iliich246\YicmsCommon\Validators\RequiredValidatorForm',
         'string' => 'Iliich246\YicmsCommon\Validators\StringValidatorForm',
         'number' => 'Iliich246\YicmsCommon\Validators\NumberValidatorForm',
     ];
-
-    public static function listOfWidgets()
-    {
-        return self::$builtInValidators;
-    }
-
-    public static function subtractListOfValidators($validatorReference)
-    {
-        $validatorsDb = self::getValidatorsDb($validatorReference);
-
-        $allValidatorsForms = array_flip(self::$builtInValidators);
-
-        if (!$validatorsDb) return $allValidatorsForms;
-
-        foreach($validatorsDb as $validatorDb) {
-            if ($allValidatorsForms[$validatorDb->validator])
-                unset($allValidatorsForms[$validatorDb->validator]);
-        }
-
-        return $allValidatorsForms;
-    }
-
-    public static function getValidatorsDb($validatorReference)
-    {
-        static $validatorsDb;
-
-        if ($validatorsDb) return $validatorsDb;
-
-        /** @var ValidatorDb[] $validatorsDb */
-        $validatorsDb = ValidatorDb::find()
-            ->where([
-                'validator_reference' => $validatorReference
-            ])->indexBy('validator')
-            ->all();
-
-        return $validatorsDb;
-    }
-
-
+    /**
+     * @var array buffer of validator db with index by validatorReference
+     */
+    private static $validatorsDbBuffer;
+    /**
+     * @var boolean is this validator is activated
+     */
     public $isActivate;
-
     /**
      * @var string class of yii validator, for which this form
      */
     public $validator;
-
+    /**
+     * @var array of fields of class that must be saved in database
+     */
     public $serializeAble = [];
-
-    /** @var ValidatorDb  */
+    /**
+     * @var ValidatorDb instance associated with this validator form
+     */
     private $validatorDb;
-
 
     /**
      * @inheritdoc
@@ -92,9 +64,88 @@ abstract class AbstractValidatorForm extends Model
     }
 
     /**
+     * Returns list of build in validators forms
+     * @return array
+     */
+    public static function listOfWidgets()
+    {
+        return self::$builtInValidators;
+    }
+
+    /**
+     * Return subtracted list of validators
+     * @param $validatorReference
+     * @return array
+     */
+    public static function subtractListOfValidators($validatorReference)
+    {
+        $validatorsDb = self::getValidatorsDb($validatorReference);
+
+        $allValidatorsForms = array_flip(self::$builtInValidators);
+
+        if (!$validatorsDb) return $allValidatorsForms;
+
+        foreach($validatorsDb as $validatorDb) {
+            if ($allValidatorsForms[$validatorDb->validator])
+                unset($allValidatorsForms[$validatorDb->validator]);
+        }
+
+        return $allValidatorsForms;
+    }
+
+    /**
+     * Returns validator name by it`s class name
+     * @param $className
+     * @return bool|mixed
+     */
+    public static function validatorNameByClass($className)
+    {
+        if (!class_exists($className)) return false;
+
+        /** @var $className self */
+        return $className::getValidatorFormName();
+    }
+
+    /**
+     * Returns true, if for current validatorReference you can add more validators
+     * @param $validatorReference
+     * @return bool
+     */
+    public static function canAddNewValidator($validatorReference)
+    {
+        $validatorsDb = self::getValidatorsDb($validatorReference);
+
+        if (count($validatorsDb) < count(self::$builtInValidators)) return true;
+        return false;
+    }
+
+
+    /**
+     * Return list of all validators for current $validatorReference
+     * @param $validatorReference
+     * @return ValidatorDb[]
+     */
+    public static function getValidatorsDb($validatorReference)
+    {
+        if (self::$validatorsDbBuffer[$validatorReference]) return
+            self::$validatorsDbBuffer[$validatorReference];
+
+        /** @var ValidatorDb[] $validatorsDb */
+        $validatorsDb = ValidatorDb::find()
+            ->where([
+                'validator_reference' => $validatorReference
+            ])->indexBy('validator')
+            ->all();
+
+        self::$validatorsDbBuffer[$validatorReference] = $validatorsDb;
+
+        return self::$validatorsDbBuffer[$validatorReference];
+    }
+
+    /**
      * Build and return concrete validator by it`s id
      * @param $id
-     * @return static|bool
+     * @return self|bool
      * @throws CommonException
      */
     public static function getConcreteInstance($id)
@@ -146,7 +197,7 @@ abstract class AbstractValidatorForm extends Model
 
         $this->validatorDb->params = $this->serializeData();
         $this->validatorDb->is_active = $this->isActivate;
-        return $this->validatorDb->save();
+        return $this->validatorDb->save(false);
     }
 
     /**
@@ -200,6 +251,8 @@ abstract class AbstractValidatorForm extends Model
         }
     }
 
+    
+
     /**
      * returns class of yii validator, for which this form
      * @return string
@@ -210,7 +263,7 @@ abstract class AbstractValidatorForm extends Model
      * Returns view name for concrete widget
      * @return string
      */
-    protected abstract function getRenderView();
+    public abstract function getRenderView();
 
     /**
      * Return

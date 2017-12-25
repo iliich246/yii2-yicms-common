@@ -5,6 +5,8 @@ namespace Iliich246\YicmsCommon\Fields;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Validators\AbstractValidatorBuilder;
+use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
 use yii\base\Exception;
 
 /**
@@ -285,6 +287,11 @@ class FieldTemplate extends AbstractTemplate
      */
     public function getValidatorReference()
     {
+        if (!$this->validator_reference) {
+            $this->validator_reference = AbstractValidatorBuilder::generateValidatorReference();
+            $this->save(false);
+        }
+
         return $this->validator_reference;
     }
 }

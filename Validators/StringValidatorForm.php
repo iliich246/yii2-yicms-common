@@ -63,9 +63,17 @@ class StringValidatorForm extends AbstractValidatorForm
     public function rules()
     {
         return array_merge(parent::rules(),[
-            ['message', 'safe'],
+            [['message', 'tooLong', 'tooShort', 'notEqual'], 'safe'],
             [['max', 'min', 'length'], 'integer'],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRenderView()
+    {
+        return '@yicms-common/Validators/views/string_form';
     }
 
     /**
@@ -74,14 +82,6 @@ class StringValidatorForm extends AbstractValidatorForm
     protected function getValidatorClass()
     {
         return 'yii\validators\StringValidator';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getRenderView()
-    {
-        return '@yicms-common/Validators/views/string_form';
     }
 
     /**

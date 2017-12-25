@@ -18,6 +18,16 @@ class ValidatorsListWidget extends Widget
     public $validatorReference;
 
     /**
+     * @var string url for returning to requester of validators block
+     */
+    public $returnUrl;
+
+    /**
+     * @var string name of pjax container that`s contains that widget
+     */
+    public $ownerPjaxContainerName;
+
+    /**
      * @inheritdoc
      */
     public function run()

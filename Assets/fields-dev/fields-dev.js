@@ -22,6 +22,10 @@
 
     $(pjaxContainerName).on('pjax:success', function(event) {
 
+        var isValidatorResponse = !!($('.validator-response').length);
+
+        if (isValidatorResponse) return loadModal($(addField).data('currentSelectedFieldTemplate'));
+
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
         $.pjax({
@@ -33,23 +37,16 @@
             timeout: 2500
         });
 
-        $(pjaxFieldsModalName).modal('hide');
+        if (!isValidatorResponse)
+            $(pjaxFieldsModalName).modal('hide');
     });
 
     $(document).on('click', '.field-item p', function(event) {
+        var fieldTemplate = $(this).data('field-template-id');
 
-        var templateData = $(this).data('field-template-id');
+        $(addField).data('currentSelectedFieldTemplate',fieldTemplate);
 
-        $.pjax({
-            url: loadModalUrl + '?fieldTemplateId=' + templateData,
-            container: pjaxContainerName,
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-
-        $(pjaxFieldsModalName).modal('show');
+        loadModal(fieldTemplate);
     });
 
     $(addField).on('click', function() {
@@ -84,4 +81,17 @@
             timeout: 2500
         });
     });
+
+    function loadModal($fieldTemplate) {
+        $.pjax({
+            url: loadModalUrl + '?fieldTemplateId=' + $fieldTemplate,
+            container: pjaxContainerName,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+
+        $(pjaxFieldsModalName).modal('show');
+    }
 })();
