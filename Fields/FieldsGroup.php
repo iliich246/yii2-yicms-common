@@ -125,6 +125,8 @@ class FieldsGroup extends AbstractGroup
                 'common_fields_template_id' => $singleFieldTemplate->id
             ])->one();
 
+            //throw new \yii\base\Exception(print_r($singleField, true));
+
             if (!$singleField) {
                 $singleField = new Field();
                 $singleField->field_reference = $this->referenceAble->getFieldReference();

@@ -96,7 +96,7 @@ class CommonModule extends AbstractConfigurableModule implements
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;
         //Language::getInstance()->setLanguage(LanguagesDb::instanceByCode('ru-RU'));
-        Yii::$app->language = LanguagesDb::instanceByCode('ru-RU')->code;
+        Yii::$app->language = LanguagesDb::instanceByCode('en-EU')->code;
         //Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
 
     }

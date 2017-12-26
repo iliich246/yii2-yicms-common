@@ -2,6 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Validators;
 
+use yii\validators\RequiredValidator;
+use Iliich246\YicmsCommon\Languages\Language;
+
+
 /**
  * Class RequireValidatorForm
  *
@@ -29,6 +33,26 @@ class RequiredValidatorForm extends AbstractValidatorForm
         return array_merge(parent::rules(),[
             ['message', 'safe']
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function buildValidator()
+    {
+
+        if (!$this->isActivate) return false;
+
+        $validator = new RequiredValidator();
+        $validator->attributes = ['value'];
+
+        $currentLanguage = Language::getInstance()->getCurrentLanguage();
+        $code = '\'' . $currentLanguage->code . '\'';
+
+        if (isset($this->message[$code]) && trim($this->message[$code]))
+            $validator->message = $this->message[$code];
+
+        return $validator;
     }
 
     /**

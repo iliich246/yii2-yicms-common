@@ -2,6 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Validators;
 
+use yii\validators\StringValidator;
+use Iliich246\YicmsCommon\Languages\Language;
+
 /**
  * Class StringValidatorForm
  *
@@ -66,6 +69,37 @@ class StringValidatorForm extends AbstractValidatorForm
             [['message', 'tooLong', 'tooShort', 'notEqual'], 'safe'],
             [['max', 'min', 'length'], 'integer'],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function buildValidator()
+    {
+        if (!$this->isActivate) return false;
+
+        $validator = new StringValidator();
+        $validator->attributes = ['value'];
+
+        $currentLanguage = Language::getInstance()->getCurrentLanguage();
+        $code = '\'' . $currentLanguage->code . '\'';
+        if (isset($this->message[$code]) && trim($this->message[$code]))
+
+
+        $validator->max = $this->max;
+        if (isset($this->tooLong[$code]) && trim($this->tooLong[$code])) {
+            $validator->tooLong = $this->tooLong[$code];
+        }
+
+        $validator->min = $this->min;
+        if (isset($this->tooShort[$code]) && trim($this->tooShort[$code]))
+            $validator->tooShort = $this->tooShort[$code];
+
+        //$validator->length = $this->length;
+        if (isset($this->notEqual[$code]) && trim($this->notEqual[$code]))
+            $validator->notEqual = $this->notEqual[$code];
+
+        return $validator;
     }
 
     /**

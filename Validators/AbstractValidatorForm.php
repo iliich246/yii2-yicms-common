@@ -2,10 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Validators;
 
-use Iliich246\YicmsCommon\Base\CommonException;
+
 use Yii;
 use yii\base\Model;
-use yii\widgets\ActiveForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 
 /**
  * Class AbstractValidatorForm
@@ -188,6 +188,36 @@ abstract class AbstractValidatorForm extends Model
     }
 
     /**
+     * Return concrete instance of validator form by validator db in parameter
+     * @param ValidatorDb $validatorDb
+     * @return bool|AbstractValidatorForm
+     * @throws CommonException
+     */
+    public static function getInstanceByValidatorDb(ValidatorDb $validatorDb)
+    {
+        $class = $validatorDb->validator;
+
+        if (!class_exists($class) && !defined(YICMS_STRICT)) {
+            Yii::warning('Wrong validator class ' . $class, __METHOD__);
+            return false;
+        }
+
+        if (!class_exists($class) && defined(YICMS_STRICT)) {
+            Yii::warning('Wrong validator class ' . $class, __METHOD__);
+            throw new CommonException('Wrong validator class ' . $class);
+        }
+
+        /** @var self $validator */
+        $validator = new $class();
+        $validator->validatorDb = $validatorDb;
+        $validator->isActivate = $validatorDb->is_active;
+
+        $validator->unSerializeData();
+
+        return $validator;
+    }
+
+    /**
      *
      * @return bool
      */
@@ -251,7 +281,11 @@ abstract class AbstractValidatorForm extends Model
         }
     }
 
-    
+    /**
+     * Return instance of correct configured yii validator
+     * @return \yii\validators\Validator
+     */
+    public abstract function buildValidator();
 
     /**
      * returns class of yii validator, for which this form

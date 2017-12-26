@@ -2,15 +2,14 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
-use Iliich246\YicmsCommon\Validators\AbstractValidatorBuilder;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
-use yii\validators\NumberValidator;
-use yii\validators\RequiredValidator;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class Field
@@ -26,7 +25,8 @@ use yii\validators\RequiredValidator;
  */
 class Field extends ActiveRecord implements
     FieldRenderInterface,
-    ValidatorBuilderInterface
+    ValidatorBuilderInterface,
+    ValidatorReferenceInterface
 {
     /**
      * Modes of field
@@ -55,12 +55,12 @@ class Field extends ActiveRecord implements
      * @var FieldTemplate instance of field template
      */
     private $template;
-
     /**
-     * @var
+     * @var ValidatorBuilder instance
      */
     private $validatorBuilder;
 
+    public $nl = false;
 
     /**
      * @inheritdoc
@@ -76,7 +76,7 @@ class Field extends ActiveRecord implements
     public function rules()
     {
         return [
-            ['value', 'string'],
+            //['value', 'safe'],
             ['field_reference', 'string'],
             [
                 ['common_fields_template_id'], 'exist', 'skipOnError' => true,
@@ -92,15 +92,35 @@ class Field extends ActiveRecord implements
     {
         if (defined('YICMS_ALERTS')) $this->setAlertMode();
 
-        $this->validators[] = new RequiredValidator([
-            'attributes' => 'value',
+        //if ($this->nl) return parent::init();
 
-        ]);
+        $this->on(self::EVENT_AFTER_FIND, function() {
 
-        $this->validators[] = new NumberValidator([
-            'attributes' => 'value',
-            'message' => 'This is penis dominator'
-        ]);
+            $validators = $this->getValidatorBuilder()->build();
+
+            if (!$validators) return;
+
+            foreach($validators as $validator)
+                $this->validators[] = $validator;
+        });
+
+//
+//        if (!$validators) return parent::init();
+//        throw new \yii\base\Exception(print_r($validators, true));
+//        foreach($validators as $validator)
+//            $this->validators[] = $validator;
+
+
+
+//        $this->validators[] = new RequiredValidator([
+//            'attributes' => 'value',
+//
+//        ]);
+//
+//        $this->validators[] = new NumberValidator([
+//            'attributes' => 'value',
+//            'message' => 'This is penis dominator'
+//        ]);
 
         parent::init();
     }
@@ -381,7 +401,8 @@ class Field extends ActiveRecord implements
     {
         if ($this->validatorBuilder) return $this->validatorBuilder;
 
-        $this->validatorBuilder = new FieldsValidatorBuilder($this);
+        $this->validatorBuilder = new ValidatorBuilder();
+        $this->validatorBuilder->setReferenceAble($this);
 
         return $this->validatorBuilder;
     }
@@ -394,7 +415,7 @@ class Field extends ActiveRecord implements
         $fieldTemplate = $this->getTemplate();
 
         if (!$fieldTemplate->validator_reference) {
-            $fieldTemplate->validator_reference = AbstractValidatorBuilder::generateValidatorReference();
+            $fieldTemplate->validator_reference = ValidatorBuilder::generateValidatorReference();
             $fieldTemplate->save(false);
         }
 
