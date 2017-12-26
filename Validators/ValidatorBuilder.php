@@ -54,16 +54,13 @@ class ValidatorBuilder extends Component
 
         if (!$validatorsDb) return false;
 
-
         $result = [];
 
 
-$ss = [];
         foreach($validatorsDb as $validatorDb) {
             $validatorForm = AbstractValidatorForm::getInstanceByValidatorDb($validatorDb);
 
             $yiiValidator = $validatorForm->buildValidator();
-            $ss[] = $yiiValidator;
             if (!$yiiValidator) continue;
 
             $result[] = $yiiValidator;

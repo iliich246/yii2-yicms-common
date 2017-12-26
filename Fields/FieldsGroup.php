@@ -113,6 +113,7 @@ class FieldsGroup extends AbstractGroup
                 $fieldTranslate->setLanguage($language);
                 $fieldTranslate->setFieldAble($this->referenceAble);
                 $fieldTranslate->loadFromDb();
+                $fieldTranslate->prepareValidators();
 
                 $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
                 $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
@@ -125,8 +126,6 @@ class FieldsGroup extends AbstractGroup
                 'common_fields_template_id' => $singleFieldTemplate->id
             ])->one();
 
-            //throw new \yii\base\Exception(print_r($singleField, true));
-
             if (!$singleField) {
                 $singleField = new Field();
                 $singleField->field_reference = $this->referenceAble->getFieldReference();
@@ -137,6 +136,8 @@ class FieldsGroup extends AbstractGroup
 
                 $singleField->save();
             }
+
+            $singleField->prepareValidators();
 
             $this->singleFields["$singleFieldTemplate->id"] = $singleField;
         }

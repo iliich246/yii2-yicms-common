@@ -60,8 +60,6 @@ class Field extends ActiveRecord implements
      */
     private $validatorBuilder;
 
-    public $nl = false;
-
     /**
      * @inheritdoc
      */
@@ -92,35 +90,15 @@ class Field extends ActiveRecord implements
     {
         if (defined('YICMS_ALERTS')) $this->setAlertMode();
 
-        //if ($this->nl) return parent::init();
-
-        $this->on(self::EVENT_AFTER_FIND, function() {
-
-            $validators = $this->getValidatorBuilder()->build();
-
-            if (!$validators) return;
-
-            foreach($validators as $validator)
-                $this->validators[] = $validator;
-        });
-
+//        $this->on(self::EVENT_AFTER_FIND, function() {
 //
-//        if (!$validators) return parent::init();
-//        throw new \yii\base\Exception(print_r($validators, true));
-//        foreach($validators as $validator)
-//            $this->validators[] = $validator;
-
-
-
-//        $this->validators[] = new RequiredValidator([
-//            'attributes' => 'value',
+//            $validators = $this->getValidatorBuilder()->build();
 //
-//        ]);
+//            if (!$validators) return;
 //
-//        $this->validators[] = new NumberValidator([
-//            'attributes' => 'value',
-//            'message' => 'This is penis dominator'
-//        ]);
+//            foreach($validators as $validator)
+//                $this->validators[] = $validator;
+//        });
 
         parent::init();
     }
@@ -395,6 +373,19 @@ class Field extends ActiveRecord implements
     }
 
     /**
+     * Method config validators for this model
+     */
+    public function prepareValidators()
+    {
+        $validators = $this->getValidatorBuilder()->build();
+
+        if (!$validators) return;
+
+        foreach($validators as $validator)
+            $this->validators[] = $validator;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getValidatorBuilder()
@@ -416,6 +407,7 @@ class Field extends ActiveRecord implements
 
         if (!$fieldTemplate->validator_reference) {
             $fieldTemplate->validator_reference = ValidatorBuilder::generateValidatorReference();
+            $fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
             $fieldTemplate->save(false);
         }
 

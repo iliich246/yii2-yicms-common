@@ -84,18 +84,21 @@ class StringValidatorForm extends AbstractValidatorForm
         $currentLanguage = Language::getInstance()->getCurrentLanguage();
         $code = '\'' . $currentLanguage->code . '\'';
         if (isset($this->message[$code]) && trim($this->message[$code]))
+            $validator->message = $this->message[$code];
 
-
-        $validator->max = $this->max;
+        if ($this->max)
+            $validator->max = $this->max;
         if (isset($this->tooLong[$code]) && trim($this->tooLong[$code])) {
             $validator->tooLong = $this->tooLong[$code];
         }
 
-        $validator->min = $this->min;
+        if ($this->min)
+            $validator->min = $this->min;
         if (isset($this->tooShort[$code]) && trim($this->tooShort[$code]))
             $validator->tooShort = $this->tooShort[$code];
 
-        //$validator->length = $this->length;
+        if ($this->length)
+            $validator->length = $this->length;
         if (isset($this->notEqual[$code]) && trim($this->notEqual[$code]))
             $validator->notEqual = $this->notEqual[$code];
 

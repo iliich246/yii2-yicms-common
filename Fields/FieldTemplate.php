@@ -289,6 +289,7 @@ class FieldTemplate extends AbstractTemplate
     {
         if (!$this->validator_reference) {
             $this->validator_reference = ValidatorBuilder::generateValidatorReference();
+            $this->scenario = self::SCENARIO_UPDATE;
             $this->save(false);
         }
 

@@ -93,11 +93,15 @@ class NumberValidatorForm extends AbstractValidatorForm
         if (isset($this->message[$code]) && trim($this->message[$code]))
             $validator->message = $this->message[$code];
 
-        $validator->max = $this->max;
+        if ($this->max)
+            $validator->max = $this->max;
+
         if (isset($this->tooBig[$code]) && trim($this->tooBig[$code]))
             $validator->tooBig = $this->tooBig[$code];
 
-        $validator->min = $this->min;
+        if ($this->min)
+            $validator->min = $this->min;
+
         if (isset($this->tooSmall[$code]) && trim($this->tooSmall[$code]))
             $validator->tooSmall = $this->tooSmall[$code];
 

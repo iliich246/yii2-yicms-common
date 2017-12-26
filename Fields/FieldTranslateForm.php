@@ -4,6 +4,9 @@ namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class FieldTranslateForm
@@ -12,7 +15,10 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInterface
+class FieldTranslateForm extends AbstractTranslateForm implements
+    FieldRenderInterface,
+    ValidatorBuilderInterface,
+    ValidatorReferenceInterface
 {
     const SCENARIO_LOAD_VIA_PJAX = 0x02;
 
@@ -37,6 +43,10 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
      * @var string value of field reference
      */
     private $fieldReference;
+    /**
+     * @var ValidatorBuilder instance
+     */
+    private $validatorBuilder;
 
     /**
      * @inheritdoc
@@ -274,6 +284,19 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
     }
 
     /**
+     * Method config validators for this model
+     */
+    public function prepareValidators()
+    {
+        $validators = $this->getValidatorBuilder()->build();
+
+        if (!$validators) return;
+
+        foreach($validators as $validator)
+            $this->validators[] = $validator;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getFieldName()
@@ -297,5 +320,34 @@ class FieldTranslateForm extends AbstractTranslateForm implements FieldRenderInt
             return 'No translate for field \'' . $this->fieldTemplate->program_name . '\'';
 
         return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorBuilder()
+    {
+        if ($this->validatorBuilder) return $this->validatorBuilder;
+
+        $this->validatorBuilder = new ValidatorBuilder();
+        $this->validatorBuilder->setReferenceAble($this);
+
+        return $this->validatorBuilder;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorReference()
+    {
+        $fieldTemplate = $this->getTemplate();
+
+        if (!$fieldTemplate->validator_reference) {
+            $fieldTemplate->validator_reference = ValidatorBuilder::generateValidatorReference();
+            $fieldTemplate->scenario = FieldTemplate::SCENARIO_UPDATE;
+            $fieldTemplate->save(false);
+        }
+
+        return  $fieldTemplate->validator_reference;
     }
 }
