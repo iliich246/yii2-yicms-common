@@ -12,6 +12,7 @@ $js = <<<JS
     var validatorsList = $('.validators-list');
 
     var homeUrl = $(validatorsBlock).data('homeUrl');
+    var returnUrl =  $(validatorsBlock).data('returnUrl');
     var pjaxContainerName = '#' + $(validatorsBlock).data('ownerPjaxContainerName');
 
 
@@ -38,6 +39,8 @@ $js = <<<JS
     });
 
     $('.validator-button').on('click', function() {
+
+        $(pjaxContainerName).data('returnUrl', returnUrl);
 
         $.pjax({
             url: updateValidatorUrl + 'validatorId=' + $(this).data('validatorId') ,
@@ -88,6 +91,7 @@ $this->registerJs($js, $this::POS_READY);
                  data-return-url="<?= $widget->returnUrl ?>"
                  data-owner-pjax-container-name="<?= $widget->ownerPjaxContainerName ?>"
                  data-home-url="<?= \yii\helpers\Url::base() ?>"
+                 data-return-url="<?= $widget->returnUrl ?>"
                 >
                 <?php foreach(AbstractValidatorForm::getValidatorsDb($widget->validatorReference->getValidatorReference()) as $validatorDb): ?>
                     <button type="button"
@@ -98,8 +102,6 @@ $this->registerJs($js, $this::POS_READY);
                         <?= AbstractValidatorForm::validatorNameByClass($validatorDb->validator) ?>
                     </button>
                 <?php endforeach; ?>
-
-
             </div>
         </div>
     </div>

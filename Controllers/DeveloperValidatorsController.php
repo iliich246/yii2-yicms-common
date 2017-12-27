@@ -44,11 +44,21 @@ class DeveloperValidatorsController extends Controller
         $validatorForm = AbstractValidatorForm::getConcreteInstance($validatorId);
 
         if ($validatorForm->load(Yii::$app->request->post()) && $validatorForm->validate()) {
-            $validatorForm->save();
+            if (!$validatorForm->save()) {
+                //TODO: return pjax error
+            }
+            //throw new \yii\base\Exception(print_r($_POST, true));
+            if (Yii::$app->request->post('_saveAndBack')) {
+
+                return $this->renderAjax($validatorForm->getRenderView(), [
+                    'validatorForm' => $validatorForm,
+                    'returnBack' => true,
+                ]);
+            }
         }
 
         return $this->renderAjax($validatorForm->getRenderView(), [
-            'validatorForm' => $validatorForm
+            'validatorForm' => $validatorForm,
         ]);
     }
 

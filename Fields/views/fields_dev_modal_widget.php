@@ -68,6 +68,8 @@ $this->registerJs($js, $this::POS_READY);
         <?php Pjax::begin([
             'options' => [
                 'id' => FieldsDevModalWidget::getPjaxContainerId(),
+                'class' => 'pjax-container',
+                'data-return-url' => '0',
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
