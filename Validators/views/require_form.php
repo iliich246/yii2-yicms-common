@@ -10,12 +10,18 @@ use Iliich246\YicmsCommon\Languages\Language;
 /** @var $returnBack boolean */
 
 $js = <<<JS
-    (function() {
+    ;(function() {
         var validatorForm = $('.validator-form');
+        var deleteButton = $('#validator-delete');
 
         var pjaxContainer = $(validatorForm).parent('.pjax-container');
         var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
+        var validatorId = $(validatorForm).data('validatorId');
+
+        var homeUrl = $(validatorForm).data('homeUrl');
         var returnUrl = $(pjaxContainer).data('returnUrl');
+        var deleteUrl = homeUrl + '/common/dev-validators/delete-validator?';
+
         var isReturn = $(validatorForm).data('returnBack');
 
         var backButton = $('.validator-form-back');
@@ -24,6 +30,28 @@ $js = <<<JS
 
         $(backButton).on('click', goBack);
 
+        $(deleteButton).on('click', function() {
+            if (!($(this).hasClass('validator-confirm-state'))) {
+                $(this).before('<span>Are you sure? </span>');
+                $(this).text('Yes, I`am sure!');
+                $(this).addClass('validator-confirm-state');
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: deleteUrl + 'id=' + validatorId,
+                    success: goBack,
+                    error: function(err) {
+                        bootbox.alert({
+                            size: 'large',
+                            title: "Ajax error",
+                            message: 'There are some error on ajax request!',
+                            className: 'bootbox-error'
+                        });
+                    }
+                })
+            }
+        });
+
         function goBack() {
             $.pjax({
                 url: returnUrl,
@@ -31,7 +59,7 @@ $js = <<<JS
                 scrollTo: false,
                 push: false,
                 type: "POST",
-                timeout: 2500
+                timeout: 2500,
             });
         }
     })();
@@ -48,7 +76,9 @@ else $return = 'false';
     'options' => [
         'class' => 'validator-form',
         'data-pjax' => true,
+        'data-home-url' => \yii\helpers\Url::base(),
         'data-return-back' => $return,
+        'data-validator-id' => $validatorForm->getValidatorDb()->id,
     ],
 ]);
 ?>
@@ -69,6 +99,12 @@ else $return = 'false';
             <?= $form->field($validatorForm, "message['$language->code']")
                 ->label("Message for language $language->name") ?>
         <?php endforeach; ?>
+
+        <button type="button"
+                class="btn btn-danger"
+                id="validator-delete">
+            Delete validator
+        </button>
     </div>
     <div class="modal-footer">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

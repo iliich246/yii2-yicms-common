@@ -11,7 +11,8 @@ use yii\helpers\Url;
 <?php Pjax::begin([
     'options' => [
         'id' => 'update-free-essences-list-container'
-    ]
+    ],
+    'linkSelector' => false,
 ]) ?>
 <div class="list-block">
     <?php foreach($freeEssences as $freeEssence): ?>

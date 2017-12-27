@@ -282,6 +282,15 @@ abstract class AbstractValidatorForm extends Model
     }
 
     /**
+     * ValidatorDb getter
+     * @return ValidatorDb
+     */
+    public function getValidatorDb()
+    {
+        return $this->validatorDb;
+    }
+
+    /**
      * Return instance of correct configured yii validator
      * @return \yii\validators\Validator
      */

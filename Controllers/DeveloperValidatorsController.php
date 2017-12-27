@@ -90,4 +90,24 @@ class DeveloperValidatorsController extends Controller
 
         return Html::hiddenInput('validator', true, ['class' => 'validator-response']);
     }
+
+    /**
+     * Action for delete validator
+     * @param $id
+     * @return false|int
+     * @throws BadRequestHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function actionDeleteValidator($id)
+    {
+        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException('no pjax');
+
+        /** @var ValidatorDb $validator */
+        $validator = ValidatorDb::findOne($id);
+
+        if (!$validator) throw new BadRequestHttpException();
+
+        return $validator->delete();
+    }
 }
