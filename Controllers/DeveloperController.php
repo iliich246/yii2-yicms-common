@@ -18,6 +18,9 @@ use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
+use Iliich246\YicmsCommon\Files\DevFilesGroup;
+use Iliich246\YicmsCommon\Files\FilesBlock;
+use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
 /**
  * Class DeveloperController
@@ -315,6 +318,23 @@ class DeveloperController extends Controller
             ]);
         }
 
+        $devFilesGroup = new DevFilesGroup();
+        $devFilesGroup->setFilesTemplateReference($freeEssence->getFileTemplateReference());
+        $devFilesGroup->initialize(Yii::$app->request->post('_fileTemplateId'));
+
+        //try to load validate and save field via pjax
+        if ($devFilesGroup->load(Yii::$app->request->post()) && $devFilesGroup->validate()) {
+
+            if (!$devFilesGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            return FilesDevModalWidget::widget([
+                'devFieldGroup' => $devFilesGroup,
+                'dataSaved' => true,
+            ]);
+        }
+
         $fieldTemplatesTranslatable = FieldTemplate::getListQuery($freeEssence->getFieldTemplateReference())
                                         ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
                                         ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
@@ -325,11 +345,18 @@ class DeveloperController extends Controller
                                         ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
                                         ->all();
 
+        $filesBlocks = FilesBlock::getListQuery($freeEssence->getFileTemplateReference())
+                            ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+                            ->all();
+
         return $this->render('/developer/create_update_free_essence', [
             'freeEssence' => $freeEssence,
             'devFieldGroup' => $devFieldGroup,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle
+            'fieldTemplatesSingle' => $fieldTemplatesSingle,
+            'devFilesGroup' => $devFilesGroup,
+            'filesBlocks' => $filesBlocks,
+
         ]);
     }
 

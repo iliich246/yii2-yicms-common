@@ -14,6 +14,8 @@ use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 /* @var $devFieldGroup \Iliich246\YicmsCommon\Fields\DevFieldsGroup */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
+/* @var $filesBlocks \Iliich246\YicmsCommon\Files\FilesBlock[] */
+/* @var $devFilesGroup \Iliich246\YicmsCommon\Files\DevFilesGroup */
 /* @var $success bool */
 
 $js = <<<JS
@@ -150,3 +152,15 @@ FieldsDevAsset::register($this);
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ])
     ?>
+
+    <?= $this->render('/pjax/update-files-list-container', [
+        'fileTemplateReference' => $freeEssence->getFileTemplateReference(),
+        'filesBlocks' => $filesBlocks,
+    ]) ?>
+
+    <?= \Iliich246\YicmsCommon\Files\FilesDevModalWidget::widget([
+        'devFilesGroup' => $devFilesGroup,
+        'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
+    ]) ?>
+
+

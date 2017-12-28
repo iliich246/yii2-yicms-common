@@ -1,22 +1,22 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Fields;
+namespace Iliich246\YicmsCommon\Files;
 
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
 
 /**
- * Class FieldsDevInputWidget
+ * Class FilesDevModalWidget
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldsDevModalWidget extends Widget
+class FilesDevModalWidget extends Widget
 {
-    /** @var DevFieldsGroup  */
-    public $devFieldGroup;
-    /** @var bool true means that widget initialized after success data save in devFieldGroup */
+    /** @var DevFilesGroup  */
+    public $devFilesGroup;
+    /** @var bool true means that widget initialized after success data save in DevFilesGroup */
     public $dataSaved = false;
-    /** @var string part of link for delete field template  */
+    /** @var string part of link for delete file block template */
     public $deleteLink;
     /** @var string keeps current form action  */
     public $action;
@@ -26,7 +26,7 @@ class FieldsDevModalWidget extends Widget
      */
     public function init()
     {
-        $this->deleteLink = Url::toRoute(['/common/dev-fields/delete-field-template']);
+        $this->deleteLink = Url::toRoute(['/common/dev-files/delete-file-block-template']);
     }
 
     /**
@@ -35,7 +35,7 @@ class FieldsDevModalWidget extends Widget
      */
     public static function getFormName()
     {
-        return 'create-update-fields';
+        return 'create-update-files';
     }
 
     /**
@@ -44,7 +44,7 @@ class FieldsDevModalWidget extends Widget
      */
     public static function getModalWindowName()
     {
-        return 'fieldsDevModal';
+        return 'filesDevModal';
     }
 
     /**
@@ -53,7 +53,7 @@ class FieldsDevModalWidget extends Widget
      */
     public static function getPjaxContainerId()
     {
-        return 'fields-pjax-container';
+        return 'files-pjax-container';
     }
 
     /**
@@ -61,7 +61,7 @@ class FieldsDevModalWidget extends Widget
      */
     public function run()
     {
-        return $this->render('fields_dev_modal_widget', [
+        return $this->render('files_dev_modal_widget', [
             'widget' => $this
         ]);
     }

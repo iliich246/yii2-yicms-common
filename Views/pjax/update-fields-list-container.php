@@ -4,6 +4,7 @@ use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
+/* @var $this \yii\web\View */
 /* @var $fieldTemplateReference integer */
 /* @var $fieldTemplatesTranslatable FieldTemplate[] */
 /* @var $fieldTemplatesSingle FieldTemplate[] */
@@ -16,7 +17,7 @@ $src = $bundle->baseUrl . '/loader.svg';
 <div class="row content-block form-block">
     <div class="col-xs-12">
         <div class="content-block-title">
-            <h3>List of page fields</h3>
+            <h3>List of fields</h3>
         </div>
         <div class="row control-buttons">
             <div class="col-xs-12">

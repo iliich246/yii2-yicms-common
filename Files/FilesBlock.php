@@ -1,44 +1,46 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Fields;
+namespace Iliich246\YicmsCommon\Files;
 
-use Iliich246\YicmsCommon\Base\AbstractTemplate;
-use Iliich246\YicmsCommon\Base\SortOrderInterface;
-use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
-use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
-use yii\base\Exception;
+use Iliich246\YicmsCommon\Fields\FieldsHandler;
+use Iliich246\YicmsCommon\Fields\FieldsInterface;
+use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
- * Class FieldTemplate
+ * Class FilesBlock
  *
+ * @property string $file_template_reference
  * @property string $field_template_reference
  * @property string $validator_reference
  * @property integer $type
  * @property integer $language_type
- * @property integer $field_order
+ * @property integer $file_order
  * @property bool $visible
  * @property bool $editable
- * @property bool $is_main
+ * @property bool $max_files
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTemplate extends AbstractTemplate
+class FilesBlock extends AbstractEntityBlock implements
+    FieldsInterface,
+    FieldReferenceInterface
 {
     /**
-     * Types of fields
-     * Type define style of render of field
+     * Files types
      */
-    const TYPE_INPUT = 0;
-    const TYPE_TEXT = 1;
-    const TYPE_REDACTOR = 2;
-
+    const TYPE_MULTIPLICITY = 0;
+    const TYPE_ONE_FILE = 1;
     /**
-     * Language types of fields
+     * Language types of files
      * Type define is field have translates or field has one value independent of languages
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
+
+    /** @var FieldsHandler instance of field handler object */
+    private $fieldHandler;
 
     /**
      * @inheritdoc
@@ -60,9 +62,8 @@ class FieldTemplate extends AbstractTemplate
      */
     public static function tableName()
     {
-        return '{{%common_fields_templates}}';
+        return '{{%common_files_templates}}';
     }
-
     /**
      * @inheritdoc
      */
@@ -70,7 +71,7 @@ class FieldTemplate extends AbstractTemplate
     {
         return array_merge(parent::rules(), [
             [['type', 'language_type'], 'integer'],
-            [['visible', 'editable', 'is_main'], 'boolean'],
+            [['visible', 'editable'], 'boolean'],
         ]);
     }
 
@@ -99,12 +100,20 @@ class FieldTemplate extends AbstractTemplate
         if ($array) return $array;
 
         $array = [
-            self::TYPE_INPUT => 'Input type',
-            self::TYPE_TEXT => 'Text area type',
-            self::TYPE_REDACTOR => 'Redactor type',
+            self::TYPE_MULTIPLICITY => 'Multiple files',
+            self::TYPE_ONE_FILE => 'One file',
         ];
 
         return $array;
+    }
+
+    /**
+     * Return name of type of concrete field
+     * @return mixed
+     */
+    public function getTypeName()
+    {
+        return self::getTypes()[$this->type];
     }
 
     /**
@@ -126,86 +135,6 @@ class FieldTemplate extends AbstractTemplate
     }
 
     /**
-     * @inheritdoc
-     */
-    public function save($runValidation = true, $attributes = null)
-    {
-        if ($this->is_main && ($this->scenario === self::SCENARIO_CREATE || $this->scenario === self::SCENARIO_UPDATE)) {
-
-            /** @var self $other */
-            foreach(self::find()->where([
-                self::getTemplateReferenceName() => self::getTemplateReference(),
-            ])->all() as $other)
-            {
-                if (!$other->is_main) continue;
-
-                $other->scenario = self::SCENARIO_UPDATE;
-                $other->is_main = false;
-                $other->save(false);
-            }
-        }
-
-        //TODO: delete this in production, it`s needed only for debug
-        if ($this->scenario === self::SCENARIO_DEFAULT) {
-            throw new \yii\base\Exception('DEFUALT SCENARIO IT`S WRONG');
-        }
-
-        if ($this->scenario === self::SCENARIO_CREATE) {
-            $this->field_order = $this->maxOrder();
-        }
-
-        return parent::save($runValidation, $attributes);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isConstraints()
-    {
-        if (Field::find()->where([
-            'common_fields_template_id' => $this->id
-        ])->one()) return true;
-
-        return false;
-    }
-
-    /**
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    public function delete()
-    {
-        $fields = Field::find()->where([
-            'common_fields_template_id' => $this->id
-        ])->all();
-
-        foreach($fields as $field) {
-            $field->delete();
-        }
-
-        $fieldNames = FieldsNamesTranslatesDb::find()->where([
-           'common_fields_template_id' => $this->id,
-        ])->all();
-
-        foreach($fieldNames as $fieldName) {
-            $fieldName->delete();
-        }
-
-        //TODO: handle fields validators
-
-        return parent::delete();
-    }
-
-    /**
-     * Return name of type of concrete field
-     * @return mixed
-     */
-    public function getTypeName()
-    {
-        return self::getTypes()[$this->type];
-    }
-
-    /**
      * Return name of language type of concrete field
      * @return mixed
      */
@@ -217,9 +146,62 @@ class FieldTemplate extends AbstractTemplate
     /**
      * @inheritdoc
      */
-    public static function generateTemplateReference()
+    public function save($runValidation = true, $attributes = null)
     {
-        return parent::generateTemplateReference();
+
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConstraints()
+    {
+
+    }
+
+    /**
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function delete()
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldHandler()
+    {
+        if (!$this->fieldHandler)
+            $this->fieldHandler = new FieldsHandler($this);
+
+        return $this->fieldHandler;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getField($name)
+    {
+        return $this->getFieldHandler()->getField($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldTemplateReference()
+    {
+        return $this->field_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldReference()
+    {
+        //return $this->field_reference;
     }
 
     /**
@@ -228,7 +210,7 @@ class FieldTemplate extends AbstractTemplate
     public function getOrderQuery()
     {
         return self::find()->where([
-            'field_template_reference' => $this->field_template_reference,
+            'file_template_reference' => $this->file_template_reference,
             'language_type' => $this->language_type,
         ]);
     }
@@ -238,7 +220,7 @@ class FieldTemplate extends AbstractTemplate
      */
     public static function getOrderFieldName()
     {
-        return 'field_order';
+        return 'file_order';
     }
 
     /**
@@ -246,7 +228,7 @@ class FieldTemplate extends AbstractTemplate
      */
     public function getOrderValue()
     {
-        return $this->field_order;
+        return $this->file_order;
     }
 
     /**
@@ -254,7 +236,7 @@ class FieldTemplate extends AbstractTemplate
      */
     public function setOrderValue($value)
     {
-        $this->field_order = $value;
+        $this->file_order = $value;
     }
 
     /**
@@ -278,7 +260,7 @@ class FieldTemplate extends AbstractTemplate
      */
     protected static function getTemplateReferenceName()
     {
-        return 'field_template_reference';
+        return 'file_template_reference';
     }
 
     /**

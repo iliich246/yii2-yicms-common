@@ -3,10 +3,10 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use yii\base\Model;
+use yii\widgets\ActiveForm;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
-use yii\widgets\ActiveForm;
 
 /**
  * Class DevFieldsGroup
@@ -41,6 +41,7 @@ class DevFieldsGroup extends AbstractGroup
     public $fieldTemplatesSingle;
 
     /**
+     * Sets fieldTemplateReference
      * @param integer $fieldTemplateReference
      */
     public function setFieldTemplateReference($fieldTemplateReference)
@@ -86,7 +87,7 @@ class DevFieldsGroup extends AbstractGroup
             $fieldNameTranslate->setLanguage($language);
             $fieldNameTranslate->setFieldTemplate($this->fieldTemplate);
 
-            if ($this->fieldTemplate->id)
+            if (!$this->fieldTemplate->isNewRecord)
                 $fieldNameTranslate->loadFromDb();
 
             $this->fieldNameTranslates[$key] = $fieldNameTranslate;
