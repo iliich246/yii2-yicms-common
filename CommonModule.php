@@ -28,9 +28,9 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public $yicmsLocation = '@app/yicms';
 
-    //public $
-
-    /** @var IdentityInterface|YicmsUserInterface  */
+    /**
+     * @var IdentityInterface|YicmsUserInterface
+     */
     public $user;
 
     /**
@@ -50,10 +50,10 @@ class CommonModule extends AbstractConfigurableModule implements
 
     /** @inheritdoc */
     public $controllerMap = [
-        'dev' => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
-        'dev-fields' => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController',
+        'dev'            => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
+        'dev-fields'     => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController',
         'dev-validators' => 'Iliich246\YicmsCommon\Controllers\DeveloperValidatorsController',
-
+        'dev-files'      => 'Iliich246\YicmsCommon\Controllers\DeveloperFilesController'
     ];
 
     /**

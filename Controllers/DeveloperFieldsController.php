@@ -59,7 +59,7 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
-     * Actions for send empty fields modal window
+     * Action for send empty fields modal window
      * @param $fieldTemplateReference
      * @return string
      * @throws BadRequestHttpException

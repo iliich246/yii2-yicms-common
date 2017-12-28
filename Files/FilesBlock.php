@@ -39,6 +39,11 @@ class FilesBlock extends AbstractEntityBlock implements
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
 
+    /**
+     * @var bool if true for this block will be created standard fields like filename
+     */
+    public $createStandardFields = true;
+
     /** @var FieldsHandler instance of field handler object */
     private $fieldHandler;
 
@@ -55,6 +60,16 @@ class FilesBlock extends AbstractEntityBlock implements
         $this->visible = true;
         $this->editable = true;
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'createStandardFields' => 'Create standard fields (filename)',
+        ]);
     }
 
     /**
@@ -82,9 +97,9 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'language_type', 'visible', 'editable', 'is_main']);
+            ['type', 'language_type', 'visible', 'editable']);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type','language_type' ,'visible', 'editable', 'is_main']);
+            ['type','language_type' ,'visible', 'editable']);
 
         return $scenarios;
     }
@@ -100,8 +115,8 @@ class FilesBlock extends AbstractEntityBlock implements
         if ($array) return $array;
 
         $array = [
-            self::TYPE_MULTIPLICITY => 'Multiple files',
             self::TYPE_ONE_FILE => 'One file',
+            self::TYPE_MULTIPLICITY => 'Multiple files',
         ];
 
         return $array;
@@ -127,8 +142,8 @@ class FilesBlock extends AbstractEntityBlock implements
         if ($array) return $array;
 
         $array = [
-            self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
             self::LANGUAGE_TYPE_SINGLE => 'Single type',
+            self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
         ];
 
         return $array;
@@ -148,7 +163,11 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function save($runValidation = true, $attributes = null)
     {
+        if ($this->scenario === self::SCENARIO_CREATE) {
+            $this->file_order = $this->maxOrder();
+        }
 
+        return parent::save($runValidation, $attributes);
     }
 
     /**

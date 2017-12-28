@@ -6,6 +6,8 @@ use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesBlock;
+use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
+use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
 /** @var $widget FilesDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
@@ -33,18 +35,18 @@ $modalName = FilesDevModalWidget::getModalWindowName();
         ]); ?>
         <?php $form = ActiveForm::begin([
             'id' => FilesDevModalWidget::getFormName(),
-            //'action' => $widget->action,
+            'action' => $widget->action,
             'options' => [
                 'data-pjax' => true,
-                //'data-yicms-saved' => $widget->dataSaved,
+                'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);
         ?>
 
         <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
-<!--            --><?//= Html::hiddenInput('_fieldTemplateId', $widget->devFilesGroup->fieldTemplate->id, [
-//                'id' => 'field-template-id-hidden'
-//            ]) ?>
+            <?= Html::hiddenInput('_fileTemplateId', $widget->devFilesGroup->filesBlock->id, [
+                'id' => 'file-template-id-hidden'
+            ]) ?>
         <?php endif; ?>
 
         <div class="modal-content">
@@ -52,46 +54,44 @@ $modalName = FilesDevModalWidget::getModalWindowName();
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 class="modal-title" id="myModalLabel">
                     <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_CREATE): ?>
-                        Create new field
+                        Create new file block template
                     <?php else: ?>
-                        Update existed field (<? //= $widget->devFilesGroup->fieldTemplate->program_name ?>)
+                        Update existed file block template (<?= $widget->devFilesGroup->filesBlock->program_name ?>)
                     <?php endif; ?>
                 </h3>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    BODY
-<!--                    <div class="col-sm-4 col-xs-12">-->
-<!--                        --><?//= $form->field($widget->devFilesGroup->fieldTemplate, 'program_name') ?>
-<!--                    </div>-->
-<!--                    <div class="col-sm-4 col-xs-12">-->
-<!--                        --><?//= $form->field($widget->devFilesGroup->fieldTemplate, 'type')->dropDownList(
-//                            FilesBlock::getTypes())
-//                        ?>
-<!--                    </div>-->
-<!--                    <div class="col-sm-4 col-xs-12">-->
-<!--                        --><?//= $form->field($widget->devFilesGroup->fieldTemplate, 'language_type')->dropDownList(
-//                            FilesBlock::getLanguageTypes())
-//                        ?>
-<!--                    </div>-->
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'program_name') ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'type')->dropDownList(
+                            FilesBlock::getTypes())
+                        ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'language_type')->dropDownList(
+                            FilesBlock::getLanguageTypes())
+                        ?>
+                    </div>
                 </div>
                 <div class="row">
-                    ROW
-<!--                    <div class="col-sm-4 col-xs-12 ">-->
-<!--                        --><?//= $form->field($widget->devFieldGroup->fieldTemplate, 'visible')->checkbox() ?>
-<!--                    </div>-->
-<!--                    <div class="col-sm-4 col-xs-12 ">-->
-<!--                        --><?//= $form->field($widget->devFieldGroup->fieldTemplate, 'editable')->checkbox() ?>
-<!--                    </div>-->
-<!--                    <div class="col-sm-4 col-xs-12 ">-->
-<!--                        --><?//= $form->field($widget->devFieldGroup->fieldTemplate, 'is_main')->checkbox() ?>
-<!--                    </div>-->
+                    <div class="col-sm-4 col-xs-12 ">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'visible')->checkbox() ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12 ">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'editable')->checkbox() ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12 ">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'createStandardFields')->checkbox() ?>
+                    </div>
                 </div>
-<!--                --><?//= SimpleTabsTranslatesWidget::widget([
-//                    'form' => $form,
-//                    'translateModels' => $widget->devFieldGroup->fieldNameTranslates,
-//                ])
-//                ?>
+                <?= SimpleTabsTranslatesWidget::widget([
+                    'form' => $form,
+                    'translateModels' => $widget->devFilesGroup->filesNameTranslates,
+                ])
+                ?>
                 <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
                     <div class="row">
                         <div class="col-xs-12">

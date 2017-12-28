@@ -22,11 +22,11 @@ class DevFilesGroup extends AbstractGroup
     /**
      * @var FilesBlock current file block template with group is working (create or update)
      */
-    protected $filesBlock;
+    public $filesBlock;
     /**
      * @var FileNamesTranslatesForm[]
      */
-    public $filedNameTranslates;
+    public $filesNameTranslates;
 
     /**
      *  Sets fileTemplateReference
@@ -58,6 +58,8 @@ class DevFilesGroup extends AbstractGroup
 
         $languages = Language::getInstance()->usedLanguages();
 
+        $this->filesNameTranslates = [];
+
         foreach($languages as $key => $language) {
 
             $fileNameTranslates = new FileNamesTranslatesForm();
@@ -67,7 +69,7 @@ class DevFilesGroup extends AbstractGroup
             if (!$this->filesBlock->isNewRecord)
                 $fileNameTranslates->loadFromDb();
 
-            $this->filedNameTranslates[$key] = $fileNameTranslates;
+            $this->filesNameTranslates[$key] = $fileNameTranslates;
         }
     }
 
@@ -76,7 +78,7 @@ class DevFilesGroup extends AbstractGroup
      */
     public function validate()
     {
-        return ($this->filesBlock->validate() && Model::validateMultiple($this->filedNameTranslates));
+        return ($this->filesBlock->validate() && Model::validateMultiple($this->filesNameTranslates));
     }
 
     /**
@@ -84,7 +86,7 @@ class DevFilesGroup extends AbstractGroup
      */
     public function load($data)
     {
-        return $this->filesBlock->load($data) && Model::loadMultiple($this->filedNameTranslates, $data);
+        return $this->filesBlock->load($data) && Model::loadMultiple($this->filesNameTranslates, $data);
     }
 
     /**
@@ -93,6 +95,64 @@ class DevFilesGroup extends AbstractGroup
     public function save()
     {
 
+//        $s = new FilesBlock();
+//        $s->field_template_reference = 1;
+//        $s->program_name = 1;
+//        $s->language_type = 1;
+//        $s->save(false);
+//
+//        throw new \Exception(print_r($s,true));
+
+        $needSaveFileBlock = false;
+
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('program_name') != $this->filesBlock->program_name)
+            $needSaveFileBlock = true;
+
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('type') != $this->filesBlock->type)
+            $needSaveFileBlock = true;
+
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('language_type') != $this->filesBlock->language_type)
+            $needSaveFileBlock = true;
+
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('visible') != $this->filesBlock->visible)
+            $needSaveFileBlock = true;
+
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('editable') != $this->filesBlock->editable)
+            $needSaveFileBlock = true;
+
+        $success = false;
+
+        if ($needSaveFileBlock)
+            $success = $this->filesBlock->save(false);
+
+        if (!$success) return false;
+
+        /** @var FileNamesTranslatesForm $fieldNameTranslate */
+        foreach($this->filesNameTranslates as $fileNameTranslate) {
+
+            $needSaveFileTemplateName = false;
+
+            if (!$needSaveFileTemplateName &&
+                $fileNameTranslate->name != $fileNameTranslate->getCurrentTranslateDb()->name)
+                $needSaveFileTemplateName = true;
+
+            if (!$needSaveFileTemplateName &&
+                $fileNameTranslate->description != $fileNameTranslate->getCurrentTranslateDb()->description)
+                $needSaveFileTemplateName = true;
+
+
+
+            if ($needSaveFileTemplateName)
+                $fileNameTranslate->save();
+        }
+
+        //TODO: makes error handling
+        return true;
     }
 
     /**

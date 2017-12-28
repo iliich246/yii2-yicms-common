@@ -75,7 +75,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
         $this->getCurrentTranslateDb()->name = $this->name;
         $this->getCurrentTranslateDb()->description = $this->description;
         $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
-        $this->getCurrentTranslateDb()->common_file_template_id = $this->fileBlockTemplate->id;
+        $this->getCurrentTranslateDb()->common_files_template_id = $this->fileBlockTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
     }
@@ -99,7 +99,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
         $this->currentTranslateDb = FilesNamesTranslatesDb::find()
             ->where([
                 'common_language_id' => $this->language->id,
-                'common_file_template_id' => $this->fileBlockTemplate->id,
+                'common_files_template_id' => $this->fileBlockTemplate->id,
             ])
             ->one();
 
@@ -120,7 +120,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
     {
         $this->currentTranslateDb = new FilesNamesTranslatesDb();
         $this->currentTranslateDb->common_language_id = $this->language->id;
-        $this->currentTranslateDb->common_file_template_id = $this->fileBlockTemplate->id;
+        $this->currentTranslateDb->common_files_template_id = $this->fileBlockTemplate->id;
 
         return $this->currentTranslateDb->save();
     }

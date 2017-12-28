@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Files\FilesBlock;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
@@ -40,7 +41,7 @@ class FieldsNamesTranslatesDb extends ActiveRecord
             ],
             [
                 ['common_fields_template_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => FieldTemplate::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
+                'targetClass' => FilesBlock::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
             ],
         ];
     }

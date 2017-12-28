@@ -2,15 +2,17 @@
 //TODO: https://codepen.io/dimbslmh/full/mKfCc modal to center!!!
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
+
 /** @var $widget FieldsDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
+
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
 $modalName = FieldsDevModalWidget::getModalWindowName();

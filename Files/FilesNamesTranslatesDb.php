@@ -9,7 +9,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  * Class FilesNamesTranslatesDb
  *
  * @property integer $id
- * @property integer $common_file_template_id
+ * @property integer $common_files_template_id
  * @property integer $common_language_id
  * @property string $name
  * @property string $description
@@ -32,15 +32,15 @@ class FilesNamesTranslatesDb extends ActiveRecord
     public function rules()
     {
         return [
-            ['name', 'string', 'max' => '50', 'tooLong' => 'Name of page must be less than 50 symbols'],
+            ['name', 'string', 'max' => '50', 'tooLong' => 'Name of file block must be less than 50 symbols'],
             ['description', 'string'],
             [
                 ['common_language_id'], 'exist', 'skipOnError' => true,
                 'targetClass' => LanguagesDb::className(), 'targetAttribute' => ['common_language_id' => 'id']
             ],
             [
-                ['common_fields_template_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => FilesBlock::className(), 'targetAttribute' => ['common_file_template_id' => 'id']
+                ['common_files_template_id'], 'exist', 'skipOnError' => true,
+                'targetClass' => FilesBlock::className(), 'targetAttribute' => ['common_files_template_id' => 'id']
             ],
         ];
     }

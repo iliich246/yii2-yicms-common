@@ -187,8 +187,6 @@ class m171110_213106_common_init extends Migration
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
             'max_files' => $this->integer(),
-            'max_size' => $this->integer(),
-            'allow_files' => $this->string(),
         ]);
 
         $this->createIndex(
@@ -269,7 +267,7 @@ class m171110_213106_common_init extends Migration
         $this->addForeignKey('common_file_names-to-common_files_templates',
             '{{%common_file_names}}',
             'common_files_template_id',
-            '{{%common_file_translates}}',
+            '{{%common_files_templates}}',
             'id'
         );
 

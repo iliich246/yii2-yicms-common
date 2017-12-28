@@ -330,7 +330,7 @@ class DeveloperController extends Controller
             }
 
             return FilesDevModalWidget::widget([
-                'devFieldGroup' => $devFilesGroup,
+                'devFilesGroup' => $devFilesGroup,
                 'dataSaved' => true,
             ]);
         }
