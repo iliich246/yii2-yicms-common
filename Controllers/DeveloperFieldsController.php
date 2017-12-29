@@ -83,7 +83,7 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
-     *
+     * Action for update fields list container
      * @param $fieldTemplateReference
      * @return string
      * @throws BadRequestHttpException

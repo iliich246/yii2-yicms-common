@@ -24,7 +24,7 @@ $src = $bundle->baseUrl . '/loader.svg';
                         data-file-template-reference="<?= $fileTemplateReference ?>"
                         data-home-url="<?= \yii\helpers\Url::base() ?>"
                         data-pjax-container-name="<?= FilesDevModalWidget::getPjaxContainerId() ?>"
-                        data-fields-modal-name="<?= FilesDevModalWidget::getModalWindowName() ?>"
+                        data-files-modal-name="<?= FilesDevModalWidget::getModalWindowName() ?>"
                         data-loader-image-src="<?= $src ?>"
                         data-current-selected-file-template="null">
                 <span class="glyphicon glyphicon-plus-sign"></span> Add new file block
@@ -39,9 +39,9 @@ $src = $bundle->baseUrl . '/loader.svg';
             ]) ?>
             <div class="list-block">
                 <?php foreach ($filesBlocks as $filesBlock): ?>
-                    <div class="row list-items field-item">
+                    <div class="row list-items file-item">
                         <div class="col-xs-10 list-title">
-                            <p data-field-template-id="<?= $filesBlock->id ?>">
+                            <p data-file-template-id="<?= $filesBlock->id ?>">
                                 <?= $filesBlock->program_name ?> (<?= $filesBlock->getTypeName() ?>)
                             </p>
                         </div>
@@ -55,12 +55,12 @@ $src = $bundle->baseUrl . '/loader.svg';
                                 <span class="glyphicon glyphicon-pencil"></span>
                             <?php endif; ?>
                             <?php if ($filesBlock->canUpOrder()): ?>
-                                <span class="glyphicon glyphicon-arrow-up"
-                                      data-field-template-id="<?= $filesBlock->id ?>"></span>
+                                <span class="glyphicon file-arrow-up glyphicon-arrow-up"
+                                      data-file-template-id="<?= $filesBlock->id ?>"></span>
                             <?php endif; ?>
                             <?php if ($filesBlock->canDownOrder()): ?>
-                                <span class="glyphicon glyphicon-arrow-down"
-                                      data-field-template-id="<?= $filesBlock->id ?>"></span>
+                                <span class="glyphicon file-arrow-down glyphicon-arrow-down"
+                                      data-file-template-id="<?= $filesBlock->id ?>"></span>
                             <?php endif; ?>
                         </div>
                     </div>

@@ -54,17 +54,17 @@ $jsFiles = <<<JS
     var homeUrl = $(addFile).data('homeUrl');
     var emptyModalUrl = homeUrl + '/common/dev-files/empty-modal';
     var loadModalUrl = homeUrl + '/common/dev-files/load-modal';
-    var updateFieldsListUrl = homeUrl + '/common/dev-fields/update-fields-list-container';
-    var fieldTemplateUpUrl = homeUrl + '/common/dev-fields/field-template-up-order';
-    var fieldTemplateDownUrl = homeUrl + '/common/dev-fields/field-template-down-order';
+    var updateFileListUrl = homeUrl + '/common/dev-files/update-files-list-container';
+    var fileTemplateUpUrl = homeUrl + '/common/dev-files/file-template-up-order';
+    var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
 
-    var fieldTemplateReference = $(addField).data('fieldTemplateReference');
-    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
-    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
-    var imageLoaderScr = $(addField).data('loaderImageSrc');
+    var fileTemplateReference = $(addFile).data('fileTemplateReference');
+    var pjaxContainerName = '#' + $(addFile).data('pjaxContainerName');
+    var pjaxFilesModalName = '#' + $(addFile).data('filesModalName');
+    var imageLoaderScr = $(addFile).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
-        $(pjaxFieldsModalName)
+        $(pjaxFilesModalName)
             .find('.modal-content')
             .empty()
             .append('<img src="' + imageLoaderScr + '" style="text-align:center">');
@@ -74,13 +74,13 @@ $jsFiles = <<<JS
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        if (isValidatorResponse) return loadModal($(addField).data('currentSelectedFieldTemplate'));
+        if (isValidatorResponse) return loadModal($(addFile).data('currentSelectedFileTemplate'));
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
         $.pjax({
-            url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
-            container: '#update-fields-list-container',
+            url: updateFileListUrl + '?fileTemplateReference=' + fileTemplateReference,
+            container: '#update-files-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -88,20 +88,20 @@ $jsFiles = <<<JS
         });
 
         if (!isValidatorResponse)
-            $(pjaxFieldsModalName).modal('hide');
+            $(pjaxFilesModalName).modal('hide');
     });
 
-    $(document).on('click', '.field-item p', function(event) {
-        var fieldTemplate = $(this).data('field-template-id');
+    $(document).on('click', '.file-item p', function(event) {
+        var fileTemplate = $(this).data('file-template-id');
 
-        $(addField).data('currentSelectedFieldTemplate',fieldTemplate);
+        $(addFile).data('currentSelectedFileTemplate',fileTemplate);
 
-        loadModal(fieldTemplate);
+        loadModal(fileTemplate);
     });
 
-    $(addField).on('click', function() {
+    $(addFile).on('click', function() {
         $.pjax({
-            url: emptyModalUrl + '?fieldTemplateReference=' + fieldTemplateReference ,
+            url: emptyModalUrl + '?fileTemplateReference=' + fileTemplateReference ,
             container: pjaxContainerName,
             scrollTo: false,
             push: false,
@@ -110,10 +110,10 @@ $jsFiles = <<<JS
         });
     });
 
-    $(document).on('click', '.glyphicon-arrow-up', function() {
+    $(document).on('click', '.file-arrow-up', function() {
         $.pjax({
-            url: fieldTemplateUpUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
+            url: fileTemplateUpUrl + '?fileTemplateId=' + $(this).data('fileTemplateId'),
+            container: '#update-files-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -121,10 +121,10 @@ $jsFiles = <<<JS
         });
     });
 
-    $(document).on('click', '.glyphicon-arrow-down', function() {
+    $(document).on('click', '.file-arrow-down', function() {
         $.pjax({
-            url: fieldTemplateDownUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
+            url: filedTemplateDownUrl + '?fileTemplateId=' + $(this).data('fileTemplateId'),
+            container: '#update-files-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -132,9 +132,9 @@ $jsFiles = <<<JS
         });
     });
 
-    function loadModal($fieldTemplate) {
+    function loadModal(fileTemplate) {
         $.pjax({
-            url: loadModalUrl + '?fieldTemplateId=' + $fieldTemplate,
+            url: loadModalUrl + '?fileTemplateId=' + fileTemplate,
             container: pjaxContainerName,
             scrollTo: false,
             push: false,
@@ -142,11 +142,12 @@ $jsFiles = <<<JS
             timeout: 2500
         });
 
-        $(pjaxFieldsModalName).modal('show');
+        $(pjaxFilesModalName).modal('show');
     }
 })();
 JS;
 
+$this->registerJs($jsFiles, $this::POS_READY);
 
 ?>
 

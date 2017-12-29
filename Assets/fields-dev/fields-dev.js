@@ -60,7 +60,7 @@
         });
     });
 
-    $(document).on('click', '.glyphicon-arrow-up', function() {
+    $(document).on('click', '.field-arrow-up', function() {
         $.pjax({
             url: fieldTemplateUpUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
             container: '#update-fields-list-container',
@@ -71,7 +71,7 @@
         });
     });
 
-    $(document).on('click', '.glyphicon-arrow-down', function() {
+    $(document).on('click', '.field-arrow-down', function() {
         $.pjax({
             url: fieldTemplateDownUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
             container: '#update-fields-list-container',

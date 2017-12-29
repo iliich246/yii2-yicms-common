@@ -44,7 +44,9 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public $createStandardFields = true;
 
-    /** @var FieldsHandler instance of field handler object */
+    /**
+     * @var FieldsHandler instance of field handler object
+     */
     private $fieldHandler;
 
     /**
@@ -69,6 +71,7 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         return array_merge(parent::attributeLabels(),[
             'createStandardFields' => 'Create standard fields (filename)',
+            'max_files' => 'Maximum files in block'
         ]);
     }
 
@@ -87,6 +90,7 @@ class FilesBlock extends AbstractEntityBlock implements
         return array_merge(parent::rules(), [
             [['type', 'language_type'], 'integer'],
             [['visible', 'editable'], 'boolean'],
+            ['max_files', 'integer', 'min' => 0]
         ]);
     }
 
@@ -97,9 +101,9 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'language_type', 'visible', 'editable']);
+            ['type', 'language_type', 'visible', 'editable', 'max_files']);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type','language_type' ,'visible', 'editable']);
+            ['type','language_type' ,'visible', 'editable', 'max_files']);
 
         return $scenarios;
     }

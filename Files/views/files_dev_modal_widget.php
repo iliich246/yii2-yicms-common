@@ -15,7 +15,46 @@ use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
 $modalName = FilesDevModalWidget::getModalWindowName();
-//$deleteLink = $widget->deleteLink . '?fieldTemplateId=';
+$deleteLink = $widget->deleteLink . '?fileTemplateId=';
+
+$js = <<<JS
+;(function() {
+    $(document).on('click', '#file-delete', function() {
+        var button = ('#file-delete');
+
+        if (!$(button).is('[data-file-template-id]')) return;
+
+        var fileTemplateId = $(button).data('fileTemplateId');
+
+        if (!($(this).hasClass('file-confirm-state'))) {
+            $(this).before('<span>Are you sure? </span>');
+            $(this).text('Yes, I`am sure!');
+            $(this).addClass('file-confirm-state');
+        } else {
+            $.pjax({
+                url: '{$deleteLink}' + fileTemplateId,
+                container: '#update-files-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            var deleteActived = true;
+
+            $('#update-files-list-container').on('pjax:success', function(event) {
+
+                if (!deleteActived) return false;
+
+                $('#{$modalName}').modal('hide');
+                deleteActived = false;
+            });
+        }
+    });
+})();
+JS;
+
+$this->registerJs($js, $this::POS_READY);
 
 ?>
 
@@ -75,6 +114,14 @@ $modalName = FilesDevModalWidget::getModalWindowName();
                             FilesBlock::getLanguageTypes())
                         ?>
                     </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devFilesGroup->filesBlock, 'max_files') ?>
+                    </div>
+                    <div class="col-sm-8 col-xs-12">
+                        <br>
+                        <p>zero value - infinite count of files in block</p>
+                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-sm-4 col-xs-12 ">
@@ -83,9 +130,11 @@ $modalName = FilesDevModalWidget::getModalWindowName();
                     <div class="col-sm-4 col-xs-12 ">
                         <?= $form->field($widget->devFilesGroup->filesBlock, 'editable')->checkbox() ?>
                     </div>
-                    <div class="col-sm-4 col-xs-12 ">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'createStandardFields')->checkbox() ?>
-                    </div>
+                    <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_CREATE): ?>
+                        <div class="col-sm-4 col-xs-12 ">
+                            <?= $form->field($widget->devFilesGroup->filesBlock, 'createStandardFields')->checkbox() ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?= SimpleTabsTranslatesWidget::widget([
                     'form' => $form,
@@ -100,24 +149,23 @@ $modalName = FilesDevModalWidget::getModalWindowName();
                             <p>IMPORTANT! Do not delete file blocks without serious reason!</p>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="field-delete"
-<!--                                    data-field-template-reference="--><?//= $widget->devFilesGroup->fieldTemplate->field_template_reference ?><!--"-->
-<!--                                    data-field-template-id="--><?//= $widget->devFieldGroup->fieldTemplate->id ?><!--">-->
-                                >
-                                Delete field
+                                    id="file-delete"
+                                    data-file-template-reference="<?= $widget->devFilesGroup->filesBlock->file_template_reference ?>"
+                                    data-file-template-id="<?= $widget->devFilesGroup->filesBlock->id ?>">
+                                Delete file block template
                             </button>
                         </div>
                     </div>
                     <hr>
 
-<!--                    --><?//= ValidatorsListWidget::widget([
-//                        'validatorReference' => $widget->devFieldGroup->fieldTemplate,
-//                        'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
-//                        'returnUrl' => \yii\helpers\Url::toRoute([
-//                            '/common/dev-fields/load-modal',
-//                            'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id,
-//                        ])
-//                    ]) ?>
+                    <?= ValidatorsListWidget::widget([
+                        'validatorReference' => $widget->devFilesGroup->filesBlock,
+                        'ownerPjaxContainerName' => FilesDevModalWidget::getPjaxContainerId(),
+                        'returnUrl' => \yii\helpers\Url::toRoute([
+                            '/common/dev-files/load-modal',
+                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
+                        ])
+                    ]) ?>
 
                 <?php endif; ?>
             </div>
@@ -130,4 +178,3 @@ $modalName = FilesDevModalWidget::getModalWindowName();
         <?php Pjax::end() ?>
     </div>
 </div>
-

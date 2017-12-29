@@ -329,6 +329,8 @@ class DeveloperController extends Controller
                 //TODO: bootbox error
             }
 
+            //throw new \yii\base\Exception(print_r($devFilesGroup->filesNameTranslates, true));
+
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
                 'dataSaved' => true,

@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
+use Iliich246\YicmsCommon\Files\FilesBlock;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -45,11 +46,11 @@ class DeveloperFilesController extends Controller
         if (Yii::$app->request->isPjax &&
             Yii::$app->request->post('_pjax') == '#'.FilesDevModalWidget::getPjaxContainerId())
         {
-            $devFieldGroup = new DevFilesGroup();
-            $devFieldGroup->initialize($fileTemplateId);
+            $devFilesGroup = new DevFilesGroup();
+            $devFilesGroup->initialize($fileTemplateId);
 
             return FilesDevModalWidget::widget([
-                'devFieldGroup' => $devFieldGroup
+                'devFilesGroup' => $devFilesGroup
             ]);
         }
 
@@ -69,17 +70,131 @@ class DeveloperFilesController extends Controller
         if (Yii::$app->request->isPjax &&
             Yii::$app->request->post('_pjax') == '#'.FilesDevModalWidget::getPjaxContainerId())
         {
-            $devFieldGroup = new DevFilesGroup();
-            $devFieldGroup->setFilesTemplateReference($fileTemplateReference);
-            $devFieldGroup->initialize();
+            $devFilesGroup = new DevFilesGroup();
+            $devFilesGroup->setFilesTemplateReference($fileTemplateReference);
+            $devFilesGroup->initialize();
 
             return FilesDevModalWidget::widget([
-                'devFieldGroup' => $devFieldGroup
+                'devFilesGroup' => $devFilesGroup
             ]);
         }
 
         throw new BadRequestHttpException();
     }
 
+    /**
+     * Action for update files blocks list container
+     * @param $fileTemplateReference
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function actionUpdateFilesListContainer($fileTemplateReference)
+    {
+        if (Yii::$app->request->isPjax &&
+            Yii::$app->request->post('_pjax') == '#update-files-list-container') {
 
+            $filesBlocks = FilesBlock::getListQuery($fileTemplateReference)
+                ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+                ->all();
+
+            return  $this->render('/pjax/update-files-list-container', [
+                'fileTemplateReference' => $fileTemplateReference,
+                'filesBlocks' => $filesBlocks,
+            ]);
+        }
+
+        throw new BadRequestHttpException();
+    }
+
+    /**
+     * Action for delete file block template
+     * @param $fileTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteFileBlockTemplate($fileTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FilesBlock $filesBlock */
+        $filesBlock = FilesBlock::findOne($fileTemplateId);
+
+        if (!$filesBlock) throw new NotFoundHttpException('Wrong fileTemplateId');
+
+        //TODO: for field templates with constraints makes request of root password
+
+        $fileTemplateReference = $filesBlock->file_template_reference;
+
+        $filesBlock->delete();
+
+        $filesBlocks = FilesBlock::getListQuery($fileTemplateReference)
+            ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return  $this->render('/pjax/update-files-list-container', [
+            'fileTemplateReference' => $fileTemplateReference,
+            'filesBlocks' => $filesBlocks,
+        ]);
+    }
+
+    /**
+     * Action for up file block template order
+     * @param $fileTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFileTemplateUpOrder($fileTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FilesBlock $filesBlock */
+        $filesBlock = FilesBlock::findOne($fileTemplateId);
+
+        if (!$filesBlock) throw new NotFoundHttpException('Wrong fileTemplateId');
+
+        $filesBlock->upOrder();
+
+        $fileTemplateReference = $filesBlock->file_template_reference;
+
+        $filesBlocks = FilesBlock::getListQuery($fileTemplateReference)
+            ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-files-list-container', [
+            'fileTemplateReference' => $fileTemplateReference,
+            'filesBlocks' => $filesBlocks,
+        ]);
+    }
+
+    /**
+     * Action for down file block template order
+     * @param $fileTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFileTemplateDownOrder($fileTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var FilesBlock $filesBlock */
+        $filesBlock = FilesBlock::findOne($fileTemplateId);
+
+        if (!$filesBlock) throw new NotFoundHttpException('Wrong fileTemplateId');
+
+        $filesBlock->downOrder();
+
+        $fileTemplateReference = $filesBlock->file_template_reference;
+
+        $filesBlocks = FilesBlock::getListQuery($fileTemplateReference)
+            ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return  $this->render('/pjax/update-files-list-container', [
+            'fileTemplateReference' => $fileTemplateReference,
+            'filesBlocks' => $filesBlocks,
+        ]);
+    }
 }

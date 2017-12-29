@@ -25,7 +25,6 @@ $js = <<<JS
 
         if (!$(button).is('[data-field-template-id]')) return;
 
-        //var fieldTemplateId = $(button).data('fieldTemplateId');
         var fieldTemplateId = $(button).data('fieldTemplateId');
 
         if (!($(this).hasClass('field-confirm-state'))) {
@@ -148,6 +147,7 @@ $this->registerJs($js, $this::POS_READY);
                             </button>
                         </div>
                     </div>
+                    
                     <hr>
 
                     <?= ValidatorsListWidget::widget([

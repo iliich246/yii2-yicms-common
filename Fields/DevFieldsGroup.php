@@ -92,16 +92,6 @@ class DevFieldsGroup extends AbstractGroup
 
             $this->fieldNameTranslates[$key] = $fieldNameTranslate;
         }
-
-//        $this->fieldTemplatesTranslatable = FieldTemplate::getListQuery($this->fieldTemplateReference)
-//                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-//                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                            ->all();
-//
-//        $fieldTemplatesSingle = FieldTemplate::getListQuery($this->fieldTemplateReference)
-//                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-//                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                            ->all();
     }
 
     /**

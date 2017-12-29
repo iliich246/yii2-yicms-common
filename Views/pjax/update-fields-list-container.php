@@ -67,11 +67,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                                     <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
-                                    <span class="glyphicon glyphicon-arrow-up"
+                                    <span class="glyphicon field-arrow-up glyphicon-arrow-up"
                                           data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
-                                    <span class="glyphicon glyphicon-arrow-down"
+                                    <span class="glyphicon field-arrow-down glyphicon-arrow-down"
                                           data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                             </div>
@@ -105,11 +105,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                                     <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
-                                <span class="glyphicon glyphicon-arrow-up"
+                                <span class="glyphicon field-arrow-up glyphicon-arrow-up"
                                       data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canDownOrder()): ?>
-                                    <span class="glyphicon glyphicon-arrow-down"
+                                    <span class="glyphicon field-arrow-down glyphicon-arrow-down"
                                           data-field-template-id="<?= $fieldTemplate->id ?>"></span>
                                 <?php endif; ?>
                             </div>

@@ -95,14 +95,6 @@ class DevFilesGroup extends AbstractGroup
     public function save()
     {
 
-//        $s = new FilesBlock();
-//        $s->field_template_reference = 1;
-//        $s->program_name = 1;
-//        $s->language_type = 1;
-//        $s->save(false);
-//
-//        throw new \Exception(print_r($s,true));
-
         $needSaveFileBlock = false;
 
         if (!$needSaveFileBlock &&
@@ -125,7 +117,11 @@ class DevFilesGroup extends AbstractGroup
             $this->filesBlock->getOldAttribute('editable') != $this->filesBlock->editable)
             $needSaveFileBlock = true;
 
-        $success = false;
+        if (!$needSaveFileBlock &&
+            $this->filesBlock->getOldAttribute('max_files') != $this->filesBlock->max_files)
+            $needSaveFileBlock = true;
+
+        $success = true;
 
         if ($needSaveFileBlock)
             $success = $this->filesBlock->save(false);
@@ -144,8 +140,6 @@ class DevFilesGroup extends AbstractGroup
             if (!$needSaveFileTemplateName &&
                 $fileNameTranslate->description != $fileNameTranslate->getCurrentTranslateDb()->description)
                 $needSaveFileTemplateName = true;
-
-
 
             if ($needSaveFileTemplateName)
                 $fileNameTranslate->save();
