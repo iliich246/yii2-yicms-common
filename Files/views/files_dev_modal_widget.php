@@ -161,10 +161,17 @@ $this->registerJs($js, $this::POS_READY);
                     <?= ValidatorsListWidget::widget([
                         'validatorReference' => $widget->devFilesGroup->filesBlock,
                         'ownerPjaxContainerName' => FilesDevModalWidget::getPjaxContainerId(),
+                        'ownerModalId' => FilesDevModalWidget::getModalWindowName(),
                         'returnUrl' => \yii\helpers\Url::toRoute([
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                         ])
+                    ]) ?>
+
+                    <?= $this->render('/pjax/update-fields-list-container', [
+                        'fieldTemplateReference' => $widget->devFilesGroup->filesBlock->getFieldTemplateReference(),
+                        'fieldTemplatesTranslatable' => null,
+                        'fieldTemplatesSingle' => null
                     ]) ?>
 
                 <?php endif; ?>

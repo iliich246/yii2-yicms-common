@@ -153,6 +153,7 @@ $this->registerJs($js, $this::POS_READY);
                     <?= ValidatorsListWidget::widget([
                         'validatorReference' => $widget->devFieldGroup->fieldTemplate,
                         'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
+                        'ownerModalId' => FieldsDevModalWidget::getModalWindowName(),
                         'returnUrl' => \yii\helpers\Url::toRoute([
                             '/common/dev-fields/load-modal',
                             'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id,

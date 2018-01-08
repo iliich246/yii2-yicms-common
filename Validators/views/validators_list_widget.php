@@ -2,31 +2,25 @@
 
 use yii\bootstrap\Html;
 use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
+
 /** @var $widget \Iliich246\YicmsCommon\Validators\ValidatorsListWidget */
 
 $js = <<<JS
 ;(function() {
+    var currentModal = $('.modal').filter('.in');
 
-    var validatorsBlock = $('.validators-block');
-    var addValidator = $('.add-validator');
-    var validatorsList = $('.validators-list');
+    var validatorsBlock = $(currentModal).find('.validators-block');
+    var addValidator = $(currentModal).find('.add-validator');
+    var validatorsList = $(currentModal).find('.validators-list');
 
     var homeUrl = $(validatorsBlock).data('homeUrl');
     var returnUrl =  $(validatorsBlock).data('returnUrl');
     var pjaxContainerName = '#' + $(validatorsBlock).data('ownerPjaxContainerName');
 
-
-    //var imageLoaderScr = $(addValidator).data('loaderImageSrc');
-
     var updateValidatorUrl = homeUrl + '/common/dev-validators/update-validator?';
     var addValidatorUrl = homeUrl + '/common/dev-validators/add-validator?';
 
     $(addValidator).on('click', function() {
-
-        $(validatorsList).find(":selected").text();
-
-        console.log($(validatorsList).find(":selected").text());
-
         $.pjax({
             url: addValidatorUrl + 'validatorReference=' + $(this).data('validatorReference') +
                 '&validator=' + $(validatorsList).find(":selected").text(),
@@ -41,6 +35,8 @@ $js = <<<JS
     $('.validator-button').on('click', function() {
 
         $(pjaxContainerName).data('returnUrl', returnUrl);
+
+        //console.log(returnUrl);
 
         $.pjax({
             url: updateValidatorUrl + 'validatorId=' + $(this).data('validatorId') ,
@@ -90,8 +86,8 @@ $this->registerJs($js, $this::POS_READY);
             <div class="col-xs-12 validators-block"
                  data-return-url="<?= $widget->returnUrl ?>"
                  data-owner-pjax-container-name="<?= $widget->ownerPjaxContainerName ?>"
+                 data-owner-modal-id="<?= $widget->ownerModalId ?>"
                  data-home-url="<?= \yii\helpers\Url::base() ?>"
-                 data-return-url="<?= $widget->returnUrl ?>"
                 >
                 <?php foreach(AbstractValidatorForm::getValidatorsDb($widget->validatorReference->getValidatorReference()) as $validatorDb): ?>
                     <button type="button"

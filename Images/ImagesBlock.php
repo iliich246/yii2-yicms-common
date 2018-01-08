@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Files;
+namespace Iliich246\YicmsCommon\Images;
 
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -9,32 +9,35 @@ use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
- * Class FilesBlock
+ * Class ImagesBlock
  *
- * @property string $file_template_reference
+ * @property string $image_template_reference
  * @property string $field_template_reference
  * @property string $validator_reference
  * @property integer $type
  * @property integer $language_type
- * @property integer $file_order
+ * @property integer $image_order
  * @property bool $visible
  * @property bool $editable
- * @property bool $max_files
+ * @property bool $max_images
+ * @property bool $crop_type
+ * @property bool $crop_height
+ * @property bool $crop_width
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FilesBlock extends AbstractEntityBlock implements
+class ImagesBlock extends AbstractEntityBlock implements
     FieldsInterface,
     FieldReferenceInterface
 {
     /**
-     * Files types
+     * Images types
      */
     const TYPE_MULTIPLICITY = 0;
-    const TYPE_ONE_FILE = 1;
+    const TYPE_ONE_IMAGE = 1;
     /**
-     * Language types of files
-     * Type define is file have translates or file has one instance independent of languages
+     * Language types of images
+     * Type define is image have translates or image has one instance independent of languages
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
@@ -43,12 +46,10 @@ class FilesBlock extends AbstractEntityBlock implements
      * @var bool if true for this block will be created standard fields like filename
      */
     public $createStandardFields = true;
-
     /**
      * @var FieldsHandler instance of field handler object
      */
     private $fieldHandler;
-
     /**
      * @inheritdoc
      */
@@ -70,8 +71,8 @@ class FilesBlock extends AbstractEntityBlock implements
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(),[
-            'createStandardFields' => 'Create standard fields (filename)',
-            'max_files' => 'Maximum files in block'
+            'createStandardFields' => 'Create standard fields (name, alt)',
+            'max_images' => 'Maximum images in block'
         ]);
     }
 
@@ -80,7 +81,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public static function tableName()
     {
-        return '{{%common_files_templates}}';
+        return '{{%common_images_templates}}';
     }
 
     /**
@@ -91,7 +92,7 @@ class FilesBlock extends AbstractEntityBlock implements
         return array_merge(parent::rules(), [
             [['type', 'language_type'], 'integer'],
             [['visible', 'editable'], 'boolean'],
-            ['max_files', 'integer', 'min' => 0]
+            ['max_images', 'integer', 'min' => 0]
         ]);
     }
 
@@ -102,9 +103,9 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'language_type', 'visible', 'editable', 'max_files']);
+            ['type', 'language_type', 'visible', 'editable', 'max_images']);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type','language_type' ,'visible', 'editable', 'max_files']);
+            ['type','language_type' ,'visible', 'editable', 'max_images']);
 
         return $scenarios;
     }
@@ -120,8 +121,8 @@ class FilesBlock extends AbstractEntityBlock implements
         if ($array) return $array;
 
         $array = [
-            self::TYPE_ONE_FILE => 'One file',
-            self::TYPE_MULTIPLICITY => 'Multiple files',
+            self::TYPE_ONE_IMAGE => 'One image',
+            self::TYPE_MULTIPLICITY => 'Multiple images',
         ];
 
         return $array;
@@ -169,7 +170,7 @@ class FilesBlock extends AbstractEntityBlock implements
     public function save($runValidation = true, $attributes = null)
     {
         if ($this->scenario === self::SCENARIO_CREATE) {
-            $this->file_order = $this->maxOrder();
+            $this->image_order = $this->maxOrder();
         }
 
         return parent::save($runValidation, $attributes);
@@ -203,7 +204,6 @@ class FilesBlock extends AbstractEntityBlock implements
         return $this->fieldHandler;
     }
 
-
     /**
      * @inheritdoc
      */
@@ -234,7 +234,7 @@ class FilesBlock extends AbstractEntityBlock implements
     public function getOrderQuery()
     {
         return self::find()->where([
-            'file_template_reference' => $this->file_template_reference,
+            'image_template_reference' => $this->image_template_reference,
             'language_type' => $this->language_type,
         ]);
     }
@@ -244,7 +244,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public static function getOrderFieldName()
     {
-        return 'file_order';
+        return 'image_order';
     }
 
     /**
@@ -252,7 +252,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getOrderValue()
     {
-        return $this->file_order;
+        return $this->image_order;
     }
 
     /**
@@ -260,7 +260,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function setOrderValue($value)
     {
-        $this->file_order = $value;
+        $this->image_order = $value;
     }
 
     /**
@@ -284,7 +284,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     protected static function getTemplateReferenceName()
     {
-        return 'file_template_reference';
+        return 'image_template_reference';
     }
 
     /**

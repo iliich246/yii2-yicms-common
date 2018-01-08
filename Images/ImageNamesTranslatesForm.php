@@ -1,31 +1,30 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Files;
+namespace Iliich246\YicmsCommon\Images;
 
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 
 /**
- * Class FileNamesTranslatesForm
+ * Class ImageNamesTranslatesForm
  *
- * @property FilesNamesTranslatesDb $currentTranslateDb
+ * @property ImagesNamesTranslatesDb $currentTranslateDb
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FileNamesTranslatesForm extends AbstractTranslateForm
+class ImageNamesTranslatesForm extends AbstractTranslateForm
 {
     /**
-     * @var string name of file block template in current model language
+     * @var string name of image block template in current model language
      */
     public $name;
     /**
-     * @var string description of file block template on current model language
+     * @var string description of image block template on current model language
      */
     public $description;
-
     /**
-     * @var FilesBlock associated with this model
+     * @var ImagesBlock associated with this model
      */
-    private $fileBlockTemplate;
+    private $imageBlockTemplate;
 
     /**
      * @inheritdoc
@@ -33,8 +32,8 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
     public function attributeLabels()
     {
         return [
-            'name' => 'File block name on language "' . $this->language->name . '"',
-            'description' => 'Description of file block on language "' . $this->language->name . '"',
+            'name' => 'Image block name on language "' . $this->language->name . '"',
+            'description' => 'Description of image block on language "' . $this->language->name . '"',
         ];
     }
 
@@ -44,7 +43,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
     public function rules()
     {
         return [
-            ['name', 'string', 'max' => '50', 'tooLong' => 'Name of field must be less than 50 symbols'],
+            ['name', 'string', 'max' => '50', 'tooLong' => 'Name of image must be less than 50 symbols'],
             ['description', 'string'],
         ];
     }
@@ -54,16 +53,16 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
      */
     public static function getViewName()
     {
-        return '@yicms-common/Views/translates/files_names_translate';
+        return '@yicms-common/Views/translates/images_names_translate';
     }
 
     /**
      * Sets fileBlockTemplate associated with this object
-     * @param FilesBlock $fileBlockTemplate
+     * @param ImagesBlock $imageBlockTemplate
      */
-    public function setFilesBlockTemplate(FilesBlock $fileBlockTemplate)
+    public function setImagesBlockTemplate(ImagesBlock $imageBlockTemplate)
     {
-        $this->fileBlockTemplate = $fileBlockTemplate;
+        $this->imageBlockTemplate = $imageBlockTemplate;
     }
 
     /**
@@ -75,7 +74,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
         $this->getCurrentTranslateDb()->name = $this->name;
         $this->getCurrentTranslateDb()->description = $this->description;
         $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
-        $this->getCurrentTranslateDb()->common_files_template_id = $this->fileBlockTemplate->id;
+        $this->getCurrentTranslateDb()->common_images_template_id = $this->imageBlockTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
     }
@@ -85,7 +84,7 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
      */
     protected function isCorrectConfigured()
     {
-        if (!parent::isCorrectConfigured() || !$this->fileBlockTemplate) return false;
+        if (!parent::isCorrectConfigured() || !$this->imageBlockTemplate) return false;
         return true;
     }
 
@@ -96,10 +95,10 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
     {
         if ($this->currentTranslateDb) return $this->currentTranslateDb;
 
-        $this->currentTranslateDb = FilesNamesTranslatesDb::find()
+        $this->currentTranslateDb = ImagesNamesTranslatesDb::find()
             ->where([
                 'common_language_id' => $this->language->id,
-                'common_files_template_id' => $this->fileBlockTemplate->id,
+                'common_images_template_id' => $this->imageBlockTemplate->id,
             ])
             ->one();
 
@@ -118,9 +117,9 @@ class FileNamesTranslatesForm extends AbstractTranslateForm
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new FilesNamesTranslatesDb();
+        $this->currentTranslateDb = new ImagesNamesTranslatesDb();
         $this->currentTranslateDb->common_language_id = $this->language->id;
-        $this->currentTranslateDb->common_files_template_id = $this->fileBlockTemplate->id;
+        $this->currentTranslateDb->common_images_template_id = $this->imageBlockTemplate->id;
 
         return $this->currentTranslateDb->save();
     }

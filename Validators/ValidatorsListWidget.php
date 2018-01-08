@@ -23,6 +23,11 @@ class ValidatorsListWidget extends Widget
     public $returnUrl;
 
     /**
+     * @var string id of owner modal window
+     */
+    public $ownerModalId;
+
+    /**
      * @var string name of pjax container that`s contains that widget
      */
     public $ownerPjaxContainerName;
