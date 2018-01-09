@@ -45,8 +45,8 @@ class DeveloperFieldsController extends Controller
     public function actionLoadModal($fieldTemplateId)
     {
         if (Yii::$app->request->isPjax &&
-            Yii::$app->request->post('_pjax') == '#'.FieldsDevModalWidget::getPjaxContainerId())
-        {
+            Yii::$app->request->post('_pjax') == '#' . FieldsDevModalWidget::getPjaxContainerId()
+        ) {
             $devFieldGroup = new DevFieldsGroup();
             $devFieldGroup->initialize($fieldTemplateId);
 
@@ -67,19 +67,15 @@ class DeveloperFieldsController extends Controller
      */
     public function actionEmptyModal($fieldTemplateReference)
     {
-        if (Yii::$app->request->isPjax &&
-            Yii::$app->request->post('_pjax') == '#'.FieldsDevModalWidget::getPjaxContainerId())
-        {
-            $devFieldGroup = new DevFieldsGroup();
-            $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
-            $devFieldGroup->initialize();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
-            return FieldsDevModalWidget::widget([
-                'devFieldGroup' => $devFieldGroup
-            ]);
-        }
+        $devFieldGroup = new DevFieldsGroup();
+        $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
+        $devFieldGroup->initialize();
 
-        throw new BadRequestHttpException();
+        return FieldsDevModalWidget::widget([
+            'devFieldGroup' => $devFieldGroup
+        ]);
     }
 
     /**
@@ -91,7 +87,8 @@ class DeveloperFieldsController extends Controller
     public function actionUpdateFieldsListContainer($fieldTemplateReference)
     {
         if (Yii::$app->request->isPjax &&
-            Yii::$app->request->post('_pjax') == '#update-fields-list-container') {
+            Yii::$app->request->post('_pjax') == '#update-fields-list-container'
+        ) {
 
             $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplateReference)
                 ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
@@ -138,14 +135,14 @@ class DeveloperFieldsController extends Controller
         $fieldTemplate->delete();
 
         $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplateReference)
-                                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-                                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-                                            ->all();
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
 
         $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplateReference)
-                                            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-                                            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-                                            ->all();
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
 
         return $this->render('/pjax/update-fields-list-container', [
             'fieldTemplateReference' => $fieldTemplateReference,
@@ -246,7 +243,7 @@ class DeveloperFieldsController extends Controller
         $fieldsGroup = new FieldsGroup();
         $fieldsGroup->initializePjax($fieldTemplateReference, $field);
 
-        return $this->render(CommonModule::getInstance()->yicmsLocation  . '/Common/Views/pjax/fields', [
+        return $this->render(CommonModule::getInstance()->yicmsLocation . '/Common/Views/pjax/fields', [
             'fieldsGroup' => $fieldsGroup,
             'fieldTemplateReference' => $fieldTemplateReference,
             'success' => true,
@@ -277,7 +274,7 @@ class DeveloperFieldsController extends Controller
         $fieldsGroup = new FieldsGroup();
         $fieldsGroup->initializePjax($fieldTemplateReference, $field);
 
-        return $this->render(CommonModule::getInstance()->yicmsLocation  . '/Common/Views/pjax/fields', [
+        return $this->render(CommonModule::getInstance()->yicmsLocation . '/Common/Views/pjax/fields', [
             'fieldsGroup' => $fieldsGroup,
             'fieldTemplateReference' => $fieldTemplateReference,
             'success' => true,

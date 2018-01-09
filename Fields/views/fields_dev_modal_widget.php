@@ -127,11 +127,13 @@ $this->registerJs($js, $this::POS_READY);
                         <?= $form->field($widget->devFieldGroup->fieldTemplate, 'is_main')->checkbox() ?>
                     </div>
                 </div>
+
                 <?= SimpleTabsTranslatesWidget::widget([
                     'form' => $form,
                     'translateModels' => $widget->devFieldGroup->fieldNameTranslates,
                 ])
                 ?>
+
                 <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
                     <div class="row">
                         <div class="col-xs-12">

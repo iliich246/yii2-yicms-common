@@ -36,8 +36,6 @@ $js = <<<JS
 
         $(pjaxContainerName).data('returnUrl', returnUrl);
 
-        //console.log(returnUrl);
-
         $.pjax({
             url: updateValidatorUrl + 'validatorId=' + $(this).data('validatorId') ,
             container: pjaxContainerName,

@@ -2,7 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
-use Iliich246\YicmsCommon\Files\FilesBlock;
+
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -10,8 +10,12 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
-use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
+use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
+use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Files\DevFilesGroup;
+use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
 
 /**
@@ -21,6 +25,8 @@ use Iliich246\YicmsCommon\Files\DevFilesGroup;
  */
 class DeveloperFilesController extends Controller
 {
+    /** @inheritdoc */
+    public $layout = '@yicms-common/Views/layouts/developer';
     /**
      * @inheritdoc
      */
@@ -49,8 +55,20 @@ class DeveloperFilesController extends Controller
             $devFilesGroup = new DevFilesGroup();
             $devFilesGroup->initialize($fileTemplateId);
 
+            $fieldTemplatesTranslatable = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
+                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+                ->all();
+
+            $fieldTemplatesSingle = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
+                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+                ->all();
+
             return FilesDevModalWidget::widget([
-                'devFilesGroup' => $devFilesGroup
+                'devFilesGroup' => $devFilesGroup,
+                'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+                'fieldTemplatesSingle' => $fieldTemplatesSingle
             ]);
         }
 
@@ -195,6 +213,51 @@ class DeveloperFilesController extends Controller
         return  $this->render('/pjax/update-files-list-container', [
             'fileTemplateReference' => $fileTemplateReference,
             'filesBlocks' => $filesBlocks,
+        ]);
+    }
+
+    /**
+     * Show fields for file block template
+     * @param $fileTemplateId
+     * @return string
+     */
+    public function actionShowFileBlockFields($fileTemplateId)
+    {
+        /** @var FilesBlock $filesBlock */
+        $filesBlock = FilesBlock::findOne($fileTemplateId);
+
+        $devFieldGroup = new DevFieldsGroup();
+        $devFieldGroup->setFieldTemplateReference($filesBlock->getFieldTemplateReference());
+        $devFieldGroup->initialize(Yii::$app->request->post('_fieldTemplateId'));
+
+        //try to load validate and save field via pjax
+        if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {
+
+            if (!$devFieldGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            return FieldsDevModalWidget::widget([
+                'devFieldGroup' => $devFieldGroup,
+                'dataSaved' => true,
+            ]);
+        }
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($filesBlock->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($filesBlock->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/developer/show-file-block-fields', [
+            'filesBlock' => $filesBlock,
+            'devFieldGroup' => $devFieldGroup,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle' => $fieldTemplatesSingle,
         ]);
     }
 }

@@ -8,6 +8,8 @@ use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
+use Iliich246\YicmsCommon\Assets\FilesDevAsset;
+use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
 /* @var $this \yii\web\View */
 /* @var $freeEssence FreeEssences */
@@ -46,6 +48,7 @@ JS;
 $this->registerJs($js, $this::POS_READY);
 
 FieldsDevAsset::register($this);
+//FilesDevAsset::register($this);
 
 $jsFiles = <<<JS
 ;(function() {
@@ -260,9 +263,7 @@ $this->registerJs($jsFiles, $this::POS_READY);
         'filesBlocks' => $filesBlocks,
     ]) ?>
 
-    <?= \Iliich246\YicmsCommon\Files\FilesDevModalWidget::widget([
+    <?= FilesDevModalWidget::widget([
         'devFilesGroup' => $devFilesGroup,
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ]) ?>
-
-

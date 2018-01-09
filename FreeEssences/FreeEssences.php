@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\FreeEssences;
 
-
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;

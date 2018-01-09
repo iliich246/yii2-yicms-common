@@ -14,12 +14,12 @@ use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Languages\DefaultLanguageForm;
 use Iliich246\YicmsCommon\Widgets\ReloadAlertWidget;
+use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
-use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
-use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesBlock;
+use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
 /**
@@ -329,8 +329,6 @@ class DeveloperController extends Controller
                 //TODO: bootbox error
             }
 
-            //throw new \yii\base\Exception(print_r($devFilesGroup->filesNameTranslates, true));
-
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
                 'dataSaved' => true,
@@ -350,6 +348,8 @@ class DeveloperController extends Controller
         $filesBlocks = FilesBlock::getListQuery($freeEssence->getFileTemplateReference())
                             ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
                             ->all();
+
+        Url::remember('', 'dev');
 
         return $this->render('/developer/create_update_free_essence', [
             'freeEssence' => $freeEssence,

@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Files;
 
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 
 /**
  * Class FilesDevModalWidget
@@ -20,6 +21,10 @@ class FilesDevModalWidget extends Widget
     public $deleteLink;
     /** @var string keeps current form action  */
     public $action;
+    /** @var FieldTemplate[] array of translate able fields for current file block template  */
+    public $fieldTemplatesTranslatable;
+    /** @var FieldTemplate[] array of single fields for current file block template  */
+    public $fieldTemplatesSingle;
 
     /**
      * @inheritdoc

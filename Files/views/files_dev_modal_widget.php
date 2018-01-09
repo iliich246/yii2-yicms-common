@@ -144,6 +144,7 @@ $this->registerJs($js, $this::POS_READY);
                 <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
                     <div class="row">
                         <div class="col-xs-12">
+
                             <br>
 
                             <p>IMPORTANT! Do not delete file blocks without serious reason!</p>
@@ -158,6 +159,16 @@ $this->registerJs($js, $this::POS_READY);
                     </div>
                     <hr>
 
+                    <a href="<?= \yii\helpers\Url::toRoute([
+                        '/common/dev-files/show-file-block-fields',
+                        'fileTemplateId' => $widget->devFilesGroup->filesBlock->id
+                    ]) ?>"
+                       class="btn btn-primary">
+                        View file block fields
+                    </a>
+
+                    <hr>
+
                     <?= ValidatorsListWidget::widget([
                         'validatorReference' => $widget->devFilesGroup->filesBlock,
                         'ownerPjaxContainerName' => FilesDevModalWidget::getPjaxContainerId(),
@@ -166,12 +177,6 @@ $this->registerJs($js, $this::POS_READY);
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                         ])
-                    ]) ?>
-
-                    <?= $this->render('/pjax/update-fields-list-container', [
-                        'fieldTemplateReference' => $widget->devFilesGroup->filesBlock->getFieldTemplateReference(),
-                        'fieldTemplatesTranslatable' => null,
-                        'fieldTemplatesSingle' => null
                     ]) ?>
 
                 <?php endif; ?>

@@ -41,7 +41,7 @@ class FieldsNamesTranslatesDb extends ActiveRecord
             ],
             [
                 ['common_fields_template_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => FilesBlock::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
+                'targetClass' => FieldTemplate::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
             ],
         ];
     }
