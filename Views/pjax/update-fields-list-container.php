@@ -1,6 +1,7 @@
 <?php
 
 use yii\widgets\Pjax;
+use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
@@ -13,112 +14,11 @@ use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';
 
-$js = <<<JS
-;(function() {
-    var addField = $('.add-field');
-
-    var homeUrl = $(addField).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-fields/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-fields/load-modal';
-    var updateFieldsListUrl = homeUrl + '/common/dev-fields/update-fields-list-container';
-    var fieldTemplateUpUrl = homeUrl + '/common/dev-fields/field-template-up-order';
-    var fieldTemplateDownUrl = homeUrl + '/common/dev-fields/field-template-down-order';
-
-    var fieldTemplateReference = $(addField).data('fieldTemplateReference');
-    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
-    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
-    var imageLoaderScr = $(addField).data('loaderImageSrc');
-
-    $(pjaxContainerName).on('pjax:send', function() {
-        $(pjaxFieldsModalName)
-            .find('.modal-content')
-            .empty()
-            .append('<img src="' + imageLoaderScr + '" style="text-align:center">');
-    });
-
-    $(pjaxContainerName).on('pjax:success', function(event) {
-
-        var isValidatorResponse = !!($('.validator-response').length);
-
-        if (isValidatorResponse) return loadModal($(addField).data('currentSelectedFieldTemplate'));
-
-        if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
-
-        $.pjax({
-            url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-
-        if (!isValidatorResponse)
-            $(pjaxFieldsModalName).modal('hide');
-    });
-
-    $(document).on('click', '.field-item p', function(event) {
-        var fieldTemplate = $(this).data('field-template-id');
-
-        $(addField).data('currentSelectedFieldTemplate',fieldTemplate);
-
-        loadModal(fieldTemplate);
-    });
-
-    $(addField).on('click', function() {
-        $.pjax({
-            url: emptyModalUrl + '?fieldTemplateReference=' + fieldTemplateReference ,
-            container: pjaxContainerName,
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-
-    $(document).on('click', '.field-arrow-up', function() {
-        $.pjax({
-            url: fieldTemplateUpUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-
-    $(document).on('click', '.field-arrow-down', function() {
-        $.pjax({
-            url: fieldTemplateDownUrl + '?fieldTemplateId=' + $(this).data('fieldTemplateId'),
-            container: '#update-fields-list-container',
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-    });
-
-    function loadModal(fieldTemplate) {
-        $.pjax({
-            url: loadModalUrl + '?fieldTemplateId=' + fieldTemplate,
-            container: pjaxContainerName,
-            scrollTo: false,
-            push: false,
-            type: "POST",
-            timeout: 2500
-        });
-
-        $(pjaxFieldsModalName).modal('show');
-    }
-})();
-
-JS;
-
-//$this->registerJs($js, $this::POS_READY);
+FieldsDevAsset::register($this);
 
 ?>
 
-<div class="row <?php if (!isset($isInModal)): ?>content-block form-block <?php endif; ?>">
+<div class="row content-block form-block">
     <div class="col-xs-12">
         <div class="content-block-title">
             <h3>List of fields</h3>

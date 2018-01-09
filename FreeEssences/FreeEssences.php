@@ -2,6 +2,8 @@
 
 namespace Iliich246\YicmsCommon\FreeEssences;
 
+use Iliich246\YicmsCommon\Files\FilesBlock;
+use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
@@ -167,6 +169,12 @@ class FreeEssences extends ActiveRecord implements
         if ($this->scenario == self::SCENARIO_CREATE) {
             $this->field_template_reference = FieldTemplate::generateTemplateReference();
             $this->field_reference = $this->field_template_reference;
+
+            $this->file_template_reference = FilesBlock::generateTemplateReference();
+            $this->file_reference = $this->file_template_reference;
+
+            $this->image_template_reference = ImagesBlock::generateTemplateReference();
+            $this->image_reference = $this->image_template_reference;
         }
     }
 

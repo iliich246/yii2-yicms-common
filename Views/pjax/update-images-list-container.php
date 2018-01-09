@@ -1,17 +1,14 @@
 <?php
 
 use yii\widgets\Pjax;
-use Iliich246\YicmsCommon\Assets\FilesDevAsset;
-use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
+use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 
 /* @var $this \yii\web\View */
-/* @var $fileTemplateReference string */
-/* @var $filesBlocks \Iliich246\YicmsCommon\Files\FilesBlock[] */
+/* @var $imageTemplateReference string */
+/* @var $imagesBlocks \Iliich246\YicmsCommon\Images\ImagesBlock[] */
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';
-
-FilesDevAsset::register($this);
 
 ?>
 
@@ -24,47 +21,47 @@ FilesDevAsset::register($this);
             <div class="col-xs-12">
                 <button class="btn btn-primary add-file-block"
                         data-toggle="modal"
-                        data-target="#filesDevModal"
-                        data-file-template-reference="<?= $fileTemplateReference ?>"
+                        data-target="#imagesDevModal"
+                        data-image-template-reference="<?= $imageTemplateReference ?>"
                         data-home-url="<?= \yii\helpers\Url::base() ?>"
-                        data-pjax-container-name="<?= FilesDevModalWidget::getPjaxContainerId() ?>"
-                        data-files-modal-name="<?= FilesDevModalWidget::getModalWindowName() ?>"
+                        data-pjax-container-name="<?= ImagesDevModalWidget::getPjaxContainerId() ?>"
+                        data-images-modal-name="<?= ImagesDevModalWidget::getModalWindowName() ?>"
                         data-loader-image-src="<?= $src ?>"
-                        data-current-selected-file-template="null">
-                <span class="glyphicon glyphicon-plus-sign"></span> Add new file block
+                        data-current-selected-image-template="null">
+                    <span class="glyphicon glyphicon-plus-sign"></span> Add image block
                 </button>
             </div>
         </div>
-        <?php if (isset($filesBlocks)): ?>
+        <?php if (isset($imagesBlocks)): ?>
             <?php Pjax::begin([
                 'options' => [
-                    'id' => 'update-files-list-container'
+                    'id' => 'update-images-list-container'
                 ]
             ]) ?>
             <div class="list-block">
-                <?php foreach ($filesBlocks as $filesBlock): ?>
+                <?php foreach ($imagesBlocks as $imageBlock): ?>
                     <div class="row list-items file-item">
                         <div class="col-xs-10 list-title">
-                            <p data-file-template-id="<?= $filesBlock->id ?>">
-                                <?= $filesBlock->program_name ?> (<?= $filesBlock->getTypeName() ?>)
+                            <p data-file-template-id="<?= $imageBlock->id ?>">
+                                <?= $imageBlock->program_name ?> (<?= $imageBlock->getTypeName() ?>)
                             </p>
                         </div>
                         <div class="col-xs-2 list-controls">
-                            <?php if ($filesBlock->visible): ?>
+                            <?php if ($imageBlock->visible): ?>
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             <?php else: ?>
                                 <span class="glyphicon glyphicon-eye-close"></span>
                             <?php endif; ?>
-                            <?php if ($filesBlock->editable): ?>
+                            <?php if ($imageBlock->editable): ?>
                                 <span class="glyphicon glyphicon-pencil"></span>
                             <?php endif; ?>
-                            <?php if ($filesBlock->canUpOrder()): ?>
-                                <span class="glyphicon file-arrow-up glyphicon-arrow-up"
-                                      data-file-template-id="<?= $filesBlock->id ?>"></span>
+                            <?php if ($imageBlock->canUpOrder()): ?>
+                                <span class="glyphicon image-arrow-up glyphicon-arrow-up"
+                                      data-file-template-id="<?= $imageBlock->id ?>"></span>
                             <?php endif; ?>
-                            <?php if ($filesBlock->canDownOrder()): ?>
-                                <span class="glyphicon file-arrow-down glyphicon-arrow-down"
-                                      data-file-template-id="<?= $filesBlock->id ?>"></span>
+                            <?php if ($imageBlock->canDownOrder()): ?>
+                                <span class="glyphicon image-arrow-down glyphicon-arrow-down"
+                                      data-file-template-id="<?= $imageBlock->id ?>"></span>
                             <?php endif; ?>
                         </div>
                     </div>

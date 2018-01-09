@@ -4,11 +4,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\ActiveForm;
-use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
-use Iliich246\YicmsCommon\Assets\FilesDevAsset;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
 /* @var $this \yii\web\View */
@@ -47,8 +45,8 @@ JS;
 
 $this->registerJs($js, $this::POS_READY);
 
-FieldsDevAsset::register($this);
-//FilesDevAsset::register($this);
+
+
 
 $jsFiles = <<<JS
 ;(function() {
@@ -150,7 +148,7 @@ $jsFiles = <<<JS
 })();
 JS;
 
-$this->registerJs($jsFiles, $this::POS_READY);
+//$this->registerJs($jsFiles, $this::POS_READY);
 
 ?>
 

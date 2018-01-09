@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
-
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -17,7 +16,6 @@ use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 
-
 /**
  * Class DeveloperFilesController
  *
@@ -27,6 +25,7 @@ class DeveloperFilesController extends Controller
 {
     /** @inheritdoc */
     public $layout = '@yicms-common/Views/layouts/developer';
+
     /**
      * @inheritdoc
      */

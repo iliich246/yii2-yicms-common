@@ -50,4 +50,12 @@ abstract class AbstractEntityBlock extends AbstractTemplate
     {
 
     }
+
+    /**
+     * @inheritdoc
+     */
+    public static function generateTemplateReference()
+    {
+        return parent::generateTemplateReference();
+    }
 }
