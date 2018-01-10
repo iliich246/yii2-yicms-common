@@ -24,6 +24,9 @@ use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Iliich246\YicmsCommon\Images\DevImagesGroup;
 use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
+use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
 /**
  * Class DeveloperController
@@ -355,6 +358,23 @@ class DeveloperController extends Controller
             ]);
         }
 
+        $devConditionsGroup = new DevConditionsGroup();
+        $devConditionsGroup->setConditionsTemplateReference($freeEssence->getConditionTemplateReference());
+        $devConditionsGroup->initialize(Yii::$app->request->post('_conditionTemplateId'));
+
+        //try to load validate and save image block via pjax
+        if ($devConditionsGroup->load(Yii::$app->request->post()) && $devConditionsGroup->validate()) {
+
+            if (!$devConditionsGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            return ConditionsDevModalWidget::widget([
+                'devConditionsGroup' => $devConditionsGroup,
+                'dataSaved' => true,
+            ]);
+        }
+
         $fieldTemplatesTranslatable = FieldTemplate::getListQuery($freeEssence->getFieldTemplateReference())
                                         ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
                                         ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
@@ -373,6 +393,10 @@ class DeveloperController extends Controller
                                         ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
                                         ->all();
 
+        $conditionTemplates = ConditionTemplate::getListQuery($freeEssence->getConditionTemplateReference())
+                                        ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+                                        ->all();
+
         Url::remember('', 'dev');
 
         return $this->render('/developer/create_update_free_essence', [
@@ -383,7 +407,10 @@ class DeveloperController extends Controller
             'devFilesGroup' => $devFilesGroup,
             'filesBlocks' => $filesBlocks,
             'devImagesGroup' => $devImagesGroup,
-            'imagesBlocks' => $imagesBlocks
+            'imagesBlocks' => $imagesBlocks,
+            'devConditionsGroup' => $devConditionsGroup,
+            'conditionTemplates' => $conditionTemplates
+
         ]);
     }
 

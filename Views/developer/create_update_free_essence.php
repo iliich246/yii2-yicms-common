@@ -9,17 +9,20 @@ use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
+use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
-/* @var $this \yii\web\View */
-/* @var $freeEssence FreeEssences */
-/* @var $devFieldGroup \Iliich246\YicmsCommon\Fields\DevFieldsGroup */
-/* @var $fieldTemplatesTranslatable FieldTemplate[] */
-/* @var $fieldTemplatesSingle FieldTemplate[] */
-/* @var $filesBlocks \Iliich246\YicmsCommon\Files\FilesBlock[] */
-/* @var $devFilesGroup \Iliich246\YicmsCommon\Files\DevFilesGroup */
-/* @var $imagesBlocks \Iliich246\YicmsCommon\Images\ImagesBlock[] */
-/* @var $devImagesGroup \Iliich246\YicmsCommon\Images\DevImagesGroup */
-/* @var $success bool */
+/** @var $this \yii\web\View */
+/** @var $freeEssence FreeEssences */
+/** @var $devFieldGroup \Iliich246\YicmsCommon\Fields\DevFieldsGroup */
+/** @var $fieldTemplatesTranslatable FieldTemplate[] */
+/** @var $fieldTemplatesSingle FieldTemplate[] */
+/** @var $filesBlocks \Iliich246\YicmsCommon\Files\FilesBlock[] */
+/** @var $devFilesGroup \Iliich246\YicmsCommon\Files\DevFilesGroup */
+/** @var $imagesBlocks \Iliich246\YicmsCommon\Images\ImagesBlock[] */
+/** @var $devImagesGroup \Iliich246\YicmsCommon\Images\DevImagesGroup */
+/** @var $devConditionsGroup Iliich246\YicmsCommon\Conditions\DevConditionsGroup */
+/** @var $conditionTemplates Iliich246\YicmsCommon\Conditions\ConditionTemplate[] */
+/** @var $success bool */
 
 $js = <<<JS
 ;(function() {
@@ -53,7 +56,7 @@ $this->registerJs($js, $this::POS_READY);
 
 $jsConditions = <<<JS
 ;(function() {
-    var addCondition = $('.add-conditions-template');
+    var addCondition = $('.add-condition-template');
 
     var homeUrl = $(addCondition).data('homeUrl');
     var emptyModalUrl = homeUrl + '/common/dev-conditions/empty-modal';
@@ -64,7 +67,7 @@ $jsConditions = <<<JS
 
     var conditionTemplateReference = $(addCondition).data('conditionTemplateReference');
     var pjaxContainerName = '#' + $(addCondition).data('pjaxContainerName');
-    var pjaxConditionsModalName = '#' + $(addCondition).data('conditionsModalName');
+    var pjaxConditionsModalName = '#' + $(addCondition).data('conditionModalName');
     var imageLoaderScr = $(addCondition).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
@@ -88,7 +91,7 @@ $jsConditions = <<<JS
             scrollTo: false,
             push: false,
             type: "POST",
-            timeout: 2500
+            timeout: 12500
         });
 
         if (!isValidatorResponse)
@@ -105,7 +108,7 @@ $jsConditions = <<<JS
 
     $(addCondition).on('click', function() {
         $.pjax({
-            url: emptyModalUrl + '?imageTemplateReference=' + conditionTemplateReference ,
+            url: emptyModalUrl + '?conditionTemplateReference=' + conditionTemplateReference ,
             container: pjaxContainerName,
             scrollTo: false,
             push: false,
@@ -276,5 +279,15 @@ $this->registerJs($jsConditions, $this::POS_READY);
 
     <?= ImagesDevModalWidget::widget([
         'devImagesGroup' => $devImagesGroup,
+        'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
+    ]) ?>
+
+    <?= $this->render('/pjax/update-conditions-list-container', [
+        'conditionTemplateReference' => $freeEssence->getConditionTemplateReference(),
+        'conditionsTemplates' => $conditionTemplates,
+    ]) ?>
+
+    <?= ConditionsDevModalWidget::widget([
+        'devConditionsGroup' => $devConditionsGroup,
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ]) ?>

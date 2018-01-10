@@ -376,7 +376,7 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_image_names}}', [
             'id' => $this->primaryKey(),
-            'common_images_template_id' => $this->integer(),
+            'common_images_templates_id' => $this->integer(),
             'common_language_id' => $this->integer(),
             'name' => $this->string(),
             'description' => $this->text(),
@@ -424,6 +424,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'condition_template_reference' => $this->string(),
             'validator_reference' => $this->string(),
+            'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'condition_order' => $this->integer(),
             'editable' => $this->boolean(),

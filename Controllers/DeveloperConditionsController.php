@@ -7,6 +7,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
+use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
 /**
  * Class DeveloperConditionsController
@@ -37,7 +40,18 @@ class DeveloperConditionsController extends Controller
      */
     public function actionLoadModal($conditionTemplateId)
     {
+        if (Yii::$app->request->isPjax &&
+            Yii::$app->request->post('_pjax') == '#'.ConditionsDevModalWidget::getPjaxContainerId())
+        {
+            $devConditionsGroup = new DevConditionsGroup();
+            $devConditionsGroup->initialize($conditionTemplateId);
 
+            return ConditionsDevModalWidget::widget([
+                'devConditionsGroup' => $devConditionsGroup,
+            ]);
+        }
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -50,7 +64,19 @@ class DeveloperConditionsController extends Controller
      */
     public function actionEmptyModal($conditionTemplateReference)
     {
+        if (Yii::$app->request->isPjax &&
+            Yii::$app->request->post('_pjax') == '#'.ConditionsDevModalWidget::getPjaxContainerId())
+        {
+            $devConditionsGroup = new DevConditionsGroup();
+            $devConditionsGroup->setConditionsTemplateReference($conditionTemplateReference);
+            $devConditionsGroup->initialize();
 
+            return ConditionsDevModalWidget::widget([
+                'devConditionsGroup' => $devConditionsGroup,
+            ]);
+        }
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -61,7 +87,20 @@ class DeveloperConditionsController extends Controller
      */
     public function actionUpdateConditionsListContainer($conditionTemplateReference)
     {
+        if (Yii::$app->request->isPjax &&
+            Yii::$app->request->post('_pjax') == '#update-conditions-list-container') {
 
+            $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+                ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+                ->all();
+
+            return $this->render('/pjax/update-conditions-list-container', [
+                'conditionTemplateReference' => $conditionTemplateReference,
+                'conditionsTemplates' => $conditionTemplates,
+            ]);
+        }
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -73,7 +112,25 @@ class DeveloperConditionsController extends Controller
      */
     public function actionDeleteConditionsBlockTemplate($conditionTemplateId)
     {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionTemplateReference = $conditionTemplate->condition_template_reference;
+
+        $conditionTemplate->delete();
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-conditions-list-container', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionsTemplates' => $conditionTemplates,
+        ]);
     }
 
     /**
@@ -85,7 +142,25 @@ class DeveloperConditionsController extends Controller
      */
     public function actionConditionTemplateUpOrder($conditionTemplateId)
     {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionTemplateReference = $conditionTemplate->condition_template_reference;
+
+        $conditionTemplate->upOrder();
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-conditions-list-container', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionsTemplates' => $conditionTemplates,
+        ]);
     }
 
     /**
@@ -97,6 +172,24 @@ class DeveloperConditionsController extends Controller
      */
     public function actionConditionTemplateDownOrder($conditionTemplateId)
     {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionTemplateReference = $conditionTemplate->condition_template_reference;
+
+        $conditionTemplate->downOrder();
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->render('/pjax/update-conditions-list-container', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionsTemplates' => $conditionTemplates,
+        ]);
     }
 }

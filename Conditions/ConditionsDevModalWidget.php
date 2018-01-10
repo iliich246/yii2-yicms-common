@@ -78,7 +78,7 @@ class ConditionsDevModalWidget extends Widget
      */
     public function run()
     {
-        return $this->render('files_dev_modal_widget', [
+        return $this->render('conditions_dev_modal_widget', [
             'widget' => $this
         ]);
     }

@@ -16,7 +16,7 @@ $src = $bundle->baseUrl . '/loader.svg';
 <div class="row content-block form-block">
     <div class="col-xs-12">
         <div class="content-block-title">
-            <h3>List of conditions templates</h3>
+            <h3>List of conditions</h3>
         </div>
         <div class="row control-buttons">
             <div class="col-xs-12">
@@ -29,10 +29,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                         data-condition-modal-name="<?= ConditionsDevModalWidget::getModalWindowName() ?>"
                         data-loader-image-src="<?= $src ?>"
                         data-current-selected-condition-template="null">
-                    <span class="glyphicon glyphicon-plus-sign"></span> Add new condition template
+                    <span class="glyphicon glyphicon-plus-sign"></span> Add new condition
                 </button>
             </div>
         </div>
+
         <?php if (isset($conditionsTemplates)): ?>
             <?php Pjax::begin([
                 'options' => [
@@ -41,7 +42,7 @@ $src = $bundle->baseUrl . '/loader.svg';
             ]) ?>
             <div class="list-block">
                 <?php foreach ($conditionsTemplates as $conditionsTemplate): ?>
-                    <div class="row list-items file-item">
+                    <div class="row list-items condition-item">
                         <div class="col-xs-10 list-title">
                             <p data-condition-template-id="<?= $conditionsTemplate->id ?>">
                                 <?= $conditionsTemplate->program_name ?> (type)

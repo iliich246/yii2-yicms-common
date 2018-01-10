@@ -56,6 +56,7 @@ JS;
 
 $this->registerJs($js, $this::POS_READY);
 
+//throw new \Exception(print_r($widget->devConditionsGroup,true));
 ?>
 
 <div class="modal fade"
@@ -87,6 +88,8 @@ $this->registerJs($js, $this::POS_READY);
                 'id' => 'condition-template-id-hidden'
             ]) ?>
         <?php endif; ?>
+
+
 
         <div class="modal-content">
             <div class="modal-header">
@@ -143,7 +146,7 @@ $this->registerJs($js, $this::POS_READY);
                         'ownerPjaxContainerName' => ConditionsDevModalWidget::getPjaxContainerId(),
                         'ownerModalId' => ConditionsDevModalWidget::getModalWindowName(),
                         'returnUrl' => \yii\helpers\Url::toRoute([
-                            '/common/dev-condition/load-modal',
+                            '/common/dev-conditions/load-modal',
                             'conditionTemplateId' => $widget->devConditionsGroup->conditionTemplate->id,
                         ])
                     ]) ?>

@@ -10,6 +10,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  *
  * @property string $condition_template_reference
  * @property string $validator_reference
+ * @property string $program_name,
  * @property integer $type
  * @property integer $condition_order
  * @property bool $editable
@@ -70,7 +71,11 @@ class ConditionTemplate extends AbstractTemplate
      */
     public function save($runValidation = true, $attributes = null)
     {
+        if ($this->scenario === self::SCENARIO_CREATE) {
+            $this->condition_order = $this->maxOrder();
+        }
 
+        return parent::save($runValidation, $attributes);
     }
 
     /**
@@ -105,7 +110,6 @@ class ConditionTemplate extends AbstractTemplate
     {
         return self::find()->where([
             'condition_template_reference' => $this->condition_template_reference,
-            'language_type' => $this->language_type,
         ]);
     }
 
