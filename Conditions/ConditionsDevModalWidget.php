@@ -1,28 +1,28 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Files;
+namespace Iliich246\YicmsCommon\Conditions;
 
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 
 /**
- * Class FilesDevModalWidget
+ * Class ConditionsDevModalWidget
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FilesDevModalWidget extends Widget
+class ConditionsDevModalWidget extends Widget
 {
     /**
-     * @var DevFilesGroup
+     * @var DevConditionsGroup
      */
-    public $devFilesGroup;
+    public $devConditionsGroup;
     /**
-     * @var bool true means that widget initialized after success data save in DevFilesGroup
+     * @var bool true means that widget initialized after success data save in DevConditionsGroup
      */
     public $dataSaved = false;
     /**
-     * @var string part of link for delete file block template
+     * @var string part of link for delete condition template
      */
     public $deleteLink;
     /**
@@ -43,7 +43,7 @@ class FilesDevModalWidget extends Widget
      */
     public function init()
     {
-        $this->deleteLink = Url::toRoute(['/common/dev-files/delete-file-block-template']);
+        $this->deleteLink = Url::toRoute(['/common/dev-conditions/delete-condition-template']);
     }
 
     /**
@@ -52,7 +52,7 @@ class FilesDevModalWidget extends Widget
      */
     public static function getFormName()
     {
-        return 'create-update-files';
+        return 'create-update-conditions';
     }
 
     /**
@@ -61,7 +61,7 @@ class FilesDevModalWidget extends Widget
      */
     public static function getModalWindowName()
     {
-        return 'filesDevModal';
+        return 'conditionsDevModal';
     }
 
     /**
@@ -70,7 +70,7 @@ class FilesDevModalWidget extends Widget
      */
     public static function getPjaxContainerId()
     {
-        return 'files-pjax-container';
+        return 'conditions-pjax-container';
     }
 
     /**

@@ -343,7 +343,7 @@ class m171110_213106_common_init extends Migration
         /**
          * common_images_translates table
          */
-        $this->createTable('{{%common_images_translates}}', [
+        $this->createTable('{{%common_image_translates}}', [
             'id' => $this->primaryKey(),
             'common_image_id' => $this->integer(),
             'common_language_id' => $this->integer(),
@@ -357,15 +357,15 @@ class m171110_213106_common_init extends Migration
             'updated_at' => $this->integer(),
         ]);
 
-        $this->addForeignKey('common_images_translates-to-common_images',
-            '{{%common_images_translates}}',
+        $this->addForeignKey('common_image_translates-to-common_images',
+            '{{%common_image_translates}}',
             'common_image_id',
             '{{%common_images}}',
             'id'
         );
 
-        $this->addForeignKey('common_images_translates-to-common_languages',
-            '{{%common_images_translates}}',
+        $this->addForeignKey('common_image_translates-to-common_languages',
+            '{{%common_image_translates}}',
             'common_language_id',
             '{{%common_languages}}',
             'id'
@@ -374,23 +374,23 @@ class m171110_213106_common_init extends Migration
         /**
          * common_images_names table
          */
-        $this->createTable('{{%common_images_names}}', [
+        $this->createTable('{{%common_image_names}}', [
             'id' => $this->primaryKey(),
-            'common_images_templates_id' => $this->integer(),
+            'common_images_template_id' => $this->integer(),
             'common_language_id' => $this->integer(),
             'name' => $this->string(),
             'description' => $this->text(),
         ]);
 
-        $this->addForeignKey('common_images_names-to-common_images_templates',
-            '{{%common_images_names}}',
+        $this->addForeignKey('common_image_names-to-common_images_templates',
+            '{{%common_image_names}}',
             'common_images_templates_id',
             '{{%common_images_templates}}',
             'id'
         );
 
-        $this->addForeignKey('common_images_names-to-common_languages',
-            '{{%common_images_names}}',
+        $this->addForeignKey('common_image_names-to-common_languages',
+            '{{%common_image_names}}',
             'common_language_id',
             '{{%common_languages}}',
             'id'
@@ -616,13 +616,13 @@ class m171110_213106_common_init extends Migration
         $this->dropForeignKey('common_images_thumbnails-to-common_images_templates', '{{%common_images_thumbnails}}');
         $this->dropTable('{{%common_images_thumbnails}}');
 
-        $this->dropForeignKey('common_images_names-to-common_languages', '{{%common_images_names}}');
-        $this->dropForeignKey('common_images_names-to-common_images_templates', '{{%common_images_names}}');
-        $this->dropTable('{{%common_images_names}}');
+        $this->dropForeignKey('common_image_names-to-common_languages', '{{%common_images_names}}');
+        $this->dropForeignKey('common_image_names-to-common_images_templates', '{{%common_images_names}}');
+        $this->dropTable('{{%common_image_names}}');
 
-        $this->dropForeignKey('common_images_translates-to-common_languages', '{{%common_images_translates}}');
-        $this->dropForeignKey('common_images_translates-to-common_images', '{{%common_images_translates}}');
-        $this->dropTable('{{%common_images_translates}}');
+        $this->dropForeignKey('common_image_translates-to-common_languages', '{{%common_images_translates}}');
+        $this->dropForeignKey('common_image_translates-to-common_images', '{{%common_images_translates}}');
+        $this->dropTable('{{%common_image_translates}}');
 
         $this->dropForeignKey('common_images-to-common_images_templates', '{{%common_images}}');
         $this->dropIndex('image_reference-index', '{{%common_images}}');

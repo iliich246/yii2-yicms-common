@@ -3,11 +3,7 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
-use Iliich246\YicmsCommon\Base\SortOrderInterface;
-use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
-use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
-use yii\base\Exception;
 
 /**
  * Class FieldTemplate

@@ -1,29 +1,29 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Fields;
+namespace Iliich246\YicmsCommon\Conditions;
 
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
- * Class FieldsNamesTranslatesDb
+ * Class ConditionsNamesTranslatesDb
  *
  * @property integer $id
- * @property integer $common_fields_template_id
+ * @property integer $common_condition_template_id
  * @property integer $common_language_id
  * @property string $name
  * @property string $description
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldsNamesTranslatesDb extends ActiveRecord
+class ConditionsNamesTranslatesDb extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%common_field_names}}';
+        return '{{%common_conditions_names}}';
     }
 
     /**
@@ -39,8 +39,8 @@ class FieldsNamesTranslatesDb extends ActiveRecord
                 'targetClass' => LanguagesDb::className(), 'targetAttribute' => ['common_language_id' => 'id']
             ],
             [
-                ['common_fields_template_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => FieldTemplate::className(), 'targetAttribute' => ['common_fields_template_id' => 'id']
+                ['common_condition_template_id'], 'exist', 'skipOnError' => true,
+                'targetClass' => ConditionTemplate::className(), 'targetAttribute' => ['common_condition_template_id' => 'id']
             ],
         ];
     }

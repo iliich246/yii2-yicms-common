@@ -1,6 +1,7 @@
 <?php
 
 use yii\widgets\Pjax;
+use Iliich246\YicmsCommon\Assets\ImagesDevAsset;
 use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 
 /* @var $this \yii\web\View */
@@ -10,16 +11,18 @@ use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';
 
+ImagesDevAsset::register($this);
+
 ?>
 
 <div class="row content-block form-block">
     <div class="col-xs-12">
         <div class="content-block-title">
-            <h3>List of file blocks</h3>
+            <h3>List of image blocks</h3>
         </div>
         <div class="row control-buttons">
             <div class="col-xs-12">
-                <button class="btn btn-primary add-file-block"
+                <button class="btn btn-primary add-image-block"
                         data-toggle="modal"
                         data-target="#imagesDevModal"
                         data-image-template-reference="<?= $imageTemplateReference ?>"
@@ -40,9 +43,9 @@ $src = $bundle->baseUrl . '/loader.svg';
             ]) ?>
             <div class="list-block">
                 <?php foreach ($imagesBlocks as $imageBlock): ?>
-                    <div class="row list-items file-item">
+                    <div class="row list-items image-item">
                         <div class="col-xs-10 list-title">
-                            <p data-file-template-id="<?= $imageBlock->id ?>">
+                            <p data-image-template-id="<?= $imageBlock->id ?>">
                                 <?= $imageBlock->program_name ?> (<?= $imageBlock->getTypeName() ?>)
                             </p>
                         </div>
@@ -57,11 +60,11 @@ $src = $bundle->baseUrl . '/loader.svg';
                             <?php endif; ?>
                             <?php if ($imageBlock->canUpOrder()): ?>
                                 <span class="glyphicon image-arrow-up glyphicon-arrow-up"
-                                      data-file-template-id="<?= $imageBlock->id ?>"></span>
+                                      data-image-template-id="<?= $imageBlock->id ?>"></span>
                             <?php endif; ?>
                             <?php if ($imageBlock->canDownOrder()): ?>
                                 <span class="glyphicon image-arrow-down glyphicon-arrow-down"
-                                      data-file-template-id="<?= $imageBlock->id ?>"></span>
+                                      data-image-template-id="<?= $imageBlock->id ?>"></span>
                             <?php endif; ?>
                         </div>
                     </div>

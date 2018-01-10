@@ -2,8 +2,6 @@
 
 namespace Iliich246\YicmsCommon\FreeEssences;
 
-use Iliich246\YicmsCommon\Files\FilesBlock;
-use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
@@ -13,9 +11,18 @@ use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Files\FilesHandler;
 use Iliich246\YicmsCommon\Files\FilesInterface;
 use Iliich246\YicmsCommon\Files\FilesReferenceInterface;
+use Iliich246\YicmsCommon\Images\ImagesBlock;
+use Iliich246\YicmsCommon\Images\ImagesHandler;
+use Iliich246\YicmsCommon\Images\ImagesInterface;
+use Iliich246\YicmsCommon\Images\ImagesReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\ConditionsHandler;
+use Iliich246\YicmsCommon\Conditions\ConditionsInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
 
 /**
  * Class FreeEssences
@@ -41,6 +48,10 @@ class FreeEssences extends ActiveRecord implements
     FieldReferenceInterface,
     FilesInterface,
     FilesReferenceInterface,
+    ImagesInterface,
+    ImagesReferenceInterface,
+    ConditionsReferenceInterface,
+    ConditionsInterface,
     SortOrderInterface
 {
     use SortOrderTrait;
@@ -56,6 +67,14 @@ class FreeEssences extends ActiveRecord implements
      * @var FilesHandler
      */
     private $fileHandler;
+    /**
+     * @var ImagesHandler
+     */
+    private $imageHandler;
+    /**
+     * @var ConditionsHandler
+     */
+    private $conditionHandler;
 
     /**
      * @param array $config
@@ -263,9 +282,79 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
+    public function getImagesHandler()
+    {
+        if (!$this->imageHandler)
+            $this->imageHandler = new ImagesHandler($this);
+
+        return $this->imageHandler;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getImageBlock($name)
+    {
+        return $this->getImagesHandler()->getImageBlock($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getImageTemplateReference()
+    {
+        return $this->image_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getImageReference()
+    {
+        return $this->image_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionsHandler()
+    {
+        if (!$this->conditionHandler)
+            $this->conditionHandler = new ConditionsHandler($this);
+
+        return $this->conditionHandler;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCondition($name)
+    {
+        return $this->getConditionsHandler()->getCondition($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getOrderQuery()
     {
         return self::find();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionTemplateReference()
+    {
+        return $this->condition_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionReference()
+    {
+        return $this->condition_reference;
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
@@ -54,20 +53,20 @@ class DeveloperFilesController extends Controller
             $devFilesGroup = new DevFilesGroup();
             $devFilesGroup->initialize($fileTemplateId);
 
-            $fieldTemplatesTranslatable = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
-                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-                ->all();
-
-            $fieldTemplatesSingle = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
-                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-                ->all();
+//            $fieldTemplatesTranslatable = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
+//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+//                ->all();
+//
+//            $fieldTemplatesSingle = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
+//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+//                ->all();
 
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
-                'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-                'fieldTemplatesSingle' => $fieldTemplatesSingle
+                //'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+                //'fieldTemplatesSingle' => $fieldTemplatesSingle
             ]);
         }
 
@@ -219,11 +218,16 @@ class DeveloperFilesController extends Controller
      * Show fields for file block template
      * @param $fileTemplateId
      * @return string
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function actionShowFileBlockFields($fileTemplateId)
     {
         /** @var FilesBlock $filesBlock */
         $filesBlock = FilesBlock::findOne($fileTemplateId);
+
+        if (!$filesBlock) throw new NotFoundHttpException('Wrong fileTemplateId');
 
         $devFieldGroup = new DevFieldsGroup();
         $devFieldGroup->setFieldTemplateReference($filesBlock->getFieldTemplateReference());

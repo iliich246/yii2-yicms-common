@@ -21,6 +21,9 @@ use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
+use Iliich246\YicmsCommon\Images\ImagesBlock;
+use Iliich246\YicmsCommon\Images\DevImagesGroup;
+use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 
 /**
  * Class DeveloperController
@@ -322,7 +325,7 @@ class DeveloperController extends Controller
         $devFilesGroup->setFilesTemplateReference($freeEssence->getFileTemplateReference());
         $devFilesGroup->initialize(Yii::$app->request->post('_fileTemplateId'));
 
-        //try to load validate and save field via pjax
+        //try to load validate and save file block via pjax
         if ($devFilesGroup->load(Yii::$app->request->post()) && $devFilesGroup->validate()) {
 
             if (!$devFilesGroup->save()) {
@@ -331,6 +334,23 @@ class DeveloperController extends Controller
 
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
+                'dataSaved' => true,
+            ]);
+        }
+
+        $devImagesGroup = new DevImagesGroup();
+        $devImagesGroup->setImagesTemplateReference($freeEssence->getFileTemplateReference());
+        $devImagesGroup->initialize(Yii::$app->request->post('_imageTemplateId'));
+
+        //try to load validate and save image block via pjax
+        if ($devImagesGroup->load(Yii::$app->request->post()) && $devImagesGroup->validate()) {
+
+            if (!$devImagesGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            return ImagesDevModalWidget::widget([
+                'devImagesGroup' => $devImagesGroup,
                 'dataSaved' => true,
             ]);
         }
@@ -346,8 +366,12 @@ class DeveloperController extends Controller
                                         ->all();
 
         $filesBlocks = FilesBlock::getListQuery($freeEssence->getFileTemplateReference())
-                            ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
-                            ->all();
+                                        ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
+                                        ->all();
+
+        $imagesBlocks = ImagesBlock::getListQuery($freeEssence->getFileTemplateReference())
+                                        ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
+                                        ->all();
 
         Url::remember('', 'dev');
 
@@ -358,7 +382,8 @@ class DeveloperController extends Controller
             'fieldTemplatesSingle' => $fieldTemplatesSingle,
             'devFilesGroup' => $devFilesGroup,
             'filesBlocks' => $filesBlocks,
-
+            'devImagesGroup' => $devImagesGroup,
+            'imagesBlocks' => $imagesBlocks
         ]);
     }
 

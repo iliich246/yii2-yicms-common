@@ -8,7 +8,7 @@ namespace Iliich246\YicmsCommon\Files;
  * This interface must implement any class, that must has files functionality.
  * All that objects must have ability to give two variables for correct work with files functionality:
  *
- * Variable templateFileReference used for pointing on group of files, called files block.
+ * Variable fileTemplateReference used for pointing on group of files, called files block templates.
  * Variable fileReference user for pointing on single file block.
  *
  * @author iliich246 <iliich246@gmail.com>
@@ -16,14 +16,14 @@ namespace Iliich246\YicmsCommon\Files;
 interface FilesReferenceInterface
 {
     /**
-     * Returns templateFileReference
-     * @return integer
+     * Returns fileTemplateReference
+     * @return string
      */
     public function getFileTemplateReference();
 
     /**
      * Returns fileReference
-     * @return integer
+     * @return string
      */
     public function getFileReference();
 }

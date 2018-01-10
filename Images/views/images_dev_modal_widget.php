@@ -3,19 +3,19 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
-use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
-use Iliich246\YicmsCommon\Files\DevFilesGroup;
-use Iliich246\YicmsCommon\Files\FilesBlock;
+use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
+use Iliich246\YicmsCommon\Images\DevImagesGroup;
+use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
-/** @var $widget FilesDevModalWidget */
+/** @var $widget ImagesDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
-$modalName = FilesDevModalWidget::getModalWindowName();
-$deleteLink = $widget->deleteLink . '?fileTemplateId=';
+$modalName = ImagesDevModalWidget::getModalWindowName();
+$deleteLink = $widget->deleteLink . '?imageTemplateId=';
 
 $js = <<<JS
 ;(function() {
@@ -59,7 +59,7 @@ $this->registerJs($js, $this::POS_READY);
 ?>
 
 <div class="modal fade"
-     id="<?= FilesDevModalWidget::getModalWindowName() ?>"
+     id="<?= ImagesDevModalWidget::getModalWindowName() ?>"
      tabindex="-1"
      role="dialog"
      aria-labelledby="myModalLabel"
@@ -67,13 +67,13 @@ $this->registerJs($js, $this::POS_READY);
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => FilesDevModalWidget::getPjaxContainerId(),
+                'id' => ImagesDevModalWidget::getPjaxContainerId(),
                 'class' => 'pjax-container',
                 'data-return-url' => '0',
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => FilesDevModalWidget::getFormName(),
+            'id' => ImagesDevModalWidget::getFormName(),
             'action' => $widget->action,
             'options' => [
                 'data-pjax' => true,
@@ -82,9 +82,9 @@ $this->registerJs($js, $this::POS_READY);
         ]);
         ?>
 
-        <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
-            <?= Html::hiddenInput('_fileTemplateId', $widget->devFilesGroup->filesBlock->id, [
-                'id' => 'file-template-id-hidden'
+        <?php if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_UPDATE): ?>
+            <?= Html::hiddenInput('_imageTemplateId', $widget->devImagesGroup->imagesBlock->id, [
+                'id' => 'image-template-id-hidden'
             ]) ?>
         <?php endif; ?>
 
@@ -92,90 +92,92 @@ $this->registerJs($js, $this::POS_READY);
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 class="modal-title" id="myModalLabel">
-                    <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_CREATE): ?>
-                        Create new file block template
+                    <?php if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_CREATE): ?>
+                        Create new images block template
                     <?php else: ?>
-                        Update existed file block template (<?= $widget->devFilesGroup->filesBlock->program_name ?>)
+                        Update existed image block template (<?= $widget->devImagesGroup->imagesBlock->program_name ?>)
                     <?php endif; ?>
                 </h3>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'program_name') ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'program_name') ?>
                     </div>
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'type')->dropDownList(
-                            FilesBlock::getTypes())
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'type')->dropDownList(
+                            ImagesBlock::getTypes())
                         ?>
                     </div>
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'language_type')->dropDownList(
-                            FilesBlock::getLanguageTypes())
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'language_type')->dropDownList(
+                            ImagesBlock::getLanguageTypes())
                         ?>
                     </div>
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'max_files') ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'max_images') ?>
                     </div>
                     <div class="col-sm-8 col-xs-12">
                         <br>
-                        <p>zero value - infinite count of files in block</p>
+                        <p>zero value - infinite count of images in block</p>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-sm-4 col-xs-12 ">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'visible')->checkbox() ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'visible')->checkbox() ?>
                     </div>
                     <div class="col-sm-4 col-xs-12 ">
-                        <?= $form->field($widget->devFilesGroup->filesBlock, 'editable')->checkbox() ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'editable')->checkbox() ?>
                     </div>
-                    <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_CREATE): ?>
+                    <?php if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_CREATE): ?>
                         <div class="col-sm-4 col-xs-12 ">
-                            <?= $form->field($widget->devFilesGroup->filesBlock, 'createStandardFields')->checkbox() ?>
+                            <?= $form->field($widget->devImagesGroup->imagesBlock, 'createStandardFields')->checkbox() ?>
                         </div>
                     <?php endif; ?>
                 </div>
+
                 <?= SimpleTabsTranslatesWidget::widget([
                     'form' => $form,
-                    'translateModels' => $widget->devFilesGroup->filesNameTranslates,
+                    'translateModels' => $widget->devImagesGroup->imagesNameTranslates,
                 ])
                 ?>
-                <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
+
+                <?php if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_UPDATE): ?>
                     <div class="row">
                         <div class="col-xs-12">
 
                             <br>
 
-                            <p>IMPORTANT! Do not delete file blocks without serious reason!</p>
+                            <p>IMPORTANT! Do not delete images blocks without serious reason!</p>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="file-delete"
-                                    data-file-template-reference="<?= $widget->devFilesGroup->filesBlock->file_template_reference ?>"
-                                    data-file-template-id="<?= $widget->devFilesGroup->filesBlock->id ?>">
-                                Delete file block template
+                                    id="image-delete"
+                                    data-image-template-reference="<?= $widget->devImagesGroup->imagesBlock->image_template_reference ?>"
+                                    data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>">
+                                Delete image block template
                             </button>
                         </div>
                     </div>
                     <hr>
 
                     <a href="<?= \yii\helpers\Url::toRoute([
-                        '/common/dev-files/show-file-block-fields',
-                        'fileTemplateId' => $widget->devFilesGroup->filesBlock->id
+                        '/common/dev-images/show-image-block-fields',
+                        'imageTemplateId' => $widget->devImagesGroup->imagesBlock->id
                     ]) ?>"
                        class="btn btn-primary">
-                        View file block fields
+                        View image block fields
                     </a>
 
                     <hr>
 
                     <?= ValidatorsListWidget::widget([
-                        'validatorReference' => $widget->devFilesGroup->filesBlock,
-                        'ownerPjaxContainerName' => FilesDevModalWidget::getPjaxContainerId(),
-                        'ownerModalId' => FilesDevModalWidget::getModalWindowName(),
+                        'validatorReference' => $widget->devImagesGroup->imagesBlock,
+                        'ownerPjaxContainerName' => ImagesDevModalWidget::getPjaxContainerId(),
+                        'ownerModalId' => ImagesDevModalWidget::getModalWindowName(),
                         'returnUrl' => \yii\helpers\Url::toRoute([
-                            '/common/dev-files/load-modal',
-                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
+                            '/common/dev-images/load-modal',
+                            'imageTemplateId' => $widget->devImagesGroup->imagesBlock->id,
                         ])
                     ]) ?>
 

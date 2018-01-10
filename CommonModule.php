@@ -2,16 +2,16 @@
 
 namespace Iliich246\YicmsCommon;
 
-use Iliich246\YicmsCommon\Base\CommonUser;
-use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
+use Iliich246\YicmsCommon\Base\CommonUser;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\YicmsUserInterface;
 use Iliich246\YicmsCommon\Base\YicmsModuleInterface;
 use Iliich246\YicmsCommon\Base\AbstractConfigurableModule;
 use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
  * Class CommonModule
@@ -27,12 +27,10 @@ class CommonModule extends AbstractConfigurableModule implements
      * will place generated code
      */
     public $yicmsLocation = '@app/yicms';
-
     /**
      * @var IdentityInterface|YicmsUserInterface
      */
     public $user;
-
     /**
      * @var string default user language, there using language codes like 'ru-RU' or 'en-EU'
      */
@@ -50,10 +48,12 @@ class CommonModule extends AbstractConfigurableModule implements
 
     /** @inheritdoc */
     public $controllerMap = [
-        'dev'            => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
-        'dev-fields'     => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController',
-        'dev-validators' => 'Iliich246\YicmsCommon\Controllers\DeveloperValidatorsController',
-        'dev-files'      => 'Iliich246\YicmsCommon\Controllers\DeveloperFilesController'
+        'dev'             => 'Iliich246\YicmsCommon\Controllers\DeveloperController',
+        'dev-fields'      => 'Iliich246\YicmsCommon\Controllers\DeveloperFieldsController',
+        'dev-validators'  => 'Iliich246\YicmsCommon\Controllers\DeveloperValidatorsController',
+        'dev-files'       => 'Iliich246\YicmsCommon\Controllers\DeveloperFilesController',
+        'dev-images'      => 'Iliich246\YicmsCommon\Controllers\DeveloperImagesController',
+        'dev-conditions'  => 'Iliich246\YicmsCommon\Controllers\DeveloperConditionsController',
     ];
 
     /**

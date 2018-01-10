@@ -16,7 +16,7 @@ use Iliich246\YicmsCommon\Languages\Language;
 class DevFilesGroup extends AbstractGroup
 {
     /**
-     * @var integer fileTemplateReference value for current group
+     * @var string fileTemplateReference value for current group
      */
     protected $fileTemplateReference;
     /**
@@ -29,7 +29,7 @@ class DevFilesGroup extends AbstractGroup
     public $filesNameTranslates;
 
     /**
-     *  Sets fileTemplateReference
+     * Sets fileTemplateReference
      * @param $fileTemplateReference
      */
     public function setFilesTemplateReference($fileTemplateReference)
@@ -94,7 +94,6 @@ class DevFilesGroup extends AbstractGroup
      */
     public function save()
     {
-
         $needSaveFileBlock = false;
 
         if (!$needSaveFileBlock &&

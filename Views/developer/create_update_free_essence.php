@@ -8,6 +8,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
+use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 
 /* @var $this \yii\web\View */
 /* @var $freeEssence FreeEssences */
@@ -16,6 +17,8 @@ use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 /* @var $fieldTemplatesSingle FieldTemplate[] */
 /* @var $filesBlocks \Iliich246\YicmsCommon\Files\FilesBlock[] */
 /* @var $devFilesGroup \Iliich246\YicmsCommon\Files\DevFilesGroup */
+/* @var $imagesBlocks \Iliich246\YicmsCommon\Images\ImagesBlock[] */
+/* @var $devImagesGroup \Iliich246\YicmsCommon\Images\DevImagesGroup */
 /* @var $success bool */
 
 $js = <<<JS
@@ -48,24 +51,24 @@ $this->registerJs($js, $this::POS_READY);
 
 
 
-$jsFiles = <<<JS
+$jsConditions = <<<JS
 ;(function() {
-    var addFile = $('.add-file-block');
+    var addCondition = $('.add-conditions-template');
 
-    var homeUrl = $(addFile).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-files/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-files/load-modal';
-    var updateFileListUrl = homeUrl + '/common/dev-files/update-files-list-container';
-    var fileTemplateUpUrl = homeUrl + '/common/dev-files/file-template-up-order';
-    var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
+    var homeUrl = $(addCondition).data('homeUrl');
+    var emptyModalUrl = homeUrl + '/common/dev-conditions/empty-modal';
+    var loadModalUrl = homeUrl + '/common/dev-conditions/load-modal';
+    var updateConditionListUrl = homeUrl + '/common/dev-conditions/update-conditions-list-container';
+    var conditionTemplateUpUrl = homeUrl + '/common/dev-conditions/condition-template-up-order';
+    var conditionTemplateDownUrl = homeUrl + '/common/dev-conditions/condition-template-down-order';
 
-    var fileTemplateReference = $(addFile).data('fileTemplateReference');
-    var pjaxContainerName = '#' + $(addFile).data('pjaxContainerName');
-    var pjaxFilesModalName = '#' + $(addFile).data('filesModalName');
-    var imageLoaderScr = $(addFile).data('loaderImageSrc');
+    var conditionTemplateReference = $(addCondition).data('conditionTemplateReference');
+    var pjaxContainerName = '#' + $(addCondition).data('pjaxContainerName');
+    var pjaxConditionsModalName = '#' + $(addCondition).data('conditionsModalName');
+    var imageLoaderScr = $(addCondition).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
-        $(pjaxFilesModalName)
+        $(pjaxConditionsModalName)
             .find('.modal-content')
             .empty()
             .append('<img src="' + imageLoaderScr + '" style="text-align:center">');
@@ -75,13 +78,13 @@ $jsFiles = <<<JS
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        if (isValidatorResponse) return loadModal($(addFile).data('currentSelectedFileTemplate'));
+        if (isValidatorResponse) return loadModal($(addCondition).data('currentSelectedImageTemplate'));
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
         $.pjax({
-            url: updateFileListUrl + '?fileTemplateReference=' + fileTemplateReference,
-            container: '#update-files-list-container',
+            url: updateConditionListUrl + '?conditionTemplateReference=' + conditionTemplateReference,
+            container: '#update-conditions-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -89,20 +92,20 @@ $jsFiles = <<<JS
         });
 
         if (!isValidatorResponse)
-            $(pjaxFilesModalName).modal('hide');
+            $(pjaxContainerName).modal('hide');
     });
 
-    $(document).on('click', '.file-item p', function(event) {
-        var fileTemplate = $(this).data('file-template-id');
+    $(document).on('click', '.condition-item p', function(event) {
+        var conditionTemplate = $(this).data('conditionTemplateId');
 
-        $(addFile).data('currentSelectedFileTemplate',fileTemplate);
+        $(addCondition).data('currentSelectedConditionTemplate',conditionTemplate);
 
-        loadModal(fileTemplate);
+        loadModal(conditionTemplate);
     });
 
-    $(addFile).on('click', function() {
+    $(addCondition).on('click', function() {
         $.pjax({
-            url: emptyModalUrl + '?fileTemplateReference=' + fileTemplateReference ,
+            url: emptyModalUrl + '?imageTemplateReference=' + conditionTemplateReference ,
             container: pjaxContainerName,
             scrollTo: false,
             push: false,
@@ -111,10 +114,10 @@ $jsFiles = <<<JS
         });
     });
 
-    $(document).on('click', '.file-arrow-up', function() {
+    $(document).on('click', '.condition-arrow-up', function() {
         $.pjax({
-            url: fileTemplateUpUrl + '?fileTemplateId=' + $(this).data('fileTemplateId'),
-            container: '#update-files-list-container',
+            url: conditionTemplateUpUrl + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
+            container: '#update-conditions-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -122,10 +125,10 @@ $jsFiles = <<<JS
         });
     });
 
-    $(document).on('click', '.file-arrow-down', function() {
+    $(document).on('click', '.condition-arrow-down', function() {
         $.pjax({
-            url: filedTemplateDownUrl + '?fileTemplateId=' + $(this).data('fileTemplateId'),
-            container: '#update-files-list-container',
+            url: conditionTemplateDownUrl + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
+            container: '#update-conditions-list-container',
             scrollTo: false,
             push: false,
             type: "POST",
@@ -133,9 +136,9 @@ $jsFiles = <<<JS
         });
     });
 
-    function loadModal(fileTemplate) {
+    function loadModal(conditionTemplate) {
         $.pjax({
-            url: loadModalUrl + '?fileTemplateId=' + fileTemplate,
+            url: loadModalUrl + '?conditionTemplateId=' + conditionTemplate,
             container: pjaxContainerName,
             scrollTo: false,
             push: false,
@@ -143,12 +146,12 @@ $jsFiles = <<<JS
             timeout: 2500
         });
 
-        $(pjaxFilesModalName).modal('show');
+        $(pjaxConditionsModalName).modal('show');
     }
 })();
 JS;
 
-//$this->registerJs($jsFiles, $this::POS_READY);
+$this->registerJs($jsConditions, $this::POS_READY);
 
 ?>
 
@@ -263,5 +266,15 @@ JS;
 
     <?= FilesDevModalWidget::widget([
         'devFilesGroup' => $devFilesGroup,
+        'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
+    ]) ?>
+
+    <?= $this->render('/pjax/update-images-list-container', [
+        'imageTemplateReference' => $freeEssence->getImageTemplateReference(),
+        'imagesBlocks' => $imagesBlocks,
+    ]) ?>
+
+    <?= ImagesDevModalWidget::widget([
+        'devImagesGroup' => $devImagesGroup,
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ]) ?>

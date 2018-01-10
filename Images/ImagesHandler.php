@@ -1,31 +1,31 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Files;
+namespace Iliich246\YicmsCommon\Images;
 
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 
 /**
- * Class FilesHandler
+ * Class ImagesHandler
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FilesHandler extends AbstractHandler
+class ImagesHandler extends AbstractHandler
 {
     /**
      * FilesHandler constructor.
-     * @param FilesReferenceInterface $aggregator
+     * @param ImagesReferenceInterface $aggregator
      */
-    public function __construct(FilesReferenceInterface $aggregator)
+    public function __construct(ImagesReferenceInterface $aggregator)
     {
         $this->aggregator = $aggregator;
     }
 
     /**
-     * Returns instance of file block template by name
+     * Returns instance of image block template by name
      * @param $name
      * @return bool|object
      */
-    public function getFileBlock($name)
+    public function getImageBlock($name)
     {
         return $this->getOrSet($name, function() use($name) {
 //            return FilesBlock::getInstance(
