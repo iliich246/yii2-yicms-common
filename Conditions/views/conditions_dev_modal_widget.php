@@ -140,6 +140,10 @@ $this->registerJs($js, $this::POS_READY);
                     </div>
                     <hr>
 
+                    <pre>
+                        <?php print_r($widget->devConditionsGroup->conditionTemplate->id)?>
+                    </pre>
+
 
                     <?= ValidatorsListWidget::widget([
                         'validatorReference' => $widget->devConditionsGroup->conditionTemplate,

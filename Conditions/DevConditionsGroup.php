@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Languages\Language;
 /**
  * Class DevConditionsGroup
  *
- *  @author iliich246 <iliich246@gmail.com>
+ * @author iliich246 <iliich246@gmail.com>
  */
 class DevConditionsGroup extends AbstractGroup
 {

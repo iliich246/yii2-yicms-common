@@ -81,7 +81,7 @@ $jsConditions = <<<JS
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        if (isValidatorResponse) return loadModal($(addCondition).data('currentSelectedImageTemplate'));
+        if (isValidatorResponse) return loadModal($(addCondition).data('currentSelectedConditionTemplate'));
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
@@ -154,7 +154,7 @@ $jsConditions = <<<JS
 })();
 JS;
 
-$this->registerJs($jsConditions, $this::POS_READY);
+//$this->registerJs($jsConditions, $this::POS_READY);
 
 ?>
 

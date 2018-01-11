@@ -1,8 +1,9 @@
 <?php
 
 use yii\widgets\Pjax;
-
+use Iliich246\YicmsCommon\Assets\ConditionsDevAsset;
 use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
+
 
 /** @var $this \yii\web\View */
 /** @var $conditionTemplateReference string */
@@ -10,6 +11,8 @@ use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';
+
+ConditionsDevAsset::register($this);
 
 ?>
 
