@@ -194,6 +194,9 @@ class FreeEssences extends ActiveRecord implements
 
             $this->image_template_reference = ImagesBlock::generateTemplateReference();
             $this->image_reference = $this->image_template_reference;
+
+            $this->condition_template_reference = ConditionTemplate::generateTemplateReference();
+            $this->condition_reference = $this->condition_template_reference;
         }
     }
 
@@ -336,14 +339,6 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
-    public function getOrderQuery()
-    {
-        return self::find();
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getConditionTemplateReference()
     {
         return $this->condition_template_reference;
@@ -355,6 +350,14 @@ class FreeEssences extends ActiveRecord implements
     public function getConditionReference()
     {
         return $this->condition_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOrderQuery()
+    {
+        return self::find();
     }
 
     /**
