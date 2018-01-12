@@ -5,7 +5,6 @@ namespace Iliich246\YicmsCommon\Validators;
 use yii\validators\RequiredValidator;
 use Iliich246\YicmsCommon\Languages\Language;
 
-
 /**
  * Class RequireValidatorForm
  *

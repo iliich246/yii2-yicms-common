@@ -1,28 +1,32 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Fields;
+namespace Iliich246\YicmsCommon\Files;
 
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
- * Class FieldTranslate
+ * Class FileTranslate
  *
  * @property integer $id
- * @property integer $common_fields_represent_id
+ * @property integer $common_file_id
  * @property integer $common_language_id
- * @property string $value
+ * @property integer $system_name
+ * @property integer $original_name
+ * @property integer $filename
+ * @property integer $size
+ * @property integer $type
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTranslate extends ActiveRecord
+class FileTranslate extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%common_field_translates}}';
+        return '{{%common_file_translates}}';
     }
 
     /**
@@ -31,14 +35,13 @@ class FieldTranslate extends ActiveRecord
     public function rules()
     {
         return [
-            ['value', 'string'],
             [
                 ['common_language_id'], 'exist', 'skipOnError' => true,
                 'targetClass' => LanguagesDb::className(), 'targetAttribute' => ['common_language_id' => 'id']
             ],
             [
-                ['common_fields_represent_id'], 'exist', 'skipOnError' => true,
-                'targetClass' => Field::className(), 'targetAttribute' => ['common_fields_represent_id' => 'id']
+                ['common_file_id'], 'exist', 'skipOnError' => true,
+                'targetClass' => File::className(), 'targetAttribute' => ['common_file_id' => 'id']
             ],
         ];
     }

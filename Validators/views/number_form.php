@@ -1,4 +1,5 @@
 <?php
+
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Validators\NumberValidatorForm;
@@ -79,14 +80,13 @@ else $return = 'false';
         'data-home-url' => \yii\helpers\Url::base(),
         'data-return-back' => $return,
         'data-validator-id' => $validatorForm->getValidatorDb()->id,
-
     ],
 ]);
 ?>
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 class="modal-title" id="myModalLabel">
+        <h3 class="modal-title">
             Number validator
 
             <span class="glyphicon glyphicon-arrow-left validator-form-back" aria-hidden="true" style="float: right;margin-right: 20px"></span>
@@ -128,7 +128,6 @@ else $return = 'false';
                 id="validator-delete">
             Delete validator
         </button>
-
     </div>
     <div class="modal-footer">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -138,5 +137,4 @@ else $return = 'false';
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
     </div>
 </div>
-
 <?php ActiveForm::end(); ?>

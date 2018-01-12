@@ -18,7 +18,7 @@ use Iliich246\YicmsCommon\Languages\Language;
 class FieldsGroup extends AbstractGroup
 {
     /**
-     * @var FieldReferenceInterface|FieldsInterface fieldTemplateReference value for current group
+     * @var FieldReferenceInterface|FieldsInterface object for current group
      */
     protected $referenceAble;
 

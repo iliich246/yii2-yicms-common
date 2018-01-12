@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
-use Iliich246\YicmsCommon\Files\FilesBlock;
 use yii\db\ActiveRecord;
 
 /**
@@ -13,7 +12,22 @@ use yii\db\ActiveRecord;
 class AbstractEntity extends ActiveRecord
 {
     /**
-     * @var FilesBlock instance of field template
+     * @var AbstractEntityBlock instance of entity block that keep this entity
      */
-    private $block;
+    private $entityBlock;
+
+    public function delete()
+    {
+
+    }
+
+    public function isEntity()
+    {
+
+    }
+
+    public function getPath()
+    {
+
+    }
 }

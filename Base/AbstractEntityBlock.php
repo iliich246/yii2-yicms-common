@@ -9,7 +9,10 @@ namespace Iliich246\YicmsCommon\Base;
  */
 abstract class AbstractEntityBlock extends AbstractTemplate
 {
-    private $currentKey;
+    public function getIterator()
+    {
+
+    }
 
     public function getEntity()
     {
@@ -26,27 +29,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate
 
     }
 
-    public function current()
-    {
-
-    }
-
-    public function next()
-    {
-
-    }
-
-    public function key()
-    {
-
-    }
-
-    public function valid()
-    {
-
-    }
-
-    public function rewind()
+    public function delete()
     {
 
     }
