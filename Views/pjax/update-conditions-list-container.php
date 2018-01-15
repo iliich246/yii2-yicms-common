@@ -4,7 +4,6 @@ use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Assets\ConditionsDevAsset;
 use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
-
 /** @var $this \yii\web\View */
 /** @var $conditionTemplateReference string */
 /** @var $conditionsTemplates \Iliich246\YicmsCommon\Conditions\ConditionTemplate[] */

@@ -61,7 +61,9 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function init()
     {
+        //TODO: change namespace to correct $yicmsLocation
         $this->controllerMap['admin'] = 'app\yicms\Common\Controllers\AdminController';
+        $this->controllerMap['admin-files'] = 'app\yicms\Common\Controllers\AdminFilesController';
         parent::init();
     }
 
