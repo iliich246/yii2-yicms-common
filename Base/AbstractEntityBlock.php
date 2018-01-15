@@ -2,6 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
+use yii\db\ActiveQuery;
+
 /**
  * Class AbstractEntityBlock
  *
@@ -9,9 +11,12 @@ namespace Iliich246\YicmsCommon\Base;
  */
 abstract class AbstractEntityBlock extends AbstractTemplate
 {
+    /**
+     * @inheritdoc
+     */
     public function getIterator()
     {
-
+        return new \ArrayIterator($this->getEntities());
     }
 
     public function getEntity()
@@ -33,6 +38,13 @@ abstract class AbstractEntityBlock extends AbstractTemplate
     {
 
     }
+
+    /**
+     * Return query for searching entities for concrete entity block
+     * @return ActiveQuery
+     */
+    abstract public function getEntityQuery();
+
 
     /**
      * @inheritdoc

@@ -205,6 +205,7 @@ class m171110_213106_common_init extends Migration
             'field_reference' => $this->string(),
             'system_name' => $this->string(),
             'original_name' => $this->string(),
+            'file_order' => $this->integer(),
             'size' => $this->integer(),
             'type' => $this->string(),
             'editable' => $this->boolean(),
@@ -235,6 +236,7 @@ class m171110_213106_common_init extends Migration
             'common_language_id' => $this->integer(),
             'system_name' => $this->string(),
             'original_name' => $this->string(),
+            'filename' => $this->string(),
             'size' => $this->integer(),
             'type' => $this->string(),
         ]);
@@ -376,7 +378,7 @@ class m171110_213106_common_init extends Migration
          */
         $this->createTable('{{%common_image_names}}', [
             'id' => $this->primaryKey(),
-            'common_images_templates_id' => $this->integer(),
+            'common_images_template_id' => $this->integer(),
             'common_language_id' => $this->integer(),
             'name' => $this->string(),
             'description' => $this->text(),

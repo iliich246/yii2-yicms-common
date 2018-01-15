@@ -195,6 +195,16 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * @inheritdoc
      */
+    public function getEntityQuery()
+    {
+        return File::find()->where([
+            'common_files_template_id' =>
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldHandler()
     {
         if (!$this->fieldHandler)
