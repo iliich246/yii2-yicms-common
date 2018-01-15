@@ -2,8 +2,6 @@
     var editFieldsForm = $('#edit-fields-form');
     var baseAction = $(editFieldsForm).attr('action');
 
-    console.log(baseAction);
-
     var fieldPjaxContainer = $('#edit-fields-container');
     var homeUrl = $(fieldPjaxContainer).data('homeUrl');
     var fieldTemplateReference = $(fieldPjaxContainer).data('fieldTemplateReference');
