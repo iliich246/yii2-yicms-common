@@ -21,4 +21,53 @@ class FilesGroup extends AbstractGroup
      * @var FilesReferenceInterface|FilesInterface object for current group
      */
     protected $referenceAble;
+
+    /**
+     * Set FileReferenceAble
+     * @param FilesReferenceInterface $referenceAble
+     */
+    public function setFileReferenceAble(FilesReferenceInterface $referenceAble)
+    {
+        $this->referenceAble = $referenceAble;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function initialize()
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validate()
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function load($data)
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save()
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function render(ActiveForm $form)
+    {
+
+    }
 }
