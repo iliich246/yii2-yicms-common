@@ -61,6 +61,11 @@ class Field extends ActiveRecord implements
     private $validatorBuilder;
 
     /**
+     * @var FieldsNamesTranslatesDb[]
+     */
+    private $fieldNamesTranslations;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -154,7 +159,7 @@ class Field extends ActiveRecord implements
         if ($this->getLanguageType() == FieldTemplate::LANGUAGE_TYPE_SINGLE) {
             if ($this->mode == self::MODE_DEFAULT) {
                 if (!$this->value) {
-                    Yii::warning("Empty field value for field \"" .  $this->getTemplate()->program_name . '"', __METHOD__);
+                    Yii::warning("Empty field value for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
                     return false;
                 }
 
@@ -163,7 +168,7 @@ class Field extends ActiveRecord implements
 
             if ($this->value) return $this->value;
 
-            Yii::warning("Empty field value for field \"" .  $this->getTemplate()->program_name . '"', __METHOD__);
+            Yii::warning("Empty field value for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
             return 'Warning! Empty value';
         }
 
@@ -179,7 +184,7 @@ class Field extends ActiveRecord implements
             'common_fields_represent_id' => $this->id
         ])->all();
 
-        foreach($fieldTranslates as $fieldTranslate)
+        foreach ($fieldTranslates as $fieldTranslate)
             $fieldTranslate->delete();
 
         parent::delete();
@@ -249,11 +254,11 @@ class Field extends ActiveRecord implements
 
             if ($translate->value) return $translate->value;
 
-            Yii::warning("Empty field translate for field \"" .  $this->getTemplate()->program_name . '"', __METHOD__);
+            Yii::warning("Empty field translate for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
             return 'Warning! empty field translate';
         }
 
-        Yii::warning("No translate for field \"" .  $this->getTemplate()->program_name . '"', __METHOD__);
+        Yii::warning("No translate for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
 
         if ($this->mode == self::MODE_DEFAULT) return false;
 
@@ -322,7 +327,7 @@ class Field extends ActiveRecord implements
      */
     public function getKey()
     {
-       return '[' . $this->getTemplate()->id . ']value';
+        return '[' . $this->getTemplate()->id . ']value';
     }
 
     /**
@@ -351,12 +356,8 @@ class Field extends ActiveRecord implements
      */
     public function getFieldName()
     {
-        /** @var FieldsNamesTranslatesDb $fieldName */
-        $fieldName = FieldsNamesTranslatesDb::find()
-            ->where([
-                'common_fields_template_id' => $this->getTemplate()->id,
-                'common_language_id' => Language::getInstance()->getCurrentLanguage()->id
-            ])->one();
+        //TODO: delete duplicate db requests
+        $fieldName = $this->getFieldNameTranslate(Language::getInstance()->getCurrentLanguage());
 
         if ($fieldName && trim($fieldName->name) && CommonModule::isUnderAdmin()) return $fieldName->name;
 
@@ -364,12 +365,42 @@ class Field extends ActiveRecord implements
             return $this->getTemplate()->program_name;
 
         if ($fieldName && trim($fieldName->name) && CommonModule::isUnderDev())
-            return $fieldName->name . ' (' . $this->getTemplate()->program_name .')';
+            return $fieldName->name . ' (' . $this->getTemplate()->program_name . ')';
 
         if ((!$fieldName || !trim($fieldName->name)) && CommonModule::isUnderDev())
             return 'No translate for field \'' . $this->getTemplate()->program_name . '\'';
 
         return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldDescription()
+    {
+        $fieldName = $this->getFieldNameTranslate(Language::getInstance()->getCurrentLanguage());
+
+        if ($fieldName)
+            return $fieldName->description;
+
+        return false;
+    }
+
+    /**
+     * Returns buffered name translate db
+     * @param LanguagesDb $language
+     * @return FieldsNamesTranslatesDb
+     */
+    public function getFieldNameTranslate(LanguagesDb $language)
+    {
+        if (!isset($this->fieldNamesTranslations[$language->id])) {
+            $this->fieldNamesTranslations[$language->id] = FieldsNamesTranslatesDb::find()->where([
+                'common_fields_template_id' => $this->id,
+                'common_language_id' => $language->id,
+            ])->one();
+        }
+
+        return $this->fieldNamesTranslations[$language->id];
     }
 
     /**
@@ -381,7 +412,7 @@ class Field extends ActiveRecord implements
 
         if (!$validators) return;
 
-        foreach($validators as $validator)
+        foreach ($validators as $validator)
             $this->validators[] = $validator;
     }
 
@@ -411,6 +442,6 @@ class Field extends ActiveRecord implements
             $fieldTemplate->save(false);
         }
 
-        return  $fieldTemplate->validator_reference;
+        return $fieldTemplate->validator_reference;
     }
 }

@@ -301,12 +301,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
      */
     public function getFieldName()
     {
-        /** @var FieldsNamesTranslatesDb $fieldName */
-        $fieldName = FieldsNamesTranslatesDb::find()
-                            ->where([
-                                'common_fields_template_id' => $this->fieldTemplate->id,
-                                'common_language_id' => $this->language->id
-                            ])->one();
+        $fieldName = $this->getField()->getFieldNameTranslate($this->language);
 
         if ($fieldName && trim($fieldName->name) && CommonModule::isUnderAdmin()) return $fieldName->name;
 
@@ -320,6 +315,19 @@ class FieldTranslateForm extends AbstractTranslateForm implements
             return 'No translate for field \'' . $this->fieldTemplate->program_name . '\'';
 
         return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldDescription()
+    {
+        $fieldName = $this->getField()->getFieldNameTranslate($this->language);
+
+        if ($fieldName)
+            return $fieldName->description;
+
+        return false;
     }
 
     /**

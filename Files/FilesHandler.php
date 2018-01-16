@@ -27,12 +27,9 @@ class FilesHandler extends AbstractHandler
      */
     public function getFileBlock($name)
     {
-        return $this->getOrSet($name, function() use($name) {
-//            return FilesBlock::getInstance(
-//                $this->aggregator->getFieldTemplateReference(),
-//                $this->aggregator->getFieldReference(),
-//                $name
-//            );
-        });
+        return FilesBlock::getInstance(
+            $this->aggregator->getFileTemplateReference(),
+            $name
+        );
     }
 }

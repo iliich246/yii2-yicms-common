@@ -56,6 +56,12 @@ interface FieldRenderInterface
     public function getFieldName();
 
     /**
+     * Returns description of field for admin panel on correct language
+     * @return string
+     */
+    public function getFieldDescription();
+
+    /**
      * Returns id of field object
      * @return integer
      */

@@ -228,6 +228,12 @@ class ImagesBlock extends AbstractEntityBlock implements
         //return $this->field_reference;
     }
 
+    public function getEntityQuery()
+    {
+        //TODO: implement this
+    }
+
+
     /**
      * @inheritdoc
      */

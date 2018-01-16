@@ -3,6 +3,9 @@
 namespace Iliich246\YicmsCommon\Files;
 
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
+use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
@@ -48,6 +51,11 @@ class FilesBlock extends AbstractEntityBlock implements
      * @var FieldsHandler instance of field handler object
      */
     private $fieldHandler;
+
+    /**
+     * @var FilesNamesTranslatesDb[]
+     */
+    private $fileNamesTranslates = [];
 
     /**
      * @inheritdoc
@@ -192,14 +200,81 @@ class FilesBlock extends AbstractEntityBlock implements
 
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function getName(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $fileTranslate = $this->getFileNameTranslate($language);
+
+        if ($fileTranslate && trim($fileTranslate->name) && CommonModule::isUnderAdmin())
+            return $fileTranslate->name;
+
+        if ((!$fileTranslate || !trim($fileTranslate->name)) && CommonModule::isUnderAdmin())
+            return $this->program_name;
+
+        if ($fileTranslate && trim($fileTranslate->name) && CommonModule::isUnderDev())
+            return $fileTranslate->name . ' (' . $this->program_name .')';
+
+        if ((!$fileTranslate || !trim($fileTranslate->name)) && CommonModule::isUnderDev())
+            return 'No translate for file block \'' . $this->program_name . '\'';
+
+        return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * Returns translated description of file block
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getDescription(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $fileTranslate = $this->getFileNameTranslate($language);
+
+        if ($fileTranslate)
+            return $fileTranslate->description;
+
+        return false;
+    }
+
+    /**
+     * Returns buffered name translate db
+     * @param LanguagesDb $language
+     * @return FilesNamesTranslatesDb
+     */
+    private function getFileNameTranslate(LanguagesDb $language)
+    {
+        if (!isset($this->fileNamesTranslates[$language->id])) {
+
+            $data = FilesNamesTranslatesDb::find()->where([
+                    'common_files_template_id' => $this->id,
+                    'common_language_id' => $language->id,
+                ])->one();
+
+            if (!$data) $this->fileNamesTranslates[$language->id] = null;
+            else $this->fileNamesTranslates[$language->id] = $data;
+        }
+
+        return $this->fileNamesTranslates[$language->id];
+    }
+
     /**
      * @inheritdoc
      */
     public function getEntityQuery()
     {
-        return File::find()->where([
-            'common_files_template_id' =>
-        ]);
+        return File::find()
+            ->where([
+                'common_files_template_id' => $this->id
+            ])
+            ->indexBy('id')
+            ->orderBy(['file_order' => SORT_ASC]);
     }
 
     /**

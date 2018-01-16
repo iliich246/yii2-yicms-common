@@ -30,4 +30,13 @@ class AbstractEntity extends ActiveRecord
     {
 
     }
+
+    /**
+     * Method sets entity block to this entity
+     * @param AbstractEntityBlock $entityBlock
+     */
+    public function setEntityBlock(AbstractEntityBlock $entityBlock)
+    {
+        $this->entityBlock = $entityBlock;
+    }
 }
