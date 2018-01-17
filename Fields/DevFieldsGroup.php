@@ -16,7 +16,7 @@ use Iliich246\YicmsCommon\Languages\Language;
 class DevFieldsGroup extends AbstractGroup
 {
     /**
-     * @var integer fieldTemplateReference value for current group
+     * @var string fieldTemplateReference value for current group
      */
     protected $fieldTemplateReference;
 

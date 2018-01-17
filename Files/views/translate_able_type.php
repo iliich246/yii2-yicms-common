@@ -1,0 +1,5 @@
+<?php
+
+?>
+
+TRANSLATE ABLE TYPE

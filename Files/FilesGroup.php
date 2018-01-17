@@ -18,23 +18,43 @@ use Iliich246\YicmsCommon\Languages\Language;
 class FilesGroup extends AbstractGroup
 {
     /**
-     * @var FilesReferenceInterface|FilesInterface object for current group
+     * @var string fileTemplateReference value for current group
      */
-    protected $referenceAble;
+    protected $fileTemplateReference;
 
     /**
-     * Set FileReferenceAble
-     * @param FilesReferenceInterface $referenceAble
+     * @var File instance for this group
      */
-    public function setFileReferenceAble(FilesReferenceInterface $referenceAble)
+    public $file;
+
+    /**
+     * Set $fileTemplateReference
+     * @param $fileTemplateReference
+     */
+    public function setFileTemplateReference($fileTemplateReference)
     {
-        $this->referenceAble = $referenceAble;
+        $this->fileTemplateReference = $fileTemplateReference;
     }
 
     /**
      * @inheritdoc
      */
     public function initialize()
+    {
+        $filesBlockQuery = FilesBlock::getListQuery($this->fileTemplateReference);
+
+        if (!CommonModule::isUnderDev()) $filesBlockQuery->andWhere([
+            'editable' => true,
+        ]);
+
+        $filesBlockQuery->orderBy([
+            FilesBlock::getOrderFieldName() => SORT_ASC
+        ])->indexBy('id');
+
+        $languages = Language::getInstance()->usedLanguages();
+    }
+
+    public function initializeUpdate()
     {
 
     }
