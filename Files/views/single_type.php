@@ -1,5 +1,8 @@
 <?php
 
+/** @var $this yii\web\View */
+/** @var $filesGroup \Iliich246\YicmsCommon\Files\FilesGroup */
+
 ?>
 
-SINGLE TYPE
+<?= $form->field($filesGroup->file, "file")->fileInput() ?>

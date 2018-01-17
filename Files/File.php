@@ -28,6 +28,8 @@ use Iliich246\YicmsCommon\Base\SortOrderTrait;
 class File extends AbstractEntity implements SortOrderInterface
 {
     use SortOrderTrait;
+
+    public $file;
     /**
      * @inheritdoc
      */
@@ -44,6 +46,11 @@ class File extends AbstractEntity implements SortOrderInterface
         return [
             TimestampBehavior::className(),
         ];
+    }
+
+    public function getFileBlock()
+    {
+        return $this->entityBlock;
     }
 
     /**

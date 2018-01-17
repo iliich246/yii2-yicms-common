@@ -22,10 +22,17 @@ class FilesGroup extends AbstractGroup
      */
     protected $fileTemplateReference;
 
+
+    public $fileBlock;
+
     /**
      * @var File instance for this group
      */
     public $file;
+
+    public $translateForms = [];
+
+    public $translateFormsArray = [];
 
     /**
      * Set $fileTemplateReference
@@ -36,22 +43,41 @@ class FilesGroup extends AbstractGroup
         $this->fileTemplateReference = $fileTemplateReference;
     }
 
+    public function setFileBlock(FilesBlock $filesBlock)
+    {
+        $this->fileBlock = $filesBlock;
+    }
+
     /**
      * @inheritdoc
      */
     public function initialize()
     {
-        $filesBlockQuery = FilesBlock::getListQuery($this->fileTemplateReference);
+//        $filesBlockQuery = FilesBlock::getListQuery($this->fileTemplateReference);
+//
+//        if (!CommonModule::isUnderDev()) $filesBlockQuery->andWhere([
+//            'editable' => true,
+//        ]);
+//
+//        $filesBlockQuery->orderBy([
+//            FilesBlock::getOrderFieldName() => SORT_ASC
+//        ])->indexBy('id');
 
-        if (!CommonModule::isUnderDev()) $filesBlockQuery->andWhere([
-            'editable' => true,
-        ]);
-
-        $filesBlockQuery->orderBy([
-            FilesBlock::getOrderFieldName() => SORT_ASC
-        ])->indexBy('id');
+        $this->file = new File();
+        $this->file->setEntityBlock($this->fileBlock);
 
         $languages = Language::getInstance()->usedLanguages();
+
+        foreach($languages as $languageKey => $language) {
+
+            $fileTranslate = new FileTranslateForm();
+            $fileTranslate->scenario = FileTranslateForm::SCENARIO_CREATE;
+            $fileTranslate->setLanguage($language);
+
+            $this->translateForms["$languageKey-"] = $fileTranslate;
+
+
+        }
     }
 
     public function initializeUpdate()

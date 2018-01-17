@@ -67,9 +67,19 @@ class FileTranslateForm extends AbstractTranslateForm
         ];
     }
 
+    public function setFile(File $file)
+    {
+        $this->file = $file;
+    }
+
     private function getFile()
     {
+        return $this->file;
+    }
 
+    public function setFileBlock(FilesBlock $filesBlock)
+    {
+        $this->fieldBlock = $filesBlock;
     }
 
     /**

@@ -14,7 +14,7 @@ class AbstractEntity extends ActiveRecord
     /**
      * @var AbstractEntityBlock instance of entity block that keep this entity
      */
-    private $entityBlock;
+    protected $entityBlock;
 
     public function delete()
     {
