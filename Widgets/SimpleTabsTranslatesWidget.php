@@ -32,6 +32,10 @@ class SimpleTabsTranslatesWidget extends Widget
      * ]
      */
     public $translateModels;
+    /**
+     * @var mixed arbitrary data
+     */
+    public $data;
 
     /**
      * @var string path to translate view

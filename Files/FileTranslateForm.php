@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Files;
 
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
+use Iliich246\YicmsCommon\CommonModule;
 
 /**
  * Class FileTranslateForm
@@ -16,7 +17,9 @@ class FileTranslateForm extends AbstractTranslateForm
     /**
      * @var string value of translated field
      */
-    public $value;
+    public $filename;
+
+    public $translatedFile;
     /**
      * @var FilesBlock associated with this model
      */
@@ -24,7 +27,7 @@ class FileTranslateForm extends AbstractTranslateForm
     /**
      * @var File
      */
-    private $file;
+    private $file_;
 
     /**
      * @inheritdoc
@@ -48,10 +51,10 @@ class FileTranslateForm extends AbstractTranslateForm
     {
         return [
             self::SCENARIO_CREATE => [
-                'value'
+                'filename', 'translatedFile'
             ],
             self::SCENARIO_UPDATE => [
-                'value'
+                'filename', 'translatedFile'
             ],
         ];
     }
@@ -63,23 +66,41 @@ class FileTranslateForm extends AbstractTranslateForm
     {
         //TODO: makes validators
         return [
-            ['value', 'string'],
+            ['filename', 'string'],
+            [['translatedFile'], 'file'],
         ];
     }
 
-    public function setFile(File $file)
+    /**
+     * @inheritdoc
+     */
+    public static function getViewName()
     {
-        $this->file = $file;
+        //CommonModule::getInstance()->yicmsLocation . '/Common/Views/files/file-load.php
+        return CommonModule::getInstance()->yicmsLocation . '/Common/Views/files/file-translate';
     }
-
-    private function getFile()
-    {
-        return $this->file;
-    }
+//
+//    public function setFile(File $file)
+//    {
+//        $this->file = $file;
+//    }
+//
+//    private function getFile()
+//    {
+//        return $this->file;
+//    }
 
     public function setFileBlock(FilesBlock $filesBlock)
     {
         $this->fieldBlock = $filesBlock;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getKey()
+    {
+        return $this->language->id . '-' . $this->fieldBlock->id;
     }
 
     /**

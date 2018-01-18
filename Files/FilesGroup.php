@@ -66,15 +66,18 @@ class FilesGroup extends AbstractGroup
         $this->file = new File();
         $this->file->setEntityBlock($this->fileBlock);
 
+        $fileBlockId = $this->fileBlock->id;
+
         $languages = Language::getInstance()->usedLanguages();
 
         foreach($languages as $languageKey => $language) {
 
             $fileTranslate = new FileTranslateForm();
             $fileTranslate->scenario = FileTranslateForm::SCENARIO_CREATE;
+            $fileTranslate->setFileBlock($this->fileBlock);
             $fileTranslate->setLanguage($language);
 
-            $this->translateForms["$languageKey-"] = $fileTranslate;
+            $this->translateForms["$languageKey-$fileBlockId"] = $fileTranslate;
 
 
         }

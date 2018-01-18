@@ -29,6 +29,7 @@
                 <?= $this->render($widget->getTranslateView(), [
                     'form' => $widget->form,
                     'translateModel' => $translateModel,
+                    'widget' => $widget
                 ]) ?>
             </div>
         <?php endforeach; ?>

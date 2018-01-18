@@ -30,6 +30,7 @@ class File extends AbstractEntity implements SortOrderInterface
     use SortOrderTrait;
 
     public $file;
+
     /**
      * @inheritdoc
      */
@@ -37,6 +38,16 @@ class File extends AbstractEntity implements SortOrderInterface
     {
         return '{{%common_files}}';
     }
+
+    public function rules()
+    {
+        return [
+            //
+            ['file', 'file', 'maxSize' => 10000000, 'uploadRequired' => 'Need epta!', 'skipOnEmpty' => true],
+            //['file', 'required'],
+        ];
+    }
+
 
     /**
      * @inheritdoc
