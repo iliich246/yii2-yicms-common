@@ -2,7 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use Yii;
 use yii\base\Model;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
@@ -22,14 +25,19 @@ class FilesGroup extends AbstractGroup
      */
     protected $fileTemplateReference;
 
-
+    /**
+     * @var FilesBlock instance
+     */
     public $fileBlock;
 
     /**
      * @var File instance for this group
      */
-    public $file;
+    public $fileEntity;
 
+    /**
+     * @var FileTranslateForm[]
+     */
     public $translateForms = [];
 
     public $translateFormsArray = [];
@@ -53,24 +61,14 @@ class FilesGroup extends AbstractGroup
      */
     public function initialize()
     {
-//        $filesBlockQuery = FilesBlock::getListQuery($this->fileTemplateReference);
-//
-//        if (!CommonModule::isUnderDev()) $filesBlockQuery->andWhere([
-//            'editable' => true,
-//        ]);
-//
-//        $filesBlockQuery->orderBy([
-//            FilesBlock::getOrderFieldName() => SORT_ASC
-//        ])->indexBy('id');
-
-        $this->file = new File();
-        $this->file->setEntityBlock($this->fileBlock);
+        $this->fileEntity = new File();
+        $this->fileEntity->setEntityBlock($this->fileBlock);
 
         $fileBlockId = $this->fileBlock->id;
 
         $languages = Language::getInstance()->usedLanguages();
 
-        foreach($languages as $languageKey => $language) {
+        foreach ($languages as $languageKey => $language) {
 
             $fileTranslate = new FileTranslateForm();
             $fileTranslate->scenario = FileTranslateForm::SCENARIO_CREATE;
@@ -93,7 +91,15 @@ class FilesGroup extends AbstractGroup
      */
     public function validate()
     {
+        $success = true;
 
+        if ($this->fileEntity->validate())
+            $success = true;
+
+        if ($success && Model::validateMultiple($this->translateForms))
+            return true;
+
+        return false;
     }
 
     /**
@@ -101,7 +107,24 @@ class FilesGroup extends AbstractGroup
      */
     public function load($data)
     {
+        $success = false;
 
+        if ($this->fileEntity->load($data)) {
+            $this->fileEntity->file = UploadedFile::getInstance($this->fileEntity, "file");
+
+            $success = true;
+        }
+
+        if ($success && Model::loadMultiple($this->translateForms, $data)) {
+            foreach ($this->translateForms as $fileTranslateForm) {
+                $key = $fileTranslateForm->getKey();
+                $fileTranslateForm->translatedFile = UploadedFile::getInstance($fileTranslateForm, "[$key]translatedFile");
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -109,7 +132,45 @@ class FilesGroup extends AbstractGroup
      */
     public function save()
     {
+        $file = $this->getFileExistedInDbEntity();
 
+        $path = CommonModule::getInstance()->filesPatch;
+
+        if (!is_dir($path))
+            FileHelper::createDirectory($path);
+
+        if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
+
+            if ($this->scenario == self::SCENARIO_UPDATE) {
+                if (file_exists($path . $file->system_name))
+                    unlink($path . $file->system_name);
+            }
+
+            $name = uniqid() . '.' . $this->fileEntity->file->extension;
+            $this->fileEntity->file->saveAs($path . $name);
+
+            $this->fileEntity->system_name = $name;
+            $this->fileEntity->original_name = $this->fileEntity->file->baseName;
+            $this->fileEntity->size = $this->fileEntity->file->size;
+            $this->fileEntity->type = FileHelper::getMimeType($path . $name);
+
+            $this->fileEntity->save();
+        }
+
+        foreach ($this->translateForms as $fileTranslateForm) {
+
+            if ($this->scenario == self::SCENARIO_CREATE)
+                $fileTranslateForm->setFileEntity($file);
+
+            if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_TRANSLATABLE) {
+                if ($this->scenario == self::SCENARIO_UPDATE) {
+                    if (file_exists($path . $file->system_name))
+                        unlink($path . $file->system_name);
+                }
+            }
+
+
+        }
     }
 
     /**
@@ -117,6 +178,28 @@ class FilesGroup extends AbstractGroup
      */
     public function render(ActiveForm $form)
     {
+        return FilesRenderWidget::widget([
+            'form' => $form,
+            'filesGroup' => $this,
+            'filesBlock' => $this->fileBlock,
+        ]);
+    }
 
+    /**
+     * Return instance of File entity that that necessarily exists in the database
+     * @return File
+     */
+    public function getFileExistedInDbEntity()
+    {
+        if ($this->fileEntity->isNewRecord) {
+            $this->fileEntity->common_files_template_id = $this->fileBlock->id;
+            $this->fileEntity->file_order = $this->fileEntity->maxOrder();
+            $this->fileEntity->visible = true;
+            $this->fileEntity->editable = true;
+
+            $this->fileEntity->save();
+        }
+
+        return $this->fileEntity;
     }
 }

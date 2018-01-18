@@ -40,6 +40,10 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public $languageMethod = Language::COOKIE_TYPE;
 
+    public $filesPatch = DIRECTORY_SEPARATOR .
+                        'web' . DIRECTORY_SEPARATOR .
+                        'files' . DIRECTORY_SEPARATOR;
+
     /** @inheritdoc */
     public $configurable = [
         'defaultLanguage',
@@ -64,6 +68,9 @@ class CommonModule extends AbstractConfigurableModule implements
         //TODO: change namespace to correct $yicmsLocation
         $this->controllerMap['admin'] = 'app\yicms\Common\Controllers\AdminController';
         $this->controllerMap['admin-files'] = 'app\yicms\Common\Controllers\AdminFilesController';
+
+        $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
+
         parent::init();
     }
 

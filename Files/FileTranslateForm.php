@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Files;
 
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Fields\FieldTranslate;
 
 /**
  * Class FileTranslateForm
@@ -25,9 +26,9 @@ class FileTranslateForm extends AbstractTranslateForm
      */
     private $fieldBlock;
     /**
-     * @var File
+     * @var File associated instance
      */
-    private $file_;
+    private $fileEntity;
 
     /**
      * @inheritdoc
@@ -76,23 +77,17 @@ class FileTranslateForm extends AbstractTranslateForm
      */
     public static function getViewName()
     {
-        //CommonModule::getInstance()->yicmsLocation . '/Common/Views/files/file-load.php
         return CommonModule::getInstance()->yicmsLocation . '/Common/Views/files/file-translate';
     }
-//
-//    public function setFile(File $file)
-//    {
-//        $this->file = $file;
-//    }
-//
-//    private function getFile()
-//    {
-//        return $this->file;
-//    }
 
     public function setFileBlock(FilesBlock $filesBlock)
     {
         $this->fieldBlock = $filesBlock;
+    }
+
+    public function setFileEntity(File $fileEntity)
+    {
+        $this->fileEntity = $fileEntity;
     }
 
     /**
@@ -108,7 +103,20 @@ class FileTranslateForm extends AbstractTranslateForm
      */
     public function getCurrentTranslateDb()
     {
+        if ($this->currentTranslateDb) return $this->currentTranslateDb;
 
+        $this->currentTranslateDb = FileTranslate::find()->where([
+            'common_file_id' =>  $this->fileEntity->id,
+            'common_language_id' => $this->language->id,
+        ])->one();
+
+        if (!$this->currentTranslateDb)
+            $this->createTranslateDb();
+        else {
+            $this->filename = $this->currentTranslateDb->filename;
+        }
+
+        return $this->currentTranslateDb;
     }
 
     /**
@@ -118,7 +126,7 @@ class FileTranslateForm extends AbstractTranslateForm
     {
         $this->currentTranslateDb = new FileTranslate();
         $this->currentTranslateDb->common_language_id = $this->language->id;
-        $this->currentTranslateDb->common_file_id = $this->getFile()->id;
+        $this->currentTranslateDb->common_file_id = $this->fileEntity->id;
         $this->currentTranslateDb->system_name = null;
         $this->currentTranslateDb->original_name = null;
         $this->currentTranslateDb->filename = null;

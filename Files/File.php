@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
@@ -10,6 +11,7 @@ use Iliich246\YicmsCommon\Base\SortOrderTrait;
 /**
  * Class File
  *
+ * @property integer $id
  * @property string $common_files_template_id
  * @property string $file_reference
  * @property string $field_reference
@@ -29,6 +31,9 @@ class File extends AbstractEntity implements SortOrderInterface
 {
     use SortOrderTrait;
 
+    /**
+     * @var UploadedFile loaded file
+     */
     public $file;
 
     /**

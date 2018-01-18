@@ -7,7 +7,7 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
 ?>
 
-<?= $form->field($filesGroup->file, "file")->fileInput() ?>
+<?= $form->field($filesGroup->fileEntity, "file")->fileInput() ?>
 
 <?= SimpleTabsTranslatesWidget::widget([
     'form' => $form,
