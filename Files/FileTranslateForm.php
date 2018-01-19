@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use yii\web\UploadedFile;
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Fields\FieldTranslate;
@@ -20,6 +21,9 @@ class FileTranslateForm extends AbstractTranslateForm
      */
     public $filename;
 
+    /**
+     * @var UploadedFile
+     */
     public $translatedFile;
     /**
      * @var FilesBlock associated with this model

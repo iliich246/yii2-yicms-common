@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
  * Class File
@@ -37,6 +39,11 @@ class File extends AbstractEntity implements SortOrderInterface
     public $file;
 
     /**
+     * @var FileTranslate[] array of buffered translates
+     */
+    public $fileTranslates;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -64,9 +71,62 @@ class File extends AbstractEntity implements SortOrderInterface
         ];
     }
 
+    /**
+     * Return FilesBlock associated with this file entity
+     * @return FilesBlock
+     */
     public function getFileBlock()
     {
         return $this->entityBlock;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function getReferenceName()
+    {
+        return 'file_reference';
+    }
+
+    /**
+     * Return translated file name
+     * @param LanguagesDb|false $language
+     * @return int
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getFileName(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $fileTranslate = $this->getFileTranslate($language);
+
+        if ($fileTranslate && trim($fileTranslate->filename))
+            return $fileTranslate->filename;
+
+        if ($this->getFileBlock()->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
+            return $this->original_name;
+
+        if ($fileTranslate)
+            return $fileTranslate->original_name;
+
+        return false;
+    }
+
+    /**
+     * Return buffered file translate db
+     * @param LanguagesDb $language
+     * @return FileTranslate
+     */
+    private function getFileTranslate(LanguagesDb $language)
+    {
+        if ($this->fileTranslates[$language->id]) return $this->fileTranslates[$language->id];
+
+        $this->fileTranslates[$language->id] = FileTranslate::find()->where([
+            'common_file_id' => $this->id,
+            'common_language_id' => $language->id
+        ])->one();
+
+        return $this->fileTranslates[$language->id];
     }
 
     /**
@@ -76,6 +136,7 @@ class File extends AbstractEntity implements SortOrderInterface
     {
         return self::find()->where([
             'common_files_template_id' => $this->common_files_template_id,
+            'file_reference' => $this->file_reference,
         ]);
     }
 

@@ -31,6 +31,11 @@ class FilesGroup extends AbstractGroup
     public $fileBlock;
 
     /**
+     * @var string current fileReference key
+     */
+    public $fileReference;
+
+    /**
      * @var File instance for this group
      */
     public $fileEntity;
@@ -40,10 +45,9 @@ class FilesGroup extends AbstractGroup
      */
     public $translateForms = [];
 
-    public $translateFormsArray = [];
 
     /**
-     * Set $fileTemplateReference
+     * Set current fileTemplateReference
      * @param $fileTemplateReference
      */
     public function setFileTemplateReference($fileTemplateReference)
@@ -51,9 +55,31 @@ class FilesGroup extends AbstractGroup
         $this->fileTemplateReference = $fileTemplateReference;
     }
 
+    /**
+     * Sets current FileBlock
+     * @param FilesBlock $filesBlock
+     */
     public function setFileBlock(FilesBlock $filesBlock)
     {
         $this->fileBlock = $filesBlock;
+    }
+
+    /**
+     * Sets current fileReference key
+     * @param $fileReference
+     */
+    public function setFileReference($fileReference)
+    {
+        $this->fileReference = $fileReference;
+    }
+
+    /**
+     * Sets file entity for update mode
+     * @param File $fileEntity
+     */
+    public function setFileEntity(File $fileEntity)
+    {
+        $this->fileEntity = $fileEntity;
     }
 
     /**
@@ -76,8 +102,6 @@ class FilesGroup extends AbstractGroup
             $fileTranslate->setLanguage($language);
 
             $this->translateForms["$languageKey-$fileBlockId"] = $fileTranslate;
-
-
         }
     }
 
@@ -89,33 +113,16 @@ class FilesGroup extends AbstractGroup
     /**
      * @inheritdoc
      */
-    public function validate()
-    {
-        $success = true;
-
-        if ($this->fileEntity->validate())
-            $success = true;
-
-        if ($success && Model::validateMultiple($this->translateForms))
-            return true;
-
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function load($data)
     {
         $success = false;
 
         if ($this->fileEntity->load($data)) {
             $this->fileEntity->file = UploadedFile::getInstance($this->fileEntity, "file");
-
             $success = true;
         }
 
-        if ($success && Model::loadMultiple($this->translateForms, $data)) {
+        if ($success | Model::loadMultiple($this->translateForms, $data)) {
             foreach ($this->translateForms as $fileTranslateForm) {
                 $key = $fileTranslateForm->getKey();
                 $fileTranslateForm->translatedFile = UploadedFile::getInstance($fileTranslateForm, "[$key]translatedFile");
@@ -130,9 +137,33 @@ class FilesGroup extends AbstractGroup
     /**
      * @inheritdoc
      */
+    public function validate()
+    {
+        if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
+            $success = false;
+
+            if ($this->fileEntity->validate())
+                $success = true;
+
+            if ($success && Model::validateMultiple($this->translateForms, ['filename']))
+                return true;
+
+            return false;
+        } else {
+            return Model::validateMultiple($this->translateForms);
+        }
+    }
+
+
+
+    /**
+     * @inheritdoc
+     */
     public function save()
     {
         $file = $this->getFileExistedInDbEntity();
+
+        $this->fileEntity->file_reference = $this->fileReference;
 
         $path = CommonModule::getInstance()->filesPatch;
 
@@ -153,9 +184,9 @@ class FilesGroup extends AbstractGroup
             $this->fileEntity->original_name = $this->fileEntity->file->baseName;
             $this->fileEntity->size = $this->fileEntity->file->size;
             $this->fileEntity->type = FileHelper::getMimeType($path . $name);
-
-            $this->fileEntity->save();
         }
+
+        $this->fileEntity->save();
 
         foreach ($this->translateForms as $fileTranslateForm) {
 
@@ -164,12 +195,21 @@ class FilesGroup extends AbstractGroup
 
             if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_TRANSLATABLE) {
                 if ($this->scenario == self::SCENARIO_UPDATE) {
-                    if (file_exists($path . $file->system_name))
-                        unlink($path . $file->system_name);
+                    if (file_exists($path . $fileTranslateForm->getCurrentTranslateDb()->system_name))
+                        unlink($path . $fileTranslateForm->getCurrentTranslateDb()->system_name);
                 }
+
+                $name = uniqid() . '.' . $fileTranslateForm->translatedFile->extension;
+                $fileTranslateForm->translatedFile->saveAs($path . $name);
+
+                $fileTranslateForm->getCurrentTranslateDb()->system_name = $name;
+                $fileTranslateForm->getCurrentTranslateDb()->original_name = $fileTranslateForm->translatedFile->baseName;
+                $fileTranslateForm->getCurrentTranslateDb()->size = $fileTranslateForm->translatedFile->size;
+                $this->fileEntity->type = FileHelper::getMimeType($path . $name);
             }
 
-
+            $fileTranslateForm->getCurrentTranslateDb()->filename = $fileTranslateForm->filename;
+            $fileTranslateForm->getCurrentTranslateDb()->save();
         }
     }
 

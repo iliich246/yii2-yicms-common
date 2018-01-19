@@ -5,6 +5,7 @@ namespace Iliich246\YicmsCommon\Fields;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -288,6 +289,32 @@ class Field extends ActiveRecord implements
         $field->template = $template;
 
         return $field;
+    }
+
+    /**
+     * Generates reference key
+     * @return string
+     * @throws CommonException
+     */
+    public static function generateReference()
+    {
+        $value = strrev(uniqid());
+
+        $coincidence = true;
+        $counter = 0;
+
+        while($coincidence) {
+            if (!self::find()->where([
+               'field_reference' => $value
+            ])->one()) return $value;
+
+            if ($counter++ > 100) {
+                Yii::error('Looping', __METHOD__);
+                throw new CommonException('Looping in ' . __METHOD__);
+            }
+        }
+
+        throw new CommonException('Can`t reach there 0_0' . __METHOD__);
     }
 
     /**

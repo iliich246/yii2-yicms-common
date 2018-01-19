@@ -3,7 +3,9 @@
 namespace Iliich246\YicmsCommon\Files;
 
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -56,6 +58,11 @@ class FilesBlock extends AbstractEntityBlock implements
      * @var FilesNamesTranslatesDb[]
      */
     private $fileNamesTranslates = [];
+
+    /**
+     * @var string fileReference for what files group must be fetched
+     */
+    private $currentFileReference;
 
     /**
      * @inheritdoc
@@ -200,6 +207,14 @@ class FilesBlock extends AbstractEntityBlock implements
 
     }
 
+    /**
+     * Sets current file reference
+     * @param $fileReference
+     */
+    public function setFileReference($fileReference)
+    {
+        $this->currentFileReference = $fileReference;
+    }
 
     /**
      * @inheritdoc
@@ -271,7 +286,8 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         return File::find()
             ->where([
-                'common_files_template_id' => $this->id
+                'common_files_template_id' => $this->id,
+                'file_reference' => $this->currentFileReference,
             ])
             ->indexBy('id')
             ->orderBy(['file_order' => SORT_ASC]);
@@ -302,6 +318,10 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFieldTemplateReference()
     {
+        if (!$this->field_template_reference) {
+            $this->field_template_reference = FieldTemplate::generateTemplateReference();
+            $this->save(false);
+        }
         return $this->field_template_reference;
     }
 
@@ -310,7 +330,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFieldReference()
     {
-        //return $this->field_reference;
+        throw new CommonException('Do not need implementation for FileBlock');
     }
 
     /**
