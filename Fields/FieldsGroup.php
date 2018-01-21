@@ -198,6 +198,68 @@ class FieldsGroup extends AbstractGroup
         }
     }
 
+    public function initializeForEmptyFieldReference()
+    {
+        $fieldTemplatesQuery = FieldTemplate::getListQuery($this->referenceAble->getFieldTemplateReference());
+
+        if (!CommonModule::isUnderDev()) $fieldTemplatesQuery->andWhere([
+            'editable' => true,
+        ]);
+
+        $templateQuery = clone($fieldTemplatesQuery);
+
+        /** @var FieldTemplate $fieldTemplates */
+        $this->translateAbleFieldTemplates = $fieldTemplatesQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE
+        ])->all();
+
+        $this->singleFieldTemplates = $templateQuery->andWhere([
+            'language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE
+        ])->all();
+
+        $languages = Language::getInstance()->usedLanguages();
+
+        foreach($languages as $languageKey => $language) {
+            foreach($this->translateAbleFieldTemplates as $fieldTemplateKey=>$fieldTemplate) {
+
+                $fieldTranslate = new FieldTranslateForm();
+                $fieldTranslate->scenario = FieldTranslateForm::SCENARIO_UPDATE;
+                $fieldTranslate->setFieldTemplate($fieldTemplate);
+                $fieldTranslate->setLanguage($language);
+                //$fieldTranslate->setFieldAble($this->referenceAble);
+                $fieldTranslate->loadFromDb();
+                $fieldTranslate->prepareValidators();
+
+                $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
+                $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
+            }
+        }
+
+        foreach($this->singleFieldTemplates as $singleFieldTemplate) {
+            $singleField = Field::find()->where([
+                'field_reference' => $this->referenceAble->getFieldReference(),
+                'common_fields_template_id' => $singleFieldTemplate->id
+            ])->one();
+
+            if (!$singleField) {
+                $singleField = new Field();
+                $singleField->field_reference = $this->referenceAble->getFieldReference();
+                $singleField->common_fields_template_id = $singleFieldTemplate->id;
+                $singleField->value = null;
+                $singleField->visible = true;
+                $singleField->editable = true;
+
+                $singleField->save();
+            }
+
+            $singleField->prepareValidators();
+
+            $this->singleFields["$singleFieldTemplate->id"] = $singleField;
+        }
+
+
+    }
+
     /**
      * @inheritdoc
      */

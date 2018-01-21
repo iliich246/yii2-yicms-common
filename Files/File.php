@@ -9,6 +9,9 @@ use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Fields\FieldsHandler;
+use Iliich246\YicmsCommon\Fields\FieldsInterface;
+use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
  * Class File
@@ -29,7 +32,10 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class File extends AbstractEntity implements SortOrderInterface
+class File extends AbstractEntity implements
+    SortOrderInterface,
+    FieldsInterface,
+    FieldReferenceInterface
 {
     use SortOrderTrait;
 
@@ -37,6 +43,11 @@ class File extends AbstractEntity implements SortOrderInterface
      * @var UploadedFile loaded file
      */
     public $file;
+
+    /**
+     * @var FieldsHandler instance of field handler object
+     */
+    private $fieldHandler;
 
     /**
      * @var FileTranslate[] array of buffered translates
@@ -127,6 +138,47 @@ class File extends AbstractEntity implements SortOrderInterface
         ])->one();
 
         return $this->fileTranslates[$language->id];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldHandler()
+    {
+        if (!$this->fieldHandler)
+            $this->fieldHandler = new FieldsHandler($this);
+
+        return $this->fieldHandler;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getField($name)
+    {
+        return $this->getFieldHandler()->getField($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldTemplateReference()
+    {
+        $this->getFileBlock()->getFieldTemplateReference();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldReference()
+    {
+        if (!$this->file_reference) {
+            $this->file_reference = self::generateReference();
+            $this->save(false);
+        }
+
+        return $this->file_reference;
     }
 
     /**

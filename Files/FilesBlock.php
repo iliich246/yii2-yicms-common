@@ -29,7 +29,6 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  * @author iliich246 <iliich246@gmail.com>
  */
 class FilesBlock extends AbstractEntityBlock implements
-    FieldsInterface,
     FieldReferenceInterface
 {
     /**
@@ -48,11 +47,6 @@ class FilesBlock extends AbstractEntityBlock implements
      * @var bool if true for this block will be created standard fields like filename
      */
     public $createStandardFields = true;
-
-    /**
-     * @var FieldsHandler instance of field handler object
-     */
-    private $fieldHandler;
 
     /**
      * @var FilesNamesTranslatesDb[]
@@ -296,26 +290,6 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * @inheritdoc
      */
-    public function getFieldHandler()
-    {
-        if (!$this->fieldHandler)
-            $this->fieldHandler = new FieldsHandler($this);
-
-        return $this->fieldHandler;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getField($name)
-    {
-        return $this->getFieldHandler()->getField($name);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getFieldTemplateReference()
     {
         if (!$this->field_template_reference) {
@@ -330,7 +304,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFieldReference()
     {
-        throw new CommonException('Do not need implementation for FileBlock');
+        return null;
     }
 
     /**

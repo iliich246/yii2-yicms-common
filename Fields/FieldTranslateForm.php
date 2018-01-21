@@ -107,9 +107,9 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * Sets FieldsInterface object
-     * @param FieldsInterface $fieldAble
+     * @param FieldReferenceInterface $fieldAble
      */
-    public function setFieldAble(FieldsInterface $fieldAble)
+    public function setFieldAble(FieldReferenceInterface $fieldAble)
     {
         $this->fieldAble = $fieldAble;
     }
