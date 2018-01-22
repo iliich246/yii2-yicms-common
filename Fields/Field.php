@@ -422,7 +422,7 @@ class Field extends ActiveRecord implements
     {
         if (!isset($this->fieldNamesTranslations[$language->id])) {
             $this->fieldNamesTranslations[$language->id] = FieldsNamesTranslatesDb::find()->where([
-                'common_fields_template_id' => $this->id,
+                'common_fields_template_id' => $this->getTemplate()->id,
                 'common_language_id' => $language->id,
             ])->one();
         }

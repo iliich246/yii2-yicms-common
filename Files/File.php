@@ -66,7 +66,7 @@ class File extends AbstractEntity implements
     {
         return [
             //
-            ['file', 'file', 'maxSize' => 10000000, 'uploadRequired' => 'Need epta!', 'skipOnEmpty' => true],
+            ['file', 'file', 'maxSize' => 1000000, 'uploadRequired' => 'Need epta!', 'skipOnEmpty' => true],
             //['file', 'required'],
         ];
     }
@@ -165,7 +165,7 @@ class File extends AbstractEntity implements
      */
     public function getFieldTemplateReference()
     {
-        $this->getFileBlock()->getFieldTemplateReference();
+        return $this->getFileBlock()->getFieldTemplateReference();
     }
 
     /**

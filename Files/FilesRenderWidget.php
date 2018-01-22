@@ -32,11 +32,13 @@ class FilesRenderWidget extends Widget
         if ($this->filesBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
             return $this->render('@yicms-common/Files/views/single_type', [
                 'filesGroup' => $this->filesGroup,
+                'filesBlock' => $this->filesBlock,
                 'form' => $this->form
             ]);
         else
             return $this->render('@yicms-common/Files/views/translate_able_type', [
                 'filesGroup' => $this->filesGroup,
+                'filesBlock' => $this->filesBlock,
                 'form' => $this->form
             ]);
     }

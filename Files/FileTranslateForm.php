@@ -84,11 +84,19 @@ class FileTranslateForm extends AbstractTranslateForm
         return CommonModule::getInstance()->yicmsLocation . '/Common/Views/files/file-translate';
     }
 
+    /**
+     * Sets FilesBlock
+     * @param FilesBlock $filesBlock
+     */
     public function setFileBlock(FilesBlock $filesBlock)
     {
         $this->fieldBlock = $filesBlock;
     }
 
+    /**
+     * Sets File
+     * @param File $fileEntity
+     */
     public function setFileEntity(File $fileEntity)
     {
         $this->fileEntity = $fileEntity;

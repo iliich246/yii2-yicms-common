@@ -87,8 +87,10 @@ class FilesGroup extends AbstractGroup
      */
     public function initialize()
     {
-        $this->fileEntity = new File();
-        $this->fileEntity->setEntityBlock($this->fileBlock);
+        if ($this->scenario == self::SCENARIO_CREATE) {
+            $this->fileEntity = new File();
+            $this->fileEntity->setEntityBlock($this->fileBlock);
+        }
 
         $fileBlockId = $this->fileBlock->id;
 
@@ -99,15 +101,11 @@ class FilesGroup extends AbstractGroup
             $fileTranslate = new FileTranslateForm();
             $fileTranslate->scenario = FileTranslateForm::SCENARIO_CREATE;
             $fileTranslate->setFileBlock($this->fileBlock);
+            $fileTranslate->setFileEntity($this->fileEntity);
             $fileTranslate->setLanguage($language);
 
             $this->translateForms["$languageKey-$fileBlockId"] = $fileTranslate;
         }
-    }
-
-    public function initializeUpdate()
-    {
-
     }
 
     /**
@@ -167,45 +165,51 @@ class FilesGroup extends AbstractGroup
 
         $path = CommonModule::getInstance()->filesPatch;
 
-        if (!is_dir($path))
-            FileHelper::createDirectory($path);
+        if ($this->fileEntity->file) {
+            if (!is_dir($path))
+                FileHelper::createDirectory($path);
 
-        if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
+            if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
 
-            if ($this->scenario == self::SCENARIO_UPDATE) {
-                if (file_exists($path . $file->system_name))
-                    unlink($path . $file->system_name);
+                if ($this->scenario == self::SCENARIO_UPDATE) {
+                    if (file_exists($path . $file->system_name))
+                        unlink($path . $file->system_name);
+                }
+
+                $name = uniqid() . '.' . $this->fileEntity->file->extension;
+                $this->fileEntity->file->saveAs($path . $name);
+
+                $this->fileEntity->system_name = $name;
+                $this->fileEntity->original_name = $this->fileEntity->file->baseName;
+                $this->fileEntity->size = $this->fileEntity->file->size;
+                $this->fileEntity->type = FileHelper::getMimeType($path . $name);
             }
 
-            $name = uniqid() . '.' . $this->fileEntity->file->extension;
-            $this->fileEntity->file->saveAs($path . $name);
-
-            $this->fileEntity->system_name = $name;
-            $this->fileEntity->original_name = $this->fileEntity->file->baseName;
-            $this->fileEntity->size = $this->fileEntity->file->size;
-            $this->fileEntity->type = FileHelper::getMimeType($path . $name);
+            $this->fileEntity->save();
         }
 
-        $this->fileEntity->save();
-
         foreach ($this->translateForms as $fileTranslateForm) {
-
             if ($this->scenario == self::SCENARIO_CREATE)
                 $fileTranslateForm->setFileEntity($file);
 
             if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_TRANSLATABLE) {
-                if ($this->scenario == self::SCENARIO_UPDATE) {
-                    if (file_exists($path . $fileTranslateForm->getCurrentTranslateDb()->system_name))
-                        unlink($path . $fileTranslateForm->getCurrentTranslateDb()->system_name);
+                if ($fileTranslateForm->translatedFile) {
+                    if (!is_dir($path))
+                        FileHelper::createDirectory($path);
+
+                    if ($this->scenario == self::SCENARIO_UPDATE) {
+                        if (file_exists($path . $fileTranslateForm->getCurrentTranslateDb()->system_name))
+                            unlink($path . $fileTranslateForm->getCurrentTranslateDb()->system_name);
+                    }
+
+                    $name = uniqid() . '.' . $fileTranslateForm->translatedFile->extension;
+                    $fileTranslateForm->translatedFile->saveAs($path . $name);
+
+                    $fileTranslateForm->getCurrentTranslateDb()->system_name = $name;
+                    $fileTranslateForm->getCurrentTranslateDb()->original_name = $fileTranslateForm->translatedFile->baseName;
+                    $fileTranslateForm->getCurrentTranslateDb()->size = $fileTranslateForm->translatedFile->size;
+                    $this->fileEntity->type = FileHelper::getMimeType($path . $name);
                 }
-
-                $name = uniqid() . '.' . $fileTranslateForm->translatedFile->extension;
-                $fileTranslateForm->translatedFile->saveAs($path . $name);
-
-                $fileTranslateForm->getCurrentTranslateDb()->system_name = $name;
-                $fileTranslateForm->getCurrentTranslateDb()->original_name = $fileTranslateForm->translatedFile->baseName;
-                $fileTranslateForm->getCurrentTranslateDb()->size = $fileTranslateForm->translatedFile->size;
-                $this->fileEntity->type = FileHelper::getMimeType($path . $name);
             }
 
             $fileTranslateForm->getCurrentTranslateDb()->filename = $fileTranslateForm->filename;
