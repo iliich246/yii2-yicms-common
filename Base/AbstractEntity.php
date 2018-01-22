@@ -8,6 +8,8 @@ use yii\db\ActiveRecord;
 /**
  * Class AbstractEntity
  *
+ * @property integer $id
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 class AbstractEntity extends ActiveRecord

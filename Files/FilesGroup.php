@@ -104,6 +104,10 @@ class FilesGroup extends AbstractGroup
             $fileTranslate->setFileEntity($this->fileEntity);
             $fileTranslate->setLanguage($language);
 
+            if ($this->scenario == self::SCENARIO_UPDATE) {
+                $fileTranslate->loadFromDb();
+            }
+
             $this->translateForms["$languageKey-$fileBlockId"] = $fileTranslate;
         }
     }

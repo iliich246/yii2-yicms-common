@@ -193,6 +193,24 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     *
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->getEntity();
+    }
+
+    /**
+     *
+     * @return File[]
+     */
+    public function getFiles()
+    {
+        return $this->getEntities();
+    }
+
+    /**
      * @throws \Exception
      * @throws \Throwable
      */

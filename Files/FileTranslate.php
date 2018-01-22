@@ -11,11 +11,11 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  * @property integer $id
  * @property integer $common_file_id
  * @property integer $common_language_id
- * @property integer $system_name
- * @property integer $original_name
- * @property integer $filename
+ * @property string $system_name
+ * @property string $original_name
+ * @property string $filename
  * @property integer $size
- * @property integer $type
+ * @property string $type
  *
  * @author iliich246 <iliich246@gmail.com>
  */
