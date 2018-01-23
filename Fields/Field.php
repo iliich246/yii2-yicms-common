@@ -11,6 +11,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
+use yii\validators\SafeValidator;
 
 /**
  * Class Field
@@ -80,7 +81,6 @@ class Field extends ActiveRecord implements
     public function rules()
     {
         return [
-            //['value', 'safe'],
             ['field_reference', 'string'],
             [
                 ['common_fields_template_id'], 'exist', 'skipOnError' => true,
@@ -437,7 +437,14 @@ class Field extends ActiveRecord implements
     {
         $validators = $this->getValidatorBuilder()->build();
 
-        if (!$validators) return;
+        if (!$validators) {
+
+            $safeValidator = new SafeValidator();
+            $safeValidator->attributes = ['value'];
+            $this->validators[] = $safeValidator;
+
+            return;
+        }
 
         foreach ($validators as $validator)
             $this->validators[] = $validator;

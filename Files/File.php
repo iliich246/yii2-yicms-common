@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
@@ -173,12 +174,12 @@ class File extends AbstractEntity implements
      */
     public function getFieldReference()
     {
-        if (!$this->file_reference) {
-            $this->file_reference = self::generateReference();
+        if (!$this->field_reference) {
+            $this->field_reference = FieldTemplate::generateTemplateReference();
             $this->save(false);
         }
 
-        return $this->file_reference;
+        return $this->field_reference;
     }
 
     /**

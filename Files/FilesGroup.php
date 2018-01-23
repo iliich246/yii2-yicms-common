@@ -176,7 +176,8 @@ class FilesGroup extends AbstractGroup
             if ($this->fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
 
                 if ($this->scenario == self::SCENARIO_UPDATE) {
-                    if (file_exists($path . $file->system_name))
+                    if (file_exists($path . $file->system_name) &&
+                        !is_dir($path . $file->system_name))
                         unlink($path . $file->system_name);
                 }
 
@@ -202,7 +203,8 @@ class FilesGroup extends AbstractGroup
                         FileHelper::createDirectory($path);
 
                     if ($this->scenario == self::SCENARIO_UPDATE) {
-                        if (file_exists($path . $fileTranslateForm->getCurrentTranslateDb()->system_name))
+                        if (file_exists($path . $fileTranslateForm->getCurrentTranslateDb()->system_name) &&
+                            !is_dir($path . $fileTranslateForm->getCurrentTranslateDb()->system_name))
                             unlink($path . $fileTranslateForm->getCurrentTranslateDb()->system_name);
                     }
 
@@ -241,6 +243,7 @@ class FilesGroup extends AbstractGroup
     {
         if ($this->fileEntity->isNewRecord) {
             $this->fileEntity->common_files_template_id = $this->fileBlock->id;
+            $this->fileEntity->file_reference = $this->fileReference;
             $this->fileEntity->file_order = $this->fileEntity->maxOrder();
             $this->fileEntity->visible = true;
             $this->fileEntity->editable = true;

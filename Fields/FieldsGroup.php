@@ -226,8 +226,9 @@ class FieldsGroup extends AbstractGroup
         if ($this->translateForms)
             $success = Model::loadMultiple($this->translateForms, $data);
 
-        if ($success && $this->singleFields)
+        if ($success && $this->singleFields) {
             $success = Model::loadMultiple($this->singleFields, $data);
+        }
 
         return $success;
     }
