@@ -19,8 +19,9 @@ abstract class AbstractValidatorForm extends Model
      */
     public static $builtInValidators = [
         'required' => 'Iliich246\YicmsCommon\Validators\RequiredValidatorForm',
-        'string' => 'Iliich246\YicmsCommon\Validators\StringValidatorForm',
-        'number' => 'Iliich246\YicmsCommon\Validators\NumberValidatorForm',
+        'string'   => 'Iliich246\YicmsCommon\Validators\StringValidatorForm',
+        'number'   => 'Iliich246\YicmsCommon\Validators\NumberValidatorForm',
+        'file'     => 'Iliich246\YicmsCommon\Validators\FileValidatorForm',
     ];
     /**
      * @var array buffer of validator db with index by validatorReference

@@ -2,7 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use yii\validators\RequiredValidator;
+use yii\validators\SafeValidator;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
@@ -10,9 +11,13 @@ use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class File
@@ -36,7 +41,9 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 class File extends AbstractEntity implements
     SortOrderInterface,
     FieldsInterface,
-    FieldReferenceInterface
+    FieldReferenceInterface,
+    ValidatorBuilderInterface,
+    ValidatorReferenceInterface
 {
     use SortOrderTrait;
 
@@ -44,12 +51,14 @@ class File extends AbstractEntity implements
      * @var UploadedFile loaded file
      */
     public $file;
-
     /**
      * @var FieldsHandler instance of field handler object
      */
     private $fieldHandler;
-
+    /**
+     * @var ValidatorBuilder instance
+     */
+    private $validatorBuilder;
     /**
      * @var FileTranslate[] array of buffered translates
      */
@@ -62,16 +71,6 @@ class File extends AbstractEntity implements
     {
         return '{{%common_files}}';
     }
-
-    public function rules()
-    {
-        return [
-            //
-            ['file', 'file', 'maxSize' => 1000000, 'uploadRequired' => 'Need epta!', 'skipOnEmpty' => true],
-            //['file', 'required'],
-        ];
-    }
-
 
     /**
      * @inheritdoc
@@ -180,6 +179,61 @@ class File extends AbstractEntity implements
         }
 
         return $this->field_reference;
+    }
+
+    /**
+     * Method config validators for this model
+     * @return void
+     */
+    public function prepareValidators()
+    {
+        $validators = $this->getValidatorBuilder()->build();
+
+        if (!$validators) {
+
+            $safeValidator = new SafeValidator();
+            $safeValidator->attributes = ['file'];
+            $this->validators[] = $safeValidator;
+
+            return;
+        }
+
+        foreach ($validators as $validator) {
+
+            if ($validator instanceof RequiredValidator && !$this->isNewRecord) continue;
+
+            $validator->attributes = ['file'];
+            $this->validators[] = $validator;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorBuilder()
+    {
+        if ($this->validatorBuilder) return $this->validatorBuilder;
+
+        $this->validatorBuilder = new ValidatorBuilder();
+        $this->validatorBuilder->setReferenceAble($this);
+
+        return $this->validatorBuilder;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidatorReference()
+    {
+        $fileBlock = $this->getFileBlock();
+
+        if (!$fileBlock->validator_reference) {
+            $fileBlock->validator_reference = ValidatorBuilder::generateValidatorReference();
+            $fileBlock->scenario = FilesBlock::SCENARIO_UPDATE;
+            $fileBlock->save(false);
+        }
+
+        return $fileBlock->validator_reference;
     }
 
     /**

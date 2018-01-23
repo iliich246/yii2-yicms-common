@@ -92,6 +92,8 @@ class FilesGroup extends AbstractGroup
             $this->fileEntity->setEntityBlock($this->fileBlock);
         }
 
+        $this->fileEntity->prepareValidators();
+
         $fileBlockId = $this->fileBlock->id;
 
         $languages = Language::getInstance()->usedLanguages();
@@ -103,6 +105,7 @@ class FilesGroup extends AbstractGroup
             $fileTranslate->setFileBlock($this->fileBlock);
             $fileTranslate->setFileEntity($this->fileEntity);
             $fileTranslate->setLanguage($language);
+
 
             if ($this->scenario == self::SCENARIO_UPDATE) {
                 $fileTranslate->loadFromDb();

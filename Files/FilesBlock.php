@@ -3,14 +3,11 @@
 namespace Iliich246\YicmsCommon\Files;
 
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
-use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
-use Iliich246\YicmsCommon\Fields\FieldsHandler;
-use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
@@ -100,7 +97,8 @@ class FilesBlock extends AbstractEntityBlock implements
         return array_merge(parent::rules(), [
             [['type', 'language_type'], 'integer'],
             [['visible', 'editable'], 'boolean'],
-            ['max_files', 'integer', 'min' => 0]
+            ['max_files', 'integer', 'min' => 0],
+            ['max_files', 'default', 'value' => 0]
         ]);
     }
 

@@ -130,11 +130,6 @@ $this->registerJs($js, $this::POS_READY);
                     <div class="col-sm-4 col-xs-12 ">
                         <?= $form->field($widget->devFilesGroup->filesBlock, 'editable')->checkbox() ?>
                     </div>
-                    <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_CREATE): ?>
-                        <div class="col-sm-4 col-xs-12 ">
-                            <?= $form->field($widget->devFilesGroup->filesBlock, 'createStandardFields')->checkbox() ?>
-                        </div>
-                    <?php endif; ?>
                 </div>
                 <?= SimpleTabsTranslatesWidget::widget([
                     'form' => $form,

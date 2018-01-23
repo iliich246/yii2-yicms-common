@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Fields;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\validators\SafeValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -11,7 +12,6 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
-use yii\validators\SafeValidator;
 
 /**
  * Class Field
@@ -47,12 +47,10 @@ class Field extends ActiveRecord implements
      * @var int keeps mode of field
      */
     private $mode = self::MODE_DEFAULT;
-
     /**
      * @var FieldTranslate[] array of field translations
      */
     private $translation = null;
-
     /**
      * @var FieldTemplate instance of field template
      */
@@ -61,7 +59,6 @@ class Field extends ActiveRecord implements
      * @var ValidatorBuilder instance
      */
     private $validatorBuilder;
-
     /**
      * @var FieldsNamesTranslatesDb[]
      */

@@ -14,6 +14,9 @@ use yii\db\ActiveRecord;
  */
 class AbstractEntity extends ActiveRecord
 {
+    const SCENARIO_CREATE = 0x00;
+    const SCENARIO_UPDATE = 0x01;
+
     /**
      * @var AbstractEntityBlock instance of entity block that keep this entity
      */
