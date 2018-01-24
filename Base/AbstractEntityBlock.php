@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -15,6 +16,10 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      * @var AbstractEntity[] that`s contains this block
      */
     private $entityBuffer = null;
+    /**
+     * @var bool sets true, when entity block is nonexistent (can`t be fetched from db)
+     */
+    private $isNonexistent = false;
 
     /**
      * @inheritdoc
@@ -30,6 +35,8 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      */
     public function getEntity()
     {
+        if ($this->isNonexistent) return (self::getNoExistentEntity());
+
         if (is_null($this->entityBuffer)) $this->fetchEntities();
 
         foreach($this->entityBuffer as $entity)
@@ -44,6 +51,8 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      */
     public function getEntities()
     {
+        if ($this->isNonexistent) return [];
+
         if (is_null($this->entityBuffer)) $this->fetchEntities();
 
         return $this->entityBuffer;
@@ -55,6 +64,8 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      */
     public function countEntities()
     {
+        if ($this->isNonexistent) return 0;
+
         if (is_null($this->entityBuffer)) $this->fetchEntities();
 
         return count($this->entityBuffer);
@@ -66,9 +77,38 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      */
     public function isEntities()
     {
+        if ($this->isNonexistent) return false;
+
         if (is_null($this->entityBuffer)) $this->fetchEntities();
 
         return !!$this->entityBuffer;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getInstance($templateReference, $programName)
+    {
+        $value = parent::getInstance($templateReference, $programName);
+
+        if ($value) return $value;
+
+        Yii::warning(
+            "Can`t fetch for " . static::className() . " name = $programName and templateReference = $templateReference",
+            __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException(
+                "YICMS_STRICT_MODE:
+                Can`t fetch for " . static::className() . " name = $programName and templateReference = $templateReference");
+        }
+
+        $value = new static();
+        $value->isNonexistent = true;
+
+        self::setToCache($templateReference, $programName, $value);
+
+        return $value;
     }
 
     public function delete()
@@ -93,6 +133,15 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      * @return ActiveQuery
      */
     abstract public function getEntityQuery();
+
+    /**
+     * Returns class of entity of concrete block
+     * @return string
+     */
+     protected static function getNoExistentEntity()
+     {
+         return static::getNoExistentEntity();
+     }
 
     /**
      * @inheritdoc

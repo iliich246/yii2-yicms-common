@@ -2,13 +2,14 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use yii\db\ActiveQuery;
 
 /**
  * Class FilesBlock
@@ -25,7 +26,6 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  *
  * @method File getEntity()
  * @method File[] getEntities()
- * @method File[] getIterator()
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -305,13 +305,27 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getEntityQuery()
     {
-        return File::find()
-            ->where([
-                'common_files_template_id' => $this->id,
-                'file_reference' => $this->currentFileReference,
-            ])
-            ->indexBy('id')
-            ->orderBy(['file_order' => SORT_ASC]);
+        if (CommonModule::isUnderDev() || $this->editable)
+            return File::find()
+                ->where([
+                    'common_files_template_id' => $this->id,
+                    'file_reference' => $this->currentFileReference,
+                ])
+                ->indexBy('id')
+                ->orderBy(['file_order' => SORT_ASC]);
+
+        return new ActiveQuery(File::className());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function getNoExistentEntity()
+    {
+        $file = new File();
+        $file->setNoExistent();
+
+        return $file;
     }
 
     /**

@@ -3,6 +3,7 @@
 /** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget*/
 
 $infoString = '';
+$optionsTemplate = '';
 
 if ($widget->fieldModel->isVisible())
     $infoString .= '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"

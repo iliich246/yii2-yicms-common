@@ -22,6 +22,10 @@ abstract class AbstractEntity extends ActiveRecord
      * @var AbstractEntityBlock instance of entity block that keep this entity
      */
     protected $entityBlock;
+    /**
+     * @var bool sets true, when entity is nonexistent (can`t be fetched from db)
+     */
+    private $isNonexistent = false;
 
     public function delete()
     {
@@ -33,8 +37,13 @@ abstract class AbstractEntity extends ActiveRecord
 
     }
 
-
-
+    /**
+     * Set`s entity as nonexistent
+     */
+    public function setNoExistent()
+    {
+        $this->isNonexistent = true;
+    }
 
     /**
      * Generates reference key

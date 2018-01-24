@@ -140,7 +140,8 @@ abstract class AbstractTemplate extends ActiveRecord implements
 
         $value = self::fetchTemplate($templateReference, $programName);
 
-        self::setToCache($templateReference, $programName, $value);
+        if ($value)
+            self::setToCache($templateReference, $programName, $value);
 
         return $value;
     }
@@ -204,7 +205,7 @@ abstract class AbstractTemplate extends ActiveRecord implements
      * @param self $value
      * @return void
      */
-    private static function setToCache($templateReference, $programName, $value)
+    protected static function setToCache($templateReference, $programName, $value)
     {
         static::$buffer[$templateReference][$programName] = $value;
     }
