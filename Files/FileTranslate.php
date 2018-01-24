@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Files;
 
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
@@ -27,6 +28,19 @@ class FileTranslate extends ActiveRecord
     public static function tableName()
     {
         return '{{%common_file_translates}}';
+    }
+
+    /**
+     * Returns true, if associated file physical existed
+     * @return bool
+     */
+    public function isPhysicalExisted()
+    {
+        $path = CommonModule::getInstance()->filesPatch . $this->system_name;
+
+        if (!file_exists($path) || is_dir($path)) return false;
+
+        return true;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Base;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -12,7 +13,7 @@ use yii\db\ActiveRecord;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class AbstractEntity extends ActiveRecord
+abstract class AbstractEntity extends ActiveRecord
 {
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
@@ -32,10 +33,8 @@ class AbstractEntity extends ActiveRecord
 
     }
 
-    public function getPath()
-    {
 
-    }
+
 
     /**
      * Generates reference key
@@ -81,4 +80,27 @@ class AbstractEntity extends ActiveRecord
     {
         $this->entityBlock = $entityBlock;
     }
+
+    /**
+     * Return entity block for this entity
+     * @return array|AbstractEntityBlock|null|ActiveRecord
+     */
+    public function getEntityBlock()
+    {
+        if ($this->entityBlock) return $this->entityBlock;
+
+        return $this->entityBlock = $this->entityBlockQuery()->one();
+    }
+
+    /**
+     * Return path to physical destination of this entity
+     * @return string
+     */
+    abstract public function getPath();
+
+    /**
+     * Returns query for find child entity block
+     * @return ActiveQuery
+     */
+    abstract public function entityBlockQuery();
 }

@@ -65,6 +65,15 @@ abstract class AbstractTranslateForm extends Model
     }
 
     /**
+     * Languages Db getter
+     * @return LanguagesDb
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
      * Return true, if current language is active for this model
      * @return bool
      */

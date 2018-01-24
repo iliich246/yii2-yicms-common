@@ -68,6 +68,7 @@ class CommonModule extends AbstractConfigurableModule implements
         //TODO: change namespace to correct $yicmsLocation
         $this->controllerMap['admin'] = 'app\yicms\Common\Controllers\AdminController';
         $this->controllerMap['admin-files'] = 'app\yicms\Common\Controllers\AdminFilesController';
+        $this->controllerMap['files'] = 'app\yicms\Common\Controllers\AdminFilesController';
 
         $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
 
@@ -98,7 +99,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $dev = -1;
         $admin = 0;
 
-        $user = CommonUser::findIdentity($dev);
+        $user = CommonUser::findIdentity($admin);
         Yii::$app->user->login($user);
 
         /** END OF DEBUG CODE */

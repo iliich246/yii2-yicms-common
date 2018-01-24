@@ -11,8 +11,17 @@ use Iliich246\YicmsCommon\Files\FilesGroup;
 <?php if ($filesGroup->scenario == FilesGroup::SCENARIO_CREATE): ?>
     <?= $form->field($filesGroup->fileEntity, "file")->fileInput()->label('load new file') ?>
 <?php else: ?>
+    <?php if ($filesGroup->fileEntity->getPath()): ?>
     <?= $form->field($filesGroup->fileEntity, "file")->fileInput()->label('replace existed file') ?>
-    <a href="#">Load existed file</a>
+        <a href="<?= $filesGroup->fileEntity->uploadUrl() ?>"
+           data-pjax="0">
+            Upload file "<?= $filesGroup->fileEntity->getFileName(null, true) ?>"
+        </a>
+        <br>
+        <br>
+    <?php else: ?>
+        <?= $form->field($filesGroup->fileEntity, "file")->fileInput()->label('load file') ?>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?= SimpleTabsTranslatesWidget::widget([

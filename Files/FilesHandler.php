@@ -29,7 +29,8 @@ class FilesHandler extends AbstractHandler
     {
         return FilesBlock::getInstance(
             $this->aggregator->getFileTemplateReference(),
-            $name
+            $name,
+            $this->aggregator->getFileReference()
         );
     }
 }

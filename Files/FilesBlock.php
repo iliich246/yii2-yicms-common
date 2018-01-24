@@ -23,6 +23,10 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  * @property bool $editable
  * @property bool $max_files
  *
+ * @method File getEntity()
+ * @method File[] getEntities()
+ * @method File[] getIterator()
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 class FilesBlock extends AbstractEntityBlock implements
@@ -39,11 +43,6 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
-
-    /**
-     * @var bool if true for this block will be created standard fields like filename
-     */
-    public $createStandardFields = true;
 
     /**
      * @var FilesNamesTranslatesDb[]
@@ -180,6 +179,18 @@ class FilesBlock extends AbstractEntityBlock implements
         }
 
         return parent::save($runValidation, $attributes);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getInstance($templateReference, $programName, $currentFieldReference = null)
+    {
+        $value = parent::getInstance($templateReference, $programName);
+
+        if (!$value->currentFileReference) $value->currentFileReference = $currentFieldReference;
+
+        return $value;
     }
 
     /**

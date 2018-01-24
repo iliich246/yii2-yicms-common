@@ -188,13 +188,16 @@ class FilesGroup extends AbstractGroup
                 $this->fileEntity->file->saveAs($path . $name);
 
                 $this->fileEntity->system_name = $name;
-                $this->fileEntity->original_name = $this->fileEntity->file->baseName;
+                $this->fileEntity->original_name =
+                    $this->fileEntity->file->baseName;
                 $this->fileEntity->size = $this->fileEntity->file->size;
                 $this->fileEntity->type = FileHelper::getMimeType($path . $name);
             }
-
-            $this->fileEntity->save();
         }
+
+//        if (CommonModule::isUnderDev())
+//            $this->fileEntity->editable = $this->ed
+        $this->fileEntity->save();
 
         foreach ($this->translateForms as $fileTranslateForm) {
             if ($this->scenario == self::SCENARIO_CREATE)
@@ -215,7 +218,8 @@ class FilesGroup extends AbstractGroup
                     $fileTranslateForm->translatedFile->saveAs($path . $name);
 
                     $fileTranslateForm->getCurrentTranslateDb()->system_name = $name;
-                    $fileTranslateForm->getCurrentTranslateDb()->original_name = $fileTranslateForm->translatedFile->baseName;
+                    $fileTranslateForm->getCurrentTranslateDb()->original_name =
+                        $fileTranslateForm->translatedFile->baseName;
                     $fileTranslateForm->getCurrentTranslateDb()->size = $fileTranslateForm->translatedFile->size;
                     $this->fileEntity->type = FileHelper::getMimeType($path . $name);
                 }

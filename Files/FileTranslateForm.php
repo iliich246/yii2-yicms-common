@@ -103,6 +103,15 @@ class FileTranslateForm extends AbstractTranslateForm
     }
 
     /**
+     * File getter
+     * @return File
+     */
+    public function getFileEntity()
+    {
+        return $this->fileEntity;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getKey()

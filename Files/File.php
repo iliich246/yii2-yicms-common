@@ -2,10 +2,12 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use yii\validators\RequiredValidator;
-use yii\validators\SafeValidator;
+use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
+use yii\validators\SafeValidator;
+use yii\validators\RequiredValidator;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
@@ -75,6 +77,26 @@ class File extends AbstractEntity implements
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return [
+            'editable' => 'Editable(dev)'
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['editable', 'visible'], 'boolean']
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -88,7 +110,7 @@ class File extends AbstractEntity implements
      */
     public function getFileBlock()
     {
-        return $this->entityBlock;
+        return $this->getEntityBlock();
     }
 
     /**
@@ -101,26 +123,84 @@ class File extends AbstractEntity implements
 
     /**
      * Return translated file name
-     * @param LanguagesDb|false $language
-     * @return int
+     * @param LanguagesDb|null $language
+     * @param bool|false $addExtension
+     * @return bool|string
      * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
-    public function getFileName(LanguagesDb $language = null)
+    public function getFileName(LanguagesDb $language = null, $addExtension = false)
     {
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         $fileTranslate = $this->getFileTranslate($language);
 
+        if ($this->getFileBlock()->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
+            $extension = strrchr($this->system_name, '.');
+        else
+            $extension = strrchr($fileTranslate->system_name, '.');
+
         if ($fileTranslate && trim($fileTranslate->filename))
-            return $fileTranslate->filename;
+            return !$addExtension ? $fileTranslate->filename :
+                                   $fileTranslate->filename . $extension;
 
         if ($this->getFileBlock()->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
-            return $this->original_name;
+            return !$addExtension ? $this->original_name :
+                                   $this->original_name . $extension;
 
         if ($fileTranslate)
-            return $fileTranslate->original_name;
+            return !$addExtension ? $fileTranslate->original_name :
+                                   $fileTranslate->original_name . $extension;
 
         return false;
+    }
+
+    /**
+     * Returns path of file in correct translate
+     * @param LanguagesDb|null $language
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getPath(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $fileBlock = $this->getFileBlock();
+        $fileTranslate = $this->getFileTranslate($language);
+
+        if ($fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
+            $systemName = $this->system_name;
+        else {
+            if (!$fileTranslate) return false;
+
+            $systemName = $fileTranslate->system_name;
+        }
+
+        $path = CommonModule::getInstance()->filesPatch . $systemName;
+
+        if (!file_exists($path) || is_dir($path)) return false;
+
+        return $path;
+    }
+
+    /**
+     * Returns link for upload this file entity
+     * @param LanguagesDb|null $language
+     * @param bool|true $onlyPhysicalExistedFiles
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function uploadUrl(LanguagesDb $language= null, $onlyPhysicalExistedFiles = true)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        if ($onlyPhysicalExistedFiles && !$this->getPath()) return false;
+
+        return Url::toRoute([
+            '/common/files/upload-file',
+            'fileBlockId' => $this->getFileBlock()->id,
+            'fileId' => $this->id,
+            'language' => $language->id
+        ]);
     }
 
     /**
@@ -130,7 +210,7 @@ class File extends AbstractEntity implements
      */
     private function getFileTranslate(LanguagesDb $language)
     {
-        if ($this->fileTranslates[$language->id]) return $this->fileTranslates[$language->id];
+        if (isset($this->fileTranslates[$language->id])) return $this->fileTranslates[$language->id];
 
         $this->fileTranslates[$language->id] = FileTranslate::find()->where([
             'common_file_id' => $this->id,
@@ -138,6 +218,16 @@ class File extends AbstractEntity implements
         ])->one();
 
         return $this->fileTranslates[$language->id];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function entityBlockQuery()
+    {
+        return FilesBlock::find()->where([
+            'id' => $this->common_files_template_id
+        ]);
     }
 
     /**
