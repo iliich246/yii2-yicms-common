@@ -171,10 +171,10 @@ class File extends AbstractEntity implements
 
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
-        $fileBlock = $this->getFileBlock();
+        $filesBlock = $this->getFileBlock();
         $fileTranslate = $this->getFileTranslate($language);
 
-        if ($fileBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
+        if ($filesBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
             $systemName = $this->system_name;
         else {
             if (!$fileTranslate) return false;

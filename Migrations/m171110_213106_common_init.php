@@ -321,6 +321,7 @@ class m171110_213106_common_init extends Migration
             'field_reference' => $this->string(),
             'system_name' => $this->string(),
             'original_name' => $this->string(),
+            'image_order' => $this->integer(),
             'size' => $this->integer(),
             'type' => $this->string(),
             'editable' => $this->boolean(),
@@ -355,8 +356,6 @@ class m171110_213106_common_init extends Migration
             'type' => $this->string(),
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
-            'created_at' => $this->integer(),
-            'updated_at' => $this->integer(),
         ]);
 
         $this->addForeignKey('common_image_translates-to-common_images',

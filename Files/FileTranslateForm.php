@@ -20,7 +20,6 @@ class FileTranslateForm extends AbstractTranslateForm
      * @var string value of translated field
      */
     public $filename;
-
     /**
      * @var UploadedFile
      */
@@ -153,6 +152,8 @@ class FileTranslateForm extends AbstractTranslateForm
         $this->currentTranslateDb->filename = null;
         $this->currentTranslateDb->size = null;
         $this->currentTranslateDb->type = null;
+        $this->currentTranslateDb->editable = true;
+        $this->currentTranslateDb->visible = true;
 
         return $this->currentTranslateDb->save();
     }

@@ -24,22 +24,18 @@ class FilesGroup extends AbstractGroup
      * @var string fileTemplateReference value for current group
      */
     protected $fileTemplateReference;
-
-    /**
-     * @var FilesBlock instance
-     */
-    public $fileBlock;
-
     /**
      * @var string current fileReference key
      */
     public $fileReference;
-
+    /**
+     * @var FilesBlock instance
+     */
+    public $fileBlock;
     /**
      * @var File instance for this group
      */
     public $fileEntity;
-
     /**
      * @var FileTranslateForm[]
      */
@@ -56,21 +52,21 @@ class FilesGroup extends AbstractGroup
     }
 
     /**
-     * Sets current FileBlock
-     * @param FilesBlock $filesBlock
-     */
-    public function setFileBlock(FilesBlock $filesBlock)
-    {
-        $this->fileBlock = $filesBlock;
-    }
-
-    /**
      * Sets current fileReference key
      * @param $fileReference
      */
     public function setFileReference($fileReference)
     {
         $this->fileReference = $fileReference;
+    }
+
+    /**
+     * Sets current FileBlock
+     * @param FilesBlock $filesBlock
+     */
+    public function setFileBlock(FilesBlock $filesBlock)
+    {
+        $this->fileBlock = $filesBlock;
     }
 
     /**
@@ -105,7 +101,6 @@ class FilesGroup extends AbstractGroup
             $fileTranslate->setFileBlock($this->fileBlock);
             $fileTranslate->setFileEntity($this->fileEntity);
             $fileTranslate->setLanguage($language);
-
 
             if ($this->scenario == self::SCENARIO_UPDATE) {
                 $fileTranslate->loadFromDb();
@@ -243,7 +238,7 @@ class FilesGroup extends AbstractGroup
     }
 
     /**
-     * Return instance of File entity that that necessarily exists in the database
+     * Return instance of File entity that necessarily exists in the database
      * @return File
      */
     public function getFileExistedInDbEntity()

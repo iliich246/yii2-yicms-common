@@ -1,9 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * Project: yicms
- * User: iliich246
- * Date: 25.01.2018
- * Time: 21:11
- * File: translate_able_type.php
- */
+
+use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
+
+/** @var $this yii\web\View */
+/** @var $imagesGroup \Iliich246\YicmsCommon\Images\ImagesGroup */
+/** @var $imagesBlock \Iliich246\YicmsCommon\Images\ImagesBlock */
+
+?>
+
+<?= SimpleTabsTranslatesWidget::widget([
+    'form' => $form,
+    'translateModels' => $imagesGroup->translateForms,
+    'data' => [$imagesGroup->imagesBlock, $imagesGroup],
+])
+?>

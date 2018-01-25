@@ -44,6 +44,10 @@ class CommonModule extends AbstractConfigurableModule implements
                         'web' . DIRECTORY_SEPARATOR .
                         'files' . DIRECTORY_SEPARATOR;
 
+    public $imagesPath = DIRECTORY_SEPARATOR .
+                        'web' . DIRECTORY_SEPARATOR .
+                        'images' . DIRECTORY_SEPARATOR;
+
     /** @inheritdoc */
     public $configurable = [
         'defaultLanguage',
@@ -72,6 +76,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['files'] = 'app\yicms\Common\Controllers\AdminFilesController';
 
         $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
+        $this->imagesPath = Yii::$app->basePath . $this->imagesPath;
 
         parent::init();
     }
