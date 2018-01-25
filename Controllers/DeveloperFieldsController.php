@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
@@ -30,7 +31,6 @@ class DeveloperFieldsController extends Controller
         return [
 //            'root' => [
 //                'class' => DevFilter::className(),
-//                'except' => ['change-field-editable'],
 //            ],
         ];
     }
@@ -251,33 +251,26 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
-     * This action invert field visible value
+     * This action invert field editable value via ajax without render of template
      * @param $fieldTemplateReference
      * @param $fieldId
-     * @return string
+     * @return bool
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
-    public function actionChangeFieldVisible($fieldTemplateReference, $fieldId)
+    public function actionChangeFieldEditableAjax($fieldTemplateReference, $fieldId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
-
-        if (!CommonModule::isUnderDev() && !CommonModule::isUnderAdmin()) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException();
 
         /** @var Field $field */
         $field = Field::findOne($fieldId);
 
         if (!$field) throw new BadRequestHttpException('Wrong fieldId = ' . $fieldId);
 
-        $field->visible = !$field->visible;
-        $field->save(false);
+        $field->editable = !$field->editable;
 
-        $fieldsGroup = new FieldsGroup();
-        $fieldsGroup->initializePjax($fieldTemplateReference, $field);
+        if ($field->save(false)) return true;
 
-        return $this->render(CommonModule::getInstance()->yicmsLocation . '/Common/Views/pjax/fields', [
-            'fieldsGroup' => $fieldsGroup,
-            'fieldTemplateReference' => $fieldTemplateReference,
-            'success' => true,
-        ]);
+        throw new CommonException('Can`t update field');
     }
 }

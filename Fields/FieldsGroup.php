@@ -77,6 +77,15 @@ class FieldsGroup extends AbstractGroup
     }
 
     /**
+     * Returns current fields template reference
+     * @return string
+     */
+    public function getCurrentFieldTemplateReference()
+    {
+        return $this->referenceAble->getFieldTemplateReference();
+    }
+
+    /**
      * @inheritdoc
      */
     public function initialize()
@@ -258,21 +267,23 @@ class FieldsGroup extends AbstractGroup
     /**
      * @inheritdoc
      */
-    public function render(ActiveForm $form)
+    public function render(ActiveForm $form, $isModal = false)
     {
         $result = '';
 
         if ($this->translateFormsArray) {
             $result = FieldsRenderWidget::widget([
                 'form' => $form,
-                'fieldsArray' => $this->translateFormsArray
+                'fieldsArray' => $this->translateFormsArray,
+                'isModal' => $isModal,
             ]);
         }
 
         if ($this->singleFields) {
             $result .= FieldsRenderWidget::widget([
                 'form' => $form,
-                'fieldsArray' => [$this->singleFields]
+                'fieldsArray' => [$this->singleFields],
+                'isModal' => $isModal
             ]);
         }
 

@@ -5,7 +5,7 @@
     var fieldPjaxContainer = $('#edit-fields-container');
     var homeUrl = $(fieldPjaxContainer).data('homeUrl');
     var fieldTemplateReference = $(fieldPjaxContainer).data('fieldTemplateReference');
-    var changeVisibleUrl = homeUrl + '/common/dev-fields/change-field-visible';
+    var changeVisibleUrl = homeUrl + '/common/admin-fields/change-field-visible';
     var changeEditableUrl = homeUrl + '/common/dev-fields/change-field-editable';
 
     $(document).on('click', '.field-visible-link', function(e) {

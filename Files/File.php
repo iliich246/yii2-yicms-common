@@ -130,6 +130,11 @@ class File extends AbstractEntity implements
      */
     public function getFileName(LanguagesDb $language = null, $addExtension = false)
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev()) return 'None existent file';
+            return false;
+        }
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         $fileTranslate = $this->getFileTranslate($language);
@@ -162,6 +167,8 @@ class File extends AbstractEntity implements
      */
     public function getPath(LanguagesDb $language = null)
     {
+        if ($this->isNonexistent) return false;
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         $fileBlock = $this->getFileBlock();
@@ -191,6 +198,8 @@ class File extends AbstractEntity implements
      */
     public function uploadUrl(LanguagesDb $language= null, $onlyPhysicalExistedFiles = true)
     {
+        if ($this->isNonexistent) return false;
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         if ($onlyPhysicalExistedFiles && !$this->getPath()) return false;

@@ -25,7 +25,7 @@ abstract class AbstractEntity extends ActiveRecord
     /**
      * @var bool sets true, when entity is nonexistent (can`t be fetched from db)
      */
-    private $isNonexistent = false;
+    protected $isNonexistent = false;
 
     public function delete()
     {

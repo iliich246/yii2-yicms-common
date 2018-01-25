@@ -22,6 +22,11 @@ class FieldsRenderWidget extends Widget
     public $fieldsArray;
 
     /**
+     * @var bool if true widget will render in modal window mode
+     */
+    public $isModal;
+
+    /**
      * @inheritdoc
      */
     public function run()
@@ -32,7 +37,7 @@ class FieldsRenderWidget extends Widget
         if (count($this->fieldsArray) == 1)
             return $this->render('single_fields',[
                 'widget' => $this,
-                'fieldsArray' => current($this->fieldsArray)
+                'fieldsArray' => current($this->fieldsArray),
             ]);
 
         return $this->render('tabs',[

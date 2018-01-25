@@ -48,30 +48,36 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dLabel">';
 
+    $widget->isModal ? $fieldVisibleClass = 'field-visible-link-modal' : $fieldVisibleClass = 'field-visible-link';
+
+
     if ($widget->fieldModel->isVisible())
         $optionsTemplate .=
             '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
-             class="field-visible-link">
+             class="' . $fieldVisibleClass . '">
             <p>Change to invisible</p>
         </li>';
     else
         $optionsTemplate .=
             '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
-             class="field-visible-link">
+             class="' . $fieldVisibleClass . '">
             <p>Change to visible</p>
         </li>';
 
     if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
+
+        $widget->isModal ? $fieldEditableClass = 'field-editable-link-modal' : $fieldEditableClass = 'field-editable-link';
+
         if ($widget->fieldModel->isEditable())
             $optionsTemplate .=
                 '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
-                 class="field-editable-link">
+                 class="' . $fieldEditableClass . '">
                 <p>Change to not editable(Dev)</p>
             </li>';
         else
             $optionsTemplate .=
                 '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
-                 class="field-editable-link">
+                 class="' . $fieldEditableClass . '">
                  <p>Change to editable(Dev)</p>
             </li>';
     }
