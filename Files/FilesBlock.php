@@ -2,14 +2,14 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
-use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
-use yii\db\ActiveQuery;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 
 /**
  * Class FilesBlock
@@ -45,15 +45,13 @@ class FilesBlock extends AbstractEntityBlock implements
     const LANGUAGE_TYPE_SINGLE = 1;
 
     /**
-     * @var FilesNamesTranslatesDb[]
+     * @var FilesNamesTranslatesDb[] buffer
      */
     private $fileNamesTranslates = [];
-
     /**
      * @var string fileReference for what files group must be fetched
      */
     private $currentFileReference;
-
     /**
      * @inheritdoc
      */
@@ -202,7 +200,16 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     *
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function delete()
+    {
+
+    }
+
+    /**
+     * Renames parent method on concrete name
      * @return File
      */
     public function getFile()
@@ -211,21 +218,12 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     *
+     * Renames parent method on concrete name
      * @return File[]
      */
     public function getFiles()
     {
         return $this->getEntities();
-    }
-
-    /**
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    public function delete()
-    {
-
     }
 
     /**
@@ -238,7 +236,10 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * @inheritdoc
+     * Returns translated name of file block
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getName(LanguagesDb $language = null)
     {

@@ -2,11 +2,15 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use yii\db\ActiveQuery;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
-use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 
 /**
  * Class ImagesBlock
@@ -50,6 +54,14 @@ class ImagesBlock extends AbstractEntityBlock implements
      * @var FieldsHandler instance of field handler object
      */
     private $fieldHandler;
+    /**
+     * @var ImagesNamesTranslatesDb[] buffer
+     */
+    private $imageNamesTranslates = [];
+    /**
+     * @var string fileReference for what files group must be fetched
+     */
+    private $currentImageReference;
     /**
      * @inheritdoc
      */
@@ -194,6 +206,99 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Renames parent method on concrete name
+     * @return Image
+     */
+    public function getImage()
+    {
+        return $this->getEntity();
+    }
+
+    /**
+     * Renames parent method on concrete name
+     * @return Image[]
+     */
+    public function getImages()
+    {
+        return $this->getEntities();
+    }
+
+    /**
+     * Sets current image reference
+     * @param $imageReference
+     */
+    public function setImageReference($imageReference)
+    {
+        $this->currentImageReference = $imageReference;
+    }
+
+    /**
+     * Returns translated name of image block
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getName(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $imageNameTranslate = $this->getImageNameTranslate($language);
+
+        if ($imageNameTranslate && trim($imageNameTranslate->name) && CommonModule::isUnderAdmin())
+            return $imageNameTranslate->name;
+
+        if ((!$imageNameTranslate || !trim($imageNameTranslate->name)) && CommonModule::isUnderAdmin())
+            return $this->program_name;
+
+        if ($imageNameTranslate && trim($imageNameTranslate->name) && CommonModule::isUnderDev())
+            return $imageNameTranslate->name . ' (' . $this->program_name .')';
+
+        if ((!$imageNameTranslate || !trim($imageNameTranslate->name)) && CommonModule::isUnderDev())
+            return 'No translate for file block \'' . $this->program_name . '\'';
+
+        return 'Can`t reach this place if all correct';
+    }
+
+    /**
+     * Returns translated description of image block
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getDescription(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $imageNameTranslate = $this->getImageNameTranslate($language);
+
+        if ($imageNameTranslate)
+            return $imageNameTranslate->description;
+
+        return false;
+    }
+
+    /**
+     * Returns buffered name translate db
+     * @param LanguagesDb|null $language
+     * @return ImagesNamesTranslatesDb
+     */
+    private function getImageNameTranslate(LanguagesDb $language)
+    {
+        if (!isset($this->imageNamesTranslates[$language->id])) {
+
+            $data = ImagesNamesTranslatesDb::find()->where([
+                'common_images_template_id' => $this->id,
+                'common_language_id' => $language->id,
+            ])->one();
+
+            if (!$data) $this->imageNamesTranslates[$language->id] = null;
+            else $this->imageNamesTranslates[$language->id] = $data;
+        }
+
+        return $this->imageNamesTranslates[$language->id];
+    }
+
+    /**
      * @inheritdoc
      */
     public function getFieldHandler()
@@ -228,11 +333,22 @@ class ImagesBlock extends AbstractEntityBlock implements
         //return $this->field_reference;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getEntityQuery()
     {
-        //TODO: implement this
-    }
+        if (CommonModule::isUnderDev() || $this->editable)
+            return Image::find()
+                ->where([
+                    'common_images_templates_id' => $this->id,
+                    'image_reference' => $this->currentImageReference
+                ])
+                ->indexBy('id')
+                ->orderBy(['image_order' => SORT_ASC]);
 
+        return new ActiveQuery(Image::className());
+    }
 
     /**
      * @inheritdoc
