@@ -13,17 +13,29 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
  */
 class ImagesDevModalWidget extends Widget
 {
-    /** @var DevImagesGroup  */
+    /**
+     * @var DevImagesGroup
+     */
     public $devImagesGroup;
-    /** @var bool true means that widget initialized after success data save in DevImagesGroup */
+    /**
+     * @var bool true means that widget initialized after success data save in DevImagesGroup
+     */
     public $dataSaved = false;
-    /** @var string part of link for delete images block template */
+    /**
+     * @var string part of link for delete images block template
+     */
     public $deleteLink;
-    /** @var string keeps current form action  */
+    /**
+     * @var string keeps current form action
+     */
     public $action;
-    /** @var FieldTemplate[] array of translate able fields for current image block template  */
+    /**
+     * @var FieldTemplate[] array of translate able fields for current image block template
+     */
     public $fieldTemplatesTranslatable;
-    /** @var FieldTemplate[] array of single fields for current image block template  */
+    /**
+     * @var FieldTemplate[] array of single fields for current image block template
+     */
     public $fieldTemplatesSingle;
 
     /**

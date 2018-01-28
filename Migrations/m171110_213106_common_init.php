@@ -403,7 +403,7 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_images_thumbnails}}', [
             'id' => $this->primaryKey(),
             'common_images_templates_id' => $this->integer(),
-            'program_mane' => $this->string(50),
+            'program_name' => $this->string(50),
             'divider' => $this->smallInteger(),
             'quality' => $this->smallInteger(),
         ]);

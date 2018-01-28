@@ -2,16 +2,18 @@
     var addImage = $('.add-image-block');
 
     var homeUrl = $(addImage).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-images/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-images/load-modal';
-    var updateImageListUrl = homeUrl + '/common/dev-images/update-images-list-container';
-    var imageTemplateUpUrl = homeUrl + '/common/dev-images/image-template-up-order';
+
+    var emptyModalUrl        = homeUrl + '/common/dev-images/empty-modal';
+    var loadModalUrl         = homeUrl + '/common/dev-images/load-modal';
+    var updateImageListUrl   = homeUrl + '/common/dev-images/update-images-list-container';
+    var imageTemplateUpUrl   = homeUrl + '/common/dev-images/image-template-up-order';
     var imageTemplateDownUrl = homeUrl + '/common/dev-images/image-template-down-order';
+    var showThumbnailsList   = homeUrl + '/common/dev-images/show-thumbnails-list';
 
     var imageTemplateReference = $(addImage).data('imageTemplateReference');
-    var pjaxContainerName = '#' + $(addImage).data('pjaxContainerName');
-    var pjaxImagesModalName = '#' + $(addImage).data('imagesModalName');
-    var imageLoaderScr = $(addImage).data('loaderImageSrc');
+    var pjaxContainerName      = '#' + $(addImage).data('pjaxContainerName');
+    var pjaxImagesModalName    = '#' + $(addImage).data('imagesModalName');
+    var imageLoaderScr         = $(addImage).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxImagesModalName)
@@ -81,6 +83,20 @@
             timeout: 2500
         });
     });
+
+    $(document).on('click', '.config-thumbnails-button', function() {
+
+        $.pjax({
+            url: showThumbnailsList + '?imageTemplateId=' + $(this).data('imageTemplateId'),
+            container: '#images-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+
 
     function loadModal(imageTemplate) {
         $.pjax({

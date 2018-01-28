@@ -51,6 +51,14 @@ $js = <<<JS
             });
         }
     });
+
+    $(document).on('click', '.config-thumbnails-button', function() {
+
+        var imageTemplateId = $(this).data('imageTemplateId');
+
+
+
+    });
 })();
 JS;
 
@@ -168,6 +176,11 @@ $this->registerJs($js, $this::POS_READY);
                        class="btn btn-primary">
                         View image block fields
                     </a>
+
+                    <p class="btn btn-primary config-thumbnails-button"
+                       data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>">
+                        Config images thumbnails
+                    </p>
 
                     <hr>
 

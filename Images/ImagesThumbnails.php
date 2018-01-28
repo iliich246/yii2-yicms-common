@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
  * Class ImagesThumbnails
  *
  * @property integer $id
- * @property integer $common_images_template_id
+ * @property integer $common_images_templates_id
  * @property string $program_name
  * @property integer $divider
  * @property integer $quality
@@ -35,8 +35,8 @@ class ImagesThumbnails extends ActiveRecord
     {
         return [
             'program_name' => 'Program name',
-            'divider' => 'Divider',
-            'quality' => 'Quality'
+            'divider'      => 'Divider',
+            'quality'      => 'Quality'
         ];
     }
 
@@ -64,7 +64,7 @@ class ImagesThumbnails extends ActiveRecord
         if (!$this->hasErrors()) {
 
             $query = static::find()->where([
-                'common_images_template_id' => $this->common_images_template_id,
+                'common_images_templates_id' => $this->common_images_templates_id,
                 'program_name' => $this->program_name
             ]);
 

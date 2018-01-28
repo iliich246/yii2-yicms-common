@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
+use Iliich246\YicmsCommon\Images\ImagesThumbnails;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -115,7 +116,7 @@ class DeveloperImagesController extends Controller
 
             return  $this->render('/pjax/update-images-list-container', [
                 'imageTemplateReference' => $imageTemplateReference,
-                'imagesBlocks' => $imagesBlocks,
+                'imagesBlocks'           => $imagesBlocks,
             ]);
 
         }
@@ -151,7 +152,7 @@ class DeveloperImagesController extends Controller
 
         return  $this->render('/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
-            'imagesBlocks' => $imagesBlocks,
+            'imagesBlocks'           => $imagesBlocks,
         ]);
     }
 
@@ -181,7 +182,7 @@ class DeveloperImagesController extends Controller
 
         return  $this->render('/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
-            'imagesBlocks' => $imagesBlocks,
+            'imagesBlocks'           => $imagesBlocks,
         ]);
     }
 
@@ -211,7 +212,7 @@ class DeveloperImagesController extends Controller
 
         return  $this->render('/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
-            'imagesBlocks' => $imagesBlocks,
+            'imagesBlocks'           => $imagesBlocks,
         ]);
     }
 
@@ -243,7 +244,7 @@ class DeveloperImagesController extends Controller
 
             return FieldsDevModalWidget::widget([
                 'devFieldGroup' => $devFieldGroup,
-                'dataSaved' => true,
+                'dataSaved'     => true,
             ]);
         }
 
@@ -258,10 +259,60 @@ class DeveloperImagesController extends Controller
             ->all();
 
         return $this->render('/developer/show-image-block-fields', [
-            'imagesBlock' => $imagesBlock,
-            'devFieldGroup' => $devFieldGroup,
+            'imagesBlock'                => $imagesBlock,
+            'devFieldGroup'              => $devFieldGroup,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle,
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
         ]);
     }
+
+    /**
+     * Render list of thumbnails configurators for selected imageTemplateId
+     * @param $imageTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionShowThumbnailsList($imageTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('zzz');
+        /** @var ImagesBlock $imagesBlock */
+        $imagesBlock = ImagesBlock::findOne($imageTemplateId);
+
+        if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId');
+
+        $thumbnails = ImagesThumbnails::find()->where([
+            'common_images_templates_id' => $imageTemplateId
+        ])->all();
+
+        return $this->renderAjax('@yicms-common/Images/views/images_thumbnails_list', [
+            'thumbnails'   => $thumbnails,
+            'imagesBlock'  => $imagesBlock,
+        ]);
+    }
+
+    public function actionAddNewThumbnailConfigurator($imageTemplateId)
+    {
+        /** @var ImagesBlock $imagesBlock */
+        $imagesBlock = ImagesBlock::findOne($imageTemplateId);
+
+        if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId');
+
+        $thumbnail = new ImagesThumbnails();
+
+        //if ($this->lo)
+
+    }
+
+    public function actionUpdateThumbnailConfigurator($thumbnailId)
+    {
+
+    }
+
+    public function actionDeleteThumbnailConfigurator($thumbnailId)
+    {
+
+    }
+
+
 }
