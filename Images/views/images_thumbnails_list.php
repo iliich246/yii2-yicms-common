@@ -14,12 +14,49 @@ $js = <<<JS
 
     var homeUrl = $(thumbnailForm).data('homeUrl');
 
+    var pjaxContainer   = $(thumbnailForm).closest('.pjax-container');
+    var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
+    var returnUrl       = $(thumbnailForm).data('returnUrl');
+
     var addNewThumbnailConfiguratorUrl = homeUrl + '/common/dev-images/add-new-thumbnail-configurator';
-    var updateThubnailConfiguratorUrl  = homeUrl + '/common/dev-images/update-thumbnail-configurator';
+    var updateThumbnailConfiguratorUrl = homeUrl + '/common/dev-images/update-thumbnail-configurator';
 
+    var imageTemplateId = $(thumbnailForm).data('imageTemplateId');
 
+    $('.thumbnail-list-form-back').on('click', function(){
+        $(pjaxContainerId).data('returnUrl', returnUrl);
 
+         $.pjax({
+             url: returnUrl,
+             container: pjaxContainerId,
+             scrollTo: false,
+             push: false,
+             type: "POST",
+             timeout: 2500,
+         });
+    });
 
+    $('.add-thumbnail-button').on('click', function() {
+         $.pjax({
+             url: addNewThumbnailConfiguratorUrl + '?imageTemplateId=' + imageTemplateId,
+             container: pjaxContainerId,
+             scrollTo: false,
+             push: false,
+             type: "POST",
+             timeout: 2500,
+         });
+    });
+
+    $('.thumbnail-block-item').on('click', function() {
+         $.pjax({
+             url: updateThumbnailConfiguratorUrl + '?thumbnailId=' + $(this).data('thumbnailId'),
+             container: pjaxContainerId,
+             scrollTo: false,
+             push: false,
+             type: "POST",
+             timeout: 2500,
+         });
+    });
 })();
 JS;
 
@@ -33,22 +70,20 @@ $this->registerJs($js);
         <h3 class="modal-title" id="myModalLabel">
             Thumbnails
 
-            <span class="glyphicon glyphicon-arrow-left validator-form-back" aria-hidden="true" style="float: right;margin-right: 20px"></span>
+            <span class="glyphicon glyphicon-arrow-left thumbnail-list-form-back" aria-hidden="true" style="float: right;margin-right: 20px"></span>
         </h3>
 
     </div>
     <div class="modal-body thumbnails-modal-body"
          data-home-url="<?= \yii\helpers\Url::base() ?>"
-         data-file-block-id="<?= 1?>"
-         data-file-reference="<?= 1 ?>"
+         data-image-template-id="<?= $imagesBlock->id ?>"
          data-return-url="<?= \yii\helpers\Url::toRoute(
              [
-                 'files-list',
-                 'fileBlockId' =>1,
-                 'fileReference' => 1,
+                 '/common/dev-images/load-modal',
+                 'imageTemplateId' => $imagesBlock->id,
              ]) ?>"
     >
-        <button class="btn btn-primary add-file-button">
+        <button class="btn btn-primary add-thumbnail-button">
             Add new thumbnail configurator
         </button>
         <hr>

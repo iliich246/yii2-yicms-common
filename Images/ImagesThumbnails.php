@@ -21,6 +21,11 @@ class ImagesThumbnails extends ActiveRecord
     const SCENARIO_UPDATE = 0x01;
 
     /**
+     * @var ImagesBlock instance associated with this thumbnail
+     */
+    private $imagesBlock;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -35,9 +40,43 @@ class ImagesThumbnails extends ActiveRecord
     {
         return [
             'program_name' => 'Program name',
-            'divider'      => 'Divider',
-            'quality'      => 'Quality'
+            'divider'      => 'Divider (digit 1 to infinity)',
+            'quality'      => 'Quality (in percents)'
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'program_name', 'divider', 'quality'
+            ],
+            self::SCENARIO_UPDATE => [
+                'program_name', 'divider', 'quality'
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->scenario == self::SCENARIO_CREATE)
+            $this->common_images_templates_id = $this->imagesBlock->id;
+
+        return parent::save($runValidation = true, $attributeNames = null);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete()
+    {
+        parent::delete();
     }
 
     /**
@@ -46,6 +85,12 @@ class ImagesThumbnails extends ActiveRecord
     public function rules()
     {
         return [
+            ['divider', 'integer', 'min' => 1, 'tooSmall' => 'Value can`t be less than 1'],
+            [
+                'quality', 'integer',
+                'min' => 1, 'tooSmall' => 'Value can`t be less than 1',
+                'max' => 100, 'tooBig' => 'Value can`t be more than 100'
+            ],
             ['program_name', 'required', 'message' => 'Obligatory input field'],
             ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
             ['program_name', 'validateProgramName'],
@@ -75,5 +120,14 @@ class ImagesThumbnails extends ActiveRecord
 
             if ($count)$this->addError($attribute, 'Thumbnail with same name already existed');
         }
+    }
+
+    /**
+     * Images Block setter
+     * @param ImagesBlock $imagesBlock
+     */
+    public function setImagesBlock(ImagesBlock $imagesBlock)
+    {
+        $this->imagesBlock = $imagesBlock;
     }
 }

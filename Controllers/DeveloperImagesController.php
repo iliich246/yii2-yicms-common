@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
-use Iliich246\YicmsCommon\Images\ImagesThumbnails;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,6 +13,7 @@ use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Iliich246\YicmsCommon\Images\DevImagesGroup;
+use Iliich246\YicmsCommon\Images\ImagesThumbnails;
 use Iliich246\YicmsCommon\Images\ImagesDevModalWidget;
 
 /**
@@ -275,7 +275,7 @@ class DeveloperImagesController extends Controller
      */
     public function actionShowThumbnailsList($imageTemplateId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('zzz');
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
         /** @var ImagesBlock $imagesBlock */
         $imagesBlock = ImagesBlock::findOne($imageTemplateId);
 
@@ -291,28 +291,108 @@ class DeveloperImagesController extends Controller
         ]);
     }
 
+    /**
+     * Add new thumbnail configurator
+     * @param $imageTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionAddNewThumbnailConfigurator($imageTemplateId)
     {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
         /** @var ImagesBlock $imagesBlock */
         $imagesBlock = ImagesBlock::findOne($imageTemplateId);
 
-        if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId');
+        if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId = ' . $imageTemplateId);
 
         $thumbnail = new ImagesThumbnails();
+        $thumbnail->setImagesBlock($imagesBlock);
+        $thumbnail->scenario = ImagesThumbnails::SCENARIO_CREATE;
 
-        //if ($this->lo)
+        if ($thumbnail->load(Yii::$app->request->post()) && $thumbnail->validate()) {
 
+            if (!$thumbnail->save()) {
+                //TODO: return pjax error
+            }
+
+            if (Yii::$app->request->post('_saveAndBack')) {
+
+                return $this->renderAjax('@yicms-common/Images/views/create_update_thumbnail', [
+                    'thumbnail'   => $thumbnail,
+                    'imagesBlock' => $imagesBlock,
+                    'returnBack'  => true,
+                ]);
+            }
+        }
+
+        return $this->renderAjax('@yicms-common/Images/views/create_update_thumbnail', [
+            'thumbnail'   => $thumbnail,
+            'imagesBlock' => $imagesBlock,
+        ]);
     }
 
+    /**
+     * Updates existed thumbnail configurator
+     * @param $thumbnailId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionUpdateThumbnailConfigurator($thumbnailId)
     {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
+        /** @var ImagesThumbnails $thumbnail */
+        $thumbnail = ImagesThumbnails::findOne($thumbnailId);
+
+        if (!$thumbnail) throw new NotFoundHttpException('Wrong $thumbnailId = ' . $thumbnailId);
+
+        /** @var ImagesBlock $imagesBlock */
+        $imagesBlock = ImagesBlock::findOne($thumbnail->common_images_templates_id);
+
+        if (!$imagesBlock) throw new NotFoundHttpException('Wrong $imagesBlock');
+
+        $thumbnail->scenario = ImagesThumbnails::SCENARIO_UPDATE;
+
+        if ($thumbnail->load(Yii::$app->request->post()) && $thumbnail->validate()) {
+
+            if (!$thumbnail->save()) {
+                //TODO: return pjax error
+            }
+
+            if (Yii::$app->request->post('_saveAndBack')) {
+
+                return $this->renderAjax('@yicms-common/Images/views/create_update_thumbnail', [
+                    'thumbnail'   => $thumbnail,
+                    'imagesBlock' => $imagesBlock,
+                    'returnBack'  => true,
+                ]);
+            }
+        }
+
+        return $this->renderAjax('@yicms-common/Images/views/create_update_thumbnail', [
+            'thumbnail'   => $thumbnail,
+            'imagesBlock' => $imagesBlock,
+        ]);
     }
 
+    /**
+     * Delete thumbnail configurator
+     * @param $thumbnailId
+     * @return false|int|void
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionDeleteThumbnailConfigurator($thumbnailId)
     {
+        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException('Not Ajax');
+        /** @var ImagesThumbnails $thumbnail */
+        $thumbnail = ImagesThumbnails::findOne($thumbnailId);
 
+        if (!$thumbnail) throw new NotFoundHttpException('Wrong $thumbnailId = ' . $thumbnailId);
+
+        return $thumbnail->delete();
     }
-
-
 }

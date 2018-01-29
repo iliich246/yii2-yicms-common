@@ -74,6 +74,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['admin-fields'] = 'app\yicms\Common\Controllers\AdminFieldsController';
         $this->controllerMap['admin-files'] = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['files'] = 'app\yicms\Common\Controllers\AdminFilesController';
+        $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
         $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
         $this->imagesPath = Yii::$app->basePath . $this->imagesPath;
