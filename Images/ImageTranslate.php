@@ -31,6 +31,11 @@ class ImageTranslate extends ActiveRecord
         return '{{%common_image_translates}}';
     }
 
+    public function isPhysicalExisted()
+    {
+        return false;
+    }
+
     /**
      * @inheritdoc
      */

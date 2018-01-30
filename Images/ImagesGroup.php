@@ -164,7 +164,11 @@ class ImagesGroup extends AbstractGroup
      */
     public function render(ActiveForm $form)
     {
-
+        return ImagesRenderWidget::widget([
+            'form' => $form,
+            'imagesGroup' => $this,
+            'imagesBlock' => $this->imagesBlock,
+        ]);
     }
 
     /**
