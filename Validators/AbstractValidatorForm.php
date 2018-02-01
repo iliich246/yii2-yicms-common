@@ -22,6 +22,7 @@ abstract class AbstractValidatorForm extends Model
         'string'   => 'Iliich246\YicmsCommon\Validators\StringValidatorForm',
         'number'   => 'Iliich246\YicmsCommon\Validators\NumberValidatorForm',
         'file'     => 'Iliich246\YicmsCommon\Validators\FileValidatorForm',
+        'image'    => 'Iliich246\YicmsCommon\Validators\ImageValidatorForm',
     ];
     /**
      * @var array buffer of validator db with index by validatorReference

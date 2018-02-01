@@ -54,6 +54,10 @@ class Image extends AbstractEntity implements
      */
     public $image;
     /**
+     * @var mixed information about crop
+     */
+    public $cropInfo;
+    /**
      * @var FieldsHandler instance of field handler object
      */
     private $fieldHandler;
