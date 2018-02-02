@@ -154,8 +154,6 @@ class FilesGroup extends AbstractGroup
         }
     }
 
-
-
     /**
      * @inheritdoc
      */
@@ -190,8 +188,6 @@ class FilesGroup extends AbstractGroup
             }
         }
 
-//        if (CommonModule::isUnderDev())
-//            $this->fileEntity->editable = $this->ed
         $this->fileEntity->save();
 
         foreach ($this->translateForms as $fileTranslateForm) {
@@ -216,7 +212,7 @@ class FilesGroup extends AbstractGroup
                     $fileTranslateForm->getCurrentTranslateDb()->original_name =
                         $fileTranslateForm->translatedFile->baseName;
                     $fileTranslateForm->getCurrentTranslateDb()->size = $fileTranslateForm->translatedFile->size;
-                    $this->fileEntity->type = FileHelper::getMimeType($path . $name);
+                    $fileTranslateForm->getCurrentTranslateDb()->type = FileHelper::getMimeType($path . $name);
                 }
             }
 

@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Base\CommonException;
 use Yii;
 use yii\base\Model;
 use yii\helpers\FileHelper;
@@ -156,7 +157,74 @@ class ImagesGroup extends AbstractGroup
      */
     public function save()
     {
+        $image = $this->getImageExistedInDbEntity();
 
+        $this->imageEntity->image_reference = $this->imageReference;
+
+        $path = CommonModule::getInstance()->imagesPath . DIRECTORY_SEPARATOR . 'orig' . DIRECTORY_SEPARATOR;
+
+        if ($this->imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_SINGLE) {
+            if (!$this->imageEntity->image) return true;
+
+            if ($this->imagesBlock->editable == false && !CommonModule::isUnderDev()) return true;
+
+            if (!is_dir($path))
+                FileHelper::createDirectory($path);
+
+            if ($this->scenario == self::SCENARIO_UPDATE) {
+                if (file_exists($path . $image->system_name) &&
+                    !is_dir($path . $image->system_name))
+                    unlink($path . $image->system_name);
+            }
+
+            $name = uniqid() . '.' . $this->imageEntity->image->extension;
+            $this->imageEntity->image->saveAs($path . $name);
+
+            $this->imageEntity->system_name = $name;
+            $this->imageEntity->original_name =
+                $this->imageEntity->image->baseName;
+            $this->imageEntity->size = $this->imageEntity->image->size;
+            $this->imageEntity->type = FileHelper::getMimeType($path . $name);
+
+            return $this->imageEntity->save();
+        }
+
+        if ($this->imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_TRANSLATABLE) {
+
+            if ($this->imagesBlock->editable == false && !CommonModule::isUnderDev()) return true;
+
+            if (!is_dir($path))
+                FileHelper::createDirectory($path);
+
+            $success = true;
+
+            foreach ($this->translateForms as $imageTranslateForm) {
+
+                if (!$imageTranslateForm->translatedImage) continue;
+
+                if ($this->scenario == self::SCENARIO_UPDATE) {
+                    if (file_exists($path . $imageTranslateForm->getCurrentTranslateDb()->system_name) &&
+                        !is_dir($path . $imageTranslateForm->getCurrentTranslateDb()->system_name)
+                    )
+                        unlink($path . $imageTranslateForm->getCurrentTranslateDb()->system_name);
+                }
+
+                $name = uniqid() . '.' . $imageTranslateForm->translatedImage->extension;
+                $imageTranslateForm->translatedImage->saveAs($path . $name);
+
+                $imageTranslateForm->getCurrentTranslateDb()->system_name = $name;
+                $imageTranslateForm->getCurrentTranslateDb()->original_name =
+                    $imageTranslateForm->translatedImage->baseName;
+                $imageTranslateForm->getCurrentTranslateDb()->size = $imageTranslateForm->translatedImage->size;
+                $imageTranslateForm->getCurrentTranslateDb()->type = FileHelper::getMimeType($path . $name);
+
+                if (!$imageTranslateForm->getCurrentTranslateDb()->save()) $success = false;
+            }
+
+            return $success;
+        }
+
+        throw new CommonException('Unknown images template type');
     }
 
     /**

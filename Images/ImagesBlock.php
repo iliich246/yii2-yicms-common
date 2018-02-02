@@ -38,13 +38,19 @@ class ImagesBlock extends AbstractEntityBlock implements
      * Images types
      */
     const TYPE_MULTIPLICITY = 0;
-    const TYPE_ONE_IMAGE = 1;
+    const TYPE_ONE_IMAGE    = 1;
     /**
      * Language types of images
      * Type define is image have translates or image has one instance independent of languages
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
-    const LANGUAGE_TYPE_SINGLE = 1;
+    const LANGUAGE_TYPE_SINGLE       = 1;
+
+    /**
+     * Crop types
+     */
+    const NO_CROP   = 0;
+    const NEED_CROP = 1;
 
     /**
      * @var bool if true for this block will be created standard fields like filename
@@ -84,7 +90,10 @@ class ImagesBlock extends AbstractEntityBlock implements
     {
         return array_merge(parent::attributeLabels(),[
             'createStandardFields' => 'Create standard fields (name, alt)',
-            'max_images' => 'Maximum images in block'
+            'max_images'           => 'Maximum images in block',
+            'crop_type'            => 'Crop type',
+            'crop_height'          => 'Crop height',
+            'crop_width'           => 'Crop width'
         ]);
     }
 
@@ -102,9 +111,9 @@ class ImagesBlock extends AbstractEntityBlock implements
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['type', 'language_type'], 'integer'],
+            [['type', 'language_type','crop_type'], 'integer'],
             [['visible', 'editable'], 'boolean'],
-            ['max_images', 'integer', 'min' => 0]
+            [['max_images', 'crop_height', 'crop_width'], 'integer', 'min' => 0],
         ]);
     }
 
@@ -115,15 +124,33 @@ class ImagesBlock extends AbstractEntityBlock implements
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'language_type', 'visible', 'editable', 'max_images']);
+            [
+                'type',
+                'language_type',
+                'visible',
+                'editable',
+                'max_images',
+                'crop_type',
+                'crop_height',
+                'crop_width'
+            ]);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type','language_type' ,'visible', 'editable', 'max_images']);
+            [
+                'type',
+                'language_type',
+                'visible',
+                'editable',
+                'max_images',
+                'crop_type',
+                'crop_height',
+                'crop_width'
+            ]);
 
         return $scenarios;
     }
 
     /**
-     * Return array of field types
+     * Return array of image types
      * @return array
      */
     public static function getTypes()
@@ -141,7 +168,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * Return name of type of concrete field
+     * Return name of type of concrete image
      * @return mixed
      */
     public function getTypeName()
@@ -168,12 +195,39 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * Return name of language type of concrete field
+     * Return name of language type of concrete image
      * @return mixed
      */
     public function getLanguageTypeName()
     {
         return self::getLanguageTypes()[$this->language_type];
+    }
+
+    /**
+     * Returns array of crop types types
+     * @return array
+     */
+    public static function getCropTypes()
+    {
+        static $array = false;
+
+        if ($array) return $array;
+
+        $array = [
+            self::NO_CROP => 'No crop',
+            self::NEED_CROP => 'Need crop',
+        ];
+
+        return $array;
+    }
+
+    /**
+     * Return name of crop type of concrete image block
+     * @return mixed
+     */
+    public function getCropTypeName()
+    {
+        return self::getCropTypeName()[$this->crop_type];
     }
 
     /**

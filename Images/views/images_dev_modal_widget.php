@@ -129,7 +129,19 @@ $this->registerJs($js, $this::POS_READY);
                         <br>
                         <p>zero value - infinite count of images in block</p>
                     </div>
-
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-xs-12 ">
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_type')->dropDownList(
+                            ImagesBlock::getCropTypes()
+                        ) ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_height') ?>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_width') ?>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 col-xs-12 ">
