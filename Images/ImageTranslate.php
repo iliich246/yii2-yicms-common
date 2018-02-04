@@ -33,7 +33,7 @@ class ImageTranslate extends ActiveRecord
 
     public function isPhysicalExisted()
     {
-        return false;
+        return true;
     }
 
     /**

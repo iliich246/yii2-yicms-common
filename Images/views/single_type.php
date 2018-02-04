@@ -10,15 +10,41 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 ?>
 
 <?php if ($imagesGroup->scenario == ImagesGroup::SCENARIO_CREATE): ?>
-    <?= $form->field($imagesGroup->imageEntity, "image")->fileInput()->label('load new image') ?>
+    <?= $form->field($imagesGroup->imageEntity, "image", [
+        'inputOptions' => [
+            'class' => 'image-loader-button',
+        ],
+    ])->fileInput()->label('load new image') ?>
+    <div class="row images-thumbnails">
+        <div class="col-md-8 preview-block">
+            <img src="" alt="">
+        </div>
+    </div>
 <?php else: ?>
     <?php if ($imagesGroup->imageEntity->getPath()): ?>
-        <?= $form->field($imagesGroup->imageEntity, "image")->fileInput()->label('replace existed image') ?>
-         TODO: output image thumbnail
+        <?= $form->field($imagesGroup->imageEntity, "image",[
+            'inputOptions' => [
+                'class' => 'image-loader-button',
+            ],
+        ])->fileInput()->label('replace existed image') ?>
+        <div class="row images-thumbnails">
+            <div class="col-md-8 preview-block">
+                <img src="<?= $imagesGroup->imageEntity->getPath() ?>" alt="" style="width: 100%">
+            </div>
+        </div>
         <br>
         <br>
     <?php else: ?>
-        <?= $form->field($imagesGroup->imageEntity, "image")->fileInput()->label('load image') ?>
+        <?= $form->field($imagesGroup->imageEntity, "image", [
+            'inputOptions' => [
+                'class' => 'image-loader-button',
+            ],
+        ])->fileInput()->label('load image') ?>
+        <div class="row images-thumbnails">
+            <div class="col-md-8 preview-block">
+                <img src="" alt="">
+            </div>
+        </div>
     <?php endif; ?>
 <?php endif; ?>
 

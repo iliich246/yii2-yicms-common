@@ -143,9 +143,42 @@ class Image extends AbstractEntity implements
             $systemName = $imageTranslate->system_name;
         }
 
-        $path = CommonModule::getInstance()->imagesPath . $systemName;
+        $path = CommonModule::getInstance()->imagesWebPath .
+            '/orig/' . $systemName;
 
-        if (!file_exists($path) || is_dir($path)) return false;
+        //if (!file_exists($path) || is_dir($path)) return false;
+
+        return $path;
+    }
+
+    /**
+     * Return src param for img tag
+     * @param LanguagesDb|null $language
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getSrc(LanguagesDb $language = null)
+    {
+        if ($this->isNonexistent) return false;
+
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        $imagesBlock = $this->getImagesBlock();
+
+        if ($imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_SINGLE)
+            $systemName = $this->system_name;
+        else {
+            $imageTranslate = $this->getImageTranslate($language);
+
+            if (!$imageTranslate) return false;
+
+            $systemName = $imageTranslate->system_name;
+        }
+
+        $path = CommonModule::getInstance()->imagesWebPath .
+            '/orig/' . $systemName;
+
+        //if (!file_exists($path) || is_dir($path)) return false;
 
         return $path;
     }

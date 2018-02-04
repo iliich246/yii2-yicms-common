@@ -103,6 +103,15 @@ class ImageTranslateForm extends AbstractTranslateForm
     }
 
     /**
+     * Proxies src method of image to this translate form
+     * @return bool|string
+     */
+    public function getSrc()
+    {
+        return $this->getImageEntity()->getSrc($this->getLanguage());
+    }
+
+    /**
      * @inheritdoc
      */
     public function getCurrentTranslateDb()

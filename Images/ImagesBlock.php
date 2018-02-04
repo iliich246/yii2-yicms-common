@@ -49,8 +49,11 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Crop types
      */
-    const NO_CROP   = 0;
-    const NEED_CROP = 1;
+    const NO_CROP          = 0x00;
+    const CROP_VIEW_MODE_0 = 0x01;
+    const CROP_VIEW_MODE_1 = 0x02;
+    const CROP_VIEW_MODE_2 = 0x03;
+    const CROP_VIEW_MODE_3 = 0x04;
 
     /**
      * @var bool if true for this block will be created standard fields like filename
@@ -215,7 +218,10 @@ class ImagesBlock extends AbstractEntityBlock implements
 
         $array = [
             self::NO_CROP => 'No crop',
-            self::NEED_CROP => 'Need crop',
+            self::CROP_VIEW_MODE_0 => 'Crop viewMode 0',
+            self::CROP_VIEW_MODE_1 => 'Crop viewMode 1',
+            self::CROP_VIEW_MODE_2 => 'Crop viewMode 2',
+            self::CROP_VIEW_MODE_3 => 'Crop viewMode 3',
         ];
 
         return $array;

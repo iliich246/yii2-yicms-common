@@ -48,6 +48,8 @@ class CommonModule extends AbstractConfigurableModule implements
                         'web' . DIRECTORY_SEPARATOR .
                         'images' . DIRECTORY_SEPARATOR;
 
+    public $imagesWebPath = 'images';
+
     /** @inheritdoc */
     public $configurable = [
         'defaultLanguage',
@@ -78,6 +80,7 @@ class CommonModule extends AbstractConfigurableModule implements
 
         $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
         $this->imagesPath = Yii::$app->basePath . $this->imagesPath;
+        $this->imagesWebPath = Yii::$app->homeUrl . $this->imagesWebPath;
 
         parent::init();
     }
