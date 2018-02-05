@@ -23,7 +23,6 @@ class ImageTranslateForm extends AbstractTranslateForm
      * @var mixed information about crop
      */
     public $cropInfo;
-
     /**
      * @var ImagesBlock associated with this model
      */

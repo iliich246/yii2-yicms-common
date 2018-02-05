@@ -7,9 +7,7 @@ use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
-use Iliich246\YicmsCommon\Fields\FieldsHandler;
-use Iliich246\YicmsCommon\Fields\FieldsInterface;
-use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 
 /**
@@ -30,9 +28,9 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ImagesBlock extends AbstractEntityBlock implements
-    FieldsInterface,
-    FieldReferenceInterface
+class ImagesBlock extends AbstractEntityBlock
+    //FieldsInterface,
+    //FieldReferenceInterface
 {
     /**
      * Images types
@@ -59,10 +57,6 @@ class ImagesBlock extends AbstractEntityBlock implements
      * @var bool if true for this block will be created standard fields like filename
      */
     public $createStandardFields = true;
-    /**
-     * @var FieldsHandler instance of field handler object
-     */
-    private $fieldHandler;
     /**
      * @var ImagesNamesTranslatesDb[] buffer
      */
@@ -359,22 +353,12 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * @inheritdoc
+     * Return true if this block has fields
+     * @return bool
      */
-    public function getFieldHandler()
+    public function hasFields()
     {
-        if (!$this->fieldHandler)
-            $this->fieldHandler = new FieldsHandler($this);
-
-        return $this->fieldHandler;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getField($name)
-    {
-        return $this->getFieldHandler()->getField($name);
+        return !!FieldTemplate::getListQuery($this->field_template_reference)->one();
     }
 
     /**
@@ -383,14 +367,6 @@ class ImagesBlock extends AbstractEntityBlock implements
     public function getFieldTemplateReference()
     {
         return $this->field_template_reference;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFieldReference()
-    {
-        //return $this->field_reference;
     }
 
     /**

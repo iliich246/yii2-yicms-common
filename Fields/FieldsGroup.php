@@ -21,23 +21,19 @@ class FieldsGroup extends AbstractGroup
      * @var FieldReferenceInterface|FieldsInterface object for current group
      */
     protected $referenceAble;
-
     /**
      * @var array of fields program names that`s will not rendered by standard render method
      * this field will not be visible or must be rendered manually
      */
     public $renderFieldsExceptions = [];
-
     /**
      * @var FieldTemplate[] instances that`s must has translates
      */
     public $translateAbleFieldTemplates;
-
     /**
      * @var FieldTemplate[] instances without translates
      */
     public $singleFieldTemplates;
-
     /** @var FieldTranslateForm[] of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
      * [key1] => FieldTranslateForm1
      * ...
@@ -46,7 +42,6 @@ class FieldsGroup extends AbstractGroup
      * Where key is value that`s used for associate models with data of form in POST array
      */
     public $translateForms = [];
-
     /**
      * @var array of FieldTranslateForms comfortable for traversable by yicms methods in format
      * [languageId1] => [
@@ -62,7 +57,6 @@ class FieldsGroup extends AbstractGroup
      * ...
      */
     public $translateFormsArray = [];
-
     /**
      * @var Field[] array of fields without translates
      */

@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Images;
 
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Yii;
 use yii\base\Model;
 use yii\helpers\FileHelper;
@@ -257,5 +258,4 @@ class ImagesGroup extends AbstractGroup
 
         return $this->imageEntity;
     }
-
 }

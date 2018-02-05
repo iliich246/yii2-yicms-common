@@ -330,6 +330,15 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Return true if this block has fields
+     * @return bool
+     */
+    public function hasFields()
+    {
+        return !!FieldTemplate::getListQuery($this->field_template_reference)->one();
+    }
+
+    /**
      * @inheritdoc
      */
     public function getFieldTemplateReference()
