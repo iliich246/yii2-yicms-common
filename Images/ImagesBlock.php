@@ -4,11 +4,13 @@ namespace Iliich246\YicmsCommon\Images;
 
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 
 /**
  * Class ImagesBlock
@@ -28,9 +30,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ImagesBlock extends AbstractEntityBlock
-    //FieldsInterface,
-    //FieldReferenceInterface
+class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
 {
     /**
      * Images types
@@ -75,7 +75,7 @@ class ImagesBlock extends AbstractEntityBlock
      */
     public function init()
     {
-        $this->visible = true;
+        $this->visible  = true;
         $this->editable = true;
         parent::init();
     }
@@ -157,7 +157,7 @@ class ImagesBlock extends AbstractEntityBlock
         if ($array) return $array;
 
         $array = [
-            self::TYPE_ONE_IMAGE => 'One image',
+            self::TYPE_ONE_IMAGE    => 'One image',
             self::TYPE_MULTIPLICITY => 'Multiple images',
         ];
 
@@ -184,7 +184,7 @@ class ImagesBlock extends AbstractEntityBlock
         if ($array) return $array;
 
         $array = [
-            self::LANGUAGE_TYPE_SINGLE => 'Single type',
+            self::LANGUAGE_TYPE_SINGLE       => 'Single type',
             self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
         ];
 
@@ -211,7 +211,7 @@ class ImagesBlock extends AbstractEntityBlock
         if ($array) return $array;
 
         $array = [
-            self::NO_CROP => 'No crop',
+            self::NO_CROP          => 'No crop',
             self::CROP_VIEW_MODE_0 => 'Crop viewMode 0',
             self::CROP_VIEW_MODE_1 => 'Crop viewMode 1',
             self::CROP_VIEW_MODE_2 => 'Crop viewMode 2',
@@ -342,7 +342,7 @@ class ImagesBlock extends AbstractEntityBlock
 
             $data = ImagesNamesTranslatesDb::find()->where([
                 'common_images_template_id' => $this->id,
-                'common_language_id' => $language->id,
+                'common_language_id'        => $language->id,
             ])->one();
 
             if (!$data) $this->imageNamesTranslates[$language->id] = null;
@@ -366,7 +366,20 @@ class ImagesBlock extends AbstractEntityBlock
      */
     public function getFieldTemplateReference()
     {
+        if (!$this->field_template_reference) {
+            $this->field_template_reference = FieldTemplate::generateTemplateReference();
+            $this->save(false);
+        }
+
         return $this->field_template_reference;
+    }
+
+    /**
+     * Unneeded method, but i don`t want to create more interfaces without serious reason
+     */
+    public function getFieldReference()
+    {
+        throw new CommonException('This method is unneeded and can`t be implemented there');
     }
 
     /**
@@ -378,7 +391,7 @@ class ImagesBlock extends AbstractEntityBlock
             return Image::find()
                 ->where([
                     'common_images_templates_id' => $this->id,
-                    'image_reference' => $this->currentImageReference
+                    'image_reference'            => $this->currentImageReference
                 ])
                 ->indexBy('id')
                 ->orderBy(['image_order' => SORT_ASC]);
@@ -393,7 +406,6 @@ class ImagesBlock extends AbstractEntityBlock
     {
         return self::find()->where([
             'image_template_reference' => $this->image_template_reference,
-            'language_type' => $this->language_type,
         ]);
     }
 

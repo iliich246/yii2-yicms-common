@@ -18,7 +18,7 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
     <div class="row images-thumbnails">
         <div class="col-md-8 preview-block">
-            <img src="" alt="">
+            <img src="" alt="" style="max-width: 100%">
         </div>
     </div>
 
@@ -35,7 +35,7 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
         <div class="row images-thumbnails">
             <div class="col-md-8 preview-block">
-                <img src="<?= $imagesGroup->imageEntity->getPath() ?>" alt="" style="width: 100%">
+                <img src="<?= $imagesGroup->imageEntity->getPath() ?>" alt="" style="max-width: 100%">
             </div>
         </div>
 
@@ -54,7 +54,7 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
         <div class="row images-thumbnails">
             <div class="col-md-8 preview-block">
-                <img src="" alt="">
+                <img src="" alt="" style="max-width: 100%">
             </div>
         </div>
 

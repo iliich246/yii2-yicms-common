@@ -167,6 +167,9 @@ class Field extends ActiveRecord implements
             if ($this->value) return $this->value;
 
             Yii::warning("Empty field value for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
+
+            if ($this->mode == self::MODE_DEFAULT) return false;
+
             return 'Warning! Empty value';
         }
 
@@ -207,7 +210,7 @@ class Field extends ActiveRecord implements
 
         $this->translation[$language->id] = FieldTranslate::find()->where([
             'common_fields_represent_id' => $this->id,
-            'common_language_id' => $language->id,
+            'common_language_id'         => $language->id,
         ])->one();
 
         if ($this->translation[$language->id])
@@ -234,7 +237,7 @@ class Field extends ActiveRecord implements
         if (is_null($this->translation[$language->id])) {
             $this->translation[$language->id] = FieldTranslate::find()->where([
                 'common_fields_represent_id' => $this->id,
-                'common_language_id' => $language->id,
+                'common_language_id'         => $language->id,
             ])->one();
         }
 
@@ -245,14 +248,15 @@ class Field extends ActiveRecord implements
                 if (!$translate->value) {
                     Yii::warning("Empty text of translation on \"$language->name\" language for field "
                         . $this->getTemplate()->program_name, __METHOD__);
-                }
 
-                return false;
+                    return false;
+                }
             }
 
             if ($translate->value) return $translate->value;
 
             Yii::warning("Empty field translate for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
+
             return 'Warning! empty field translate';
         }
 
@@ -268,24 +272,60 @@ class Field extends ActiveRecord implements
      * @param $fieldTemplateReference
      * @param $fieldReference
      * @param $programName
-     * @return array|null|ActiveRecord
+     * @return Field|null
+     * @throws CommonException
      */
     public static function getInstance($fieldTemplateReference, $fieldReference, $programName)
     {
-        //TODO: may be better to return empty field object
+/*
         if (is_null($template = FieldTemplate::getInstance($fieldTemplateReference, $programName))) return null;
 
-        /** @var self $field */
         $field = self::find()->where([
             'common_fields_template_id' => $template->id,
             'field_reference' => $fieldReference
         ])->one();
-
         if (!$field) return null;
-
         $field->template = $template;
-
         return $field;
+*/
+
+        if (is_null($template = FieldTemplate::getInstance($fieldTemplateReference, $programName))) {
+            Yii::warning(
+                "Can`t fetch for " . static::className() .
+                " name = $programName and fieldTemplateReference = $fieldTemplateReference",
+                __METHOD__);
+
+            if (defined('YICMS_STRICT')) {
+                throw new CommonException(
+                    "YICMS_STRICT_MODE:
+                Can`t fetch for " . static::className() .
+                " name = $programName and fieldTemplateReference = $fieldTemplateReference");
+            }
+        };
+
+        /** @var self $field */
+        $field = self::find()->where([
+            'common_fields_template_id' => $template->id,
+            'field_reference'           => $fieldReference
+        ])->one();
+
+        if ($field) {
+            $field->template = $template;
+            return $field;
+        }
+
+
+        Yii::warning(
+            "Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference",
+            __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException(
+                "YICMS_STRICT_MODE:
+                Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference");
+        }
+
+        return null;
     }
 
     /**

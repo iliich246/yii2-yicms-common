@@ -180,9 +180,9 @@ class DeveloperFieldsController extends Controller
             ->all();
 
         return $this->render('/pjax/update-fields-list-container', [
-            'fieldTemplateReference' => $fieldTemplate->field_template_reference,
+            'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle
         ]);
     }
 

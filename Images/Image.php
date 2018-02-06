@@ -2,18 +2,16 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
-use yii\validators\SafeValidator;
-use yii\validators\RequiredValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
-use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
@@ -125,6 +123,9 @@ class Image extends AbstractEntity implements
         return 'image_reference';
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getPath(LanguagesDb $language = null)
     {
         if ($this->isNonexistent) return false;
@@ -181,6 +182,47 @@ class Image extends AbstractEntity implements
         //if (!file_exists($path) || is_dir($path)) return false;
 
         return $path;
+    }
+
+    /**
+     * Return name of file for admin list
+     * @param LanguagesDb|null $language
+     * @return bool|int|null|string
+     * @throws CommonException
+     */
+    public function listName(LanguagesDb $language = null)
+    {
+        if ($this->isNonexistent) return false;
+
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        try {
+            $field = $this->getField('name');
+
+            if (!$field) $name = null;
+            else {
+                $field->setDefaultMode();
+                $name = $field->getTranslate($language);
+            }
+        } catch(CommonException $e) {
+            $name = null;
+        }
+
+        if ($name || trim($name)) return $name;
+
+        $imagesBlock = $this->getImagesBlock();
+
+        if ($imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_SINGLE)
+            $name = $this->original_name;
+        else {
+            $imageTranslate = $this->getImageTranslate($language);
+
+            if (!$imageTranslate) return false;
+
+            $name = $imageTranslate->original_name;
+        }
+
+        return $name;
     }
 
     /**
@@ -243,7 +285,7 @@ class Image extends AbstractEntity implements
     public function getFieldReference()
     {
         if (!$this->field_reference) {
-            $this->field_reference = FieldTemplate::generateTemplateReference();
+            $this->field_reference = Field::generateReference();
             $this->save(false);
         }
 

@@ -2,8 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use Iliich246\YicmsCommon\Base\CommonException;
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Yii;
 use yii\base\Model;
 use yii\helpers\FileHelper;
@@ -11,6 +9,7 @@ use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
 
 /**
@@ -86,6 +85,8 @@ class ImagesGroup extends AbstractGroup
     {
         if ($this->scenario == self::SCENARIO_CREATE) {
             $this->imageEntity = new Image();
+            $this->imageEntity->visible = true;
+            $this->imageEntity->editable = true;
             $this->imageEntity->setEntityBlock($this->imagesBlock);
         }
 

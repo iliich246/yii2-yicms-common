@@ -365,7 +365,6 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         return self::find()->where([
             'file_template_reference' => $this->file_template_reference,
-            'language_type' => $this->language_type,
         ]);
     }
 
