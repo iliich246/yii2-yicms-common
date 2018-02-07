@@ -2,6 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\CommonModule;
+use Imagine\Image\Box;
+use Imagine\Image\Palette\RGB;
+use Imagine\Image\Point;
 use Yii;
 use yii\helpers\Json;
 use yii\imagine\Image;
@@ -137,11 +141,26 @@ class CropProcessor extends Component
 
         if (!$path) return false;
 
+        $imagine = Image::getImagine();
         $image = Image::getImagine()->open($this->imageEntity->getPath());
 
+        $palette = new RGB();
+        $color = $palette->color('#3A7');
+        $size  = new \Imagine\Image\Box(400, 300);
+        $img = $imagine->create($size, $color);
 
 
-        throw new \yii\base\Exception(print_r($image, true));
+
+        $point = new Point(100,100);
+        $box = new Box(200,200);
+
+        $image->crop($point, $box);
+
+        $img->paste($image, $point);
+        $img->save(CommonModule::getInstance()->imagesPath . '/crp.jpg');
+
+
+        //throw new \yii\base\Exception(print_r($this, true));
     }
 }
 /*
