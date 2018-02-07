@@ -188,7 +188,14 @@ class ImagesGroup extends AbstractGroup
             $this->imageEntity->size = $this->imageEntity->image->size;
             $this->imageEntity->type = FileHelper::getMimeType($path . $name);
 
-            return $this->imageEntity->save();
+            $success = $this->imageEntity->save();
+
+            if (!$success) return false;
+
+            CropProcessor::handle($this->imageEntity);
+            ThumbnailsProcessor::handle($this->imageEntity);
+
+            return true;
         }
 
         if ($this->imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_TRANSLATABLE) {

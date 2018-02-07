@@ -11,5 +11,12 @@ use yii\base\Component;
  */
 class ThumbnailsProcessor extends Component
 {
+    /**
+     *
+     * @param ImagesProcessorInterface $imageEntity
+     */
+    public static function handle(ImagesProcessorInterface $imageEntity)
+    {
 
+    }
 }

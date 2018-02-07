@@ -17,4 +17,15 @@ interface ImagesProcessorInterface
      */
     public function getImagesBlock();
 
+    /**
+     * Return information about crop
+     * @return mixed
+     */
+    public function getCropInfo();
+
+    /**
+     * Returns physical path to image
+     * @return mixed
+     */
+    public function getPath();
 }

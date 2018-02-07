@@ -301,6 +301,8 @@ class Field extends ActiveRecord implements
                 Can`t fetch for " . static::className() .
                 " name = $programName and fieldTemplateReference = $fieldTemplateReference");
             }
+
+            return null;
         };
 
         /** @var self $field */
@@ -313,7 +315,6 @@ class Field extends ActiveRecord implements
             $field->template = $template;
             return $field;
         }
-
 
         Yii::warning(
             "Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference",

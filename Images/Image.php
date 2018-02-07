@@ -43,7 +43,8 @@ class Image extends AbstractEntity implements
     FieldsInterface,
     FieldReferenceInterface,
     ValidatorBuilderInterface,
-    ValidatorReferenceInterface
+    ValidatorReferenceInterface,
+    ImagesProcessorInterface
 {
     use SortOrderTrait;
 
@@ -92,7 +93,9 @@ class Image extends AbstractEntity implements
     public function rules()
     {
         return [
-            [['editable', 'visible'], 'boolean']
+            [
+                ['editable', 'visible'], 'boolean'],
+                ['cropInfo', 'safe']
         ];
     }
 
@@ -107,12 +110,19 @@ class Image extends AbstractEntity implements
     }
 
     /**
-     * Returns ImagesBlock associated with this file entity
-     * @return ImagesBlock
+     * @inheritdoc
      */
     public function getImagesBlock()
     {
         return $this->getEntityBlock();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCropInfo()
+    {
+        return $this->cropInfo;
     }
 
     /**
@@ -144,10 +154,10 @@ class Image extends AbstractEntity implements
             $systemName = $imageTranslate->system_name;
         }
 
-        $path = CommonModule::getInstance()->imagesWebPath .
+        $path = CommonModule::getInstance()->imagesPath .
             '/orig/' . $systemName;
 
-        //if (!file_exists($path) || is_dir($path)) return false;
+        if (!file_exists($path) || is_dir($path)) return false;
 
         return $path;
     }

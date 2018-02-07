@@ -3,8 +3,8 @@
 namespace Iliich246\YicmsCommon\Images;
 
 use yii\web\UploadedFile;
-use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 
 /**
  * Class ImageTranslateForm
@@ -13,7 +13,7 @@ use Iliich246\YicmsCommon\CommonModule;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ImageTranslateForm extends AbstractTranslateForm
+class ImageTranslateForm extends AbstractTranslateForm implements ImagesProcessorInterface
 {
     /**
      * @var UploadedFile
@@ -39,10 +39,12 @@ class ImageTranslateForm extends AbstractTranslateForm
     {
         return [
             self::SCENARIO_CREATE => [
-                'translatedImage'
+                'translatedImage',
+                'cropInfo'
             ],
             self::SCENARIO_UPDATE => [
-                'translatedImage'
+                'translatedImage',
+                'cropInfo'
             ],
         ];
     }
@@ -55,6 +57,7 @@ class ImageTranslateForm extends AbstractTranslateForm
         //TODO: makes validators
         return [
             [['translatedFile'], 'file'],
+            ['cropInfo', 'safe']
         ];
     }
 
@@ -91,6 +94,22 @@ class ImageTranslateForm extends AbstractTranslateForm
     public function getImageEntity()
     {
         return $this->imageEntity;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getImagesBlock()
+    {
+        return $this->imagesBlock;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCropInfo()
+    {
+        return $this->cropInfo;
     }
 
     /**
