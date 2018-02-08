@@ -23,10 +23,11 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  * @property integer $image_order
  * @property bool $visible
  * @property bool $editable
- * @property bool $max_images
- * @property bool $crop_type
- * @property bool $crop_height
- * @property bool $crop_width
+ * @property integer $max_images
+ * @property string $fill_color
+ * @property integer $crop_type
+ * @property integer $crop_height
+ * @property integer $crop_width
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -48,7 +49,7 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
      * Crop types
      */
     const NO_CROP          = 0x00;
-    const CROP_VIEW_MODE_0 = 0x01;
+    //const CROP_VIEW_MODE_0 = 0x01;
     const CROP_VIEW_MODE_1 = 0x02;
     const CROP_VIEW_MODE_2 = 0x03;
     const CROP_VIEW_MODE_3 = 0x04;
@@ -90,7 +91,8 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
             'max_images'           => 'Maximum images in block',
             'crop_type'            => 'Crop type',
             'crop_height'          => 'Crop height',
-            'crop_width'           => 'Crop width'
+            'crop_width'           => 'Crop width',
+            'fill_color'           => "\nFill color",
         ]);
     }
 
@@ -111,6 +113,7 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
             [['type', 'language_type','crop_type'], 'integer'],
             [['visible', 'editable'], 'boolean'],
             [['max_images', 'crop_height', 'crop_width'], 'integer', 'min' => 0],
+            ['fill_color', 'string']
         ]);
     }
 
@@ -129,7 +132,8 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
                 'max_images',
                 'crop_type',
                 'crop_height',
-                'crop_width'
+                'crop_width',
+                'fill_color'
             ]);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
             [
@@ -140,7 +144,8 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
                 'max_images',
                 'crop_type',
                 'crop_height',
-                'crop_width'
+                'crop_width',
+                'fill_color'
             ]);
 
         return $scenarios;
@@ -212,7 +217,7 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
 
         $array = [
             self::NO_CROP          => 'No crop',
-            self::CROP_VIEW_MODE_0 => 'Crop viewMode 0',
+            //self::CROP_VIEW_MODE_0 => 'Crop viewMode 0',
             self::CROP_VIEW_MODE_1 => 'Crop viewMode 1',
             self::CROP_VIEW_MODE_2 => 'Crop viewMode 2',
             self::CROP_VIEW_MODE_3 => 'Crop viewMode 3',

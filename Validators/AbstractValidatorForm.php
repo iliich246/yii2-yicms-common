@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Validators;
 
-
 use Yii;
 use yii\base\Model;
 use Iliich246\YicmsCommon\Base\CommonException;
@@ -166,8 +165,6 @@ abstract class AbstractValidatorForm extends Model
         }
 
         $class = $validatorDb->validator;
-
-        //throw new \Exception(print_r(new $class,true));
 
         if (!class_exists($class) && !defined(YICMS_STRICT)) {
             Yii::warning('Wrong validator class ' . $class, __METHOD__);

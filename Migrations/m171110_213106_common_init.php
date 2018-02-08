@@ -300,7 +300,7 @@ class m171110_213106_common_init extends Migration
             'crop_type' => $this->smallInteger(),
             'max_images' => $this->integer(),
             'max_size' => $this->integer(),
-            'allow_files' => $this->string(),
+            'fill_color' => $this->string(),
             'crop_height' => $this->integer(),
             'crop_width' => $this->integer(),
         ]);

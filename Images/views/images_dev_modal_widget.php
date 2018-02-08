@@ -9,6 +9,7 @@ use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
+/** @var $this \yii\web\View */
 /** @var $widget ImagesDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 
@@ -55,14 +56,12 @@ $js = <<<JS
     $(document).on('click', '.config-thumbnails-button', function() {
 
         var imageTemplateId = $(this).data('imageTemplateId');
-
-
-
     });
 })();
 JS;
 
 $this->registerJs($js, $this::POS_READY);
+//$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\JsColorPickerAsset::className());
 
 ?>
 
@@ -70,7 +69,7 @@ $this->registerJs($js, $this::POS_READY);
      id="<?= ImagesDevModalWidget::getModalWindowName() ?>"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="myModalLabel"
+     data-backdrop="static"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
@@ -125,11 +124,18 @@ $this->registerJs($js, $this::POS_READY);
                     <div class="col-sm-4 col-xs-12">
                         <?= $form->field($widget->devImagesGroup->imagesBlock, 'max_images') ?>
                     </div>
-                    <div class="col-sm-8 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
                         <br>
                         <p>zero value - infinite count of images in block</p>
                     </div>
+                    <?php /* ?>
+                    <div class="col-sm-4 col-xs-12">
+                        <br>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'fill_color') ?>
+                    </div>
+                    */ ?>
                 </div>
+
                 <div class="row">
                     <div class="col-sm-4 col-xs-12 ">
                         <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_type')->dropDownList(
@@ -137,10 +143,10 @@ $this->registerJs($js, $this::POS_READY);
                         ) ?>
                     </div>
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_height') ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_width') ?>
                     </div>
                     <div class="col-sm-4 col-xs-12">
-                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_width') ?>
+                        <?= $form->field($widget->devImagesGroup->imagesBlock, 'crop_height') ?>
                     </div>
                 </div>
                 <div class="row">

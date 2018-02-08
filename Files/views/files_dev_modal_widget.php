@@ -62,7 +62,7 @@ $this->registerJs($js, $this::POS_READY);
      id="<?= FilesDevModalWidget::getModalWindowName() ?>"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="myModalLabel"
+     data-backdrop="static"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([

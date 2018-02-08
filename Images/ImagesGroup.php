@@ -163,7 +163,7 @@ class ImagesGroup extends AbstractGroup
 
         $this->imageEntity->image_reference = $this->imageReference;
 
-        $path = CommonModule::getInstance()->imagesPath . DIRECTORY_SEPARATOR . 'orig' . DIRECTORY_SEPARATOR;
+        $path = CommonModule::getInstance()->imagesOriginalsPath;
 
         if ($this->imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_SINGLE) {
             if (!$this->imageEntity->image) return true;
@@ -179,21 +179,27 @@ class ImagesGroup extends AbstractGroup
                     unlink($path . $image->system_name);
             }
 
+            $oldSystemName = $image->system_name;
+
             $name = uniqid() . '.' . $this->imageEntity->image->extension;
             $this->imageEntity->image->saveAs($path . $name);
 
-            $this->imageEntity->system_name = $name;
-            $this->imageEntity->original_name =
-                $this->imageEntity->image->baseName;
-            $this->imageEntity->size = $this->imageEntity->image->size;
-            $this->imageEntity->type = FileHelper::getMimeType($path . $name);
+            $this->imageEntity->system_name   = $name;
+            $this->imageEntity->original_name = $this->imageEntity->image->baseName;
+            $this->imageEntity->size          = $this->imageEntity->image->size;
+            $this->imageEntity->type          = FileHelper::getMimeType($path . $name);
 
             $success = $this->imageEntity->save();
 
             if (!$success) return false;
 
-            CropProcessor::handle($this->imageEntity);
-            ThumbnailsProcessor::handle($this->imageEntity);
+            $this->scenario == self::SCENARIO_UPDATE ?
+                CropProcessor::handle($this->imageEntity, $oldSystemName) :
+                CropProcessor::handle($this->imageEntity);
+
+            $this->scenario == self::SCENARIO_UPDATE ?
+                ThumbnailsProcessor::handle($this->imageEntity, $oldSystemName) :
+                ThumbnailsProcessor::handle($this->imageEntity);
 
             return true;
         }
@@ -218,6 +224,8 @@ class ImagesGroup extends AbstractGroup
                         unlink($path . $imageTranslateForm->getCurrentTranslateDb()->system_name);
                 }
 
+                $oldSystemName = $imageTranslateForm->getCurrentTranslateDb()->system_name;
+
                 $name = uniqid() . '.' . $imageTranslateForm->translatedImage->extension;
                 $imageTranslateForm->translatedImage->saveAs($path . $name);
 
@@ -228,6 +236,14 @@ class ImagesGroup extends AbstractGroup
                 $imageTranslateForm->getCurrentTranslateDb()->type = FileHelper::getMimeType($path . $name);
 
                 if (!$imageTranslateForm->getCurrentTranslateDb()->save()) $success = false;
+
+                $this->scenario == self::SCENARIO_UPDATE ?
+                    CropProcessor::handle($this->imageEntity, $oldSystemName) :
+                    CropProcessor::handle($this->imageEntity);
+
+                $this->scenario == self::SCENARIO_UPDATE ?
+                    ThumbnailsProcessor::handle($this->imageEntity, $oldSystemName) :
+                    ThumbnailsProcessor::handle($this->imageEntity);
             }
 
             return $success;

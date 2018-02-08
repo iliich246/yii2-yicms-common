@@ -19,7 +19,8 @@
         "npm-asset/bootbox": "~4.4.0",
         "npm-asset/lodash": "~4.17.4",
         "npm-asset/cropper": "~3.1.4",
-        "npm-asset/photoswipe": "~4.1.2"
+        "npm-asset/photoswipe": "~4.1.2",
+        "npm-asset/jscolor-picker": "~2.0.4"
     },
     "autoload": {
         "psr-4": {

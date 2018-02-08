@@ -2,14 +2,14 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use Iliich246\YicmsCommon\CommonModule;
-use Imagine\Image\Box;
-use Imagine\Image\Palette\RGB;
-use Imagine\Image\Point;
 use Yii;
 use yii\helpers\Json;
 use yii\imagine\Image;
 use yii\base\Component;
+use yii\helpers\FileHelper;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\CommonException;
 
 /**
@@ -65,10 +65,11 @@ class CropProcessor extends Component
     /**
      * Creates cropped images for send image entity
      * @param ImagesProcessorInterface $imageEntity
+     * @param bool|false $oldSystemName
      * @return bool
-     * @throws \yii\base\Exception
+     * @throws CommonException
      */
-    public static function handle(ImagesProcessorInterface $imageEntity)
+    public static function handle(ImagesProcessorInterface $imageEntity, $oldSystemName = false)
     {
         if ($imageEntity->getImagesBlock()->crop_type == ImagesBlock::NO_CROP) return false;
 
@@ -77,9 +78,26 @@ class CropProcessor extends Component
 
         if (!$processor->handleCropArray($imageEntity->getCropInfo())) return false;
 
+        if ($oldSystemName) $processor->deleteOldImages($oldSystemName);
+
         $processor->crop();
 
+        ThumbnailsProcessor::handleCrop($processor->imageEntity);
+
         return true;
+    }
+
+    /**
+     * Delete old cropped image on update
+     * @param $oldSystemName
+     */
+    private function deleteOldImages($oldSystemName)
+    {
+        if (file_exists(CommonModule::getInstance()->imagesCropPath . $oldSystemName) &&
+            !is_dir(CommonModule::getInstance()->imagesCropPath . $oldSystemName))
+            unlink(CommonModule::getInstance()->imagesCropPath . $oldSystemName);
+
+
     }
 
     /**
@@ -135,50 +153,31 @@ class CropProcessor extends Component
         return false;
     }
 
+    /**
+     * Crop method crop image and save in crop directory
+     * @return bool
+     */
     private function crop()
     {
         $path = $this->imageEntity->getPath();
 
         if (!$path) return false;
 
-        $imagine = Image::getImagine();
+        if (!is_dir(CommonModule::getInstance()->imagesCropPath))
+            FileHelper::createDirectory(CommonModule::getInstance()->imagesCropPath);
+
         $image = Image::getImagine()->open($this->imageEntity->getPath());
 
-        $palette = new RGB();
-        $color = $palette->color('#3A7');
-        $size  = new \Imagine\Image\Box(400, 300);
-        $img = $imagine->create($size, $color);
+        $cropSize  = new Box($this->cropWidth, $this->cropHeight);
+        $cropStart = new Point($this->cropX, $this->cropY);
+        $newSize   = new Box($this->imageEntity->getImagesBlock()->crop_width,
+                             $this->imageEntity->getImagesBlock()->crop_height);
 
+        $image->crop($cropStart, $cropSize)
+              ->resize($newSize)
+              ->save(CommonModule::getInstance()->imagesCropPath .
+                     $this->imageEntity->getFileName());
 
-
-        $point = new Point(100,100);
-        $box = new Box(200,200);
-
-        $image->crop($point, $box);
-
-        $img->paste($image, $point);
-        $img->save(CommonModule::getInstance()->imagesPath . '/crp.jpg');
-
-
-        //throw new \yii\base\Exception(print_r($this, true));
+        return true;
     }
 }
-/*
-private function crop(ManipulatorInterface $image)
-{
-    $cropArray = Json::decode($this->model->getCropInfo());
-
-    $cropWidth = (int)$cropArray['width'];
-    $cropHeight = (int)$cropArray['height'];
-    $cropX = (int)$cropArray['x'];
-    $cropY = (int)$cropArray['y'];
-    //$cropRotate = (int)$cropArray['rotate']; //todo: handle rotate
-
-    $newSizeThumb = new Box($this->cropWidth, $this->cropHeight);
-    $cropStart = new Point($cropX, $cropY);
-    $cropSize = new Box($cropWidth, $cropHeight);
-
-    return $image->crop($cropStart, $cropSize)
-        ->resize($newSizeThumb);
-}
-*/

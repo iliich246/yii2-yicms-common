@@ -40,15 +40,38 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public $languageMethod = Language::COOKIE_TYPE;
 
-    public $filesPatch = DIRECTORY_SEPARATOR .
-                        'web' . DIRECTORY_SEPARATOR .
-                        'files' . DIRECTORY_SEPARATOR;
+    /**
+     * Block of fields with various paths
+     */
+    public $filesPatch           = DIRECTORY_SEPARATOR .
+                                  'web' . DIRECTORY_SEPARATOR .
+                                  'files' . DIRECTORY_SEPARATOR;
 
-    public $imagesPath = DIRECTORY_SEPARATOR .
-                        'web' . DIRECTORY_SEPARATOR .
-                        'images' . DIRECTORY_SEPARATOR;
+    public $imagesOriginalsPath  = DIRECTORY_SEPARATOR .
+                                  'web' . DIRECTORY_SEPARATOR .
+                                  'images' . DIRECTORY_SEPARATOR .
+                                  'orig' . DIRECTORY_SEPARATOR;
 
-    public $imagesWebPath = 'images';
+    public $imagesCropPath       = DIRECTORY_SEPARATOR .
+                                  'web' . DIRECTORY_SEPARATOR .
+                                  'images' . DIRECTORY_SEPARATOR .
+                                  'crop' . DIRECTORY_SEPARATOR;
+
+    public $imagesThumbnailsPath = DIRECTORY_SEPARATOR .
+                                   'web' . DIRECTORY_SEPARATOR .
+                                   'images' . DIRECTORY_SEPARATOR .
+                                   'thumb' . DIRECTORY_SEPARATOR;
+
+    /**
+     * Block of variables with images web paths
+     */
+    public $imagesOriginalsWebPath  = 'images/orig/';
+
+    public $imagesCropWebPath       = 'images/crop/';
+
+    public $imagesThumbnailsWebPath = 'images/thumb/';
+
+
 
     /** @inheritdoc */
     public $configurable = [
@@ -78,9 +101,14 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['files'] = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
-        $this->filesPatch = Yii::$app->basePath . $this->filesPatch;
-        $this->imagesPath = Yii::$app->basePath . $this->imagesPath;
-        $this->imagesWebPath = Yii::$app->homeUrl . $this->imagesWebPath;
+        $this->filesPatch           = Yii::$app->basePath . $this->filesPatch;
+        $this->imagesOriginalsPath  = Yii::$app->basePath . $this->imagesOriginalsPath;
+        $this->imagesCropPath       = Yii::$app->basePath . $this->imagesCropPath;
+        $this->imagesThumbnailsPath = Yii::$app->basePath . $this->imagesThumbnailsPath;
+
+        $this->imagesOriginalsWebPath  = Yii::$app->homeUrl . $this->imagesOriginalsWebPath;
+        $this->imagesCropWebPath       = Yii::$app->homeUrl . $this->imagesCropWebPath;
+        $this->imagesThumbnailsWebPath = Yii::$app->homeUrl . $this->imagesThumbnailsWebPath;
 
         parent::init();
     }

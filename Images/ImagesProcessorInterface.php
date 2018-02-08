@@ -19,13 +19,19 @@ interface ImagesProcessorInterface
 
     /**
      * Return information about crop
-     * @return mixed
+     * @return array
      */
     public function getCropInfo();
 
     /**
      * Returns physical path to image
-     * @return mixed
+     * @return string
      */
     public function getPath();
+
+    /**
+     * Return name of image file
+     * @return string
+     */
+    public function getFileName();
 }

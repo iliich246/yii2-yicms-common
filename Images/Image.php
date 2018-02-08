@@ -128,6 +128,14 @@ class Image extends AbstractEntity implements
     /**
      * @inheritdoc
      */
+    public function getFileName()
+    {
+        return $this->system_name;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function getReferenceName()
     {
         return 'image_reference';
@@ -154,8 +162,7 @@ class Image extends AbstractEntity implements
             $systemName = $imageTranslate->system_name;
         }
 
-        $path = CommonModule::getInstance()->imagesPath .
-            '/orig/' . $systemName;
+        $path = CommonModule::getInstance()->imagesOriginalsPath . $systemName;
 
         if (!file_exists($path) || is_dir($path)) return false;
 
@@ -186,10 +193,10 @@ class Image extends AbstractEntity implements
             $systemName = $imageTranslate->system_name;
         }
 
-        $path = CommonModule::getInstance()->imagesWebPath .
-            '/orig/' . $systemName;
-
-        //if (!file_exists($path) || is_dir($path)) return false;
+        if ($imagesBlock->crop_type == ImagesBlock::NO_CROP)
+            $path = CommonModule::getInstance()->imagesOriginalsWebPath . $systemName;
+        else
+            $path = CommonModule::getInstance()->imagesCropWebPath . $systemName;
 
         return $path;
     }

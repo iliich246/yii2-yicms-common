@@ -115,6 +115,22 @@ class ImageTranslateForm extends AbstractTranslateForm implements ImagesProcesso
     /**
      * @inheritdoc
      */
+    public function getPath()
+    {
+        return $this->imageEntity->getPath($this->language);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFileName()
+    {
+        return $this->currentTranslateDb->system_name;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getKey()
     {
         return $this->language->id . '-' . $this->imagesBlock->id;
