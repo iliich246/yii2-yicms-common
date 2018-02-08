@@ -82,7 +82,7 @@ class CropProcessor extends Component
 
         $processor->crop();
 
-        ThumbnailsProcessor::handleCrop($processor->imageEntity);
+        ThumbnailsProcessor::handleCrop($processor->imageEntity, $oldSystemName);
 
         return true;
     }

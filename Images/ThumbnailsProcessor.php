@@ -54,7 +54,7 @@ class ThumbnailsProcessor extends Component
         if ($oldSystemName) $processor->deleteOldThumbnails($oldSystemName,
             CommonModule::getInstance()->imagesCropPath);
 
-        $processor->makeThumbs(CommonModule::getInstance()->imagesCropPath);
+        $processor->makeThumbsCrop(CommonModule::getInstance()->imagesCropPath);
     }
 
     /**
@@ -75,6 +75,8 @@ class ThumbnailsProcessor extends Component
 
         if (!$thumbnailsList) return false;
 
+
+
         foreach($thumbnailsList as $thumbnail) {
             $fileName = $thumbnail->program_name . '_' . $oldSystemName;
 
@@ -86,13 +88,51 @@ class ThumbnailsProcessor extends Component
         return true;
     }
 
-
     /**
-     * Created all needed thumbnails
+     * Created all needed thumbnails for originals images
      * @param $savePath
      * @return bool
      */
     private function makeThumbs($savePath)
+    {
+        $imagesBlock = $this->imageEntity->getImagesBlock();
+
+        /** @var ImagesThumbnails[] $thumbnailsList */
+        $thumbnailsList = ImagesThumbnails::find()
+            ->where([
+                'common_images_templates_id' => $imagesBlock->id,
+            ])->all();
+
+        if (!$thumbnailsList) return false;
+
+        if (!is_dir($savePath))
+            FileHelper::createDirectory($savePath);
+
+        $image = Image::getImagine()->open(CommonModule::getInstance()->imagesOriginalsPath
+            . $this->imageEntity->getFileName());
+
+        foreach($thumbnailsList as $thumbnail) {
+            $sizeBox = $image->getSize();
+            $resizeBox = new Box($sizeBox->getWidth() / $thumbnail->divider,
+                $sizeBox->getHeight() / $thumbnail->divider);
+
+            $fileName = $thumbnail->program_name . '_' . $this->imageEntity->getFileName();
+
+            $image->resize($resizeBox)
+                ->save($savePath . $fileName, [
+                    'quality' => $thumbnail->quality
+                ]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Created all needed thumbnails for cropped images
+     * @param $savePath
+     * @return bool
+     */
+    private function makeThumbsCrop($savePath)
     {
         $imagesBlock = $this->imageEntity->getImagesBlock();
 
@@ -107,7 +147,8 @@ class ThumbnailsProcessor extends Component
         if (!is_dir($savePath))
             FileHelper::createDirectory($savePath);
 
-        $image = Image::getImagine()->open($this->imageEntity->getPath());
+        $image = Image::getImagine()->open(CommonModule::getInstance()->imagesCropPath
+            . $this->imageEntity->getFileName());
 
         foreach($thumbnailsList as $thumbnail) {
             $sizeBox = $image->getSize();
