@@ -9,6 +9,7 @@ use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
+/** @var $this \yii\web\View */
 /** @var $widget FilesDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 
@@ -24,37 +25,91 @@ $js = <<<JS
 
         if (!$(button).is('[data-file-template-id]')) return;
 
-        var fileTemplateId = $(button).data('fileTemplateId');
+        var fileTemplateId          = $(button).data('fileTemplateId');
+        var fileBlockHasConstraints = $(button).data('fileBlockHasConstraints');
+        var pjaxContainer           = $('#update-files-list-container');
 
         if (!($(this).hasClass('file-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('file-confirm-state');
         } else {
-            $.pjax({
-                url: '{$deleteLink}' + fileTemplateId,
-                container: '#update-files-list-container',
-                scrollTo: false,
-                push: false,
-                type: "POST",
-                timeout: 2500
-            });
+            if (!fileBlockHasConstraints) {
+                $.pjax({
+                    url: '{$deleteLink}' + fileTemplateId,
+                    container: '#update-files-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
 
-            var deleteActived = true;
+                var deleteActive = true;
 
-            $('#update-files-list-container').on('pjax:success', function(event) {
+                $(pjaxContainer).on('pjax:success', function(event) {
 
-                if (!deleteActived) return false;
+                    if (!deleteActive) return false;
 
-                $('#{$modalName}').modal('hide');
-                deleteActived = false;
-            });
+                    $('#{$modalName}').modal('hide');
+                    deleteActive = false;
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#file-block-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+                    $.pjax({
+                        url: '{$deleteLink}' + fileTemplateId + '&deletePass=' + $(passwordInput).val(),
+                        container: '#update-files-list-container',
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+
+                    var deleteActive = true;
+
+                    $(pjaxContainer).on('pjax:success', function(event) {
+
+                        if (!deleteActive) return false;
+
+                        $('#{$modalName}').modal('hide');
+                        deleteActive = false;
+                    });
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                         $('#{$modalName}').modal('hide');
+
+                         bootbox.alert({
+                             size: 'large',
+                             title: "Wrong dev password",
+                             message: "Files block template has not deleted",
+                             className: 'bootbox-error'
+                         });
+                    });
+                });
+
+                $('#{$modalName}').on('hide.bs.modal', function() {
+                    $(pjaxContainer).off('pjax:error');
+                    $(pjaxContainer).off('pjax:success');
+                    $('#{$modalName}').off('hide.bs.modal');
+                });
+            }
         }
     });
 })();
 JS;
 
 $this->registerJs($js, $this::POS_READY);
+
+$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
 
 ?>
 
@@ -137,7 +192,7 @@ $this->registerJs($js, $this::POS_READY);
                 ])
                 ?>
                 <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
-                    <div class="row">
+                    <div class="row delete-button-row">
                         <div class="col-xs-12">
 
                             <br>
@@ -147,11 +202,34 @@ $this->registerJs($js, $this::POS_READY);
                                     class="btn btn-danger"
                                     id="file-delete"
                                     data-file-template-reference="<?= $widget->devFilesGroup->filesBlock->file_template_reference ?>"
-                                    data-file-template-id="<?= $widget->devFilesGroup->filesBlock->id ?>">
+                                    data-file-template-id="<?= $widget->devFilesGroup->filesBlock->id ?>"
+                                    data-file-block-has-constraints="<?= (int)$widget->devFilesGroup->filesBlock->isConstraints() ?>"
+                                >
                                 Delete file block template
                             </button>
                         </div>
                     </div>
+                    <script type="text/template" id="delete-with-pass-template">
+                        <div class="col-xs-12">
+                            <br>
+                            <label for="file-block-delete-password-input">
+                                File block has constraints. Enter dev password for delete file block template
+                            </label>
+                            <input type="password"
+                                   id="file-block-delete-password-input"
+                                   class="form-control" name=""
+                                   value=""
+                                   aria-required="true"
+                                   aria-invalid="false">
+                            <br>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    id="button-delete-with-pass"
+                                >
+                                Yes, i am absolutely seriously!!!
+                            </button>
+                        </div>
+                    </script>
                     <hr>
 
                     <a href="<?= \yii\helpers\Url::toRoute([

@@ -3,12 +3,12 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Base\CommonHashForm;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldsGroup;
@@ -113,11 +113,13 @@ class DeveloperFieldsController extends Controller
     /**
      * Action for delete field template
      * @param $fieldTemplateId
+     * @param false|bool $deletePass
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
-    public function actionDeleteFieldTemplate($fieldTemplateId)
+    public function actionDeleteFieldTemplate($fieldTemplateId, $deletePass = false)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
@@ -128,9 +130,9 @@ class DeveloperFieldsController extends Controller
 
         $fieldTemplateReference = $fieldTemplate->field_template_reference;
 
-        //TODO: for field templates with constraints makes request of root password
-//        if ($fieldTemplate->isConstraints())
-//            return $this->redirect(Url::toRoute(['xxx', 'id' => $id]));
+        if ($fieldTemplate->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
 
         $fieldTemplate->delete();
 

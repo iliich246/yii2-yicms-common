@@ -8,6 +8,8 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Base\CommonHashForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
@@ -125,20 +127,24 @@ class DeveloperFilesController extends Controller
     /**
      * Action for delete file block template
      * @param $fileTemplateId
+     * @param bool|false $deletePass
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
-    public function actionDeleteFileBlockTemplate($fileTemplateId)
+    public function actionDeleteFileBlockTemplate($fileTemplateId, $deletePass = false)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
 
         /** @var FilesBlock $filesBlock */
         $filesBlock = FilesBlock::findOne($fileTemplateId);
 
         if (!$filesBlock) throw new NotFoundHttpException('Wrong fileTemplateId');
 
-        //TODO: for field templates with constraints makes request of root password
+        if ($filesBlock->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
 
         $fileTemplateReference = $filesBlock->file_template_reference;
 
@@ -163,7 +169,7 @@ class DeveloperFilesController extends Controller
      */
     public function actionFileTemplateUpOrder($fileTemplateId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
 
         /** @var FilesBlock $filesBlock */
         $filesBlock = FilesBlock::findOne($fileTemplateId);
@@ -193,7 +199,7 @@ class DeveloperFilesController extends Controller
      */
     public function actionFileTemplateDownOrder($fileTemplateId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
 
         /** @var FilesBlock $filesBlock */
         $filesBlock = FilesBlock::findOne($fileTemplateId);

@@ -196,7 +196,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function isConstraints()
     {
-
+        return true;
     }
 
     /**
@@ -205,7 +205,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function delete()
     {
-
+        return true;
     }
 
     /**

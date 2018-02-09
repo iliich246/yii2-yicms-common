@@ -25,31 +25,83 @@ $js = <<<JS
 
         if (!$(button).is('[data-image-template-id]')) return;
 
-        var fileTemplateId = $(button).data('imageTemplateId');
+        var imageTemplateId          = $(button).data('imageTemplateId');
+        var imageBlockHasConstraints = $(button).data('imageBlockHasConstraints');
+        var pjaxContainer            = $('#update-images-list-container');
 
         if (!($(this).hasClass('image-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('image-confirm-state');
         } else {
-            $.pjax({
-                url: '{$deleteLink}' + fileTemplateId,
-                container: '#update-images-list-container',
-                scrollTo: false,
-                push: false,
-                type: "POST",
-                timeout: 2500
-            });
+            if (!imageBlockHasConstraints) {
+                $.pjax({
+                    url: '{$deleteLink}' + imageTemplateId,
+                    container: '#update-images-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
 
-            var deleteActived = true;
+                var deleteActive = true;
 
-            $('#update-images-list-container').on('pjax:success', function(event) {
+                $(pjaxContainer).on('pjax:success', function(event) {
 
-                if (!deleteActived) return false;
+                    if (!deleteActive) return false;
 
-                $('#{$modalName}').modal('hide');
-                deleteActived = false;
-            });
+                    $('#{$modalName}').modal('hide');
+                    deleteActive = false;
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+                
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#images-block-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+                    $.pjax({
+                        url: '{$deleteLink}' + imageTemplateId + '&deletePass=' + $(passwordInput).val(),
+                        container: '#update-images-list-container',
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+
+                    var deleteActive = true;
+
+                    $(pjaxContainer).on('pjax:success', function(event) {
+
+                        if (!deleteActive) return false;
+
+                        $('#{$modalName}').modal('hide');
+                        deleteActive = false;
+                    });
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                         $('#{$modalName}').modal('hide');
+
+                         bootbox.alert({
+                             size: 'large',
+                             title: "Wrong dev password",
+                             message: "Images block template has not deleted",
+                             className: 'bootbox-error'
+                         });
+                    });
+                });
+
+                $('#{$modalName}').on('hide.bs.modal', function() {
+                    $(pjaxContainer).off('pjax:error');
+                    $(pjaxContainer).off('pjax:success');
+                    $('#{$modalName}').off('hide.bs.modal');
+                });
+            }
         }
     });
 
@@ -61,7 +113,8 @@ $js = <<<JS
 JS;
 
 $this->registerJs($js, $this::POS_READY);
-//$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\JsColorPickerAsset::className());
+
+$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
 
 ?>
 
@@ -170,7 +223,7 @@ $this->registerJs($js, $this::POS_READY);
                 ?>
 
                 <?php if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_UPDATE): ?>
-                    <div class="row">
+                    <div class="row delete-button-row">
                         <div class="col-xs-12">
 
                             <br>
@@ -180,11 +233,34 @@ $this->registerJs($js, $this::POS_READY);
                                     class="btn btn-danger"
                                     id="image-delete"
                                     data-image-template-reference="<?= $widget->devImagesGroup->imagesBlock->image_template_reference ?>"
-                                    data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>">
+                                    data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>"
+                                    data-image-block-has-constraints="<?= $widget->devImagesGroup->imagesBlock->isConstraints() ?>"
+                                >
                                 Delete image block template
                             </button>
                         </div>
                     </div>
+                    <script type="text/template" id="delete-with-pass-template">
+                        <div class="col-xs-12">
+                            <br>
+                            <label for="images-block-delete-password-input">
+                                Images block has constraints. Enter dev password for delete images block template
+                            </label>
+                            <input type="password"
+                                   id="images-block-delete-password-input"
+                                   class="form-control" name=""
+                                   value=""
+                                   aria-required="true"
+                                   aria-invalid="false">
+                            <br>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    id="button-delete-with-pass"
+                                >
+                                Yes, i am absolutely seriously!!!
+                            </button>
+                        </div>
+                    </script>
                     <hr>
 
                     <a href="<?= \yii\helpers\Url::toRoute([

@@ -8,6 +8,8 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Base\CommonHashForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
@@ -127,11 +129,13 @@ class DeveloperImagesController extends Controller
     /**
      * Action for delete image block template
      * @param $imageTemplateId
+     * @param bool|false $deletePass
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
-    public function actionDeleteImageBlockTemplate($imageTemplateId)
+    public function actionDeleteImageBlockTemplate($imageTemplateId, $deletePass = false)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
@@ -140,7 +144,9 @@ class DeveloperImagesController extends Controller
 
         if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId');
 
-        //TODO: for field templates with constraints makes request of root password
+        if ($imagesBlock->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
 
         $imageTemplateReference = $imagesBlock->image_template_reference;
 

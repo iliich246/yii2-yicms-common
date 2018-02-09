@@ -277,18 +277,6 @@ class Field extends ActiveRecord implements
      */
     public static function getInstance($fieldTemplateReference, $fieldReference, $programName)
     {
-/*
-        if (is_null($template = FieldTemplate::getInstance($fieldTemplateReference, $programName))) return null;
-
-        $field = self::find()->where([
-            'common_fields_template_id' => $template->id,
-            'field_reference' => $fieldReference
-        ])->one();
-        if (!$field) return null;
-        $field->template = $template;
-        return $field;
-*/
-
         if (is_null($template = FieldTemplate::getInstance($fieldTemplateReference, $programName))) {
             Yii::warning(
                 "Can`t fetch for " . static::className() .

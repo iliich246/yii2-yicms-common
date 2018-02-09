@@ -252,16 +252,15 @@ class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
      */
     public function isConstraints()
     {
-
+        return true;
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
+     * @inheritdoc
      */
     public function delete()
     {
-
+        return true;
     }
 
     /**

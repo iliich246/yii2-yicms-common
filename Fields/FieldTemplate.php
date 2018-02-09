@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
+use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 
 /**
@@ -154,6 +155,7 @@ class FieldTemplate extends AbstractTemplate
     }
 
     /**
+     * Returns true if this field template has constraints
      * @return bool
      */
     public function isConstraints()
@@ -166,8 +168,7 @@ class FieldTemplate extends AbstractTemplate
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
+     * @inheritdoc
      */
     public function delete()
     {
@@ -175,19 +176,22 @@ class FieldTemplate extends AbstractTemplate
             'common_fields_template_id' => $this->id
         ])->all();
 
-        foreach($fields as $field) {
+        foreach($fields as $field)
             $field->delete();
-        }
 
         $fieldNames = FieldsNamesTranslatesDb::find()->where([
            'common_fields_template_id' => $this->id,
         ])->all();
 
-        foreach($fieldNames as $fieldName) {
+        foreach($fieldNames as $fieldName)
             $fieldName->delete();
-        }
 
-        //TODO: handle fields validators
+        $validators = ValidatorDb::find()->where([
+                        'validator_reference' => $this->validator_reference
+                    ])->all();
+
+        foreach($validators as $validator)
+            $validator->delete();
 
         return parent::delete();
     }

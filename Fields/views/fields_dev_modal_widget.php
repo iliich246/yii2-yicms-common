@@ -10,6 +10,7 @@ use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
+/** @var $this \yii\web\View */
 /** @var $widget FieldsDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 
@@ -25,37 +26,92 @@ $js = <<<JS
 
         if (!$(button).is('[data-field-template-id]')) return;
 
-        var fieldTemplateId = $(button).data('fieldTemplateId');
+        var fieldTemplateId     = $(button).data('fieldTemplateId');
+        var fieldHasConstraints = $(button).data('fieldHasConstraints');
+        var pjaxContainer       = $('#update-fields-list-container');
 
         if (!($(this).hasClass('field-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('field-confirm-state');
         } else {
-            $.pjax({
-                url: '{$deleteLink}' + fieldTemplateId,
-                container: '#update-fields-list-container',
-                scrollTo: false,
-                push: false,
-                type: "POST",
-                timeout: 2500
-            });
+            if (!fieldHasConstraints) {
+                $.pjax({
+                    url: '{$deleteLink}' + fieldTemplateId,
+                    container: '#update-fields-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
 
-            var deleteActived = true;
+                var deleteActive = true;
 
-            $('#update-fields-list-container').on('pjax:success', function(event) {
+                $(pjaxContainer).on('pjax:success', function(event) {
 
-                if (!deleteActived) return false;
+                    if (!deleteActive) return false;
 
-                $('#{$modalName}').modal('hide');
-                deleteActived = false;
-            });
+                    $('#{$modalName}').modal('hide');
+                    deleteActive = false;
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#field-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+
+                    $.pjax({
+                        url: '{$deleteLink}' + fieldTemplateId + '&deletePass=' + $(passwordInput).val(),
+                        container: '#update-fields-list-container',
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+
+                    var deleteActive = true;
+
+                    $(pjaxContainer).on('pjax:success', function(event) {
+
+                        if (!deleteActive) return false;
+
+                        $('#{$modalName}').modal('hide');
+                        deleteActive = false;
+                    });
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                        $('#{$modalName}').modal('hide');
+
+                        bootbox.alert({
+                            size: 'large',
+                            title: "Wrong dev password",
+                            message: "Field template has not deleted",
+                            className: 'bootbox-error'
+                        });
+                    });
+                });
+
+                $('#{$modalName}').on('hide.bs.modal', function() {
+                    $(pjaxContainer).off('pjax:error');
+                    $(pjaxContainer).off('pjax:success');
+                    $('#{$modalName}').off('hide.bs.modal');
+                });
+            }
         }
     });
 })();
 JS;
 
 $this->registerJs($js, $this::POS_READY);
+
+$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
 
 ?>
 
@@ -135,7 +191,7 @@ $this->registerJs($js, $this::POS_READY);
                 ?>
 
                 <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-                    <div class="row">
+                    <div class="row delete-button-row">
                         <div class="col-xs-12">
                             <br>
 
@@ -144,11 +200,34 @@ $this->registerJs($js, $this::POS_READY);
                                     class="btn btn-danger"
                                     id="field-delete"
                                     data-field-template-reference="<?= $widget->devFieldGroup->fieldTemplate->field_template_reference ?>"
-                                    data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>">
+                                    data-field-template-id="<?= $widget->devFieldGroup->fieldTemplate->id ?>"
+                                    data-field-has-constraints="<?= (int)$widget->devFieldGroup->fieldTemplate->isConstraints() ?>"
+                                >
                                 Delete field
                             </button>
                         </div>
                     </div>
+                    <script type="text/template" id="delete-with-pass-template">
+                        <div class="col-xs-12">
+                            <br>
+                            <label for="field-delete-password-input">
+                                Field has constraints. Enter dev password for delete field template
+                            </label>
+                            <input type="password"
+                                   id="field-delete-password-input"
+                                   class="form-control" name=""
+                                   value=""
+                                   aria-required="true"
+                                   aria-invalid="false">
+                            <br>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    id="button-delete-with-pass"
+                                >
+                                Yes, i am absolutely seriously!!!
+                            </button>
+                        </div>
+                    </script>
                     
                     <hr>
 
