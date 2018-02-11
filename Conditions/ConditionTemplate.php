@@ -83,16 +83,15 @@ class ConditionTemplate extends AbstractTemplate
      */
     public function isConstraints()
     {
-
+        return true;
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
+     * @inheritdoc
      */
     public function delete()
     {
-
+        return true;
     }
 
     /**

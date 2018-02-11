@@ -104,11 +104,6 @@ $js = <<<JS
             }
         }
     });
-
-    $(document).on('click', '.config-thumbnails-button', function() {
-
-        var imageTemplateId = $(this).data('imageTemplateId');
-    });
 })();
 JS;
 

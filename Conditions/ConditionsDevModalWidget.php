@@ -43,7 +43,7 @@ class ConditionsDevModalWidget extends Widget
      */
     public function init()
     {
-        $this->deleteLink = Url::toRoute(['/common/dev-conditions/delete-condition-template']);
+        $this->deleteLink = Url::toRoute(['/common/dev-conditions/delete-conditions-block-template']);
     }
 
     /**

@@ -7,6 +7,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\Base\DevFilter;
+use Iliich246\YicmsCommon\Base\CommonHashForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
 use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
@@ -106,11 +108,13 @@ class DeveloperConditionsController extends Controller
     /**
      * Action for delete conditions template
      * @param $conditionTemplateId
+     * @param bool|false $deletePass
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
-    public function actionDeleteConditionsBlockTemplate($conditionTemplateId)
+    public function actionDeleteConditionsBlockTemplate($conditionTemplateId, $deletePass = false)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
@@ -118,6 +122,10 @@ class DeveloperConditionsController extends Controller
         $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
 
         if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        if ($conditionTemplate->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
 
         $conditionTemplateReference = $conditionTemplate->condition_template_reference;
 

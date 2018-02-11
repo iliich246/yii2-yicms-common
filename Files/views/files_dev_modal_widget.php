@@ -232,13 +232,11 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                     </script>
                     <hr>
 
-                    <a href="<?= \yii\helpers\Url::toRoute([
-                        '/common/dev-files/show-file-block-fields',
-                        'fileTemplateId' => $widget->devFilesGroup->filesBlock->id
-                    ]) ?>"
-                       class="btn btn-primary">
+                    <p class="btn btn-primary view-files-block-fields"
+                       data-field-template-id="<?= $widget->devFilesGroup->filesBlock->getFieldTemplateReference()  ?>"
+                    >
                         View file block fields
-                    </a>
+                    </p>
 
                     <hr>
 

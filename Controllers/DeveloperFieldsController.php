@@ -111,6 +111,33 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
+     * Action for update fields list container in modal windows of other entities like files or images
+     * @param $fieldTemplateReference
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function actionUpdateFieldsListContainerModal($fieldTemplateReference)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplateReference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplateReference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-fields-list-container-modal', [
+            'fieldTemplateReference' => $fieldTemplateReference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle' => $fieldTemplatesSingle
+        ]);
+    }
+
+    /**
      * Action for delete field template
      * @param $fieldTemplateId
      * @param false|bool $deletePass
@@ -128,11 +155,11 @@ class DeveloperFieldsController extends Controller
 
         if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
 
-        $fieldTemplateReference = $fieldTemplate->field_template_reference;
-
         if ($fieldTemplate->isConstraints())
             if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
                 throw new CommonException('Wrong dev password');
+
+        $fieldTemplateReference = $fieldTemplate->field_template_reference;
 
         $fieldTemplate->delete();
 

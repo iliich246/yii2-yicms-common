@@ -2,16 +2,18 @@
     var addFile = $('.add-file-block');
 
     var homeUrl = $(addFile).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-files/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-files/load-modal';
-    var updateFileListUrl = homeUrl + '/common/dev-files/update-files-list-container';
-    var fileTemplateUpUrl = homeUrl + '/common/dev-files/file-template-up-order';
+
+    var emptyModalUrl        = homeUrl + '/common/dev-files/empty-modal';
+    var loadModalUrl         = homeUrl + '/common/dev-files/load-modal';
+    var updateFileListUrl    = homeUrl + '/common/dev-files/update-files-list-container';
+    var fileTemplateUpUrl    = homeUrl + '/common/dev-files/file-template-up-order';
     var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
+    var showFieldsList       = homeUrl + '/common/dev-fields/update-fields-list-container-modal';
 
     var fileTemplateReference = $(addFile).data('fileTemplateReference');
-    var pjaxContainerName = '#' + $(addFile).data('pjaxContainerName');
-    var pjaxFilesModalName = '#' + $(addFile).data('filesModalName');
-    var imageLoaderScr = $(addFile).data('loaderImageSrc');
+    var pjaxContainerName     = '#' + $(addFile).data('pjaxContainerName');
+    var pjaxFilesModalName    = '#' + $(addFile).data('filesModalName');
+    var imageLoaderScr        = $(addFile).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxFilesModalName)
@@ -75,6 +77,17 @@
         $.pjax({
             url: filedTemplateDownUrl + '?fileTemplateId=' + $(this).data('fileTemplateId'),
             container: '#update-files-list-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $(document).on('click', '.view-files-block-fields', function() {
+        $.pjax({
+            url: showFieldsList + '?fieldTemplateReference=' + $(this).data('fieldTemplateId'),
+            container: '#files-pjax-container',
             scrollTo: false,
             push: false,
             type: "POST",

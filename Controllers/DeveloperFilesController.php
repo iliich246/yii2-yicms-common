@@ -55,20 +55,8 @@ class DeveloperFilesController extends Controller
             $devFilesGroup = new DevFilesGroup();
             $devFilesGroup->initialize($fileTemplateId);
 
-//            $fieldTemplatesTranslatable = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
-//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                ->all();
-//
-//            $fieldTemplatesSingle = FieldTemplate::getListQuery($devFilesGroup->filesBlock->field_template_reference)
-//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                ->all();
-
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
-                //'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-                //'fieldTemplatesSingle' => $fieldTemplatesSingle
             ]);
         }
 

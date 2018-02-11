@@ -2,16 +2,17 @@
     var addField = $('.add-field');
 
     var homeUrl = $(addField).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-fields/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-fields/load-modal';
-    var updateFieldsListUrl = homeUrl + '/common/dev-fields/update-fields-list-container';
-    var fieldTemplateUpUrl = homeUrl + '/common/dev-fields/field-template-up-order';
+
+    var emptyModalUrl        = homeUrl + '/common/dev-fields/empty-modal';
+    var loadModalUrl         = homeUrl + '/common/dev-fields/load-modal';
+    var updateFieldsListUrl  = homeUrl + '/common/dev-fields/update-fields-list-container';
+    var fieldTemplateUpUrl   = homeUrl + '/common/dev-fields/field-template-up-order';
     var fieldTemplateDownUrl = homeUrl + '/common/dev-fields/field-template-down-order';
 
     var fieldTemplateReference = $(addField).data('fieldTemplateReference');
-    var pjaxContainerName = '#' + $(addField).data('pjaxContainerName');
-    var pjaxFieldsModalName = '#' + $(addField).data('fieldsModalName');
-    var imageLoaderScr = $(addField).data('loaderImageSrc');
+    var pjaxContainerName      = '#' + $(addField).data('pjaxContainerName');
+    var pjaxFieldsModalName    = '#' + $(addField).data('fieldsModalName');
+    var imageLoaderScr         = $(addField).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxFieldsModalName)

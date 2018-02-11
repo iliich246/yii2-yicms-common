@@ -24,31 +24,85 @@ $js = <<<JS
 
         if (!$(button).is('[data-condition-template-id]')) return;
 
-        var conditionTemplateId = $(button).data('conditionTemplateId');
+        var conditionTemplateId     = $(button).data('conditionTemplateId');
+        var conditionHasConstraints = $(button).data('conditionHasConstraints');
+        var pjaxContainer           = $('#update-conditions-list-container');
 
         if (!($(this).hasClass('condition-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
             $(this).addClass('condition-confirm-state');
         } else {
-            $.pjax({
-                url: '{$deleteLink}' + conditionTemplateId,
-                container: '#update-conditions-list-container',
-                scrollTo: false,
-                push: false,
-                type: "POST",
-                timeout: 2500
-            });
+            if (!conditionHasConstraints) {
+                $.pjax({
+                    url: '{$deleteLink}' + conditionTemplateId,
+                    container: '#update-conditions-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
 
-            var deleteActive = true;
+                var deleteActive = true;
 
-            $('#update-condition-list-container').on('pjax:success', function(event) {
+                $(pjaxContainer).on('pjax:success', function(event) {
 
-                if (!deleteActive) return false;
+                    if (!deleteActive) return false;
 
-                $('#{$modalName}').modal('hide');
-                deleteActive = false;
-            });
+                    $('#{$modalName}').modal('hide');
+                    deleteActive = false;
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#condition-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+
+                    $.pjax({
+                        url: '{$deleteLink}' + conditionTemplateId + '&deletePass=' + $(passwordInput).val(),
+                        container: '#update-conditions-list-container',
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+
+                    var deleteActive = true;
+
+                    $(pjaxContainer).on('pjax:success', function(event) {
+
+                        if (!deleteActive) return false;
+
+                        $('#{$modalName}').modal('hide');
+
+                        deleteActive = false;
+                    });
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                        $('#{$modalName}').modal('hide');
+
+                        bootbox.alert({
+                            size: 'large',
+                            title: "Wrong dev password",
+                            message: "Condition template has not deleted",
+                            className: 'bootbox-error'
+                        });
+                    });
+                });
+
+                $('#{$modalName}').on('hide.bs.modal', function() {
+                    $(pjaxContainer).off('pjax:error');
+                    $(pjaxContainer).off('pjax:success');
+                    $('#{$modalName}').off('hide.bs.modal');
+                });
+            }
         }
     });
 })();
@@ -56,7 +110,8 @@ JS;
 
 $this->registerJs($js, $this::POS_READY);
 
-//throw new \Exception(print_r($widget->devConditionsGroup,true));
+$this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
+
 ?>
 
 <div class="modal fade"
@@ -88,8 +143,6 @@ $this->registerJs($js, $this::POS_READY);
                 'id' => 'condition-template-id-hidden'
             ]) ?>
         <?php endif; ?>
-
-
 
         <div class="modal-content">
             <div class="modal-header">
@@ -123,7 +176,7 @@ $this->registerJs($js, $this::POS_READY);
                 ?>
 
                 <?php if ($widget->devConditionsGroup->scenario == DevConditionsGroup::SCENARIO_UPDATE): ?>
-                    <div class="row">
+                    <div class="row delete-button-row">
                         <div class="col-xs-12">
 
                             <br>
@@ -131,19 +184,38 @@ $this->registerJs($js, $this::POS_READY);
                             <p>IMPORTANT! Do not delete condition templates without serious reason!</p>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="file-delete"
+                                    id="condition-delete"
                                     data-condition-template-reference="<?= $widget->devConditionsGroup->conditionTemplate->condition_template_reference ?>"
-                                    data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->id ?>">
+                                    data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->id ?>"
+                                    data-condition-has-constraints="<?= (int)$widget->devConditionsGroup->conditionTemplate->isConstraints() ?>"
+                            >
                                 Delete condition template
                             </button>
                         </div>
                     </div>
+                    <script type="text/template" id="delete-with-pass-template">
+                        <div class="col-xs-12">
+                            <br>
+                            <label for="condition-delete-password-input">
+                                Field has constraints. Enter dev password for delete field template
+                            </label>
+                            <input type="password"
+                                   id="condition-delete-password-input"
+                                   class="form-control" name=""
+                                   value=""
+                                   aria-required="true"
+                                   aria-invalid="false">
+                            <br>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    id="button-delete-with-pass"
+                            >
+                                Yes, i am absolutely seriously!!!
+                            </button>
+                        </div>
+                    </script>
+
                     <hr>
-
-                    <pre>
-                        <?php print_r($widget->devConditionsGroup->conditionTemplate->id)?>
-                    </pre>
-
 
                     <?= ValidatorsListWidget::widget([
                         'validatorReference' => $widget->devConditionsGroup->conditionTemplate,
