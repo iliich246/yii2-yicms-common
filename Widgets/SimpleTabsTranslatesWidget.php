@@ -36,7 +36,11 @@ class SimpleTabsTranslatesWidget extends Widget
      * @var mixed arbitrary data
      */
     public $data;
-
+    /**
+     * Prefix for modify bootstrap tabs if form has more than one same tab essences
+     * @var bool|string
+     */
+    public $tabModification = false;
     /**
      * @var string path to translate view
      */

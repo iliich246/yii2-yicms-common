@@ -13,13 +13,13 @@ use Iliich246\YicmsCommon\Languages\Language;
 $js = <<<JS
     ;(function() {
         var validatorForm = $('.validator-form');
-        var deleteButton = $('#validator-delete');
+        var deleteButton  = $('#validator-delete');
 
-        var pjaxContainer = $(validatorForm).parent('.pjax-container');
+        var pjaxContainer   = $(validatorForm).parent('.pjax-container');
         var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
-        var validatorId = $(validatorForm).data('validatorId');
+        var validatorId     = $(validatorForm).data('validatorId');
 
-        var homeUrl = $(validatorForm).data('homeUrl');
+        var homeUrl   = $(validatorForm).data('homeUrl');
         var returnUrl = $(pjaxContainer).data('returnUrl');
         var deleteUrl = homeUrl + '/common/dev-validators/delete-validator?';
 

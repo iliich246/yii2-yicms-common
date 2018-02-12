@@ -11,15 +11,15 @@ $js = <<<JS
         var currentModal = $('.modal').filter('.in');
 
         var validatorsBlock = $(currentModal).find('.validators-block');
-        var addValidator = $(currentModal).find('.add-validator');
-        var validatorsList = $(currentModal).find('.validators-list');
+        var addValidator    = $(currentModal).find('.add-validator');
+        var validatorsList  = $(currentModal).find('.validators-list');
 
-        var homeUrl = $(validatorsBlock).data('homeUrl');
-        var returnUrl =  $(validatorsBlock).data('returnUrl');
+        var homeUrl           = $(validatorsBlock).data('homeUrl');
+        var returnUrl         = $(validatorsBlock).data('returnUrl');
         var pjaxContainerName = '#' + $(validatorsBlock).data('ownerPjaxContainerName');
 
         var updateValidatorUrl = homeUrl + '/common/dev-validators/update-validator?';
-        var addValidatorUrl = homeUrl + '/common/dev-validators/add-validator?';
+        var addValidatorUrl    = homeUrl + '/common/dev-validators/add-validator?';
 
         $(addValidator).on('click', function() {
             $.pjax({

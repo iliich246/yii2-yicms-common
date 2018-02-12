@@ -125,6 +125,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                 'id' => FilesDevModalWidget::getPjaxContainerId(),
                 'class' => 'pjax-container',
                 'data-return-url' => '0',
+                'data-return-url-fields' => '0'
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
@@ -234,6 +235,10 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
 
                     <p class="btn btn-primary view-files-block-fields"
                        data-field-template-id="<?= $widget->devFilesGroup->filesBlock->getFieldTemplateReference()  ?>"
+                       data-return-url="<?= \yii\helpers\Url::toRoute([
+                           '/common/dev-files/load-modal',
+                           'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
+                       ]) ?>"
                     >
                         View file block fields
                     </p>

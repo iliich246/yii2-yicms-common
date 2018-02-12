@@ -11,7 +11,7 @@
     <ul class="nav nav-tabs" role="tablist">
         <?php foreach ($widget->translateModels as $translateModel): ?>
             <li role="presentation" <?php if ($translateModel->isActive()) { ?>class="active"<?php } ?>>
-                <a href="#<?= $translateModel->getIdName() ?>"
+                <a href="#<?= $translateModel->getIdName() ?><?= $widget->tabModification ?>"
                    data-toggle="tab"
                    aria-controls="<?= $translateModel->getIdName() ?>"
                 >
@@ -24,7 +24,7 @@
         <?php foreach ($widget->translateModels as $translateModel): ?>
             <div role="tabpanel"
                  class="tab-pane fade <?php if ($translateModel->isActive()) { ?>in active<?php } ?>"
-                 id="<?= $translateModel->getIdName() ?>"
+                 id="<?= $translateModel->getIdName() ?><?= $widget->tabModification ?>"
                 >
                 <?= $this->render($widget->getTranslateView(), [
                     'form' => $widget->form,

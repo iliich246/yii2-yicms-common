@@ -8,7 +8,7 @@
     var updateFileListUrl    = homeUrl + '/common/dev-files/update-files-list-container';
     var fileTemplateUpUrl    = homeUrl + '/common/dev-files/file-template-up-order';
     var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
-    var showFieldsList       = homeUrl + '/common/dev-fields/update-fields-list-container-modal';
+    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-modal';
 
     var fileTemplateReference = $(addFile).data('fileTemplateReference');
     var pjaxContainerName     = '#' + $(addFile).data('pjaxContainerName');
@@ -85,8 +85,15 @@
     });
 
     $(document).on('click', '.view-files-block-fields', function() {
+
+        $('#files-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+
+        console.log(pjaxFilesModalName);
+
         $.pjax({
-            url: showFieldsList + '?fieldTemplateReference=' + $(this).data('fieldTemplateId'),
+            url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
+                 + '&pjaxName=' + pjaxContainerName.substr(1)
+                 + '&modalName=' + pjaxFilesModalName.substr(1),
             container: '#files-pjax-container',
             scrollTo: false,
             push: false,

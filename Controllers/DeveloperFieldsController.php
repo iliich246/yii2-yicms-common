@@ -63,18 +63,49 @@ class DeveloperFieldsController extends Controller
      * @param $fieldTemplateReference
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws \Exception
      */
     public function actionEmptyModal($fieldTemplateReference)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         $devFieldGroup = new DevFieldsGroup();
         $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
         $devFieldGroup->initialize();
 
         return FieldsDevModalWidget::widget([
-            'devFieldGroup' => $devFieldGroup
+            'devFieldGroup' => $devFieldGroup,
+        ]);
+    }
+
+    /**
+     * Action for send empty fields modal window for existed modal window like file modal or images modal
+     * @param $fieldTemplateReference
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     */
+    public function actionEmptyModalDependent($fieldTemplateReference, $pjaxName, $modalName)
+    {
+        //if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        $devFieldGroup = new DevFieldsGroup();
+        $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
+        $devFieldGroup->initialize();
+
+        if (Yii::$app->request->post('_saveAndBack'))
+            $returnBack = true;
+        else
+            $returnBack = false;
+
+        return $this->renderAjax('/../Fields/views/fields_dev_for_modals_dependents.php', [
+            'devFieldGroup' => $devFieldGroup,
+            'returnBack'    => $returnBack,
+            'pjaxName'      => $pjaxName,
+            'modalName'     => $modalName
         ]);
     }
 
@@ -101,9 +132,9 @@ class DeveloperFieldsController extends Controller
                 ->all();
 
             return $this->render('/pjax/update-fields-list-container', [
-                'fieldTemplateReference' => $fieldTemplateReference,
+                'fieldTemplateReference'     => $fieldTemplateReference,
                 'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-                'fieldTemplatesSingle' => $fieldTemplatesSingle
+                'fieldTemplatesSingle'       => $fieldTemplatesSingle
             ]);
         }
 
@@ -113,10 +144,12 @@ class DeveloperFieldsController extends Controller
     /**
      * Action for update fields list container in modal windows of other entities like files or images
      * @param $fieldTemplateReference
+     * @param $pjaxName
+     * @param $modalName
      * @return string
      * @throws BadRequestHttpException
      */
-    public function actionUpdateFieldsListContainerModal($fieldTemplateReference)
+    public function actionUpdateFieldsListContainerModal($fieldTemplateReference, $pjaxName, $modalName)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
 
@@ -131,9 +164,11 @@ class DeveloperFieldsController extends Controller
             ->all();
 
         return $this->renderAjax('/pjax/update-fields-list-container-modal', [
-            'fieldTemplateReference' => $fieldTemplateReference,
+            'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
         ]);
     }
 
@@ -174,9 +209,9 @@ class DeveloperFieldsController extends Controller
             ->all();
 
         return $this->render('/pjax/update-fields-list-container', [
-            'fieldTemplateReference' => $fieldTemplateReference,
+            'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle
         ]);
     }
 
@@ -244,9 +279,9 @@ class DeveloperFieldsController extends Controller
             ->all();
 
         return $this->render('/pjax/update-fields-list-container', [
-            'fieldTemplateReference' => $fieldTemplate->field_template_reference,
+            'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle' => $fieldTemplatesSingle
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle
         ]);
     }
 
@@ -273,9 +308,9 @@ class DeveloperFieldsController extends Controller
         $fieldsGroup->initializePjax($fieldTemplateReference, $field);
 
         return $this->render(CommonModule::getInstance()->yicmsLocation . '/Common/Views/pjax/fields', [
-            'fieldsGroup' => $fieldsGroup,
+            'fieldsGroup'            => $fieldsGroup,
             'fieldTemplateReference' => $fieldTemplateReference,
-            'success' => true,
+            'success'                => true,
         ]);
     }
 
