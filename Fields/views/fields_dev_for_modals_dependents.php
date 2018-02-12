@@ -66,11 +66,29 @@ else $return = 'false';
             <?php endif; ?>
         </h3>
     </div>
+    <?php if ($devFieldGroup->scenario == DevFieldsGroup::SCENARIO_CREATE): ?>
+    <?php $action = ''; ?>
+    <?php else: ?>
+    <?php $action = \yii\helpers\Url::toRoute([
+
+    ]) ?>
+    <?php endif; ?>
     <?php $form = ActiveForm::begin([
         'id' => 'create-update-fields-dependent',
+        'action' => $action,
+        'options' => [
+            'data-pjax' => true,
+        ]
     ]);
     ?>
     <div class="modal-body">
+
+        <?php if ($devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
+            <?= Html::hiddenInput('_fieldTemplateId', $devFieldGroup->fieldTemplate->id, [
+                'id' => 'field-template-id-hidden'
+            ]) ?>
+        <?php endif; ?>
+
         <div class="row">
             <div class="col-sm-4 col-xs-12">
                 <?= $form->field($devFieldGroup->fieldTemplate, 'program_name') ?>
@@ -146,6 +164,8 @@ else $return = 'false';
 
             <hr>
 
+
+            <?php /*
             <?= ValidatorsListWidget::widget([
                 'validatorReference'     => $devFieldGroup->fieldTemplate,
                 'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
@@ -156,11 +176,13 @@ else $return = 'false';
                 ])
             ]) ?>
 
+            */?>
 
         <?php endif; ?>
 
 
     </div>
+
     <div class="modal-footer">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         <?= Html::submitButton('Save and back',

@@ -90,7 +90,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionEmptyModalDependent($fieldTemplateReference, $pjaxName, $modalName)
     {
-        //if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         $devFieldGroup = new DevFieldsGroup();
         $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
@@ -100,6 +100,49 @@ class DeveloperFieldsController extends Controller
             $returnBack = true;
         else
             $returnBack = false;
+
+        //try to load validate and save field via pjax
+        if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {
+
+            if (!$devFieldGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            $devFieldGroup->scenario = DevFieldsGroup::SCENARIO_UPDATE;
+        }
+
+        return $this->renderAjax('/../Fields/views/fields_dev_for_modals_dependents.php', [
+            'devFieldGroup' => $devFieldGroup,
+            'returnBack'    => $returnBack,
+            'pjaxName'      => $pjaxName,
+            'modalName'     => $modalName
+        ]);
+    }
+
+    public function actionLoadModalDependent($fieldTemplateReference,
+                                             $fieldTemplateId,
+                                             $pjaxName,
+                                             $modalName
+    )
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        $devFieldGroup = new DevFieldsGroup();
+        $devFieldGroup->setFieldTemplateReference($fieldTemplateReference);
+        $devFieldGroup->initialize($fieldTemplateId);
+
+        if (Yii::$app->request->post('_saveAndBack'))
+            $returnBack = true;
+        else
+            $returnBack = false;
+
+        //try to load validate and save field via pjax
+        if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {
+
+            if (!$devFieldGroup->save()) {
+                //TODO: bootbox error
+            }
+        }
 
         return $this->renderAjax('/../Fields/views/fields_dev_for_modals_dependents.php', [
             'devFieldGroup' => $devFieldGroup,
