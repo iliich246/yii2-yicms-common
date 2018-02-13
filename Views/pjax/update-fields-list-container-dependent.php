@@ -18,8 +18,10 @@ $js = <<<JS
 
     var homeUrl = $(fieldsListModal).data('homeUrl');
 
-    var emptyModalUrl            = homeUrl + '/common/dev-fields/empty-modal-dependent';
-    var updateModalDependentUrl  = homeUrl + '/common/dev-fields/load-modal-dependent';
+    var emptyModalUrl                 = homeUrl + '/common/dev-fields/empty-modal-dependent';
+    var updateModalDependentUrl       = homeUrl + '/common/dev-fields/load-modal-dependent';
+    var fieldTemplateUpDependentUrl   = homeUrl + '/common/dev-fields/field-template-up-order-dependent';
+    var fieldTemplateDownDependentUrl = homeUrl + '/common/dev-fields/field-template-down-order-dependent';
 
     var fieldTemplateReference = $(fieldsListModal).data('fieldTemplateReference');
     var pjaxContainerOwner     = $(fieldsListModal).data('pjaxContainerOwner');
@@ -65,9 +67,40 @@ $js = <<<JS
     });
 
     $('.field-item-modal').on('click', function() {
+
+        $(pjaxContainer).data('returnUrlFields', $(fieldsListModal).data('returnUrlFields'));
+
         var fieldTemplate = $(this).data('field-template-id');
 
         updateModalDependent(fieldTemplate);
+    });
+
+    $('.field-arrow-up-modal').on('click', function() {
+        $.pjax({
+            url: fieldTemplateUpDependentUrl
+                 + '?fieldTemplateId=' + $(this).data('fieldTemplateId')
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $('.field-arrow-down-modal').on('click', function() {
+        $.pjax({
+            url: fieldTemplateDownDependentUrl
+                 + '?fieldTemplateId=' + $(this).data('fieldTemplateId')
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
     });
 
     function updateModalDependent(fieldTemplateId) {
@@ -97,7 +130,7 @@ $this->registerJs($js);
      data-pjax-container-owner="<?= $pjaxName ?>"
      data-modal-owner="<?= $modalName ?>"
      data-return-url-fields="<?= \yii\helpers\Url::toRoute([
-         '/common/dev-fields/update-fields-list-container-modal',
+         '/common/dev-fields/update-fields-list-container-dependent',
          'fieldTemplateReference' => $fieldTemplateReference,
          'pjaxName' => $pjaxName,
          'modalName' => $modalName,
@@ -124,8 +157,9 @@ $this->registerJs($js);
             </div>
             <?php foreach ($fieldTemplatesTranslatable as $fieldTemplate): ?>
                 <div class="row list-items">
-                    <div class="col-xs-9 list-title field-item-modal">
-                        <p data-field-template="<?= $fieldTemplate->field_template_reference ?>"
+                    <div class="col-xs-9 list-title">
+                        <p class="field-item-modal"
+                           data-field-template="<?= $fieldTemplate->field_template_reference ?>"
                            data-field-template-id="<?= $fieldTemplate->id ?>"
                         >
                             <?= $fieldTemplate->program_name ?> (<?= $fieldTemplate->getTypeName() ?>)

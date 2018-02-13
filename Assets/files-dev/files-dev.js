@@ -8,7 +8,7 @@
     var updateFileListUrl    = homeUrl + '/common/dev-files/update-files-list-container';
     var fileTemplateUpUrl    = homeUrl + '/common/dev-files/file-template-up-order';
     var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
-    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-modal';
+    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
 
     var fileTemplateReference = $(addFile).data('fileTemplateReference');
     var pjaxContainerName     = '#' + $(addFile).data('pjaxContainerName');
@@ -87,8 +87,6 @@
     $(document).on('click', '.view-files-block-fields', function() {
 
         $('#files-pjax-container').data('returnUrl', $(this).data('returnUrl'));
-
-        console.log(pjaxFilesModalName);
 
         $.pjax({
             url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')

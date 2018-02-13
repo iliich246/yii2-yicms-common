@@ -5,11 +5,11 @@ use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
-/* @var $this \yii\web\View */
-/* @var $fieldTemplateReference integer */
-/* @var $fieldTemplatesTranslatable FieldTemplate[] */
-/* @var $fieldTemplatesSingle FieldTemplate[] */
-/* @var $isInModal bool */
+/** @var $this \yii\web\View */
+/** @var $fieldTemplateReference integer */
+/** @var $fieldTemplatesTranslatable FieldTemplate[] */
+/** @var $fieldTemplatesSingle FieldTemplate[] */
+/** @var $isInModal bool */
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 $src = $bundle->baseUrl . '/loader.svg';

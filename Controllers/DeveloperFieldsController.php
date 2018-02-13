@@ -88,7 +88,9 @@ class DeveloperFieldsController extends Controller
      * @throws BadRequestHttpException
      * @throws CommonException
      */
-    public function actionEmptyModalDependent($fieldTemplateReference, $pjaxName, $modalName)
+    public function actionEmptyModalDependent($fieldTemplateReference,
+                                              $pjaxName,
+                                              $modalName)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
@@ -119,11 +121,19 @@ class DeveloperFieldsController extends Controller
         ]);
     }
 
+    /**
+     * @param $fieldTemplateReference
+     * @param $fieldTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     */
     public function actionLoadModalDependent($fieldTemplateReference,
                                              $fieldTemplateId,
                                              $pjaxName,
-                                             $modalName
-    )
+                                             $modalName)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
@@ -192,7 +202,7 @@ class DeveloperFieldsController extends Controller
      * @return string
      * @throws BadRequestHttpException
      */
-    public function actionUpdateFieldsListContainerModal($fieldTemplateReference, $pjaxName, $modalName)
+    public function actionUpdateFieldsListContainerDependent($fieldTemplateReference, $pjaxName, $modalName)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
 
@@ -206,7 +216,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-fields-list-container-modal', [
+        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
             'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle,
@@ -226,7 +236,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionDeleteFieldTemplate($fieldTemplateId, $deletePass = false)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         /** @var FieldTemplate $fieldTemplate */
         $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
@@ -259,6 +269,56 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
+     * Action for delete field template in dependent modal window
+     * @param $fieldTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @param bool|false $deletePass
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteFieldTemplateDependent($fieldTemplateId,
+                                                       $pjaxName,
+                                                       $modalName,
+                                                       $deletePass = false)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        /** @var FieldTemplate $fieldTemplate */
+        $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+        if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
+
+        if ($fieldTemplate->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
+
+        $fieldTemplateReference = $fieldTemplate->field_template_reference;
+
+        $fieldTemplate->delete();
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplateReference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplateReference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+            'fieldTemplateReference'     => $fieldTemplateReference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
+    /**
      * Action for up field template order
      * @param $fieldTemplateId
      * @return string
@@ -267,7 +327,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionFieldTemplateUpOrder($fieldTemplateId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         /** @var FieldTemplate $fieldTemplate */
         $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
@@ -302,7 +362,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionFieldTemplateDownOrder($fieldTemplateId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         /** @var FieldTemplate $fieldTemplate */
         $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
@@ -329,6 +389,88 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
+     * Action for up field template order in dependent modal window
+     * @param $fieldTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFieldTemplateUpOrderDependent($fieldTemplateId,
+                                                        $pjaxName,
+                                                        $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        /** @var FieldTemplate $fieldTemplate */
+        $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+        if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
+
+        $fieldTemplate->upOrder();
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+            'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
+    /**
+     * Action for down field template order in dependent modal window
+     * @param $fieldTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionFieldTemplateDownOrderDependent($fieldTemplateId,
+                                                          $pjaxName,
+                                                          $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        /** @var FieldTemplate $fieldTemplate */
+        $fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+
+        if (!$fieldTemplate) throw new NotFoundHttpException('Wrong fieldTemplateId');
+
+        $fieldTemplate->downOrder();
+
+        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        $fieldTemplatesSingle = FieldTemplate::getListQuery($fieldTemplate->field_template_reference)
+            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
+            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+            'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
+            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
+            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
+    /**
      * This action invert field editable value
      * @param $fieldTemplateReference
      * @param $fieldId
@@ -337,7 +479,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionChangeFieldEditable($fieldTemplateReference, $fieldId)
     {
-        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
 
         /** @var Field $field */
         $field = Field::findOne($fieldId);
@@ -367,7 +509,7 @@ class DeveloperFieldsController extends Controller
      */
     public function actionChangeFieldEditableAjax($fieldTemplateReference, $fieldId)
     {
-        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException();
+        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException('Not Pjax');
 
         /** @var Field $field */
         $field = Field::findOne($fieldId);

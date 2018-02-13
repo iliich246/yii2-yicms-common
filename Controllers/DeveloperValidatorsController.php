@@ -101,7 +101,7 @@ class DeveloperValidatorsController extends Controller
      */
     public function actionDeleteValidator($id)
     {
-        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException('no pjax');
+        if (!Yii::$app->request->isAjax) throw new BadRequestHttpException('No Pjax');
 
         /** @var ValidatorDb $validator */
         $validator = ValidatorDb::findOne($id);
