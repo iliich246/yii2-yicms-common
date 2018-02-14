@@ -26,7 +26,11 @@ $js = <<<JS
 
     var deleteFieldUrl = homeUrl + '/common/dev-fields/delete-field-template-dependent?';
 
+    var isReturn = $(fieldCreateUpdate).data('returnBack');
+
     var backButton = $('.fields-modal-create-update-back');
+
+    if (isReturn) goBack();
 
     $(backButton).on('click', goBack);
 
@@ -46,12 +50,6 @@ $js = <<<JS
 
         var fieldTemplateId     = $(button).data('fieldTemplateId');
         var fieldHasConstraints = $(button).data('fieldHasConstraints');
-        //
-        //console.log(fieldTemplateId);
-        // console.log(pjaxContainerName.substr(1));
-        //  console.log(modalName);
-        //
-        //  return;
 
         if (!($(this).hasClass('field-confirm-state'))) {
 
@@ -141,7 +139,7 @@ JS;
 
 $this->registerJs($js);
 
-if (isset($returnBack) || $returnBack) $return = 'true';
+if (isset($returnBack) && $returnBack) $return = 'true';
 else $return = 'false';
 
 ?>
@@ -256,23 +254,20 @@ else $return = 'false';
 
             <hr>
 
-
-            <?php /*
             <?= ValidatorsListWidget::widget([
                 'validatorReference'     => $devFieldGroup->fieldTemplate,
-                'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
-                'ownerModalId'           => FieldsDevModalWidget::getModalWindowName(),
+                'ownerPjaxContainerName' => $pjaxName,
+                'ownerModalId'           => $modalName,
                 'returnUrl' => \yii\helpers\Url::toRoute([
                     '/common/dev-fields/load-modal-dependent',
-                    'fieldTemplateId' => $devFieldGroup->fieldTemplate->id,
+                    'fieldTemplateReference' => $devFieldGroup->fieldTemplate->field_template_reference,
+                    'fieldTemplateId'        => $devFieldGroup->fieldTemplate->id,
+                    'pjaxName'               => $pjaxName,
+                    'modalName'              => $modalName,
                 ])
             ]) ?>
 
-            */?>
-
         <?php endif; ?>
-
-
     </div>
 
     <div class="modal-footer">

@@ -20,7 +20,7 @@ $js = <<<JS
         var validatorId     = $(validatorForm).data('validatorId');
 
         var homeUrl   = $(validatorForm).data('homeUrl');
-        var returnUrl = $(pjaxContainer).data('returnUrl');
+        var returnUrl = $(pjaxContainer).data('returnUrlValidators');
         var deleteUrl = homeUrl + '/common/dev-validators/delete-validator?';
 
         var isReturn = $(validatorForm).data('returnBack');
@@ -73,12 +73,12 @@ else $return = 'false';
 ?>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'number-validator-form',
+    'id'      => 'number-validator-form',
     'options' => [
-        'class' => 'validator-form',
-        'data-pjax' => true,
-        'data-home-url' => \yii\helpers\Url::base(),
-        'data-return-back' => $return,
+        'class'             => 'validator-form',
+        'data-pjax'         => true,
+        'data-home-url'     => \yii\helpers\Url::base(),
+        'data-return-back'  => $return,
         'data-validator-id' => $validatorForm->getValidatorDb()->id,
     ],
 ]);

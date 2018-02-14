@@ -199,7 +199,36 @@ $this->registerJs($js);
             </div>
             <?php foreach ($fieldTemplatesSingle as $fieldTemplate): ?>
                 <div class="row list-items">
-                    1
+                    <div class="col-xs-9 list-title">
+                        <p class="field-item-modal"
+                           data-field-template="<?= $fieldTemplate->field_template_reference ?>"
+                           data-field-template-id="<?= $fieldTemplate->id ?>"
+                            >
+                            <?= $fieldTemplate->program_name ?> (<?= $fieldTemplate->getTypeName() ?>)
+                        </p>
+                    </div>
+                    <div class="col-xs-3 list-controls">
+                        <?php if ($fieldTemplate->visible): ?>
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        <?php else: ?>
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                        <?php endif; ?>
+                        <?php if ($fieldTemplate->editable): ?>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        <?php endif; ?>
+                        <?php if ($fieldTemplate->is_main): ?>
+                            <span class="glyphicon glyphicon-tower"></span>
+                        <?php endif; ?>
+                        <?php if ($fieldTemplate->canUpOrder()): ?>
+                            <span class="glyphicon field-arrow-up-modal glyphicon-arrow-up"
+                                  data-field-template-id="<?= $fieldTemplate->id ?>"></span>
+                        <?php endif; ?>
+                        <?php if ($fieldTemplate->canDownOrder()): ?>
+                            <span class="glyphicon field-arrow-down-modal glyphicon-arrow-down"
+                                  data-field-template-id="<?= $fieldTemplate->id ?>"></span>
+                        <?php endif; ?>
+
+                    </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>

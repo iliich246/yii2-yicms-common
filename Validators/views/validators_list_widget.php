@@ -22,6 +22,9 @@ $js = <<<JS
         var addValidatorUrl    = homeUrl + '/common/dev-validators/add-validator?';
 
         $(addValidator).on('click', function() {
+
+            $(pjaxContainerName).data('returnUrlValidators', returnUrl);
+
             $.pjax({
                 url: addValidatorUrl + 'validatorReference=' + $(this).data('validatorReference') +
                     '&validator=' + $(validatorsList).find(":selected").text(),
@@ -35,7 +38,7 @@ $js = <<<JS
 
         $('.validator-button').on('click', function() {
 
-            $(pjaxContainerName).data('returnUrl', returnUrl);
+            $(pjaxContainerName).data('returnUrlValidators', returnUrl);
 
             $.pjax({
                 url: updateValidatorUrl + 'validatorId=' + $(this).data('validatorId') ,

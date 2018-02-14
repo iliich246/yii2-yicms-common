@@ -124,16 +124,17 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => FieldsDevModalWidget::getPjaxContainerId(),
-                'class' => 'pjax-container',
-                'data-return-url' => '0',
+                'id'                         => FieldsDevModalWidget::getPjaxContainerId(),
+                'class'                      => 'pjax-container',
+                'data-return-url'            => '0',
+                'data-return-url-validators' => '0',
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
             'id' => FieldsDevModalWidget::getFormName(),
-            'action' => $widget->action,
+            'action'  => $widget->action,
             'options' => [
-                'data-pjax' => true,
+                'data-pjax'        => true,
                 'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);
@@ -232,9 +233,9 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                     <hr>
 
                     <?= ValidatorsListWidget::widget([
-                        'validatorReference' => $widget->devFieldGroup->fieldTemplate,
+                        'validatorReference'     => $widget->devFieldGroup->fieldTemplate,
                         'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
-                        'ownerModalId' => FieldsDevModalWidget::getModalWindowName(),
+                        'ownerModalId'           => FieldsDevModalWidget::getModalWindowName(),
                         'returnUrl' => \yii\helpers\Url::toRoute([
                             '/common/dev-fields/load-modal',
                             'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id,

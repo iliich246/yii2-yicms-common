@@ -12,14 +12,14 @@ use Iliich246\YicmsCommon\Languages\Language;
 $js = <<<JS
     ;(function() {
         var validatorForm = $('.validator-form');
-        var deleteButton = $('#validator-delete');
+        var deleteButton  = $('#validator-delete');
 
-        var pjaxContainer = $(validatorForm).parent('.pjax-container');
+        var pjaxContainer   = $(validatorForm).parent('.pjax-container');
         var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
-        var validatorId = $(validatorForm).data('validatorId');
+        var validatorId     = $(validatorForm).data('validatorId');
 
-        var homeUrl = $(validatorForm).data('homeUrl');
-        var returnUrl = $(pjaxContainer).data('returnUrl');
+        var homeUrl   = $(validatorForm).data('homeUrl');
+        var returnUrl = $(pjaxContainer).data('returnUrlValidators');
         var deleteUrl = homeUrl + '/common/dev-validators/delete-validator?';
 
         var isReturn = $(validatorForm).data('returnBack');
@@ -72,12 +72,12 @@ else $return = 'false';
 
 ?>
 <?php $form = ActiveForm::begin([
-    'id' => 'string-validator-form',
+    'id'      => 'string-validator-form',
     'options' => [
-        'class' => 'validator-form',
-        'data-pjax' => true,
-        'data-home-url' => \yii\helpers\Url::base(),
-        'data-return-back' => $return,
+        'class'             => 'validator-form',
+        'data-pjax'         => true,
+        'data-home-url'     => \yii\helpers\Url::base(),
+        'data-return-back'  => $return,
         'data-validator-id' => $validatorForm->getValidatorDb()->id,
     ],
 ]);

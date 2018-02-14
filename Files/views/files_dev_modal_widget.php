@@ -122,17 +122,18 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => FilesDevModalWidget::getPjaxContainerId(),
-                'class' => 'pjax-container',
-                'data-return-url' => '0',
-                'data-return-url-fields' => '0'
+                'id'                         => FilesDevModalWidget::getPjaxContainerId(),
+                'class'                      => 'pjax-container',
+                'data-return-url'            => '0',
+                'data-return-url-fields'     => '0',
+                'data-return-url-validators' => '0',
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => FilesDevModalWidget::getFormName(),
-            'action' => $widget->action,
+            'id'      => FilesDevModalWidget::getFormName(),
+            'action'  => $widget->action,
             'options' => [
-                'data-pjax' => true,
+                'data-pjax'        => true,
                 'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);

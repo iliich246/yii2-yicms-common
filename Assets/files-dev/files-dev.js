@@ -26,7 +26,9 @@
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        if (isValidatorResponse) return loadModal($(addFile).data('currentSelectedFileTemplate'));
+        //if (isValidatorResponse) return loadModal($(addFile).data('currentSelectedFileTemplate'));
+
+        if (isValidatorResponse) return goBackValidator();
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
@@ -99,6 +101,20 @@
             timeout: 2500
         });
     });
+
+    function goBackValidator() {
+        var returnUrl = $(pjaxContainerName).data('returnUrlValidators');
+
+        $.pjax({
+            url: returnUrl,
+            container: '#files-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500,
+        });
+    }
+
 
     function loadModal(fileTemplate) {
         $.pjax({

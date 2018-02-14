@@ -158,7 +158,7 @@ class DeveloperFieldsController extends Controller
             'devFieldGroup' => $devFieldGroup,
             'returnBack'    => $returnBack,
             'pjaxName'      => $pjaxName,
-            'modalName'     => $modalName
+            'modalName'     => $modalName,
         ]);
     }
 
