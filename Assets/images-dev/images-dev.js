@@ -9,6 +9,7 @@
     var imageTemplateUpUrl   = homeUrl + '/common/dev-images/image-template-up-order';
     var imageTemplateDownUrl = homeUrl + '/common/dev-images/image-template-down-order';
     var showThumbnailsList   = homeUrl + '/common/dev-images/show-thumbnails-list';
+    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
 
     var imageTemplateReference = $(addImage).data('imageTemplateReference');
     var pjaxContainerName      = '#' + $(addImage).data('pjaxContainerName');
@@ -26,7 +27,9 @@
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        if (isValidatorResponse) return loadModal($(addImage).data('currentSelectedImageTemplate'));
+        //if (isValidatorResponse) return loadModal($(addImage).data('currentSelectedImageTemplate'));
+
+        if (isValidatorResponse) return goBackValidator();
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
 
@@ -96,7 +99,34 @@
         });
     });
 
+    $(document).on('click', '.view-images-block-fields', function() {
 
+        $('#images-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+
+        $.pjax({
+            url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
+            + '&pjaxName='  + pjaxContainerName.substr(1)
+            + '&modalName=' + pjaxImagesModalName.substr(1),
+            container: '#images-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    function goBackValidator() {
+        var returnUrl = $(pjaxContainerName).data('returnUrlValidators');
+
+        $.pjax({
+            url: returnUrl,
+            container: '#images-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500,
+        });
+    }
 
     function loadModal(imageTemplate) {
         $.pjax({

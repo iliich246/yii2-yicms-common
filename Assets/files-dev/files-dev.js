@@ -115,7 +115,6 @@
         });
     }
 
-
     function loadModal(fileTemplate) {
         $.pjax({
             url: loadModalUrl + '?fileTemplateId=' + fileTemplate,

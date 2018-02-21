@@ -223,56 +223,6 @@ class DeveloperImagesController extends Controller
     }
 
     /**
-     * Show fields for image block template
-     * @param $imageTemplateId
-     * @return string
-     * @throws NotFoundHttpException
-     * @throws \Exception
-     * @throws \Iliich246\YicmsCommon\Base\CommonException
-     */
-    public function actionShowImageBlockFields($imageTemplateId)
-    {
-        /** @var ImagesBlock $imagesBlock */
-        $imagesBlock = ImagesBlock::findOne($imageTemplateId);
-
-        if (!$imagesBlock) throw new NotFoundHttpException('Wrong imageTemplateId');
-
-        $devFieldGroup = new DevFieldsGroup();
-        $devFieldGroup->setFieldTemplateReference($imagesBlock->getFieldTemplateReference());
-        $devFieldGroup->initialize(Yii::$app->request->post('_fieldTemplateId'));
-
-        //try to load validate and save field via pjax
-        if ($devFieldGroup->load(Yii::$app->request->post()) && $devFieldGroup->validate()) {
-
-            if (!$devFieldGroup->save()) {
-                //TODO: bootbox error
-            }
-
-            return FieldsDevModalWidget::widget([
-                'devFieldGroup' => $devFieldGroup,
-                'dataSaved'     => true,
-            ]);
-        }
-
-        $fieldTemplatesTranslatable = FieldTemplate::getListQuery($imagesBlock->field_template_reference)
-            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-            ->all();
-
-        $fieldTemplatesSingle = FieldTemplate::getListQuery($imagesBlock->field_template_reference)
-            ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-            ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-            ->all();
-
-        return $this->render('/developer/show-image-block-fields', [
-            'imagesBlock'                => $imagesBlock,
-            'devFieldGroup'              => $devFieldGroup,
-            'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-            'fieldTemplatesSingle'       => $fieldTemplatesSingle,
-        ]);
-    }
-
-    /**
      * Render list of thumbnails configurators for selected imageTemplateId
      * @param $imageTemplateId
      * @return string

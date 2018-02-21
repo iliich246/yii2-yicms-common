@@ -122,16 +122,18 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => ImagesDevModalWidget::getPjaxContainerId(),
-                'class' => 'pjax-container',
-                'data-return-url' => '0',
+                'id'                         => ImagesDevModalWidget::getPjaxContainerId(),
+                'class'                      => 'pjax-container',
+                'data-return-url'            => '0',
+                'data-return-url-fields'     => '0',
+                'data-return-url-validators' => '0',
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => ImagesDevModalWidget::getFormName(),
-            'action' => $widget->action,
+            'id'      => ImagesDevModalWidget::getFormName(),
+            'action'  => $widget->action,
             'options' => [
-                'data-pjax' => true,
+                'data-pjax'        => true,
                 'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);
@@ -258,13 +260,15 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                     </script>
                     <hr>
 
-                    <a href="<?= \yii\helpers\Url::toRoute([
-                        '/common/dev-images/show-image-block-fields',
-                        'imageTemplateId' => $widget->devImagesGroup->imagesBlock->id
-                    ]) ?>"
-                       class="btn btn-primary">
+                    <p class="btn btn-primary view-images-block-fields"
+                       data-field-template-id="<?= $widget->devImagesGroup->imagesBlock->getFieldTemplateReference()  ?>"
+                       data-return-url="<?= \yii\helpers\Url::toRoute([
+                           '/common/dev-images/load-modal',
+                           'imageTemplateId' => $widget->devImagesGroup->imagesBlock->id,
+                       ]) ?>"
+                        >
                         View image block fields
-                    </a>
+                    </p>
 
                     <p class="btn btn-primary config-thumbnails-button"
                        data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>">

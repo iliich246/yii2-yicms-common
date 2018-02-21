@@ -9,7 +9,6 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  * Class ConditionTemplate
  *
  * @property string $condition_template_reference
- * @property string $validator_reference
  * @property string $program_name,
  * @property integer $type
  * @property integer $condition_order

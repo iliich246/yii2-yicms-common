@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Migration;
-use Iliich246\YicmsCommon\Languages\Language;
 
 /**
  * Class m171110_213106_common_init
@@ -11,8 +10,8 @@ use Iliich246\YicmsCommon\Languages\Language;
 class m171110_213106_common_init extends Migration
 {
     /**
- * @inheritdoc
- */
+     * @inheritdoc
+     */
     public function safeUp()
     {
         //////////////////////////////////////////////////////////////////
@@ -298,8 +297,6 @@ class m171110_213106_common_init extends Migration
             'editable' => $this->boolean(),
             'visible' => $this->boolean(),
             'crop_type' => $this->smallInteger(),
-            'max_images' => $this->integer(),
-            'max_size' => $this->integer(),
             'fill_color' => $this->string(),
             'crop_height' => $this->integer(),
             'crop_width' => $this->integer(),
@@ -424,7 +421,6 @@ class m171110_213106_common_init extends Migration
         $this->createTable('{{%common_conditions_templates}}', [
             'id' => $this->primaryKey(),
             'condition_template_reference' => $this->string(),
-            'validator_reference' => $this->string(),
             'program_name' => $this->string(50),
             'type' => $this->smallInteger(),
             'condition_order' => $this->integer(),
@@ -468,6 +464,7 @@ class m171110_213106_common_init extends Migration
             'id' => $this->primaryKey(),
             'common_condition_template_id' => $this->integer(),
             'value_name' => $this->string(),
+            'is_default' => $this->boolean(),
         ]);
 
         $this->addForeignKey('common_conditions_values-to-common_conditions_templates',
