@@ -216,7 +216,7 @@ class DeveloperConditionsController extends Controller
 
         if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
 
-        return $this->render('/pjax/conditions-data-list-container', [
+        return $this->renderAjax('/pjax/conditions-data-list-container', [
             'conditionTemplate' => $conditionTemplate,
         ]);
     }

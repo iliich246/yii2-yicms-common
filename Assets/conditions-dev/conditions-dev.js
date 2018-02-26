@@ -2,15 +2,18 @@
     var addCondition = $('.add-condition-template');
 
     var homeUrl = $(addCondition).data('homeUrl');
-    var emptyModalUrl = homeUrl + '/common/dev-conditions/empty-modal';
-    var loadModalUrl = homeUrl + '/common/dev-conditions/load-modal';
-    var updateConditionListUrl = homeUrl + '/common/dev-conditions/update-conditions-list-container';
-    var conditionTemplateUpUrl = homeUrl + '/common/dev-conditions/condition-template-up-order';
+
+    var emptyModalUrl            = homeUrl + '/common/dev-conditions/empty-modal';
+    var loadModalUrl             = homeUrl + '/common/dev-conditions/load-modal';
+    var updateConditionListUrl   = homeUrl + '/common/dev-conditions/update-conditions-list-container';
+    var conditionTemplateUpUrl   = homeUrl + '/common/dev-conditions/condition-template-up-order';
     var conditionTemplateDownUrl = homeUrl + '/common/dev-conditions/condition-template-down-order';
+    var conditionDataList        = homeUrl + '/common/dev-conditions/condition-data-list';
 
     var conditionTemplateReference = $(addCondition).data('conditionTemplateReference');
-    var pjaxContainerName = '#' + $(addCondition).data('pjaxContainerName');
-    var pjaxConditionsModalName = '#' + $(addCondition).data('conditionModalName');
+    var pjaxContainerName          = '#' + $(addCondition).data('pjaxContainerName');
+    var pjaxConditionsModalName    = '#' + $(addCondition).data('conditionModalName');
+
     var imageLoaderScr = $(addCondition).data('loaderImageSrc');
 
     $(pjaxContainerName).on('pjax:send', function() {
@@ -83,20 +86,18 @@
     });
 
     $(document).on('click', '.condition-data-list', function() {
-        alert(1);
+        var conditionTemplateId = $(this).data('conditionTemplateId');
 
-        //$('#images-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+        $('#conditions-pjax-container').data('returnUrl', $(this).data('returnUrl'));
         //
-        //$.pjax({
-        //    url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
-        //    + '&pjaxName='  + pjaxContainerName.substr(1)
-        //    + '&modalName=' + pjaxImagesModalName.substr(1),
-        //    container: '#images-pjax-container',
-        //    scrollTo: false,
-        //    push: false,
-        //    type: "POST",
-        //    timeout: 2500
-        //});
+        $.pjax({
+            url: conditionDataList + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
+            container: pjaxContainerName,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
     });
 
     function loadModal(conditionTemplate) {

@@ -221,9 +221,9 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                     <hr>
 
                     <p class="btn btn-primary condition-data-list"
-                       data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->condition_template_reference ?>"
+                       data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->id ?>"
                        data-return-url="<?= \yii\helpers\Url::toRoute([
-                           '/common/dev-condition/load-modal',
+                           '/common/dev-conditions/load-modal',
                            'conditionTemplateId' => $widget->devConditionsGroup->conditionTemplate->id,
                        ]) ?>"
                         >
