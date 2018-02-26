@@ -200,4 +200,24 @@ class DeveloperConditionsController extends Controller
             'conditionsTemplates' => $conditionTemplates,
         ]);
     }
+
+    /**
+     * @param $conditionTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionConditionDataList($conditionTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        return $this->render('/pjax/conditions-data-list-container', [
+            'conditionTemplate' => $conditionTemplate,
+        ]);
+    }
 }

@@ -18,6 +18,10 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  */
 class ConditionTemplate extends AbstractTemplate
 {
+    const TYPE_CHECKBOX = 0;
+    const TYPE_RADIO    = 1;
+    const TYPE_SELECT   = 2;
+
     /**
      * @inheritdoc
      */
@@ -29,6 +33,7 @@ class ConditionTemplate extends AbstractTemplate
     public function init()
     {
         $this->editable = true;
+        $this->type     = self::TYPE_CHECKBOX;
         parent::init();
     }
 
@@ -63,6 +68,25 @@ class ConditionTemplate extends AbstractTemplate
             ['type', 'editable']);
 
         return $scenarios;
+    }
+
+    /**
+     * Returns array of condition types
+     * @return array
+     */
+    public static function getTypes()
+    {
+        static $array = false;
+
+        if ($array) return $array;
+
+        $array = [
+            self::TYPE_CHECKBOX => 'Check box type',
+            self::TYPE_RADIO    => 'Radio group type',
+            self::TYPE_SELECT   => 'Select type',
+        ];
+
+        return $array;
     }
 
     /**
@@ -157,19 +181,5 @@ class ConditionTemplate extends AbstractTemplate
     protected static function getTemplateReferenceName()
     {
         return 'condition_template_reference';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getValidatorReference()
-    {
-        if (!$this->validator_reference) {
-            $this->validator_reference = ValidatorBuilder::generateValidatorReference();
-            $this->scenario = self::SCENARIO_UPDATE;
-            $this->save(false);
-        }
-
-        return $this->validator_reference;
     }
 }

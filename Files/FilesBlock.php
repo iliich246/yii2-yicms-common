@@ -10,6 +10,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class FilesBlock
@@ -30,7 +31,8 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  * @author iliich246 <iliich246@gmail.com>
  */
 class FilesBlock extends AbstractEntityBlock implements
-    FieldReferenceInterface
+    FieldReferenceInterface,
+    ValidatorReferenceInterface
 {
     /**
      * Files types

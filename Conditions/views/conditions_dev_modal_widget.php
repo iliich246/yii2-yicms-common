@@ -160,13 +160,16 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                     <div class="col-sm-4 col-xs-12">
                         <?= $form->field($widget->devConditionsGroup->conditionTemplate, 'program_name') ?>
                     </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <?= $form->field($widget->devConditionsGroup->conditionTemplate, 'type')->dropDownList(
+                            ConditionTemplate::getTypes())
+                        ?>
+                    </div>
                 </div>
                 <div class="row">
-
                     <div class="col-sm-4 col-xs-12 ">
                         <?= $form->field($widget->devConditionsGroup->conditionTemplate, 'editable')->checkbox() ?>
                     </div>
-
                 </div>
 
                 <?= SimpleTabsTranslatesWidget::widget([
@@ -188,7 +191,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                                     data-condition-template-reference="<?= $widget->devConditionsGroup->conditionTemplate->condition_template_reference ?>"
                                     data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->id ?>"
                                     data-condition-has-constraints="<?= (int)$widget->devConditionsGroup->conditionTemplate->isConstraints() ?>"
-                            >
+                                >
                                 Delete condition template
                             </button>
                         </div>
@@ -209,7 +212,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                             <button type="button"
                                     class="btn btn-danger"
                                     id="button-delete-with-pass"
-                            >
+                                >
                                 Yes, i am absolutely seriously!!!
                             </button>
                         </div>
@@ -217,18 +220,18 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
 
                     <hr>
 
-                    <?= ValidatorsListWidget::widget([
-                        'validatorReference' => $widget->devConditionsGroup->conditionTemplate,
-                        'ownerPjaxContainerName' => ConditionsDevModalWidget::getPjaxContainerId(),
-                        'ownerModalId' => ConditionsDevModalWidget::getModalWindowName(),
-                        'returnUrl' => \yii\helpers\Url::toRoute([
-                            '/common/dev-conditions/load-modal',
-                            'conditionTemplateId' => $widget->devConditionsGroup->conditionTemplate->id,
-                        ])
-                    ]) ?>
-
+                    <p class="btn btn-primary condition-data-list"
+                       data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->condition_template_reference ?>"
+                       data-return-url="<?= \yii\helpers\Url::toRoute([
+                           '/common/dev-condition/load-modal',
+                           'conditionTemplateId' => $widget->devConditionsGroup->conditionTemplate->id,
+                       ]) ?>"
+                        >
+                        Config condition options
+                    </p>
                 <?php endif; ?>
             </div>
+
             <div class="modal-footer">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

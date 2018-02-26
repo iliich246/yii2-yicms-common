@@ -82,6 +82,23 @@
         });
     });
 
+    $(document).on('click', '.condition-data-list', function() {
+        alert(1);
+
+        //$('#images-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+        //
+        //$.pjax({
+        //    url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
+        //    + '&pjaxName='  + pjaxContainerName.substr(1)
+        //    + '&modalName=' + pjaxImagesModalName.substr(1),
+        //    container: '#images-pjax-container',
+        //    scrollTo: false,
+        //    push: false,
+        //    type: "POST",
+        //    timeout: 2500
+        //});
+    });
+
     function loadModal(conditionTemplate) {
         $.pjax({
             url: loadModalUrl + '?conditionTemplateId=' + conditionTemplate,

@@ -11,6 +11,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class ImagesBlock
@@ -31,7 +32,9 @@ use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ImagesBlock extends AbstractEntityBlock implements FieldReferenceInterface
+class ImagesBlock extends AbstractEntityBlock implements
+    FieldReferenceInterface,
+    ValidatorReferenceInterface
 {
     /**
      * Images types

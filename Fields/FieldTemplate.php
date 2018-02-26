@@ -5,6 +5,7 @@ namespace Iliich246\YicmsCommon\Fields;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
+use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class FieldTemplate
@@ -20,14 +21,14 @@ use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTemplate extends AbstractTemplate
+class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterface
 {
     /**
      * Types of fields
      * Type define style of render of field
      */
-    const TYPE_INPUT = 0;
-    const TYPE_TEXT = 1;
+    const TYPE_INPUT    = 0;
+    const TYPE_TEXT     = 1;
     const TYPE_REDACTOR = 2;
 
     /**
@@ -35,7 +36,7 @@ class FieldTemplate extends AbstractTemplate
      * Type define is field have translates or field has one value independent of languages
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
-    const LANGUAGE_TYPE_SINGLE = 1;
+    const LANGUAGE_TYPE_SINGLE       = 1;
 
     /**
      * @inheritdoc
@@ -47,7 +48,7 @@ class FieldTemplate extends AbstractTemplate
      */
     public function init()
     {
-        $this->visible = true;
+        $this->visible  = true;
         $this->editable = true;
         parent::init();
     }
@@ -96,8 +97,8 @@ class FieldTemplate extends AbstractTemplate
         if ($array) return $array;
 
         $array = [
-            self::TYPE_INPUT => 'Input type',
-            self::TYPE_TEXT => 'Text area type',
+            self::TYPE_INPUT    => 'Input type',
+            self::TYPE_TEXT     => 'Text area type',
             self::TYPE_REDACTOR => 'Redactor type',
         ];
 
@@ -116,7 +117,7 @@ class FieldTemplate extends AbstractTemplate
 
         $array = [
             self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
-            self::LANGUAGE_TYPE_SINGLE => 'Single type',
+            self::LANGUAGE_TYPE_SINGLE       => 'Single type',
         ];
 
         return $array;
