@@ -20,7 +20,7 @@ $js = <<<JS
     var pjaxContainer   = $(thumbnailForm).parent('.pjax-container');
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
 
-    var homeUrl  = $(thumbnailForm).data('homeUrl');
+    var homeUrl   = $(thumbnailForm).data('homeUrl');
     var returnUrl = $(thumbnailForm).data('returnUrl');
     var deleteUrl = homeUrl + '/common/dev-images/delete-thumbnail-configurator';
 

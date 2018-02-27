@@ -1,19 +1,63 @@
 <?php
 
+use yii\bootstrap\Html;
+use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Conditions\ConditionValues;
+use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
 /** @var $this \yii\web\View */
 /** @var $conditionTemplate \Iliich246\YicmsCommon\Conditions\ConditionTemplate */
 /** @var $conditionValue \Iliich246\YicmsCommon\Conditions\ConditionValues */
 /** @var $conditionValuesTranslates \Iliich246\YicmsCommon\Conditions\ConditionValueNamesForm[] */
+
+$js = <<<JS
+;(function() {
+
+    var conditionValueModal = $('.condition-create-update-value-modal');
+    var deleteButton        = $('.condition-value-delete');
+    var backButton          = $('.condition-create-update-value-back');
+
+    var pjaxContainer   = $(conditionValueModal).parent('.pjax-container');
+    var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
+
+    var homeUrl = $(conditionValueModal).data('homeUrl');
+    var returnUrl = $(conditionValueModal).data('returnUrl');
+
+    var isReturn = $(conditionValueModal).data('returnBack');
+
+    if (isReturn) goBack();
+
+    $(backButton).on('click', function(){
+        goBack();
+    });
+
+    function goBack() {
+        $.pjax({
+            url: returnUrl,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500,
+        });
+    }
+
+})();
+JS;
+
+$this->registerJs($js);
+
+if (isset($returnBack)) $return = 'true';
+else $return = 'false';
+
 ?>
 
-<div class="modal-content condition-data-list-modal"
+<div class="modal-content condition-create-update-value-modal"
      data-home-url="<?= \yii\helpers\Url::base() ?>"
-     data-condition-template-reference="<?= 1 ?>"
-     data-return-url-fields="<?= \yii\helpers\Url::toRoute([
-         '/common/dev-fields/update-fields-list-container-dependent',
-         'conditionTemplateReference' => $conditionTemplate->condition_template_reference,
+     data-return-back="<?= $return ?>"
+     data-return-url="<?= \yii\helpers\Url::toRoute([
+         '/common/dev-conditions/condition-values-list',
+         'conditionTemplateId' => $conditionTemplate->id,
      ]) ?>"
     >
     <div class="modal-header">
@@ -24,14 +68,51 @@ use Iliich246\YicmsCommon\Conditions\ConditionValues;
             <?php else: ?>
                 Update condition value
             <?php endif; ?>
-            <span class="glyphicon glyphicon-arrow-left condition-data-list-back"
+            <span class="glyphicon glyphicon-arrow-left condition-create-update-value-back"
                   style="float: right;margin-right: 20px"></span>
         </h3>
     </div>
+    <?php $form = ActiveForm::begin([
+        'id' => 'condition-create-update-value-form',
+        'options' => [
+            'data-pjax'        => true,
+            'data-return-back' => $return
+        ],
+    ]);
+    ?>
     <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-4 col-xs-12">
+                <?= $form->field($conditionValue, 'value_name') ?>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <br>
+                <?= $form->field($conditionValue, 'is_default')->checkbox() ?>
+            </div>
+        </div>
+
+        <?= SimpleTabsTranslatesWidget::widget([
+            'form' => $form,
+            'translateModels' => $conditionValuesTranslates,
+        ])
+        ?>
+
+        <?php if ($conditionValue->scenario == ConditionValues::SCENARIO_UPDATE): ?>
+            <button type="button"
+                    class="btn btn-danger"
+                    data-condition-value-id="<?= $conditionValue->id ?>"
+                    id="condition-value-delete">
+                Delete condition value
+            </button>
+        <?php endif; ?>
 
     </div>
     <div class="modal-footer">
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save and back',
+            ['class' => 'btn btn-success',
+                'value' => 'true', 'name' => '_saveAndBack']) ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
     </div>
+    <?php ActiveForm::end(); ?>
 </div>

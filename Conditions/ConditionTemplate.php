@@ -83,7 +83,7 @@ class ConditionTemplate extends AbstractTemplate
         $array = [
             self::TYPE_CHECKBOX => 'Check box type',
             self::TYPE_RADIO    => 'Radio group type',
-            self::TYPE_SELECT   => 'Select type',
+            self::TYPE_SELECT   => 'Select dropdown type',
         ];
 
         return $array;
@@ -95,6 +95,8 @@ class ConditionTemplate extends AbstractTemplate
      */
     public function getTypeName()
     {
+        if (!isset(self::getTypes()[$this->type])) return 'Undefined';
+
         return self::getTypes()[$this->type];
     }
 

@@ -7,7 +7,6 @@ use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
-use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
 /** @var $widget \Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */

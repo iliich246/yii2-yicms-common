@@ -43,7 +43,7 @@ class ConditionValueNamesForm extends AbstractTranslateForm
     public function rules()
     {
         return [
-             [['name', 'description', ], 'max' => '255', 'string'],
+             [['valueName', 'valueDescription', ], 'string'],
         ];
     }
 
