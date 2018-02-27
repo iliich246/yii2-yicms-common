@@ -10,8 +10,8 @@ use yii\db\Migration;
 class m171110_213106_common_init extends Migration
 {
     /**
-     * @inheritdoc
-     */
+ * @inheritdoc
+ */
     public function safeUp()
     {
         //////////////////////////////////////////////////////////////////
@@ -489,6 +489,7 @@ class m171110_213106_common_init extends Migration
             'common_condition_value_id' => $this->integer(),
             'common_language_id' => $this->integer(),
             'name' => $this->string(),
+            'description' => $this->string(),
         ]);
 
         $this->addForeignKey('common_conditions_value_names-to-common_conditions_values',

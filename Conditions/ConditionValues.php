@@ -16,12 +16,39 @@ use yii\db\ActiveRecord;
  */
 class ConditionValues extends ActiveRecord
 {
+    const SCENARIO_CREATE = 0x01;
+    const SCENARIO_UPDATE = 0x02;
+
+    /**
+     * @var ConditionTemplate instance associated with this object
+     */
+    private $conditionTemplate;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%common_conditions_values}}';
+    }
+
+    /**
+     * ConditionTemplate setter
+     * @param ConditionTemplate $conditionTemplate
+     */
+    public function setConditionTemplate(ConditionTemplate $conditionTemplate)
+    {
+        $this->conditionTemplate = $conditionTemplate;
+    }
+
+
+    /**
+     * Fetch ConditionTemplate from db
+     * @return ConditionTemplate
+     */
+    public function getConditionTemplate()
+    {
+        return ConditionTemplate::findOne($this->common_condition_template_id);
     }
 
     /**

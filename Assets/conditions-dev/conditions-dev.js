@@ -8,7 +8,7 @@
     var updateConditionListUrl   = homeUrl + '/common/dev-conditions/update-conditions-list-container';
     var conditionTemplateUpUrl   = homeUrl + '/common/dev-conditions/condition-template-up-order';
     var conditionTemplateDownUrl = homeUrl + '/common/dev-conditions/condition-template-down-order';
-    var conditionDataList        = homeUrl + '/common/dev-conditions/condition-data-list';
+    var conditionDataList        = homeUrl + '/common/dev-conditions/condition-values-list';
 
     var conditionTemplateReference = $(addCondition).data('conditionTemplateReference');
     var pjaxContainerName          = '#' + $(addCondition).data('pjaxContainerName');
@@ -89,7 +89,7 @@
         var conditionTemplateId = $(this).data('conditionTemplateId');
 
         $('#conditions-pjax-container').data('returnUrl', $(this).data('returnUrl'));
-        //
+
         $.pjax({
             url: conditionDataList + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
             container: pjaxContainerName,

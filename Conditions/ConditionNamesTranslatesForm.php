@@ -21,7 +21,6 @@ class ConditionNamesTranslatesForm extends AbstractTranslateForm
      * @var string description of page on current model language
      */
     public $description;
-
     /**
      * @var ConditionTemplate associated with this model
      */

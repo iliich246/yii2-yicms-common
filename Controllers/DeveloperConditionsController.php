@@ -3,14 +3,18 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
+use yii\base\Model;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\Base\DevFilter;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Conditions\ConditionValues;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
+use Iliich246\YicmsCommon\Conditions\ConditionValueNamesForm;
 use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
 /**
@@ -98,7 +102,7 @@ class DeveloperConditionsController extends Controller
 
             return $this->render('/pjax/update-conditions-list-container', [
                 'conditionTemplateReference' => $conditionTemplateReference,
-                'conditionsTemplates' => $conditionTemplates,
+                'conditionsTemplates'        => $conditionTemplates,
             ]);
         }
 
@@ -137,7 +141,7 @@ class DeveloperConditionsController extends Controller
 
         return $this->render('/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
-            'conditionsTemplates' => $conditionTemplates,
+            'conditionsTemplates'        => $conditionTemplates,
         ]);
     }
 
@@ -167,7 +171,7 @@ class DeveloperConditionsController extends Controller
 
         return $this->render('/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
-            'conditionsTemplates' => $conditionTemplates,
+            'conditionsTemplates'        => $conditionTemplates,
         ]);
     }
 
@@ -197,7 +201,7 @@ class DeveloperConditionsController extends Controller
 
         return $this->render('/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
-            'conditionsTemplates' => $conditionTemplates,
+            'conditionsTemplates'        => $conditionTemplates,
         ]);
     }
 
@@ -207,7 +211,7 @@ class DeveloperConditionsController extends Controller
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
      */
-    public function actionConditionDataList($conditionTemplateId)
+    public function actionConditionValuesList($conditionTemplateId)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
@@ -216,8 +220,93 @@ class DeveloperConditionsController extends Controller
 
         if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
 
-        return $this->renderAjax('/pjax/conditions-data-list-container', [
+        return $this->renderAjax('/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
         ]);
+    }
+
+    /**
+     * @param $conditionTemplateId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionCreateConditionValue($conditionTemplateId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionValue = new ConditionValues();
+        $conditionValue->scenario = ConditionValues::SCENARIO_CREATE;
+        $conditionValue->setConditionTemplate($conditionTemplate);
+
+        $languages = Language::getInstance()->usedLanguages();
+
+        $conditionValuesTranslates = [];
+
+        foreach($languages as $key => $language) {
+
+            $conditionValuesTranslate = new ConditionValueNamesForm();
+            $conditionValuesTranslate->scenario = ConditionValueNamesForm::SCENARIO_CREATE;
+            $conditionValuesTranslate->setLanguage($language);
+            $conditionValuesTranslate->setConditionValues($conditionValue);
+
+            $conditionValuesTranslates[$key] = $conditionValuesTranslate;
+        }
+
+        if ($conditionValue->load(Yii::$app->request->post()) &&
+            Model::loadMultiple($conditionValuesTranslates, Yii::$app->request->post())) {
+
+            if ($conditionValue->validate() && Model::validateMultiple($conditionValuesTranslates)) {
+
+                $conditionValue->save();
+
+                /** @var ConditionValueNamesForm $conditionValuesTranslate */
+                foreach ($conditionValuesTranslates as $conditionValuesTranslate) {
+                    $conditionValuesTranslate->save();
+                }
+            }
+        }
+
+        return $this->renderAjax('/pjax/create-update-condition-value', [
+            'conditionTemplate'         => $conditionTemplate,
+            'conditionValue'            => $conditionValue,
+            'conditionValuesTranslates' => $conditionValuesTranslates
+        ]);
+    }
+
+    /**
+     * @param $conditionValueId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateConditionValue($conditionValueId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionValues $conditionValue */
+        $conditionValue = ConditionValues::findOne($conditionValueId);
+
+        if (!$conditionValue) throw new NotFoundHttpException('Wrong conditionValueId');
+
+        $conditionTemplate = $conditionValue->getConditionTemplate();
+
+        return $this->renderAjax('/pjax/create-update-condition-value', [
+            'conditionTemplate' => $conditionTemplate,
+        ]);
+    }
+
+    /**
+     * @param $conditionValueId
+     * @throws BadRequestHttpException
+     */
+    public function actionDeleteConditionValue($conditionValueId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
     }
 }

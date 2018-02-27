@@ -47,7 +47,7 @@ ConditionsDevAsset::register($this);
                     <div class="row list-items condition-item">
                         <div class="col-xs-10 list-title">
                             <p data-condition-template-id="<?= $conditionsTemplate->id ?>">
-                                <?= $conditionsTemplate->program_name ?> (type)
+                                <?= $conditionsTemplate->program_name ?> (<?= $conditionsTemplate->getTypeName()  ?>)
                             </p>
                         </div>
                         <div class="col-xs-2 list-controls">

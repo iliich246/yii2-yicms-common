@@ -12,10 +12,11 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  * @property integer $common_condition_value_id
  * @property integer $common_language_id
  * @property string $name
+ * @property string $description
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ConditionValueNames extends ActiveRecord
+class ConditionValueNamesDb extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -31,7 +32,7 @@ class ConditionValueNames extends ActiveRecord
     public function rules()
     {
         return [
-            ['name', 'string', 'max' => '255'],
+            [['name', 'description'], 'string', 'max' => '255'],
             [
                 ['common_language_id'], 'exist', 'skipOnError' => true,
                 'targetClass' => LanguagesDb::className(), 'targetAttribute' => ['common_language_id' => 'id']

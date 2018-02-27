@@ -90,6 +90,15 @@ class ConditionTemplate extends AbstractTemplate
     }
 
     /**
+     * Return name of condition type
+     * @return string
+     */
+    public function getTypeName()
+    {
+        return self::getTypes()[$this->type];
+    }
+
+    /**
      * @inheritdoc
      */
     public function save($runValidation = true, $attributes = null)
