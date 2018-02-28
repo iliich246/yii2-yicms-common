@@ -23,7 +23,7 @@ class ConditionValueNamesDb extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%common_condition_value_names}}';
+        return '{{%common_conditions_value_names}}';
     }
 
     /**

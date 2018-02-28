@@ -206,6 +206,7 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Returns list of condition values
      * @param $conditionTemplateId
      * @return string
      * @throws BadRequestHttpException
@@ -220,8 +221,15 @@ class DeveloperConditionsController extends Controller
 
         if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
 
+        $conditionValues = ConditionValues::find()->where([
+            'common_condition_template_id' => $conditionTemplate->id,
+        ])->orderBy([
+            'condition_value_order' => SORT_ASC
+        ])->all();
+
         return $this->renderAjax('/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
+            'conditionValues'   => $conditionValues
         ]);
     }
 
@@ -269,6 +277,13 @@ class DeveloperConditionsController extends Controller
                 foreach ($conditionValuesTranslates as $conditionValuesTranslate) {
                     $conditionValuesTranslate->save();
                 }
+
+                return $this->renderAjax('/pjax/create-update-condition-value', [
+                    'conditionTemplate'         => $conditionTemplate,
+                    'conditionValue'            => $conditionValue,
+                    'conditionValuesTranslates' => $conditionValuesTranslates,
+                    'redirectUpdate'            => true,
+                ]);
             }
         }
 
@@ -296,8 +311,48 @@ class DeveloperConditionsController extends Controller
 
         $conditionTemplate = $conditionValue->getConditionTemplate();
 
+        $conditionValue->scenario = ConditionValues::SCENARIO_UPDATE;
+        $conditionValue->setConditionTemplate($conditionTemplate);
+
+        $languages = Language::getInstance()->usedLanguages();
+
+        $conditionValuesTranslates = [];
+
+        foreach($languages as $key => $language) {
+
+            $conditionValuesTranslate = new ConditionValueNamesForm();
+            $conditionValuesTranslate->scenario = ConditionValueNamesForm::SCENARIO_UPDATE;
+            $conditionValuesTranslate->setLanguage($language);
+            $conditionValuesTranslate->setConditionValues($conditionValue);
+            $conditionValuesTranslate->loadFromDb();
+
+            $conditionValuesTranslates[$key] = $conditionValuesTranslate;
+        }
+
+        if ($conditionValue->load(Yii::$app->request->post()) &&
+            Model::loadMultiple($conditionValuesTranslates, Yii::$app->request->post())) {
+
+            if ($conditionValue->validate() && Model::validateMultiple($conditionValuesTranslates)) {
+
+                $conditionValue->save();
+
+                /** @var ConditionValueNamesForm $conditionValuesTranslate */
+                foreach ($conditionValuesTranslates as $conditionValuesTranslate) {
+                    $conditionValuesTranslate->save();
+                }
+
+                return $this->renderAjax('/pjax/create-update-condition-value', [
+                    'conditionTemplate'         => $conditionTemplate,
+                    'conditionValue'            => $conditionValue,
+                    'conditionValuesTranslates' => $conditionValuesTranslates,
+                ]);
+            }
+        }
+
         return $this->renderAjax('/pjax/create-update-condition-value', [
             'conditionTemplate' => $conditionTemplate,
+            'conditionValue'            => $conditionValue,
+            'conditionValuesTranslates' => $conditionValuesTranslates,
         ]);
     }
 
@@ -308,5 +363,69 @@ class DeveloperConditionsController extends Controller
     public function actionDeleteConditionValue($conditionValueId)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+    }
+
+    /**
+     * Up condition value order
+     * @param $conditionValueId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionConditionValueUpOrder($conditionValueId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionValues $conditionValue */
+        $conditionValue = ConditionValues::findOne($conditionValueId);
+
+        if (!$conditionValue) throw new NotFoundHttpException('Wrong conditionValueId');
+
+        $conditionTemplate = $conditionValue->getConditionTemplate();
+
+        $conditionValue->upOrder();
+
+        $conditionValues = ConditionValues::find()->where([
+            'common_condition_template_id' => $conditionTemplate->id,
+        ])->orderBy([
+            'condition_value_order' => SORT_ASC
+        ])->all();
+
+        return $this->renderAjax('/pjax/conditions-value-list-container', [
+            'conditionTemplate' => $conditionTemplate,
+            'conditionValues'   => $conditionValues
+        ]);
+    }
+
+    /**
+     * Down condition value order
+     * @param $conditionValueId
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionConditionValueDownOrder($conditionValueId)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionValues $conditionValue */
+        $conditionValue = ConditionValues::findOne($conditionValueId);
+
+        if (!$conditionValue) throw new NotFoundHttpException('Wrong conditionValueId');
+
+        $conditionTemplate = $conditionValue->getConditionTemplate();
+
+        $conditionValue->downOrder();
+
+        $conditionValues = ConditionValues::find()->where([
+            'common_condition_template_id' => $conditionTemplate->id,
+        ])->orderBy([
+            'condition_value_order' => SORT_ASC
+        ])->all();
+
+        return $this->renderAjax('/pjax/conditions-value-list-container', [
+            'conditionTemplate' => $conditionTemplate,
+            'conditionValues'   => $conditionValues
+        ]);
     }
 }

@@ -236,7 +236,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                         'validatorReference'     => $widget->devFieldGroup->fieldTemplate,
                         'ownerPjaxContainerName' => FieldsDevModalWidget::getPjaxContainerId(),
                         'ownerModalId'           => FieldsDevModalWidget::getModalWindowName(),
-                        'returnUrl' => \yii\helpers\Url::toRoute([
+                        'returnUrl'              => \yii\helpers\Url::toRoute([
                             '/common/dev-fields/load-modal',
                             'fieldTemplateId' => $widget->devFieldGroup->fieldTemplate->id,
                         ])

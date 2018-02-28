@@ -20,12 +20,16 @@ $js = <<<JS
     var pjaxContainer   = $(conditionValueModal).parent('.pjax-container');
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
 
-    var homeUrl = $(conditionValueModal).data('homeUrl');
-    var returnUrl = $(conditionValueModal).data('returnUrl');
+    var homeUrl           = $(conditionValueModal).data('homeUrl');
+    var returnUrl         = $(conditionValueModal).data('returnUrl');
+    var redirectUpdateUrl = $(conditionValueModal).data('redirectUpdateUrl');
 
-    var isReturn = $(conditionValueModal).data('returnBack');
+    var isReturn         = $(conditionValueModal).data('returnBack');
+    var isRedirectUpdate = $(conditionValueModal).data('redirectUpdate');
 
     if (isReturn) goBack();
+
+    if (isRedirectUpdate) redirectUpdate();
 
     $(backButton).on('click', function(){
         goBack();
@@ -42,6 +46,17 @@ $js = <<<JS
         });
     }
 
+    function redirectUpdate() {
+        $.pjax({
+            url: redirectUpdateUrl,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500,
+        });
+    }
+
 })();
 JS;
 
@@ -50,14 +65,24 @@ $this->registerJs($js);
 if (isset($returnBack)) $return = 'true';
 else $return = 'false';
 
+if (isset($redirectUpdate)) $redirect = 'true';
+else $redirect = 'false';
+
+$conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $conditionValue->id;
+
 ?>
 
 <div class="modal-content condition-create-update-value-modal"
      data-home-url="<?= \yii\helpers\Url::base() ?>"
      data-return-back="<?= $return ?>"
+     data-redirect-update="<?= $redirect ?>"
      data-return-url="<?= \yii\helpers\Url::toRoute([
          '/common/dev-conditions/condition-values-list',
          'conditionTemplateId' => $conditionTemplate->id,
+     ]) ?>"
+     data-redirect-update-url="<?= \yii\helpers\Url::toRoute([
+         '/common/dev-conditions/update-condition-value',
+         'conditionValueId' => $conditionValueId,
      ]) ?>"
     >
     <div class="modal-header">
@@ -82,10 +107,10 @@ else $return = 'false';
     ?>
     <div class="modal-body">
         <div class="row">
-            <div class="col-sm-4 col-xs-12">
+            <div class="col-sm-6 col-xs-12">
                 <?= $form->field($conditionValue, 'value_name') ?>
             </div>
-            <div class="col-sm-4 col-xs-12">
+            <div class="col-sm-6 col-xs-12">
                 <br>
                 <?= $form->field($conditionValue, 'is_default')->checkbox() ?>
             </div>
@@ -98,6 +123,7 @@ else $return = 'false';
         ?>
 
         <?php if ($conditionValue->scenario == ConditionValues::SCENARIO_UPDATE): ?>
+            <br>
             <button type="button"
                     class="btn btn-danger"
                     data-condition-value-id="<?= $conditionValue->id ?>"

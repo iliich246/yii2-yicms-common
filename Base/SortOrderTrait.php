@@ -94,7 +94,6 @@ trait SortOrderTrait
      */
     public function upOrder()
     {
-        //throw new Exception(print_r(1,true));
         if (!$this->canUpOrder()) return false;
 
         $orderAble = $this->getOrderAble();

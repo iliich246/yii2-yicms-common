@@ -2,14 +2,16 @@
 
 /** @var $this \yii\web\View */
 /** @var $conditionTemplate \Iliich246\YicmsCommon\Conditions\ConditionTemplate */
-
+/** @var $conditionValues  \Iliich246\YicmsCommon\Conditions\ConditionValues[] */
 $js = <<<JS
 ;(function() {
     var conditionDataListModal = $('.condition-values-list-modal');
 
     var homeUrl = $(conditionDataListModal).data('homeUrl');
 
-    var createConditionValueUrl = homeUrl + '/common/dev-conditions/create-condition-value';
+    var createConditionValueUrl        = homeUrl + '/common/dev-conditions/create-condition-value';
+    var conditionValueUpDependentUrl   = homeUrl + '/common/dev-conditions/condition-value-up-order';
+    var conditionValueDownDependentUrl = homeUrl + '/common/dev-conditions/condition-value-down-order';
 
     var pjaxContainer   = $(conditionDataListModal).parent('.pjax-container');
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
@@ -42,6 +44,31 @@ $js = <<<JS
             timeout: 2500,
         });
     });
+
+    $('.condition-value-arrow-up-modal').on('click', function() {
+        $.pjax({
+            url: conditionValueUpDependentUrl
+                 + '?conditionValueId=' + $(this).data('conditionValueId'),
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $('.condition-value-arrow-down-modal').on('click', function() {
+        $.pjax({
+            url: conditionValueDownDependentUrl
+                 + '?conditionValueId=' + $(this).data('conditionValueId'),
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
 })();
 JS;
 
@@ -71,6 +98,29 @@ $this->registerJs($js);
             Add new condition data
         </button>
         <hr>
+        <?php foreach($conditionValues as $conditionValue): ?>
+            <div class="row list-items">
+                <div class="col-xs-9 list-title">
+                    <p data-condition-value-id="<?= $conditionValue->id ?>"
+                       class="condition-value-block-item">
+                        <?= $conditionValue->value_name ?>
+                    </p>
+                </div>
+                <div class="col-xs-3 list-controls">
+                    <?php if ($conditionValue->is_default): ?>
+                        <span class="glyphicon glyphicon-tower"></span>
+                    <?php endif; ?>
+                    <?php if ($conditionValue->canUpOrder()): ?>
+                        <span class="glyphicon condition-value-arrow-up-modal glyphicon-arrow-up"
+                              data-condition-value-id="<?= $conditionValue->id ?>"></span>
+                    <?php endif; ?>
+                    <?php if ($conditionValue->canDownOrder()): ?>
+                        <span class="glyphicon condition-value-arrow-down-modal glyphicon-arrow-down"
+                              data-condition-value-id="<?= $conditionValue->id ?>"></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

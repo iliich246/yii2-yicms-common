@@ -32,7 +32,7 @@ class ConditionValueNamesForm extends AbstractTranslateForm
     public function attributeLabels()
     {
         return [
-            'valueName' => 'Condition value name on language "' . $this->language->name . '"',
+            'valueName'        => 'Condition value name on language "' . $this->language->name . '"',
             'valueDescription' => 'Condition value description on language "' . $this->language->name . '"',
         ];
     }
@@ -44,6 +44,21 @@ class ConditionValueNamesForm extends AbstractTranslateForm
     {
         return [
              [['valueName', 'valueDescription', ], 'string'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'valueName', 'valueDescription'
+            ],
+            self::SCENARIO_UPDATE => [
+                'valueName', 'valueDescription'
+            ],
         ];
     }
 
@@ -64,9 +79,18 @@ class ConditionValueNamesForm extends AbstractTranslateForm
         $this->conditionValue = $conditionValues;
     }
 
+    /**
+     * Save form data in db
+     * @return bool
+     */
     public function save()
     {
+        $currentTranslate = $this->getCurrentTranslateDb();
 
+        $currentTranslate->name = $this->valueName;
+        $currentTranslate->description = $this->valueDescription;
+
+        return $currentTranslate->save(false);
     }
 
     /**
@@ -88,7 +112,7 @@ class ConditionValueNamesForm extends AbstractTranslateForm
         $this->currentTranslateDb = ConditionValueNamesDb::find()
             ->where([
                 'common_language_id' => $this->language->id,
-                'common_condition_template_id' => $this->conditionTemplate->id,
+                'common_condition_value_id' => $this->conditionValue->id,
             ])
             ->one();
 
