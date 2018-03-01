@@ -278,11 +278,17 @@ class DeveloperConditionsController extends Controller
                     $conditionValuesTranslate->save();
                 }
 
+                if (Yii::$app->request->post('_saveAndBack'))
+                    $returnBack = true;
+                else
+                    $returnBack = false;
+
                 return $this->renderAjax('/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
                     'redirectUpdate'            => true,
+                    'returnBack'                => $returnBack
                 ]);
             }
         }
@@ -341,10 +347,16 @@ class DeveloperConditionsController extends Controller
                     $conditionValuesTranslate->save();
                 }
 
+                if (Yii::$app->request->post('_saveAndBack'))
+                    $returnBack = true;
+                else
+                    $returnBack = false;
+
                 return $this->renderAjax('/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
+                    'returnBack'                => $returnBack
                 ]);
             }
         }

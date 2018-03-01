@@ -10,6 +10,7 @@ $js = <<<JS
     var homeUrl = $(conditionDataListModal).data('homeUrl');
 
     var createConditionValueUrl        = homeUrl + '/common/dev-conditions/create-condition-value';
+    var updateConditionValuerUrl       = homeUrl + '/common/dev-conditions/update-condition-value';
     var conditionValueUpDependentUrl   = homeUrl + '/common/dev-conditions/condition-value-up-order';
     var conditionValueDownDependentUrl = homeUrl + '/common/dev-conditions/condition-value-down-order';
 
@@ -37,6 +38,17 @@ $js = <<<JS
     $(addNewValueButton).on('click', function() {
         $.pjax({
             url: createConditionValueUrl + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500,
+        });
+    });
+
+    $('.condition-value-block-item').on('click', function() {
+        $.pjax({
+            url: updateConditionValuerUrl + '?conditionValueId=' + $(this).data('conditionValueId'),
             container: pjaxContainerId,
             scrollTo: false,
             push: false,

@@ -21,8 +21,9 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 {
     use SortOrderTrait;
 
-    const SCENARIO_CREATE = 0x01;
-    const SCENARIO_UPDATE = 0x02;
+    const SCENARIO_CREATE       = 0x01;
+    const SCENARIO_UPDATE       = 0x02;
+    const SCENARIO_CHANGE_ORDER = 0x03;
 
     /**
      * @var ConditionTemplate instance associated with this object
@@ -130,11 +131,38 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
         if ($this->scenario == self::SCENARIO_CREATE) {
             $this->common_condition_template_id = $this->conditionTemplate->id;
             $this->condition_value_order = $this->maxOrder();
+
+            if (!self::find()->where([
+                'common_condition_template_id' => $this->common_condition_template_id
+            ])->count()) $this->is_default = true;
+        }
+
+        if ($this->is_default && $this->scenario != self::SCENARIO_CHANGE_ORDER) {
+
+            /** @var self $other */
+            foreach(self::find()->where([
+                'common_condition_template_id' => $this->common_condition_template_id
+            ])->all() as $other) {
+                if (!$other->is_default) continue;
+
+                $other->scenario   = self::SCENARIO_UPDATE;
+                $other->is_default = false;
+
+                $other->save(false);
+            }
         }
 
         $this->value_name = strtoupper($this->value_name);
 
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConstraints()
+    {
+        return false;
     }
 
     /**
@@ -176,7 +204,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
      */
     public function configToChangeOfOrder()
     {
-
+        $this->scenario = self::SCENARIO_CHANGE_ORDER;
     }
 
     /**

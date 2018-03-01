@@ -14,7 +14,7 @@ $js = <<<JS
 ;(function() {
 
     var conditionValueModal = $('.condition-create-update-value-modal');
-    var deleteButton        = $('.condition-value-delete');
+    var deleteButton        = $('#condition-value-delete');
     var backButton          = $('.condition-create-update-value-back');
 
     var pjaxContainer   = $(conditionValueModal).parent('.pjax-container');
@@ -57,6 +57,94 @@ $js = <<<JS
         });
     }
 
+    $(document).on('click', deleteButton, function() {
+
+        //if (!$(button).is('[data-condition-template-id]')) return;
+
+        var conditionValueId        = $(deleteButton).data('conditionValueId');
+        var conditionHasConstraints = $(deleteButton).data('conditionValueHasConstraints');
+        var pjaxContainer           = $('#update-conditions-list-container');
+        var homeUrl                 = $(deleteButton).data('homeUrl');
+        var deleteValueUrl          = homeUrl + '/common/dev-conditions/delete-condition-value';
+
+        if (!($(deleteButton).hasClass('condition-value-confirm-state'))) {
+            console.log(deleteButton);
+            $(deleteButton).before('<span>Are you sure? </span>');
+            $(deleteButton).text('Yes, I`am sure!');
+            $(deleteButton).addClass('condition-value-confirm-state');
+        } else {
+            if (!conditionHasConstraints) {
+                $.pjax({
+                    url: deleteValueUrl + '?conditionValueId=' + conditionValueId,
+                    container: '#update-conditions-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
+
+                var deleteActive = true;
+
+                $(pjaxContainer).on('pjax:success', function(event) {
+
+                    if (!deleteActive) return false;
+
+                    //$('#{modalName}').modal('hide');
+                    deleteActive = false;
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#condition-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+
+                $.pjax({
+                    url: deleteValueUrl + '?conditionValueId=' + conditionValueId + '&deletePassword=' + passwordInput,
+                    container: '#update-conditions-list-container',
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
+
+                    var deleteActive = true;
+
+                    $(pjaxContainer).on('pjax:success', function(event) {
+
+                        if (!deleteActive) return false;
+
+                        //$('#{modalName}').modal('hide');
+
+                        deleteActive = false;
+                    });
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                        //$('#{modalName}').modal('hide');
+
+                        bootbox.alert({
+                            size: 'large',
+                            title: "Wrong dev password",
+                            message: "Condition template has not deleted",
+                            className: 'bootbox-error'
+                        });
+                    });
+                });
+
+//                $('#{modalName}').on('hide.bs.modal', function() {
+//                    $(pjaxContainer).off('pjax:error');
+//                    $(pjaxContainer).off('pjax:success');
+//                    $('#{modalName}').off('hide.bs.modal');
+//                });
+            }
+        }
+    });
 })();
 JS;
 
@@ -126,7 +214,9 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
             <br>
             <button type="button"
                     class="btn btn-danger"
+                    data-home-url="<?= \yii\helpers\Url::base() ?>"
                     data-condition-value-id="<?= $conditionValue->id ?>"
+                    data-condition-value-has-constraints="<?= (int)$conditionValue->isConstraints() ?>"
                     id="condition-value-delete">
                 Delete condition value
             </button>
