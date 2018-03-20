@@ -288,7 +288,7 @@ class DeveloperConditionsController extends Controller
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
                     'redirectUpdate'            => true,
-                    'returnBack'                => $returnBack,
+                    'returnBack'                => $returnBack
                 ]);
             }
         }
@@ -356,7 +356,7 @@ class DeveloperConditionsController extends Controller
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
-                    'returnBack'                => $returnBack,
+                    'returnBack'                => $returnBack
                 ]);
             }
         }

@@ -14,7 +14,7 @@ $js = <<<JS
 ;(function() {
 
     var conditionValueModal = $('.condition-create-update-value-modal');
-    var deleteButton        = $('.condition-value-delete');
+    var deleteButton        = $('#condition-value-delete');
     var backButton          = $('.condition-create-update-value-back');
 
     var pjaxContainer   = $(conditionValueModal).parent('.pjax-container');
@@ -81,6 +81,16 @@ $js = <<<JS
                     type: "POST",
                     timeout: 2500
                 });
+
+                var deleteActive = true;
+
+                $(pjaxContainer).on('pjax:success', function(event) {
+
+                    if (!deleteActive) return false;
+
+                    //$('#{modalName}').modal('hide');
+                    deleteActive = false;
+                });
             } else {
                 var deleteButtonRow = $('.delete-button-row');
 
@@ -125,6 +135,11 @@ $js = <<<JS
                     });
                 });
 
+//                $('#{modalName}').on('hide.bs.modal', function() {
+//                    $(pjaxContainer).off('pjax:error');
+//                    $(pjaxContainer).off('pjax:success');
+//                    $('#{modalName}').off('hide.bs.modal');
+//                });
             }
         }
     });
