@@ -165,7 +165,22 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
     {
         //TODO: implement this method
 
-        return true;
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete()
+    {
+        $valuesNames = ConditionValueNamesDb::find()->where([
+            'common_condition_value_id' => $this->id,
+        ])->all();
+
+        foreach($valuesNames as $valuesName)
+            $valuesName->delete();
+
+        return parent::delete();
     }
 
     /**

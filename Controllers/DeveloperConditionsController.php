@@ -392,6 +392,8 @@ class DeveloperConditionsController extends Controller
 
         $conditionTemplate = $conditionValue->getConditionTemplate();
 
+        $conditionValue->delete();
+
         $conditionValues = ConditionValues::find()->where([
             'common_condition_template_id' => $conditionTemplate->id,
         ])->orderBy([

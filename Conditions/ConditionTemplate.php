@@ -113,11 +113,16 @@ class ConditionTemplate extends AbstractTemplate
     }
 
     /**
+     * Returns true if this condition template has constraints
      * @return bool
      */
     public function isConstraints()
     {
-        return true;
+        if (Condition::find()->where([
+            'common_condition_template_id' => $this->id,
+        ])->one()) return true;
+
+        return false;
     }
 
     /**
@@ -125,7 +130,28 @@ class ConditionTemplate extends AbstractTemplate
      */
     public function delete()
     {
-        return true;
+        $templateNames = ConditionsNamesTranslatesDb::find()->where([
+            'common_condition_template_id' => $this->id,
+        ])->all();
+
+        foreach($templateNames as $templateName)
+            $templateName->delete();
+
+        $conditions = Condition::find()->where([
+            'common_condition_template_id' => $this->id
+        ])->all();
+
+        foreach($conditions as $condition)
+            $condition->delete();
+
+        $conditionValues = ConditionValues::find()->where([
+            'common_condition_template_id' => $this->id
+        ])->all();
+
+        foreach($conditionValues as $conditionValue)
+            $conditionValue->delete();
+
+        return parent::delete();
     }
 
     /**
