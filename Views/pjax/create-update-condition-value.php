@@ -23,6 +23,7 @@ $js = <<<JS
     var homeUrl           = $(conditionValueModal).data('homeUrl');
     var returnUrl         = $(conditionValueModal).data('returnUrl');
     var redirectUpdateUrl = $(conditionValueModal).data('redirectUpdateUrl');
+    var deleteUrl         = homeUrl + '/common/dev-conditions/delete-condition-value';
 
     var isReturn         = $(conditionValueModal).data('returnBack');
     var isRedirectUpdate = $(conditionValueModal).data('redirectUpdate');
@@ -57,12 +58,83 @@ $js = <<<JS
         });
     }
 
+    $('#condition-value-delete').on('click',  function() {
+
+        var button = ('#condition-value-delete');
+
+        if (!$(button).is('[data-condition-value-id]')) return;
+
+        var conditionValueId        = $(button).data('conditionValueId');
+        var conditionHasConstraints = $(button).data('conditionValueHasConstraints');
+
+        if (!($(this).hasClass('condition-value-confirm-state'))) {
+            $(this).before('<span>Are you sure? </span>');
+            $(this).text('Yes, I`am sure!');
+            $(this).addClass('condition-value-confirm-state');
+        } else {
+            if (!conditionHasConstraints) {
+                $.pjax({
+                    url: deleteUrl + '?conditionValueId=' + conditionValueId,
+                    container: pjaxContainerId,
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#condition-value-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+                    $.pjax({
+                        url: deleteUrl + '?conditionValueId=' + conditionValueId +
+                                         '&deletePass=' + $(passwordInput).val(),
+                        container: pjaxContainerId,
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+
+                    var deleteActive = true;
+
+                    //$(pjaxContainer).on('pjax:success', function(event) {
+                    //
+                    //    if (!deleteActive) return false;
+                    //
+                    //    $('#conditionsDevModal').modal('hide');
+                    //    deleteActive = false;
+                    //});
+
+                    $(pjaxContainer).on('pjax:error', function(event) {
+
+                        $('#conditionsDevModal').modal('hide');
+
+                        bootbox.alert({
+                            size: 'large',
+                            title: "Wrong dev password",
+                            message: "Condition value has not deleted",
+                            className: 'bootbox-error'
+                        });
+                    });
+                });
+
+            }
+        }
+    });
+
 })();
 JS;
 
 $this->registerJs($js);
 
-if (isset($returnBack)) $return = 'true';
+if (isset($returnBack) && $returnBack) $return = 'true';
 else $return = 'false';
 
 if (isset($redirectUpdate)) $redirect = 'true';
@@ -84,7 +156,7 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
          '/common/dev-conditions/update-condition-value',
          'conditionValueId' => $conditionValueId,
      ]) ?>"
-    >
+>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="modal-title">
@@ -100,7 +172,7 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
     <?php $form = ActiveForm::begin([
         'id' => 'condition-create-update-value-form',
         'options' => [
-            'data-pjax'        => true,
+            'data-pjax' => true,
             'data-return-back' => $return
         ],
     ]);
@@ -123,13 +195,39 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
         ?>
 
         <?php if ($conditionValue->scenario == ConditionValues::SCENARIO_UPDATE): ?>
-            <br>
-            <button type="button"
-                    class="btn btn-danger"
-                    data-condition-value-id="<?= $conditionValue->id ?>"
-                    id="condition-value-delete">
-                Delete condition value
-            </button>
+            <div class="row delete-button-row">
+                <div class="col-xs-12">
+                    <br>
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-condition-value-id="<?= $conditionValue->id ?>"
+                            data-condition-value-has-constraints="<?= (int)$conditionValue->isConstraints() ?>"
+                            id="condition-value-delete">
+                        Delete condition value
+                    </button>
+                </div>
+            </div>
+            <script type="text/template" id="delete-with-pass-template">
+                <div class="col-xs-12">
+                    <br>
+                    <label for="condition-value-delete-password-input">
+                        Condition value has constraints. Enter dev password for delete condition value
+                    </label>
+                    <input type="password"
+                           id="condition-value-delete-password-input"
+                           class="form-control" name=""
+                           value=""
+                           aria-required="true"
+                           aria-invalid="false">
+                    <br>
+                    <button type="button"
+                            class="btn btn-danger"
+                            id="button-delete-with-pass"
+                    >
+                        Yes, i am absolutely seriously!!!
+                    </button>
+                </div>
+            </script>
         <?php endif; ?>
 
     </div>

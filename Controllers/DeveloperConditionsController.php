@@ -278,11 +278,17 @@ class DeveloperConditionsController extends Controller
                     $conditionValuesTranslate->save();
                 }
 
+                if (Yii::$app->request->post('_saveAndBack'))
+                    $returnBack = true;
+                else
+                    $returnBack = false;
+
                 return $this->renderAjax('/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
                     'redirectUpdate'            => true,
+                    'returnBack'                => $returnBack,
                 ]);
             }
         }
@@ -341,10 +347,16 @@ class DeveloperConditionsController extends Controller
                     $conditionValuesTranslate->save();
                 }
 
+                if (Yii::$app->request->post('_saveAndBack'))
+                    $returnBack = true;
+                else
+                    $returnBack = false;
+
                 return $this->renderAjax('/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
+                    'returnBack'                => $returnBack,
                 ]);
             }
         }
@@ -357,12 +369,40 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Delete selected condition value
      * @param $conditionValueId
+     * @param bool|false $deletePass
+     * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
+     * @throws NotFoundHttpException
      */
-    public function actionDeleteConditionValue($conditionValueId)
+    public function actionDeleteConditionValue($conditionValueId, $deletePass = false)
     {
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionValues $conditionValue */
+        $conditionValue = ConditionValues::findOne($conditionValueId);
+
+        if (!$conditionValue) throw new NotFoundHttpException('Wrong conditionValueId');
+
+        if ($conditionValue->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
+
+        $conditionTemplate = $conditionValue->getConditionTemplate();
+
+        $conditionValues = ConditionValues::find()->where([
+            'common_condition_template_id' => $conditionTemplate->id,
+        ])->orderBy([
+            'condition_value_order' => SORT_ASC
+        ])->all();
+
+        return $this->renderAjax('/pjax/conditions-value-list-container', [
+            'conditionTemplate' => $conditionTemplate,
+            'conditionValues'   => $conditionValues
+        ]);
+
     }
 
     /**

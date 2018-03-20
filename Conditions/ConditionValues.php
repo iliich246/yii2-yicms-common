@@ -132,9 +132,35 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
             $this->condition_value_order = $this->maxOrder();
         }
 
+        if ($this->is_default && ($this->scenario === self::SCENARIO_CREATE || $this->scenario === self::SCENARIO_UPDATE)) {
+
+            /** @var self $other */
+            foreach(self::find()->where([
+                'common_condition_template_id' => $this->common_condition_template_id,
+            ])->all() as $other)
+            {
+                if (!$other->is_default) continue;
+
+                $other->scenario = self::SCENARIO_UPDATE;
+                $other->is_default = false;
+                $other->save(false);
+            }
+        }
+
         $this->value_name = strtoupper($this->value_name);
 
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Returns true if this condition value has constraints
+     * @return bool
+     */
+    public function isConstraints()
+    {
+        //TODO: implement this method
+
+        return true;
     }
 
     /**
