@@ -11,10 +11,13 @@ namespace Iliich246\YicmsCommon\Base;
  */
 abstract class AbstractHandler
 {
-    /** @var object aggregator for this handler */
+    /**
+     * @var object aggregator for this handler
+     */
     protected $aggregator;
-
-    /** @var array buffer for caching data of handler */
+    /**
+     * @var array buffer for caching data of handler
+     */
     private $buffer = [];
 
     /**

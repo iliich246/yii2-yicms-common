@@ -32,6 +32,7 @@ class ConditionsHandler extends AbstractHandler
     public function getCondition($name)
     {
         return $this->getOrSet($name, function() use($name) {
+            //Condition::get
 //            return Field::getInstance(
 //                $this->aggregator->getFieldTemplateReference(),
 //                $this->aggregator->getFieldReference(),

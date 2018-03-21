@@ -63,6 +63,7 @@ class FieldsGroup extends AbstractGroup
     public $singleFields;
 
     /**
+     * Sets reference able
      * @param FieldReferenceInterface $referenceAble
      */
     public function setFieldsReferenceAble(FieldReferenceInterface $referenceAble)
@@ -104,8 +105,6 @@ class FieldsGroup extends AbstractGroup
         $this->singleFieldTemplates = $templateQuery->andWhere([
             'language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE
         ])->all();
-
-        //throw new \yii\base\Exception(print_r($this->referenceAble->getFieldTemplateReference(), true));
 
         $languages = Language::getInstance()->usedLanguages();
 
