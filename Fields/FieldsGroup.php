@@ -60,7 +60,7 @@ class FieldsGroup extends AbstractGroup
     /**
      * @var Field[] array of fields without translates
      */
-    public $singleFields;
+    public $singleFields = [];
 
     /**
      * Sets reference able
@@ -126,17 +126,17 @@ class FieldsGroup extends AbstractGroup
 
         foreach($this->singleFieldTemplates as $singleFieldTemplate) {
             $singleField = Field::find()->where([
-                'field_reference' => $this->referenceAble->getFieldReference(),
+                'field_reference'           => $this->referenceAble->getFieldReference(),
                 'common_fields_template_id' => $singleFieldTemplate->id
             ])->one();
 
             if (!$singleField) {
-                $singleField = new Field();
-                $singleField->field_reference = $this->referenceAble->getFieldReference();
+                $singleField                            = new Field();
+                $singleField->field_reference           = $this->referenceAble->getFieldReference();
                 $singleField->common_fields_template_id = $singleFieldTemplate->id;
-                $singleField->value = null;
-                $singleField->visible = true;
-                $singleField->editable = true;
+                $singleField->value                     = null;
+                $singleField->visible                   = true;
+                $singleField->editable                  = true;
 
                 $singleField->save();
             }
@@ -187,14 +187,14 @@ class FieldsGroup extends AbstractGroup
                 $fieldTranslate->setFieldReference($field->field_reference);
                 $fieldTranslate->loadFromDb();
 
-                $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
+                $this->translateForms["$languageKey-$fieldTemplateKey"]     = $fieldTranslate;
                 $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
             }
         }
 
         foreach($this->singleFieldTemplates as $singleFieldTemplate) {
             $singleField = Field::find()->where([
-                'field_reference' => $field->field_reference,
+                'field_reference'           => $field->field_reference,
                 'common_fields_template_id' => $singleFieldTemplate->id
             ])->one();
 
@@ -266,17 +266,17 @@ class FieldsGroup extends AbstractGroup
 
         if ($this->translateFormsArray) {
             $result = FieldsRenderWidget::widget([
-                'form' => $form,
+                'form'        => $form,
                 'fieldsArray' => $this->translateFormsArray,
-                'isModal' => $isModal,
+                'isModal'     => $isModal,
             ]);
         }
 
         if ($this->singleFields) {
             $result .= FieldsRenderWidget::widget([
-                'form' => $form,
+                'form'        => $form,
                 'fieldsArray' => [$this->singleFields],
-                'isModal' => $isModal
+                'isModal'     => $isModal
             ]);
         }
 

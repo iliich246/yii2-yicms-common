@@ -8,6 +8,7 @@ use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
+/** @var $this yii\web\View */
 /** @var $widget \Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget */
 /** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
 

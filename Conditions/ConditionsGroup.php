@@ -21,6 +21,14 @@ class ConditionsGroup extends AbstractGroup
      * @var ConditionsReferenceInterface|ConditionsInterface object for current group
      */
     protected $referenceAble;
+    /**
+     * @var ConditionTemplate[] instances
+     */
+    public $conditionTemplates = [];
+    /**
+     * @var Condition[] array of conditions
+     */
+    public $conditions = [];
 
     /**
      * @param ConditionsReferenceInterface $referenceAble
@@ -28,6 +36,16 @@ class ConditionsGroup extends AbstractGroup
     public function setConditionsReferenceAble(ConditionsReferenceInterface $referenceAble)
     {
         $this->referenceAble = $referenceAble;
+    }
+
+    /**
+     * Return true, if referenceAble contains any conditions
+     * @return bool
+     */
+    public function isConditions()
+    {
+        if ($this->conditions) return true;
+        return false;
     }
 
     /**
@@ -44,9 +62,29 @@ class ConditionsGroup extends AbstractGroup
                 'editable' => true,
             ]);
 
-        $conditionsTemplatesQuery->orderBy([
+        $this->conditionTemplates = $conditionsTemplatesQuery->orderBy([
             ConditionTemplate::getOrderFieldName() =>SORT_ASC
-        ])->indexBy('id');
+        ])->indexBy('id')
+          ->all();
+
+        foreach($this->conditionTemplates as $conditionTemplate) {
+            $condition = Condition::find()->where([
+                'condition_reference'          => $this->referenceAble->getConditionReference(),
+                'common_condition_template_id' => $conditionTemplate->id,
+            ])->one();
+
+            if (!$condition) {
+                $condition                               = new Condition();
+                $condition->common_condition_template_id = $conditionTemplate->id;
+                $condition->condition_reference          = $this->referenceAble->getConditionReference();
+                $condition->common_value_id              = null;
+                $condition->editable                     = true;
+
+                $condition->save();
+            }
+
+            $this->conditions["$conditionTemplate->id"] = $condition;
+        }
     }
 
     /**
@@ -54,7 +92,7 @@ class ConditionsGroup extends AbstractGroup
      */
     public function validate()
     {
-
+        return Model::validateMultiple($this->conditions);
     }
 
     /**
@@ -62,7 +100,7 @@ class ConditionsGroup extends AbstractGroup
      */
     public function load($data)
     {
-
+        return Model::loadMultiple($this->conditions, $data);
     }
 
     /**
@@ -70,7 +108,14 @@ class ConditionsGroup extends AbstractGroup
      */
     public function save()
     {
+        $success = true;
 
+        foreach($this->conditions as $condition) {
+            if (!$success) return false;
+            $success = $condition->save();
+        }
+
+        return true;
     }
 
     /**
@@ -78,7 +123,16 @@ class ConditionsGroup extends AbstractGroup
      */
     public function render(ActiveForm $form, $isModal = false)
     {
+        $result = '';
 
+        if ($this->conditions) {
+            $result .= ConditionRenderWidget::widget([
+                'form'            => $form,
+                'conditionsArray' => $this->conditions,
+                'isModal'         => $isModal
+            ]);
+        }
+
+        return $result;
     }
-
 }

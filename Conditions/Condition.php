@@ -19,6 +19,10 @@ use yii\db\ActiveRecord;
 class Condition extends ActiveRecord
 {
     /**
+     * @var ConditionTemplate instance of condition template
+     */
+    private $template;
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -43,5 +47,26 @@ class Condition extends ActiveRecord
                 'targetClass' => ConditionTemplate::className(), 'targetAttribute' => ['common_condition_template_id' => 'id']
             ],
         ];
+    }
+
+    /**
+     * Returns type of condition  essence
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->getTemplate()->type;
+    }
+
+    /**
+     * @return ConditionTemplate
+     */
+    public function getTemplate()
+    {
+        if ($this->template) return $this->template;
+
+        $this->template = ConditionTemplate::findOne($this->common_condition_template_id);
+
+        return $this->template;
     }
 }
