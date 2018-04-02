@@ -5,6 +5,8 @@ namespace Iliich246\YicmsCommon\Conditions;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
 /**
  * Class ConditionValues
@@ -29,6 +31,10 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
      * @var ConditionTemplate instance associated with this object
      */
     private $conditionTemplate;
+    /**
+     * @var ConditionValueNamesDb[]
+     */
+    private $translation;
 
     /**
      * @inheritdoc
@@ -164,6 +170,64 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
     public function isConstraints()
     {
         //TODO: implement this method
+
+        return false;
+    }
+
+    /**
+     * Returns translated name of condition value
+     * @param LanguagesDb|null $language
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getName(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        if (!is_null($this->translation[$language->id])) {
+            if (trim($this->translation[$language->id]->name) === '') {
+                return $this->value_name;
+            }
+
+            return $this->translation[$language->id]->name;
+        }
+
+        $this->translation[$language->id] = ConditionValueNamesDb::find()->where([
+            'common_condition_value_id' => $this->id,
+            'common_language_id'        => $language->id,
+        ])->one();
+
+        if ($this->translation[$language->id]) {
+            if (trim($this->translation[$language->id]->name) === '') {
+                return $this->value_name;
+            }
+
+            return $this->translation[$language->id]->name;
+        }
+
+        return $this->value_name;
+    }
+
+    /**
+     * Returns translated description of condition value
+     * @param LanguagesDb|null $language
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getDescription(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        if (!is_null($this->translation[$language->id]))
+            return $this->translation[$language->id]->description;
+
+        $this->translation[$language->id] = ConditionValueNamesDb::find()->where([
+            'common_condition_value_id' => $this->id,
+            'common_language_id'        => $language->id,
+        ])->one();
+
+        if ($this->translation[$language->id])
+            return $this->translation[$language->id]->description;
 
         return false;
     }

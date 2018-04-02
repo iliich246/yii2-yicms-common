@@ -48,11 +48,11 @@ class ConditionTypeWidget extends Widget
                 throw new CommonException("Unknown type of condition");
         }
 
-        return $view;
+        //return $view;
 
-        //return $this->render($view, [
-        //    'widget' => $this
-        //]);
+        return $this->render($view, [
+            'widget' => $this
+        ]);
     }
 
 }

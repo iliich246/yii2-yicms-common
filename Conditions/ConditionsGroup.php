@@ -77,7 +77,7 @@ class ConditionsGroup extends AbstractGroup
                 $condition                               = new Condition();
                 $condition->common_condition_template_id = $conditionTemplate->id;
                 $condition->condition_reference          = $this->referenceAble->getConditionReference();
-                $condition->common_value_id              = null;
+                $condition->common_value_id              = $conditionTemplate->defaultValueId();
                 $condition->editable                     = true;
 
                 $condition->save();

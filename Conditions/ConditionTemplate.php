@@ -28,6 +28,11 @@ class ConditionTemplate extends AbstractTemplate
     protected static $buffer = [];
 
     /**
+     * @var ConditionValues[]
+     */
+    private $values;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -152,6 +157,36 @@ class ConditionTemplate extends AbstractTemplate
             $conditionValue->delete();
 
         return parent::delete();
+    }
+
+    /**
+     * Returns buffered list of values of template
+     * @return ConditionValues[]
+     */
+    public function getValuesList()
+    {
+        if ($this->values) return $this->values;
+
+        $this->values = ConditionValues::find()->where([
+            'common_condition_template_id' => $this->id,
+        ])->orderBy(['condition_value_order' =>SORT_ASC])
+          ->indexBy('id')
+          ->all();
+
+        return $this->values;
+    }
+
+    /**
+     * Returns id of default value
+     * @return int|null
+     */
+    public function defaultValueId()
+    {
+        foreach($this->getValuesList() as $value) {
+            if ($value->is_default) return $value->id;
+        }
+
+        return null;
     }
 
     /**
