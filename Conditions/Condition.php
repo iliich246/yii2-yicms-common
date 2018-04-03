@@ -41,15 +41,10 @@ class Condition extends ActiveRecord
             if (is_null($this->common_value_id)) {
                 $valueId = $this->getTemplate()->defaultValueId();
 
-
-
                 if (!is_null($valueId)) {
 
                     $this->common_value_id = $valueId;
-                    //TODO: fix mistake with save there
-                    //throw new \Exception(print_r($this->common_value_id,true));
-                    $this->save(false);
-                    throw new \Exception(print_r($this,true));
+                    $this->simpleSave();
                 }
             }
 
@@ -92,6 +87,15 @@ class Condition extends ActiveRecord
     {
         $this->common_value_id = $this->value;
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Save action that just proxy parent method
+     * @return bool
+     */
+    public function simpleSave()
+    {
+        return parent::save(false);
     }
 
     /**

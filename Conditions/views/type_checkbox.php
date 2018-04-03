@@ -5,5 +5,7 @@
 
 ?>
 
-CHECKBOX
+<?= $widget->form->field($widget->condition, $widget->condition->getKey())->checkbox(
+
+)->label($widget->condition->getName()) ?>
 
