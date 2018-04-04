@@ -3,6 +3,7 @@
 /** @var $this \yii\web\View */
 /** @var $conditionTemplate \Iliich246\YicmsCommon\Conditions\ConditionTemplate */
 /** @var $conditionValues  \Iliich246\YicmsCommon\Conditions\ConditionValues[] */
+
 $js = <<<JS
 ;(function() {
     var conditionDataListModal = $('.condition-values-list-modal');
@@ -104,6 +105,9 @@ $this->registerJs($js);
             <span class="glyphicon glyphicon-arrow-left condition-values-list-back"
                   style="float: right;margin-right: 20px"></span>
         </h3>
+        <?php if ($conditionTemplate->type == \Iliich246\YicmsCommon\Conditions\ConditionTemplate::TYPE_CHECKBOX): ?>
+        <h4>For "checkbox" condition type used only first value, other values will be ignored</h4>
+        <?php endif; ?>
     </div>
     <div class="modal-body">
         <button class="btn btn-primary add-new-condition-value-button"

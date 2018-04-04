@@ -2,9 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Languages;
 
-use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
+use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use Iliich246\YicmsCommon\Base\CommonException;
 
 /**

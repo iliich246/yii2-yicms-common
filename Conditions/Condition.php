@@ -85,7 +85,19 @@ class Condition extends ActiveRecord
      */
     public function save($runValidation = true, $attributeNames = null)
     {
-        $this->common_value_id = $this->value;
+        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
+            if ($this->value == 0) $this->common_value_id = null;
+            else {
+                $values = $this->getTemplate()->getValuesList();
+                reset($values);
+                /** @var ConditionValues $value */
+                $value = current($values);
+                $this->common_value_id = $value->id;
+            }
+        }else {
+            $this->common_value_id = $this->value;
+        }
+
         return parent::save($runValidation, $attributeNames);
     }
 
