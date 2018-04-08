@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Yii;
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
 
@@ -20,6 +21,8 @@ class FieldsDevModalWidget extends Widget
     public $deleteLink;
     /** @var string keeps current form action  */
     public $action;
+    /** @var string if true widget must close modal window after save data */
+    public $saveAndExit = 'false';
 
     /**
      * @inheritdoc
@@ -27,6 +30,8 @@ class FieldsDevModalWidget extends Widget
     public function init()
     {
         $this->deleteLink = Url::toRoute(['/common/dev-fields/delete-field-template']);
+        if (Yii::$app->request->post('_saveAndExit'))
+            $this->saveAndExit = 'true';
     }
 
     /**

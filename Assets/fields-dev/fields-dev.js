@@ -38,7 +38,7 @@
             timeout: 2500
         });
 
-        if (!isValidatorResponse)
+        if ($('#create-update-fields').data('saveAndExit'))
             $(pjaxFieldsModalName).modal('hide');
     });
 

@@ -134,8 +134,9 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
             'id' => FieldsDevModalWidget::getFormName(),
             'action'  => $widget->action,
             'options' => [
-                'data-pjax'        => true,
-                'data-yicms-saved' => $widget->dataSaved,
+                'data-pjax'          => true,
+                'data-yicms-saved'   => $widget->dataSaved,
+                'data-save-and-exit' => $widget->saveAndExit,
             ],
         ]);
         ?>
@@ -246,6 +247,8 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
             </div>
             <div class="modal-footer">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                <?= Html::submitButton('Save and exit', ['class' => 'btn btn-success',
+                    'value' => 'true', 'name' => '_saveAndExit']) ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
