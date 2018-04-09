@@ -13,7 +13,7 @@ use yii\bootstrap\Widget;
  */
 class FieldsDevModalWidget extends Widget
 {
-    /** @var DevFieldsGroup  */
+    /** @var DevFieldsGroup instance  */
     public $devFieldGroup;
     /** @var bool true means that widget initialized after success data save in devFieldGroup */
     public $dataSaved = false;

@@ -113,6 +113,16 @@ $this->registerJs($js, $this::POS_READY);
 
 $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
 
+if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_CREATE &&
+    $widget->devFieldGroup->justSaved)
+    $redirectToUpdate = 'true';
+else
+    $redirectToUpdate = 'false';
+
+if ($redirectToUpdate == 'true')
+    $fieldTemplateIdForRedirect = $widget->devFieldGroup->fieldTemplate->id;
+else
+    $fieldTemplateIdForRedirect = '0';
 ?>
 
 <div class="modal fade"
@@ -134,9 +144,11 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
             'id' => FieldsDevModalWidget::getFormName(),
             'action'  => $widget->action,
             'options' => [
-                'data-pjax'          => true,
-                'data-yicms-saved'   => $widget->dataSaved,
-                'data-save-and-exit' => $widget->saveAndExit,
+                'data-pjax'                       => true,
+                'data-yicms-saved'                => $widget->dataSaved,
+                'data-save-and-exit'              => $widget->saveAndExit,
+                'data-redirect-to-update-field'   => $redirectToUpdate,
+                'data-field-template-id-redirect' => $fieldTemplateIdForRedirect
             ],
         ]);
         ?>

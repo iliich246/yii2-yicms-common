@@ -14,6 +14,8 @@
     var pjaxFieldsModalName    = '#' + $(addField).data('fieldsModalName');
     var imageLoaderScr         = $(addField).data('loaderImageSrc');
 
+    var redirectToUpdateNeedSecondPjaxRequest = false;
+
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxFieldsModalName)
             .find('.modal-content')
@@ -22,6 +24,44 @@
     });
 
     $(pjaxContainerName).on('pjax:success', function(event) {
+
+        var fieldForm = $('#create-update-fields');
+
+        if ($(fieldForm).data('saveAndExit')) {
+            $(pjaxFieldsModalName).modal('hide');
+
+            $.pjax({
+                url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
+                container: '#update-fields-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            return;
+        }
+
+        var redirectToUpdate           = $(fieldForm).data('redirectToUpdateField');
+        var fieldTemplateIdForRedirect = $(fieldForm).data('fieldTemplateIdRedirect');
+
+        if (redirectToUpdate) {
+            $.pjax({
+                url: updateFieldsListUrl + '?fieldTemplateReference=' + fieldTemplateReference,
+                container: '#update-fields-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            redirectToUpdateNeedSecondPjaxRequest = fieldTemplateIdForRedirect;
+
+            return;
+        }
+
+        //console.log(redirectToUpdate);
+       // console.log(fieldTemplateIdForRedirect);
 
         var isValidatorResponse = !!($('.validator-response').length);
 
@@ -37,10 +77,15 @@
             type: "POST",
             timeout: 2500
         });
-
-        if ($('#create-update-fields').data('saveAndExit'))
-            $(pjaxFieldsModalName).modal('hide');
     });
+
+    $('#update-fields-list-container').on('pjax:success', function(event) {
+        if (redirectToUpdateNeedSecondPjaxRequest) {
+            loadModal(redirectToUpdateNeedSecondPjaxRequest);
+            redirectToUpdateNeedSecondPjaxRequest = false;
+        }
+    });
+
 
     $(document).on('click', '.field-item p', function(event) {
         var fieldTemplate = $(this).data('field-template-id');

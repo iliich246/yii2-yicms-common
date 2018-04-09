@@ -215,6 +215,95 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
+    public function delete()
+    {
+        /** @var FieldTemplate[] $fieldTemplates */
+        $fieldTemplates = FieldTemplate::find()->where([
+            'field_template_reference' => $this->getFieldTemplateReference(),
+        ])->all();
+
+        foreach($fieldTemplates as $fieldTemplate)
+            $fieldTemplate->delete();
+
+        /** @var FilesBlock[] $filesBlocks */
+        $filesBlocks = FilesBlock::find()->where([
+            'file_template_reference' => $this->getFileTemplateReference(),
+        ])->all();
+
+        foreach($filesBlocks as $fileBlock)
+            $fileBlock->delete();
+
+        /** @var ImagesBlock[] $imageBlocks */
+        $imageBlocks = ImagesBlock::find()->where([
+            'image_template_reference' => $this->getImageTemplateReference(),
+        ])->all();
+
+        foreach($imageBlocks as $imageBlock)
+            $imageBlock->delete();
+
+        /** @var ConditionTemplate[] $conditionTemplates */
+        $conditionTemplates = ConditionTemplate::find()->where([
+            'condition_template_reference' => $this->getConditionTemplateReference(),
+        ])->all();
+
+        foreach($conditionTemplates as $conditionTemplate)
+            $conditionTemplate->delete();
+
+        /** @var FreeEssenceNamesTranslatesDb[] $freeEssenceNames */
+        $freeEssenceNames = FreeEssenceNamesTranslatesDb::find()->where([
+            'common_free_essence_id' => $this->id,
+        ])->all();
+
+        foreach($freeEssenceNames as $freeEssenceName)
+            $freeEssenceName->delete();
+
+        return parent::delete();
+    }
+
+    /**
+     * Return true if free essence has any constraints
+     * @return bool
+     */
+    public function isConstraints()
+    {
+        /** @var FieldTemplate[] $fieldTemplates */
+        $fieldTemplates = FieldTemplate::find()->where([
+            'field_template_reference' => $this->getFieldTemplateReference(),
+        ])->all();
+
+        foreach($fieldTemplates as $fieldTemplate)
+            if ($fieldTemplate->isConstraints()) return true;
+
+        /** @var FilesBlock[] $filesBlocks */
+        $filesBlocks = FilesBlock::find()->where([
+            'file_template_reference' => $this->getFileTemplateReference(),
+        ])->all();
+
+        foreach($filesBlocks as $fileBlock)
+            if ($fileBlock->isConstraints()) return true;
+
+        /** @var ImagesBlock[] $imageBlocks */
+        $imageBlocks = ImagesBlock::find()->where([
+            'image_template_reference' => $this->getImageTemplateReference(),
+        ])->all();
+
+        foreach($imageBlocks as $imageBlock)
+            if ($imageBlock->isConstraints()) return true;
+
+        /** @var ConditionTemplate[] $conditionTemplates */
+        $conditionTemplates = ConditionTemplate::find()->where([
+            'condition_template_reference' => $this->getConditionTemplateReference(),
+        ])->all();
+
+        foreach($conditionTemplates as $conditionTemplate)
+            if ($conditionTemplate->isConstraints()) return true;
+
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldHandler()
     {
         if (!$this->fieldHandler)

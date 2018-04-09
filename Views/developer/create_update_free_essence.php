@@ -26,7 +26,8 @@ use Iliich246\YicmsCommon\Conditions\ConditionsDevModalWidget;
 
 $js = <<<JS
 ;(function() {
-    var pjaxContainer = $('#update-free-essence-container');
+    var pjaxContainer   = $('#update-free-essence-container');
+    var pjaxContainerId = '#update-free-essence-container';
 
     $(pjaxContainer).on('pjax:success', function() {
         $(".alert").hide().slideDown(500).fadeTo(500, 1);
@@ -45,6 +46,64 @@ $js = <<<JS
             message: textStatus.responseText,
             className: 'bootbox-error'
         });
+    });
+
+    $('#free-essence-delete').on('click',  function() {
+        var button = this;
+
+        if (!$(button).is('[data-free-essence-id]')) return;
+
+        var freeEssenceId             = $(button).data('freeEssenceId');
+        var freeEssenceHasConstraints = $(button).data('freeEssenceHasConstraints');
+        var homeUrl                   = $(button).data('homeUrl');
+        var deleteUrl                 = homeUrl + '/common/dev/delete-free-essence';
+
+        if (!($(this).hasClass('page-confirm-state'))) {
+            $(this).before('<span>Are you sure? </span>');
+            $(this).text('Yes, I`am sure!');
+            $(this).addClass('page-confirm-state');
+        } else {
+            if (!freeEssenceHasConstraints) {
+                $.pjax({
+                    url: deleteUrl + '?id=' + freeEssenceId,
+                    container: pjaxContainerId,
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                 });
+            } else {
+                var deleteButtonRow = $('.delete-button-row');
+
+                var template = _.template($('#delete-with-pass-template').html());
+                $(deleteButtonRow).empty();
+                $(deleteButtonRow).append(template);
+
+                var passwordInput = $('#page-delete-password-input');
+                var buttonDelete  = $('#button-delete-with-pass');
+
+                $(buttonDelete).on('click', function() {
+                    $.pjax({
+                        url: deleteUrl + '?id=' + freeEssenceId +
+                                         '&deletePass=' + $(passwordInput).val(),
+                        container: pjaxContainerId,
+                        scrollTo: false,
+                        push: false,
+                        type: "POST",
+                        timeout: 2500
+                    });
+                });
+
+                $(pjaxContainer).on('pjax:error', function(event) {
+                    bootbox.alert({
+                        size: 'large',
+                        title: "Wrong dev password",
+                        message: "Free essence has not deleted",
+                        className: 'bootbox-error'
+                    });
+                });
+            }
+        }
     });
 })();
 JS;
@@ -236,6 +295,43 @@ JS;
                     <?= $form->field($freeEssence, 'visible')->checkbox() ?>
                 </div>
             </div>
+
+            <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_UPDATE): ?>
+                <div class="row delete-button-row">
+                    <div class="col-xs-12">
+                        <br>
+                        <button type="button"
+                                class="btn btn-danger"
+                                data-home-url="<?= \yii\helpers\Url::base() ?>"
+                                data-free-essence-id="<?= $freeEssence->id ?>"
+                                data-free-essence-has-constraints="<?= (int)$freeEssence->isConstraints() ?>"
+                                id="free-essence-delete">
+                            Delete free essence
+                        </button>
+                    </div>
+                </div>
+                <script type="text/template" id="delete-with-pass-template">
+                    <div class="col-xs-12">
+                        <br>
+                        <label for="page-delete-password-input">
+                            Free essence has constraints. Enter dev password for delete free essence
+                        </label>
+                        <input type="password"
+                               id="free-essence-delete-password-input"
+                               class="form-control" name=""
+                               value=""
+                               aria-required="true"
+                               aria-invalid="false">
+                        <br>
+                        <button type="button"
+                                class="btn btn-danger"
+                                id="button-delete-with-pass"
+                        >
+                            Yes, i am absolutely seriously!!!
+                        </button>
+                    </div>
+                </script>
+            <?php endif; ?>
 
             <div class="row control-buttons">
                 <div class="col-xs-12">

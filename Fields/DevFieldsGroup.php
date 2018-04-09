@@ -15,30 +15,18 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class DevFieldsGroup extends AbstractGroup
 {
-    /**
-     * @var string fieldTemplateReference value for current group
-     */
+    /** @var string fieldTemplateReference value for current group */
     protected $fieldTemplateReference;
-
-    /**
-     * @var FieldTemplate current field template with group is working (create or update)
-     */
+    /** @var FieldTemplate current field template with group is working (create or update) */
     public $fieldTemplate;
-
-    /**
-     * @var FieldNamesTranslatesForm[]
-     */
+    /** @var FieldNamesTranslatesForm[] */
     public $fieldNameTranslates;
-
-    /**
-     * @var FieldTemplate[] array associated with object with current $fieldTemplateReference
-     */
+    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
     public $fieldTemplatesTranslatable;
-
-    /**
-     * @var FieldTemplate[] array associated with object with current $fieldTemplateReference
-     */
+    /** @var FieldTemplate[] array associated with object with current $fieldTemplateReference */
     public $fieldTemplatesSingle;
+    /** @var bool indicate that data in this group was saved in this action */
+    public $justSaved = false;
 
     /**
      * Sets fieldTemplateReference
@@ -163,6 +151,8 @@ class DevFieldsGroup extends AbstractGroup
             if ($needSaveFieldTemplateName)
                 $fieldNameTranslate->save();
         }
+
+        $this->justSaved = true;
 
         //TODO: makes error handling
         return true;

@@ -287,7 +287,7 @@ class DeveloperController extends Controller
         $freeEssence = FreeEssences::findOne($id);
 
         if (!$freeEssence)
-            throw new NotFoundHttpException('Wrong page ID');
+            throw new NotFoundHttpException('Wrong free essence ID');
 
         $freeEssence->scenario = FreeEssences::SCENARIO_UPDATE;
 
@@ -414,9 +414,31 @@ class DeveloperController extends Controller
         ]);
     }
 
-    public function actionDeleteFreeEssence($id)
+    /**
+     * Action for delete free essence
+     * @param $id
+     * @param bool|false $deletePass
+     * @return \yii\web\Response
+     * @throws CommonException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteFreeEssence($id, $deletePass = false)
     {
-        //TODO: make this action
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($id);
+
+        if (!$freeEssence)
+            throw new NotFoundHttpException('Wrong free essence ID');
+
+        if ($freeEssence->isConstraints())
+            if (!Yii::$app->security->validatePassword($deletePass, CommonHashForm::DEV_HASH))
+                throw new CommonException('Wrong dev password');
+
+
+        if ($freeEssence->delete())
+            return $this->redirect(Url::toRoute(['free-essences-list']));
+
+        throw new CommonException('Delete error');
     }
 
     /**
