@@ -17,7 +17,6 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  * @property integer $field_order
  * @property bool $visible
  * @property bool $editable
- * @property bool $is_main
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -68,7 +67,7 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
     {
         return array_merge(parent::rules(), [
             [['type', 'language_type'], 'integer'],
-            [['visible', 'editable', 'is_main'], 'boolean'],
+            [['visible', 'editable'], 'boolean'],
         ]);
     }
 
@@ -79,9 +78,9 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'language_type', 'visible', 'editable', 'is_main']);
+            ['type', 'language_type', 'visible', 'editable']);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type','language_type' ,'visible', 'editable', 'is_main']);
+            ['type','language_type' ,'visible', 'editable']);
 
         return $scenarios;
     }
@@ -128,21 +127,6 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
      */
     public function save($runValidation = true, $attributes = null)
     {
-        if ($this->is_main && ($this->scenario === self::SCENARIO_CREATE || $this->scenario === self::SCENARIO_UPDATE)) {
-
-            /** @var self $other */
-            foreach(self::find()->where([
-                self::getTemplateReferenceName() => self::getTemplateReference(),
-            ])->all() as $other)
-            {
-                if (!$other->is_main) continue;
-
-                $other->scenario = self::SCENARIO_UPDATE;
-                $other->is_main = false;
-                $other->save(false);
-            }
-        }
-
         //TODO: delete this in production, it`s needed only for debug
         if ($this->scenario === self::SCENARIO_DEFAULT) {
             throw new \yii\base\Exception('DEFUALT SCENARIO IT`S WRONG');

@@ -60,9 +60,6 @@
             return;
         }
 
-        //console.log(redirectToUpdate);
-       // console.log(fieldTemplateIdForRedirect);
-
         var isValidatorResponse = !!($('.validator-response').length);
 
         if (isValidatorResponse) return loadModal($(addField).data('currentSelectedFieldTemplate'));

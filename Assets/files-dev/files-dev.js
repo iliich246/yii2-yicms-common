@@ -15,6 +15,8 @@
     var pjaxFilesModalName    = '#' + $(addFile).data('filesModalName');
     var imageLoaderScr        = $(addFile).data('loaderImageSrc');
 
+    var redirectToUpdateNeedSecondPjaxRequest = false;
+
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxFilesModalName)
             .find('.modal-content')
@@ -23,6 +25,42 @@
     });
 
     $(pjaxContainerName).on('pjax:success', function(event) {
+
+        var fileForm = $('#create-update-files');
+
+        if ($(fileForm).data('saveAndExit')) {
+            $(pjaxFilesModalName).modal('hide');
+
+            $.pjax({
+                url: updateFileListUrl + '?fileTemplateReference=' + fileTemplateReference,
+                container: '#update-files-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            return;
+        }
+
+        var redirectToUpdate           = $(fileForm).data('redirectToUpdateFile');
+        var fieldTemplateIdForRedirect = $(fileForm).data('fileBlockIdRedirect');
+
+        if (redirectToUpdate) {
+            $.pjax({
+                url: updateFileListUrl + '?fileTemplateReference=' + fileTemplateReference,
+                container: '#update-files-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            redirectToUpdateNeedSecondPjaxRequest = fieldTemplateIdForRedirect;
+
+            return;
+        }
+
 
         var isValidatorResponse = !!($('.validator-response').length);
 
@@ -40,9 +78,13 @@
             type: "POST",
             timeout: 2500
         });
+    });
 
-        if (!isValidatorResponse)
-            $(pjaxFilesModalName).modal('hide');
+    $('#update-files-list-container').on('pjax:success', function(event) {
+        if (redirectToUpdateNeedSecondPjaxRequest) {
+            loadModal(redirectToUpdateNeedSecondPjaxRequest);
+            redirectToUpdateNeedSecondPjaxRequest = false;
+        }
     });
 
     $(document).on('click', '.file-item p', function(event) {

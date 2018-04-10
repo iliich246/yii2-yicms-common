@@ -201,9 +201,6 @@ else $return = 'false';
             <div class="col-sm-4 col-xs-12 ">
                 <?= $form->field($devFieldGroup->fieldTemplate, 'editable')->checkbox() ?>
             </div>
-            <div class="col-sm-4 col-xs-12 ">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'is_main')->checkbox() ?>
-            </div>
         </div>
 
         <?= SimpleTabsTranslatesWidget::widget([

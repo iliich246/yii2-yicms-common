@@ -30,6 +30,7 @@ class FieldsDevModalWidget extends Widget
     public function init()
     {
         $this->deleteLink = Url::toRoute(['/common/dev-fields/delete-field-template']);
+
         if (Yii::$app->request->post('_saveAndExit'))
             $this->saveAndExit = 'true';
     }

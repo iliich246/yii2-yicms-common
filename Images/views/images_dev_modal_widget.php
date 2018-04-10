@@ -111,6 +111,17 @@ $this->registerJs($js, $this::POS_READY);
 
 $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className());
 
+if ($widget->devImagesGroup->scenario == DevImagesGroup::SCENARIO_CREATE &&
+    $widget->devImagesGroup->justSaved)
+    $redirectToUpdate = 'true';
+else
+    $redirectToUpdate = 'false';
+
+if ($redirectToUpdate == 'true')
+    $imageBlockIdForRedirect = $widget->devImagesGroup->imagesBlock->id;
+else
+    $imageBlockIdForRedirect = '0';
+
 ?>
 
 <div class="modal fade"
@@ -133,8 +144,11 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
             'id'      => ImagesDevModalWidget::getFormName(),
             'action'  => $widget->action,
             'options' => [
-                'data-pjax'        => true,
-                'data-yicms-saved' => $widget->dataSaved,
+                'data-pjax'                     => true,
+                'data-yicms-saved'              => $widget->dataSaved,
+                'data-save-and-exit'            => $widget->saveAndExit,
+                'data-redirect-to-update-image' => $redirectToUpdate,
+                'data-image-block-id-redirect'  => $imageBlockIdForRedirect
             ],
         ]);
         ?>
@@ -291,6 +305,8 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
             </div>
             <div class="modal-footer">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                <?= Html::submitButton('Save and exit', ['class' => 'btn btn-success',
+                    'value' => 'true', 'name' => '_saveAndExit']) ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

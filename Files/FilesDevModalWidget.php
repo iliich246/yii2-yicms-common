@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use Yii;
 use yii\helpers\Url;
 use yii\bootstrap\Widget;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
@@ -13,30 +14,20 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
  */
 class FilesDevModalWidget extends Widget
 {
-    /**
-     * @var DevFilesGroup
-     */
+    /** @var DevFilesGroup */
     public $devFilesGroup;
-    /**
-     * @var bool true means that widget initialized after success data save in DevFilesGroup
-     */
+    /** @var bool true means that widget initialized after success data save in DevFilesGroup */
     public $dataSaved = false;
-    /**
-     * @var string part of link for delete file block template
-     */
+    /** @var string part of link for delete file block template */
     public $deleteLink;
-    /**
-     * @var string keeps current form action
-     */
+    /** @var string keeps current form action */
     public $action;
-    /**
-     * @var FieldTemplate[] array of translate able fields for current file block template
-     */
+    /** @var FieldTemplate[] array of translate able fields for current file block template */
     public $fieldTemplatesTranslatable;
-    /**
-     * @var FieldTemplate[] array of single fields for current file block template
-     */
+    /** @var FieldTemplate[] array of single fields for current file block template */
     public $fieldTemplatesSingle;
+    /** @var string if true widget must close modal window after save data */
+    public $saveAndExit = 'false';
 
     /**
      * @inheritdoc
@@ -44,6 +35,9 @@ class FilesDevModalWidget extends Widget
     public function init()
     {
         $this->deleteLink = Url::toRoute(['/common/dev-files/delete-file-block-template']);
+
+        if (Yii::$app->request->post('_saveAndExit'))
+            $this->saveAndExit = 'true';
     }
 
     /**

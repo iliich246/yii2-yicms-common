@@ -15,18 +15,14 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class DevFilesGroup extends AbstractGroup
 {
-    /**
-     * @var string fileTemplateReference value for current group
-     */
+    /** @var string fileTemplateReference value for current group */
     protected $fileTemplateReference;
-    /**
-     * @var FilesBlock current file block template with group is working (create or update)
-     */
+    /** @var FilesBlock current file block template with group is working (create or update) */
     public $filesBlock;
-    /**
-     * @var FileNamesTranslatesForm[]
-     */
+    /** @var FileNamesTranslatesForm[] */
     public $filesNameTranslates;
+    /** @var bool indicate that data in this group was saved in this action */
+    public $justSaved = false;
 
     /**
      * Sets fileTemplateReference
@@ -143,6 +139,8 @@ class DevFilesGroup extends AbstractGroup
             if ($needSaveFileTemplateName)
                 $fileNameTranslate->save();
         }
+
+        $this->justSaved = true;
 
         //TODO: makes error handling
         return true;

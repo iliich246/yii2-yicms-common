@@ -175,9 +175,6 @@ $this->registerJs($js);
                         <?php if ($fieldTemplate->editable): ?>
                             <span class="glyphicon glyphicon-pencil"></span>
                         <?php endif; ?>
-                        <?php if ($fieldTemplate->is_main): ?>
-                            <span class="glyphicon glyphicon-tower"></span>
-                        <?php endif; ?>
                         <?php if ($fieldTemplate->canUpOrder()): ?>
                             <span class="glyphicon field-arrow-up-modal glyphicon-arrow-up"
                                   data-field-template-id="<?= $fieldTemplate->id ?>"></span>
@@ -216,9 +213,6 @@ $this->registerJs($js);
                         <?php endif; ?>
                         <?php if ($fieldTemplate->editable): ?>
                             <span class="glyphicon glyphicon-pencil"></span>
-                        <?php endif; ?>
-                        <?php if ($fieldTemplate->is_main): ?>
-                            <span class="glyphicon glyphicon-tower"></span>
                         <?php endif; ?>
                         <?php if ($fieldTemplate->canUpOrder()): ?>
                             <span class="glyphicon field-arrow-up-modal glyphicon-arrow-up"

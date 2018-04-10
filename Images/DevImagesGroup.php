@@ -15,18 +15,14 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class DevImagesGroup extends AbstractGroup
 {
-    /**
-     * @var integer fileTemplateReference value for current group
-     */
+    /** @var integer fileTemplateReference value for current group */
     protected $imageTemplateReference;
-    /**
-     * @var ImagesBlock current images block template with group is working (create or update)
-     */
+    /** @var ImagesBlock current images block template with group is working (create or update) */
     public $imagesBlock;
-    /**
-     * @var ImageNamesTranslatesForm[]
-     */
+    /** @var ImageNamesTranslatesForm[] */
     public $imagesNameTranslates;
+    /** @var bool indicate that data in this group was saved in this action */
+    public $justSaved = false;
 
     /**
      *  Sets imageTemplateReference
@@ -154,6 +150,8 @@ class DevImagesGroup extends AbstractGroup
             if ($needSaveImageTemplateName)
                 $imageNameTranslate->save();
         }
+
+        $this->justSaved = true;
 
         //TODO: makes error handling
         return true;

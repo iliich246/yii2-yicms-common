@@ -16,6 +16,8 @@
     var pjaxImagesModalName    = '#' + $(addImage).data('imagesModalName');
     var imageLoaderScr         = $(addImage).data('loaderImageSrc');
 
+    var redirectToUpdateNeedSecondPjaxRequest = false;
+
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxImagesModalName)
             .find('.modal-content')
@@ -24,6 +26,43 @@
     });
 
     $(pjaxContainerName).on('pjax:success', function(event) {
+
+        var fieldForm = $('#create-update-images');
+
+        if ($(fieldForm).data('saveAndExit')) {
+            $(pjaxImagesModalName).modal('hide');
+
+            $.pjax({
+                url: updateImageListUrl + '?imageTemplateReference=' + imageTemplateReference,
+                container: '#update-images-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            return;
+        }
+
+        var redirectToUpdate           = $(fieldForm).data('redirectToUpdateImage');
+        var fieldTemplateIdForRedirect = $(fieldForm).data('imageBlockIdRedirect');
+
+        if (redirectToUpdate) {
+            $.pjax({
+                url: updateImageListUrl + '?imageTemplateReference=' + imageTemplateReference,
+                container: '#update-images-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+
+            redirectToUpdateNeedSecondPjaxRequest = fieldTemplateIdForRedirect;
+
+            return;
+        }
+
 
         var isValidatorResponse = !!($('.validator-response').length);
 
@@ -44,6 +83,13 @@
 
         if (!isValidatorResponse)
             $(pjaxImagesModalName).modal('hide');
+    });
+
+    $('#update-images-list-container').on('pjax:success', function(event) {
+        if (redirectToUpdateNeedSecondPjaxRequest) {
+            loadModal(redirectToUpdateNeedSecondPjaxRequest);
+            redirectToUpdateNeedSecondPjaxRequest = false;
+        }
     });
 
     $(document).on('click', '.image-item p', function(event) {

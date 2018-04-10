@@ -67,9 +67,6 @@ FieldsDevAsset::register($this);
                                 <?php if ($fieldTemplate->editable): ?>
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 <?php endif; ?>
-                                <?php if ($fieldTemplate->is_main): ?>
-                                    <span class="glyphicon glyphicon-tower"></span>
-                                <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
                                     <span class="glyphicon field-arrow-up glyphicon-arrow-up"
                                           data-field-template-id="<?= $fieldTemplate->id ?>"></span>
@@ -104,9 +101,6 @@ FieldsDevAsset::register($this);
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->editable): ?>
                                     <span class="glyphicon glyphicon-pencil"></span>
-                                <?php endif; ?>
-                                <?php if ($fieldTemplate->is_main): ?>
-                                    <span class="glyphicon glyphicon-tower"></span>
                                 <?php endif; ?>
                                 <?php if ($fieldTemplate->canUpOrder()): ?>
                                 <span class="glyphicon field-arrow-up glyphicon-arrow-up"
