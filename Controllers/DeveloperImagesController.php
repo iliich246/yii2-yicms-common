@@ -56,20 +56,8 @@ class DeveloperImagesController extends Controller
             $devImagesGroup = new DevImagesGroup();
             $devImagesGroup->initialize($imageTemplateId);
 
-//            $fieldTemplatesTranslatable = FieldTemplate::getListQuery($devImagesGroup->imagesBlock->image_template_reference)
-//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_TRANSLATABLE])
-//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                ->all();
-//
-//            $fieldTemplatesSingle = FieldTemplate::getListQuery($devImagesGroup->imagesBlock->image_template_reference)
-//                ->andWhere(['language_type' => FieldTemplate::LANGUAGE_TYPE_SINGLE])
-//                ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
-//                ->all();
-
             return ImagesDevModalWidget::widget([
                 'devImagesGroup' => $devImagesGroup,
-//                'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
-//                'fieldTemplatesSingle' => $fieldTemplatesSingle
             ]);
         }
 

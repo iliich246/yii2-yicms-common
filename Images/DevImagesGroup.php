@@ -45,7 +45,6 @@ class DevImagesGroup extends AbstractGroup
             $this->scenario = self::SCENARIO_CREATE;
         } else {
             $this->imagesBlock = ImagesBlock::findOne($imagesBlockId);
-
             if (!$this->imagesBlock) throw new CommonException("Wrong imagesBlock = $imagesBlockId");
 
             $this->imagesBlock->scenario = ImagesBlock::SCENARIO_UPDATE;

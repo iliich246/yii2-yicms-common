@@ -24,10 +24,6 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
 
     $infoString .= ' | ';
 
-    if ($widget->fieldModel->getTemplate()->is_main)
-        $infoString .= '<span class="glyphicon glyphicon-tower" aria-hidden="true"
-                          data-toggle="tooltip" data-placement="top" title="This is main field in template"></span>';
-
     if ($widget->fieldModel->getTemplate()->visible)
         $infoString .= '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"
                           data-toggle="tooltip" data-placement="top" title="Field template is visible"></span>';
