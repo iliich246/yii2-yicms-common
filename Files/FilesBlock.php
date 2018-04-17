@@ -9,6 +9,8 @@ use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
@@ -17,6 +19,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  *
  * @property string $file_template_reference
  * @property string $field_template_reference
+ * @property string $condition_template_reference
  * @property string $validator_reference
  * @property integer $type
  * @property integer $language_type
@@ -32,7 +35,8 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  */
 class FilesBlock extends AbstractEntityBlock implements
     FieldReferenceInterface,
-    ValidatorReferenceInterface
+    ValidatorReferenceInterface,
+    ConditionsReferenceInterface
 {
     /**
      * Files types
@@ -46,17 +50,11 @@ class FilesBlock extends AbstractEntityBlock implements
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
 
-    /**
-     * @var FilesNamesTranslatesDb[] buffer
-     */
+    /** @var FilesNamesTranslatesDb[] buffer */
     private $fileNamesTranslates = [];
-    /**
-     * @var string fileReference for what files group must be fetched
-     */
+    /** @var string fileReference for what files group must be fetched */
     private $currentFileReference;
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     protected static $buffer = [];
 
     /**
@@ -349,6 +347,7 @@ class FilesBlock extends AbstractEntityBlock implements
             $this->field_template_reference = FieldTemplate::generateTemplateReference();
             $this->save(false);
         }
+
         return $this->field_template_reference;
     }
 
@@ -356,6 +355,27 @@ class FilesBlock extends AbstractEntityBlock implements
      * @inheritdoc
      */
     public function getFieldReference()
+    {
+        return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionTemplateReference()
+    {
+        if (!$this->condition_template_reference) {
+            $this->condition_template_reference = ConditionTemplate::generateTemplateReference();
+            $this->save(false);
+        }
+
+        return $this->condition_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionReference()
     {
         return null;
     }

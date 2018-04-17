@@ -9,8 +9,10 @@ use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
-use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
@@ -18,6 +20,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  *
  * @property string $image_template_reference
  * @property string $field_template_reference
+ * @property string $condition_template_reference
  * @property string $validator_reference
  * @property integer $type
  * @property integer $language_type
@@ -34,7 +37,8 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  */
 class ImagesBlock extends AbstractEntityBlock implements
     FieldReferenceInterface,
-    ValidatorReferenceInterface
+    ValidatorReferenceInterface,
+    ConditionsReferenceInterface
 {
     /**
      * Images types
@@ -57,21 +61,13 @@ class ImagesBlock extends AbstractEntityBlock implements
     const CROP_VIEW_MODE_2 = 0x03;
     const CROP_VIEW_MODE_3 = 0x04;
 
-    /**
-     * @var bool if true for this block will be created standard fields like filename
-     */
+    /** @var bool if true for this block will be created standard fields like filename */
     public $createStandardFields = true;
-    /**
-     * @var ImagesNamesTranslatesDb[] buffer
-     */
+    /** @var ImagesNamesTranslatesDb[] buffer */
     private $imageNamesTranslates = [];
-    /**
-     * @var string fileReference for what files group must be fetched
-     */
+    /** @var string fileReference for what files group must be fetched */
     private $currentImageReference;
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     protected static $buffer = [];
 
     /**
@@ -387,6 +383,27 @@ class ImagesBlock extends AbstractEntityBlock implements
     public function getFieldReference()
     {
         throw new CommonException('This method is unneeded and can`t be implemented there');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionTemplateReference()
+    {
+        if (!$this->condition_template_reference) {
+            $this->condition_template_reference = ConditionTemplate::generateTemplateReference();
+            $this->save(false);
+        }
+
+        return $this->condition_template_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionReference()
+    {
+        return null;
     }
 
     /**

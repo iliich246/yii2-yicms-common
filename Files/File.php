@@ -17,6 +17,10 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\ConditionsHandler;
+use Iliich246\YicmsCommon\Conditions\ConditionsInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
@@ -25,9 +29,10 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  * Class File
  *
  * @property integer $id
- * @property string $common_files_template_id
+ * @property integer $common_files_template_id
  * @property string $file_reference
  * @property string $field_reference
+ * @property string $condition_reference
  * @property string $system_name
  * @property string $original_name
  * @property integer $file_order
@@ -44,26 +49,22 @@ class File extends AbstractEntity implements
     SortOrderInterface,
     FieldsInterface,
     FieldReferenceInterface,
+    ConditionsInterface,
+    ConditionsReferenceInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface
 {
     use SortOrderTrait;
 
-    /**
-     * @var UploadedFile loaded file
-     */
+    /** @var UploadedFile loaded file */
     public $file;
-    /**
-     * @var FieldsHandler instance of field handler object
-     */
+    /** @var FieldsHandler instance of field handler object */
     private $fieldHandler;
-    /**
-     * @var ValidatorBuilder instance
-     */
+    /** @var ConditionsHandler instance of condition handler object  */
+    private $conditionHandler;
+    /** @var ValidatorBuilder instance */
     private $validatorBuilder;
-    /**
-     * @var FileTranslate[] array of buffered translates
-     */
+    /** @var FileTranslate[] array of buffered translates */
     public $fileTranslates;
 
     /**
@@ -278,6 +279,46 @@ class File extends AbstractEntity implements
         }
 
         return $this->field_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionsHandler()
+    {
+        if (!$this->conditionHandler)
+            $this->conditionHandler = new ConditionsHandler($this);
+
+        return $this->conditionHandler;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCondition($name)
+    {
+        return $this->getConditionsHandler()->getCondition($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionTemplateReference()
+    {
+        return $this->getFileBlock()->getConditionTemplateReference();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionReference()
+    {
+        if (!$this->condition_reference) {
+            $this->condition_reference = ConditionTemplate::generateTemplateReference();
+            $this->save(false);
+        }
+
+        return $this->condition_reference;
     }
 
     /**

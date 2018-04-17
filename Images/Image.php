@@ -15,6 +15,10 @@ use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
+use Iliich246\YicmsCommon\Conditions\ConditionsHandler;
+use Iliich246\YicmsCommon\Conditions\ConditionsInterface;
+use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
@@ -24,15 +28,16 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  *
  * @property integer $id
  * @property integer $common_images_templates_id
- * @property integer $image_reference
- * @property integer $field_reference
- * @property integer $system_name
- * @property integer $original_name
+ * @property string $image_reference
+ * @property string $field_reference
+ * @property string $condition_reference
+ * @property string $system_name
+ * @property string $original_name
  * @property integer $image_order
  * @property integer $size
  * @property integer $type
- * @property integer $editable
- * @property integer $visible
+ * @property bool $editable
+ * @property bool $visible
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -42,31 +47,25 @@ class Image extends AbstractEntity implements
     SortOrderInterface,
     FieldsInterface,
     FieldReferenceInterface,
+    ConditionsInterface,
+    ConditionsReferenceInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface,
     ImagesProcessorInterface
 {
     use SortOrderTrait;
 
-    /**
-     * @var UploadedFile loaded image
-     */
+    /** @var UploadedFile loaded image */
     public $image;
-    /**
-     * @var mixed information about crop
-     */
+    /** @var mixed information about crop */
     public $cropInfo;
-    /**
-     * @var FieldsHandler instance of field handler object
-     */
+    /** @var FieldsHandler instance of field handler object */
     private $fieldHandler;
-    /**
-     * @var ValidatorBuilder instance
-     */
+    /** @var ConditionsHandler instance of condition handler object  */
+    private $conditionHandler;
+    /** @var ValidatorBuilder instance */
     private $validatorBuilder;
-    /**
-     * @var ImageTranslate[] array of buffered translates
-     */
+    /** @var ImageTranslate[] array of buffered translates */
     public $imageTranslates;
 
     /**
@@ -307,6 +306,46 @@ class Image extends AbstractEntity implements
         }
 
         return $this->field_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionsHandler()
+    {
+        if (!$this->conditionHandler)
+            $this->conditionHandler = new ConditionsHandler($this);
+
+        return $this->conditionHandler;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCondition($name)
+    {
+        return $this->getConditionsHandler()->getCondition($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionTemplateReference()
+    {
+        return $this->getImagesBlock()->getConditionTemplateReference();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConditionReference()
+    {
+        if (!$this->condition_reference) {
+            $this->condition_reference = ConditionTemplate::generateTemplateReference();
+            $this->save(false);
+        }
+
+        return $this->condition_reference;
     }
 
     /**
