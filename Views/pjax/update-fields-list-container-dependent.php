@@ -6,7 +6,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /** @var $this \yii\web\View */
-/** @var $fieldTemplateReference integer */
+/** @var $fieldTemplateReference string */
 /** @var $fieldTemplatesTranslatable FieldTemplate[] */
 /** @var $fieldTemplatesSingle FieldTemplate[] */
 /** @var $pjaxName string */

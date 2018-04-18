@@ -247,7 +247,7 @@ else
                     </script>
                     <hr>
 
-                    <p class="btn btn-primary view-files-block-fields"
+                    <span class="btn btn-primary view-files-block-fields"
                        data-field-template-id="<?= $widget->devFilesGroup->filesBlock->getFieldTemplateReference()  ?>"
                        data-return-url="<?= \yii\helpers\Url::toRoute([
                            '/common/dev-files/load-modal',
@@ -255,7 +255,17 @@ else
                        ]) ?>"
                     >
                         View file block fields
-                    </p>
+                    </span>
+
+                    <span class="btn btn-primary view-files-block-conditions"
+                        data-conditions-template-id="<?= $widget->devFilesGroup->filesBlock->getConditionTemplateReference() ?>"
+                        data-return-url="<?= \yii\helpers\Url::toRoute([
+                            '/common/dev-files/load-modal',
+                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
+                        ]) ?>"
+                    >
+                        View file block conditions
+                    </span>
 
                     <hr>
 

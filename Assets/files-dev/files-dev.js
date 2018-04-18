@@ -3,12 +3,13 @@
 
     var homeUrl = $(addFile).data('homeUrl');
 
-    var emptyModalUrl        = homeUrl + '/common/dev-files/empty-modal';
-    var loadModalUrl         = homeUrl + '/common/dev-files/load-modal';
-    var updateFileListUrl    = homeUrl + '/common/dev-files/update-files-list-container';
-    var fileTemplateUpUrl    = homeUrl + '/common/dev-files/file-template-up-order';
-    var filedTemplateDownUrl = homeUrl + '/common/dev-files/file-template-down-order';
-    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
+    var emptyModalUrl           = homeUrl + '/common/dev-files/empty-modal';
+    var loadModalUrl            = homeUrl + '/common/dev-files/load-modal';
+    var updateFileListUrl       = homeUrl + '/common/dev-files/update-files-list-container';
+    var fileTemplateUpUrl       = homeUrl + '/common/dev-files/file-template-up-order';
+    var filedTemplateDownUrl    = homeUrl + '/common/dev-files/file-template-down-order';
+    var showFieldsListModal     = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
+    var showConditionsListModal = homeUrl + '/common/dev-conditions/update-conditions-list-container-dependent';
 
     var fileTemplateReference = $(addFile).data('fileTemplateReference');
     var pjaxContainerName     = '#' + $(addFile).data('pjaxContainerName');
@@ -136,6 +137,22 @@
             url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
                  + '&pjaxName=' + pjaxContainerName.substr(1)
                  + '&modalName=' + pjaxFilesModalName.substr(1),
+            container: '#files-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $(document).on('click', '.view-files-block-conditions', function() {
+
+        $('#files-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+
+        $.pjax({
+            url: showConditionsListModal + '?conditionTemplateReference=' + $(this).data('conditionTemplateId')
+            + '&pjaxName=' + pjaxContainerName.substr(1)
+            + '&modalName=' + pjaxFilesModalName.substr(1),
             container: '#files-pjax-container',
             scrollTo: false,
             push: false,

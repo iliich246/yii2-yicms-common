@@ -110,6 +110,30 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     *
+     * @param $conditionTemplateReference
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function actionUpdateConditionsListContainerDependent($conditionTemplateReference, $pjaxName, $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('No pjax');
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionTemplates'         => $conditionTemplates,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
+    /**
      * Action for delete conditions template
      * @param $conditionTemplateId
      * @param bool|false $deletePass

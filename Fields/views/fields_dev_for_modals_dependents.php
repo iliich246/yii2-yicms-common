@@ -1,5 +1,5 @@
-
 <?php
+
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
