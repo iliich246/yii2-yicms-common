@@ -104,6 +104,10 @@ class DevConditionsGroup extends AbstractGroup
             $this->conditionTemplate->getOldAttribute('editable') != $this->conditionTemplate->editable)
             $needSaveConditionBlock = true;
 
+        if (!$needSaveConditionBlock &&
+            $this->conditionTemplate->getOldAttribute('type') != $this->conditionTemplate->type)
+            $needSaveConditionBlock = true;
+
         $success = true;
 
         if ($needSaveConditionBlock)

@@ -86,6 +86,91 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Action for send empty condition modal window for existed modal window like file modal or images modal
+     * @param $conditionTemplateReference
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     */
+    public function actionEmptyModalDependent($conditionTemplateReference,
+                                              $pjaxName,
+                                              $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        $devConditionsGroup = new DevConditionsGroup();
+        $devConditionsGroup->setConditionsTemplateReference($conditionTemplateReference);
+        $devConditionsGroup->initialize();
+
+        if (Yii::$app->request->post('_saveAndBack'))
+            $returnBack = true;
+        else
+            $returnBack = false;
+
+        //try to load validate and save field via pjax
+        if ($devConditionsGroup->load(Yii::$app->request->post()) && $devConditionsGroup->validate()) {
+
+            if (!$devConditionsGroup->save()) {
+                //TODO: bootbox error
+            }
+
+            $devConditionsGroup->scenario = DevConditionsGroup::SCENARIO_UPDATE;
+        }
+
+        return $this->renderAjax('/../Conditions/views/conditions_dev_for_modals_dependents.php', [
+            'devConditionGroup' => $devConditionsGroup,
+            'returnBack'        => $returnBack,
+            'pjaxName'          => $pjaxName,
+            'modalName'         => $modalName
+        ]);
+    }
+
+    /**
+     * Load modal window with existed condition with dependent
+     * @param $conditionTemplateReference
+     * @param $conditionTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws CommonException
+     */
+    public function actionLoadModalDependent($conditionTemplateReference,
+                                             $conditionTemplateId,
+                                             $pjaxName,
+                                             $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException('Not Pjax');
+
+        $devConditionsGroup = new DevConditionsGroup();
+        $devConditionsGroup->setConditionsTemplateReference($conditionTemplateReference);
+        $devConditionsGroup->initialize($conditionTemplateId);
+
+        if (Yii::$app->request->post('_saveAndBack'))
+            $returnBack = true;
+        else
+            $returnBack = false;
+
+        //try to load validate and save field via pjax
+        if ($devConditionsGroup->load(Yii::$app->request->post()) && $devConditionsGroup->validate()) {
+
+            if (!$devConditionsGroup->save()) {
+                //TODO: bootbox error
+            }
+        }
+
+        return $this->renderAjax('/../Conditions/views/conditions_dev_for_modals_dependents.php', [
+            'devConditionGroup' => $devConditionsGroup,
+            'returnBack'        => $returnBack,
+            'pjaxName'          => $pjaxName,
+            'modalName'         => $modalName
+        ]);
+    }
+
+
+    /**
      * Action for update conditions templates list container
      * @param $conditionTemplateReference
      * @return string
@@ -228,6 +313,77 @@ class DeveloperConditionsController extends Controller
             'conditionsTemplates'        => $conditionTemplates,
         ]);
     }
+
+    /**
+     * @param $conditionTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionConditionTemplateUpOrderDependent($conditionTemplateId,
+                                                            $pjaxName,
+                                                            $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionTemplateReference = $conditionTemplate->condition_template_reference;
+
+        $conditionTemplate->upOrder();
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionTemplates'         => $conditionTemplates,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
+    /**
+     * @param $conditionTemplateId
+     * @param $pjaxName
+     * @param $modalName
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionConditionTemplateDownOrderDependent($conditionTemplateId,
+                                                              $pjaxName,
+                                                              $modalName)
+    {
+        if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
+
+        /** @var ConditionTemplate $conditionTemplate */
+        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+
+        if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
+
+        $conditionTemplateReference = $conditionTemplate->condition_template_reference;
+
+        $conditionTemplate->downOrder();
+
+        $conditionTemplates = ConditionTemplate::getListQuery($conditionTemplateReference)
+            ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
+            ->all();
+
+        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+            'conditionTemplateReference' => $conditionTemplateReference,
+            'conditionTemplates'         => $conditionTemplates,
+            'pjaxName'                   => $pjaxName,
+            'modalName'                  => $modalName,
+        ]);
+    }
+
 
     /**
      * Returns list of condition values

@@ -136,6 +136,7 @@ else
                 'class'                      => 'pjax-container',
                 'data-return-url'            => '0',
                 'data-return-url-fields'     => '0',
+                'data-return-url-conditions' => '0',
                 'data-return-url-validators' => '0',
             ],
         ]); ?>
@@ -258,7 +259,7 @@ else
                     </span>
 
                     <span class="btn btn-primary view-files-block-conditions"
-                        data-conditions-template-id="<?= $widget->devFilesGroup->filesBlock->getConditionTemplateReference() ?>"
+                        data-condition-template-id="<?= $widget->devFilesGroup->filesBlock->getConditionTemplateReference() ?>"
                         data-return-url="<?= \yii\helpers\Url::toRoute([
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,

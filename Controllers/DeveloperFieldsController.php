@@ -122,6 +122,7 @@ class DeveloperFieldsController extends Controller
     }
 
     /**
+     * Load modal window with existed field with dependent
      * @param $fieldTemplateReference
      * @param $fieldTemplateId
      * @param $pjaxName

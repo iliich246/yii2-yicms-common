@@ -2,33 +2,33 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Iliich246\YicmsCommon\Conditions\DevConditionsGroup;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
 /** @var $this \yii\web\View */
-/** @var $devFieldGroup DevFieldsGroup */
+/** @var $devConditionGroup DevConditionsGroup */
 /** @var $returnBack boolean */
 /** @var $pjaxName string */
 /** @var $modalName string */
 
 $js = <<<JS
 ;(function() {
-    var fieldCreateUpdate = $('.field-create-update-modal');
+    var conditionCreateUpdate = $('.condition-create-update-modal');
 
-    var pjaxContainerName = '#' + $(fieldCreateUpdate).data('pjaxContainerOwner');
+    var pjaxContainerName = '#' + $(conditionCreateUpdate).data('pjaxContainerOwner');
     var pjaxContainer     = $(pjaxContainerName);
-    var modalName         = $(fieldCreateUpdate).data('modalOwner');
+    var modalName         = $(conditionCreateUpdate).data('modalOwner');
 
-    var homeUrl   = $(fieldCreateUpdate).data('homeUrl');
-    var returnUrl = $(pjaxContainer).data('returnUrlFields');
+    var homeUrl   = $(conditionCreateUpdate).data('homeUrl');
+    var returnUrl = $(pjaxContainer).data('returnUrlConditions');
 
-    var deleteFieldUrl = homeUrl + '/common/dev-fields/delete-field-template-dependent?';
+    var deleteConditionUrl = homeUrl + '/common/dev-conditions/delete-condition-template-dependent?';
 
-    var isReturn = $(fieldCreateUpdate).data('returnBack');
+    var isReturn = $(conditionCreateUpdate).data('returnBack');
 
-    var backButton = $('.fields-modal-create-update-back');
+    var backButton = $('.conditions-modal-create-update-back');
 
     if (isReturn) goBack();
 
@@ -45,22 +45,24 @@ $js = <<<JS
          });
     }
 
-    $('#field-delete-modal').on('click', function() {
+    $('#condition-delete-modal').on('click', function() {
         var button = this;
 
-        var fieldTemplateId     = $(button).data('fieldTemplateId');
-        var fieldHasConstraints = $(button).data('fieldHasConstraints');
+        if (!$(button).is('[data-condition-template-id]')) return;
 
-        if (!($(this).hasClass('field-confirm-state'))) {
+        var conditionTemplateId     = $(button).data('conditionTemplateId');
+        var conditionHasConstraints = $(button).data('conditionHasConstraints');
+        var pjaxContainer           = $('#update-conditions-list-container');
 
+        if (!($(this).hasClass('condition-confirm-state'))) {
             $(this).before('<span>Are you sure? </span>');
             $(this).text('Yes, I`am sure!');
-            $(this).addClass('field-confirm-state');
+            $(this).addClass('condition-confirm-state');
         } else {
-            if (!fieldHasConstraints) {
+            if (!conditionHasConstraints) {
                 $.pjax({
-                    url: deleteFieldUrl
-                         + 'fieldTemplateId=' + fieldTemplateId
+                    url: deleteConditionUrl
+                         + 'conditionTemplateId=' + conditionTemplateId
                          + '&pjaxName='  + pjaxContainerName.substr(1)
                          + '&modalName=' + modalName,
                     container: pjaxContainerName,
@@ -86,22 +88,22 @@ $js = <<<JS
                 $(deleteButtonRow).empty();
                 $(deleteButtonRow).append(template);
 
-                var passwordInput = $('#field-delete-password-input');
+                var passwordInput = $('#condition-delete-password-input');
                 var buttonDelete  = $('#button-delete-with-pass');
 
                 $(buttonDelete).on('click', function() {
 
-                    $.pjax({
-                        url: deleteFieldUrl
-                            + '&pjaxName='  + pjaxContainerName.substr(1)
-                            + '&modalName=' + modalName
-                            + fieldTemplateId + '&deletePass=' + $(passwordInput).val(),
-                        container: pjaxContainerName,
-                        scrollTo: false,
-                        push: false,
-                        type: "POST",
-                        timeout: 2500
-                    });
+                $.pjax({
+                    url: deleteConditionUrl
+                         + 'conditionTemplateId=' + conditionTemplateId
+                         + '&pjaxName='  + pjaxContainerName.substr(1)
+                         + '&modalName=' + modalName,
+                    container: pjaxContainerName,
+                    scrollTo: false,
+                    push: false,
+                    type: "POST",
+                    timeout: 2500
+                });
 
                     var deleteActive = true;
 
@@ -110,6 +112,7 @@ $js = <<<JS
                         if (!deleteActive) return false;
 
                         $(modalName).modal('hide');
+
                         deleteActive = false;
                     });
 
@@ -120,7 +123,7 @@ $js = <<<JS
                         bootbox.alert({
                             size: 'large',
                             title: "Wrong dev password",
-                            message: "Field template has not deleted",
+                            message: "Condition template has not deleted",
                             className: 'bootbox-error'
                         });
                     });
@@ -137,109 +140,96 @@ $js = <<<JS
 })();
 JS;
 
+
 $this->registerJs($js);
 
 if (isset($returnBack) && $returnBack) $return = 'true';
 else $return = 'false';
 
 ?>
-
-<div class="modal-content field-create-update-modal"
+<div class="modal-content condition-create-update-modal"
      data-home-url="<?= \yii\helpers\Url::base() ?>"
      data-return-back="<?= $return ?>"
      data-pjax-container-owner="<?= $pjaxName ?>"
      data-modal-owner="<?= $modalName ?>"
-    >
+>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="modal-title" id="myModalLabel">
-            <?php if ($devFieldGroup->scenario == DevFieldsGroup::SCENARIO_CREATE): ?>
-                Create new field
-                <span class="glyphicon glyphicon-arrow-left fields-modal-create-update-back"
+            <?php if ($devConditionGroup->scenario == DevConditionsGroup::SCENARIO_CREATE): ?>
+                Create new condition template
+                <span class="glyphicon glyphicon-arrow-left conditions-modal-create-update-back"
+                      aria-hidden="true"
+                      style="float: right;margin-right: 20px">
+                </span>
+            <?php else: ?>
+                Update existed condition template (<?= $devConditionGroup->conditionTemplate->program_name ?>)
+                <span class="glyphicon glyphicon-arrow-left conditions-modal-create-update-back"
                       aria-hidden="true"
                       style="float: right;margin-right: 20px">
 
                 </span>
-            <?php else: ?>
-                Update existed field (<?= $devFieldGroup->fieldTemplate->program_name ?>)
-                <span class="glyphicon glyphicon-arrow-left fields-modal-create-update-back"
-                      aria-hidden="true"
-                      style="float: right;margin-right: 20px">
-                </span>
+
             <?php endif; ?>
         </h3>
     </div>
     <?php $form = ActiveForm::begin([
-        'id' => 'create-update-fields-dependent',
+        'id' => 'create-update-conditions-dependent',
         'options' => [
             'data-pjax' => true,
         ]
     ]);
     ?>
+
     <div class="modal-body">
-
-        <?php if ($devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-            <?= Html::hiddenInput('_fieldTemplateId', $devFieldGroup->fieldTemplate->id, [
-                'id' => 'field-template-id-hidden'
-            ]) ?>
-        <?php endif; ?>
-
         <div class="row">
             <div class="col-sm-4 col-xs-12">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'program_name') ?>
+                <?= $form->field($devConditionGroup->conditionTemplate, 'program_name') ?>
             </div>
             <div class="col-sm-4 col-xs-12">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'type')->dropDownList(
-                    FieldTemplate::getTypes())
-                ?>
-            </div>
-            <div class="col-sm-4 col-xs-12">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'language_type')->dropDownList(
-                    FieldTemplate::getLanguageTypes())
+                <?= $form->field($devConditionGroup->conditionTemplate, 'type')->dropDownList(
+                    ConditionTemplate::getTypes())
                 ?>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4 col-xs-12 ">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'visible')->checkbox() ?>
-            </div>
-            <div class="col-sm-4 col-xs-12 ">
-                <?= $form->field($devFieldGroup->fieldTemplate, 'editable')->checkbox() ?>
+                <?= $form->field($devConditionGroup->conditionTemplate, 'editable')->checkbox() ?>
             </div>
         </div>
 
         <?= SimpleTabsTranslatesWidget::widget([
-            'form'            => $form,
-            'translateModels' => $devFieldGroup->fieldNameTranslates,
-            'tabModification' => '_modal'
+            'form' => $form,
+            'translateModels' => $devConditionGroup->conditionNameTranslates,
         ])
         ?>
 
-        <?php if ($devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-            <div class="row delete-button-row-modal">
+        <?php if ($devConditionGroup->scenario == DevConditionsGroup::SCENARIO_UPDATE): ?>
+            <div class="row delete-button-row">
                 <div class="col-xs-12">
+
                     <br>
 
-                    <p>IMPORTANT! Do not delete fields without serious reason!</p>
+                    <p>IMPORTANT! Do not delete condition templates without serious reason!</p>
                     <button type="button"
                             class="btn btn-danger"
-                            id="field-delete-modal"
-                            data-field-template-reference="<?= $devFieldGroup->fieldTemplate->field_template_reference ?>"
-                            data-field-template-id="<?= $devFieldGroup->fieldTemplate->id ?>"
-                            data-field-has-constraints="<?= (int)$devFieldGroup->fieldTemplate->isConstraints() ?>"
-                        >
-                        Delete field
+                            id="condition-delete-modal"
+                            data-condition-template-reference="<?= $devConditionGroup->conditionTemplate->condition_template_reference ?>"
+                            data-condition-template-id="<?= $devConditionGroup->conditionTemplate->id ?>"
+                            data-condition-has-constraints="<?= (int)$devConditionGroup->conditionTemplate->isConstraints() ?>"
+                    >
+                        Delete condition template
                     </button>
                 </div>
             </div>
-            <script type="text/template" id="delete-with-pass-template-modal">
+            <script type="text/template" id="delete-with-pass-template">
                 <div class="col-xs-12">
                     <br>
-                    <label for="field-delete-password-input-modal">
+                    <label for="condition-delete-password-input">
                         Field has constraints. Enter dev password for delete field template
                     </label>
                     <input type="password"
-                           id="field-delete-password-input-modal"
+                           id="condition-delete-password-input"
                            class="form-control" name=""
                            value=""
                            aria-required="true"
@@ -247,8 +237,8 @@ else $return = 'false';
                     <br>
                     <button type="button"
                             class="btn btn-danger"
-                            id="button-delete-with-pass-modal"
-                        >
+                            id="button-delete-with-pass"
+                    >
                         Yes, i am absolutely seriously!!!
                     </button>
                 </div>
@@ -256,21 +246,18 @@ else $return = 'false';
 
             <hr>
 
-            <?= ValidatorsListWidget::widget([
-                'validatorReference'     => $devFieldGroup->fieldTemplate,
-                'ownerPjaxContainerName' => $pjaxName,
-                'ownerModalId'           => $modalName,
-                'returnUrl' => \yii\helpers\Url::toRoute([
-                    '/common/dev-fields/load-modal-dependent',
-                    'fieldTemplateReference' => $devFieldGroup->fieldTemplate->field_template_reference,
-                    'fieldTemplateId'        => $devFieldGroup->fieldTemplate->id,
-                    'pjaxName'               => $pjaxName,
-                    'modalName'              => $modalName,
-                ])
-            ]) ?>
-
+            <p class="btn btn-primary condition-data-list"
+               data-condition-template-id="<?= $devConditionGroup->conditionTemplate->id ?>"
+               data-return-url="<?= \yii\helpers\Url::toRoute([
+                   '/common/dev-conditions/load-modal',
+                   'conditionTemplateId' => $devConditionGroup->conditionTemplate->id,
+               ]) ?>"
+            >
+                Config condition options
+            </p>
         <?php endif; ?>
     </div>
+
 
     <div class="modal-footer">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

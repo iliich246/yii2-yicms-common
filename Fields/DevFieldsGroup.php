@@ -125,10 +125,6 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate->getOldAttribute('editable') != $this->fieldTemplate->editable)
             $needSaveFieldTemplate = true;
 
-        if (!$needSaveFieldTemplate &&
-            $this->fieldTemplate->getOldAttribute('is_main') != $this->fieldTemplate->is_main)
-            $needSaveFieldTemplate = true;
-
         if ($this->fieldTemplate->getOldAttribute('language_type') != $this->fieldTemplate->language_type)
             $this->fieldTemplate->field_order = $this->fieldTemplate->maxOrder();
 

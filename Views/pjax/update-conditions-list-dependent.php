@@ -12,12 +12,12 @@ $js = <<<JS
 
     var homeUrl = $(conditionsListModal).data('homeUrl');
 
-    var emptyModalUrl                 = homeUrl + '/common/dev-conditions/empty-modal-dependent';
-    var updateModalDependentUrl       = homeUrl + '/common/dev-conditions/load-modal-dependent';
-    var fieldTemplateUpDependentUrl   = homeUrl + '/common/dev-conditions/condition-template-up-order-dependent';
-    var fieldTemplateDownDependentUrl = homeUrl + '/common/dev-conditions/condition-template-down-order-dependent';
+    var emptyModalUrl                     = homeUrl + '/common/dev-conditions/empty-modal-dependent';
+    var updateModalDependentUrl           = homeUrl + '/common/dev-conditions/load-modal-dependent';
+    var conditionTemplateUpDependentUrl   = homeUrl + '/common/dev-conditions/condition-template-up-order-dependent';
+    var conditionTemplateDownDependentUrl = homeUrl + '/common/dev-conditions/condition-template-down-order-dependent';
 
-    var fieldTemplateReference = $(conditionsListModal).data('conditionTemplateReference');
+    var conditionTemplateReference = $(conditionsListModal).data('conditionTemplateReference');
     var pjaxContainerOwner     = $(conditionsListModal).data('pjaxContainerOwner');
     var modalOwner             = $(conditionsListModal).data('modalOwner');
 
@@ -27,7 +27,7 @@ $js = <<<JS
     var returnUrl       = $(pjaxContainer).data('returnUrl');
 
     var backButton        = $('.conditions-modal-list-back');
-    var addNewFieldButton = $('.add-new-field-button');
+    var addNewConditionButton = $('.add-new-condition-button');
 
     $(backButton).on('click', goBack);
 
@@ -42,7 +42,74 @@ $js = <<<JS
         });
     }
 
+    $(addNewConditionButton).on('click', function() {
 
+        $(pjaxContainer).data('returnUrlFields', $(conditionsListModal).data('returnUrlFields'));
+
+        $.pjax({
+            url: emptyModalUrl
+                 + '?conditionTemplateReference=' + conditionTemplateReference
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $('.condition-item-modal').on('click', function() {
+
+        $(pjaxContainer).data('returnUrlConditions', $(conditionsListModal).data('returnUrlConditions'));
+
+        var conditionTemplateId = $(this).data('condition-template-id');
+
+        updateModalDependent(conditionTemplateId);
+    });
+
+    $('.condition-arrow-up-modal').on('click', function() {
+        $.pjax({
+            url: conditionTemplateUpDependentUrl
+                 + '?conditionTemplateId=' + $(this).data('conditionTemplateId')
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    $('.condition-arrow-down-modal').on('click', function() {
+        $.pjax({
+            url: conditionTemplateDownDependentUrl
+                 + '?conditionTemplateId=' + $(this).data('conditionTemplateId')
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+    function updateModalDependent(conditionTemplateId) {
+        $.pjax({
+            url: updateModalDependentUrl
+                 + '?conditionTemplateReference=' + conditionTemplateReference
+                 + '&conditionTemplateId=' + conditionTemplateId
+                 + '&pjaxName=' + pjaxContainerOwner
+                 + '&modalName=' + modalOwner,
+            container: pjaxContainerId,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    }
 })();
 JS;
 
@@ -54,8 +121,8 @@ $this->registerJs($js);
      data-condition-template-reference="<?= $conditionTemplateReference ?>"
      data-pjax-container-owner="<?= $pjaxName ?>"
      data-modal-owner="<?= $modalName ?>"
-     data-return-url-fields="<?= \yii\helpers\Url::toRoute([
-         '/common/dev-fields/update-fields-list-container-dependent',
+     data-return-url-conditions="<?= \yii\helpers\Url::toRoute([
+         '/common/dev-conditions/update-conditions-list-container-dependent',
          'conditionTemplateReference' => $conditionTemplateReference,
          'pjaxName' => $pjaxName,
          'modalName' => $modalName,
@@ -70,10 +137,36 @@ $this->registerJs($js);
         </h3>
     </div>
     <div class="modal-body">
-        <button class="btn btn-primary add-new-field-button">
+        <button class="btn btn-primary add-new-condition-button">
             Add new condition
         </button>
         <hr>
+        <div class="list-block">
+            <?php foreach ($conditionTemplates as $conditionTemplate): ?>
+                <div class="row list-items condition-item-modal"
+                     data-condition-template-id="<?= $conditionTemplate->id ?>"
+                >
+                    <div class="col-xs-10 list-title">
+                        <p>
+                            <?= $conditionTemplate->program_name ?> (<?= $conditionTemplate->getTypeName() ?>)
+                        </p>
+                    </div>
+                    <div class="col-xs-2 list-controls">
+                        <?php if ($conditionTemplate->editable): ?>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        <?php endif; ?>
+                        <?php if ($conditionTemplate->canUpOrder()): ?>
+                            <span class="glyphicon condition-arrow-up-modal glyphicon-arrow-up"
+                                  data-condition-template-id="<?= $conditionTemplate->id ?>"></span>
+                        <?php endif; ?>
+                        <?php if ($conditionTemplate->canDownOrder()): ?>
+                            <span class="glyphicon condition-arrow-down-modal glyphicon-arrow-down"
+                                  data-condition-template-id="<?= $conditionTemplate->id ?>"></span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
     </div>
     <div class="modal-footer">
