@@ -21,7 +21,7 @@ $js = <<<JS
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
 
     var homeUrl           = $(conditionValueModal).data('homeUrl');
-    var returnUrl         = $(conditionValueModal).data('returnUrl');
+    var returnUrl         = $(pjaxContainer).data('returnUrlConditions');
     var redirectUpdateUrl = $(conditionValueModal).data('redirectUpdateUrl');
     var deleteUrl         = homeUrl + '/common/dev-conditions/delete-condition-value';
 

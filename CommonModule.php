@@ -27,17 +27,11 @@ class CommonModule extends AbstractConfigurableModule implements
      * will place generated code
      */
     public $yicmsLocation = '@app/yicms';
-    /**
-     * @var IdentityInterface|YicmsUserInterface
-     */
+    /** @var IdentityInterface|YicmsUserInterface */
     public $user;
-    /**
-     * @var string default user language, there using language codes like 'ru-RU' or 'en-EU'
-     */
+    /** @var string default user language, there using language codes like 'ru-RU' or 'en-EU' */
     public $defaultLanguage = 'en-EU';
-    /**
-     * @var int method that used for store information about language between requests
-     */
+    /** @var int method that used for store information about language between requests */
     public $languageMethod = Language::COOKIE_TYPE;
 
     /**

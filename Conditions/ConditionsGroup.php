@@ -49,6 +49,15 @@ class ConditionsGroup extends AbstractGroup
     }
 
     /**
+     * Returns current condition template reference
+     * @return string
+     */
+    public function getCurrentConditionTemplateReference()
+    {
+        return $this->referenceAble->getConditionTemplateReference();
+    }
+
+    /**
      * @inheritdoc
      */
     public function initialize()

@@ -284,6 +284,16 @@ else
                         View image block fields
                     </p>
 
+                    <span class="btn btn-primary view-images-block-conditions"
+                          data-condition-template-id="<?= $widget->devImagesGroup->imagesBlock->getConditionTemplateReference() ?>"
+                          data-return-url="<?= \yii\helpers\Url::toRoute([
+                              '/common/dev-images/load-modal',
+                              'imageTemplateId' => $widget->devImagesGroup->imagesBlock->id,
+                          ]) ?>"
+                    >
+                        View image block conditions
+                    </span>
+
                     <p class="btn btn-primary config-thumbnails-button"
                        data-image-template-id="<?= $widget->devImagesGroup->imagesBlock->id ?>">
                         Config images thumbnails

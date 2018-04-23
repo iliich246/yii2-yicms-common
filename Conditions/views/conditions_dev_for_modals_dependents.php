@@ -25,6 +25,7 @@ $js = <<<JS
     var returnUrl = $(pjaxContainer).data('returnUrlConditions');
 
     var deleteConditionUrl = homeUrl + '/common/dev-conditions/delete-condition-template-dependent?';
+    var conditionDataList  = homeUrl + '/common/dev-conditions/condition-values-list';
 
     var isReturn = $(conditionCreateUpdate).data('returnBack');
 
@@ -44,6 +45,21 @@ $js = <<<JS
              timeout: 2500,
          });
     }
+
+    $('.condition-data-list-modal').on('click', function() {
+        var conditionTemplateId = $(this).data('conditionTemplateId');
+
+        $(pjaxContainer).data('returnUrlConditions', $(this).data('returnUrl'));
+
+        $.pjax({
+            url: conditionDataList + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
+            container: pjaxContainerName,
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
 
     $('#condition-delete-modal').on('click', function() {
         var button = this;
@@ -246,11 +262,14 @@ else $return = 'false';
 
             <hr>
 
-            <p class="btn btn-primary condition-data-list"
+            <p class="btn btn-primary condition-data-list-modal"
                data-condition-template-id="<?= $devConditionGroup->conditionTemplate->id ?>"
                data-return-url="<?= \yii\helpers\Url::toRoute([
-                   '/common/dev-conditions/load-modal',
-                   'conditionTemplateId' => $devConditionGroup->conditionTemplate->id,
+                   '/common/dev-conditions/load-modal-dependent',
+                   'conditionTemplateReference' => $devConditionGroup->conditionTemplate->condition_template_reference,
+                   'conditionTemplateId'        => $devConditionGroup->conditionTemplate->id,
+                   'pjaxName'                   => $pjaxName,
+                   'modalName'                  => $modalName,
                ]) ?>"
             >
                 Config condition options

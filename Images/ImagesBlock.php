@@ -365,6 +365,15 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Return true if this block has conditions
+     * @return bool
+     */
+    public function hasConditions()
+    {
+        return !!ConditionTemplate::getListQuery($this->condition_template_reference)->one();
+    }
+
+    /**
      * @inheritdoc
      */
     public function getFieldTemplateReference()

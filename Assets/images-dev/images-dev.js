@@ -3,13 +3,14 @@
 
     var homeUrl = $(addImage).data('homeUrl');
 
-    var emptyModalUrl        = homeUrl + '/common/dev-images/empty-modal';
-    var loadModalUrl         = homeUrl + '/common/dev-images/load-modal';
-    var updateImageListUrl   = homeUrl + '/common/dev-images/update-images-list-container';
-    var imageTemplateUpUrl   = homeUrl + '/common/dev-images/image-template-up-order';
-    var imageTemplateDownUrl = homeUrl + '/common/dev-images/image-template-down-order';
-    var showThumbnailsList   = homeUrl + '/common/dev-images/show-thumbnails-list';
-    var showFieldsListModal  = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
+    var emptyModalUrl           = homeUrl + '/common/dev-images/empty-modal';
+    var loadModalUrl            = homeUrl + '/common/dev-images/load-modal';
+    var updateImageListUrl      = homeUrl + '/common/dev-images/update-images-list-container';
+    var imageTemplateUpUrl      = homeUrl + '/common/dev-images/image-template-up-order';
+    var imageTemplateDownUrl    = homeUrl + '/common/dev-images/image-template-down-order';
+    var showThumbnailsList      = homeUrl + '/common/dev-images/show-thumbnails-list';
+    var showFieldsListModal     = homeUrl + '/common/dev-fields/update-fields-list-container-dependent';
+    var showConditionsListModal = homeUrl + '/common/dev-conditions/update-conditions-list-container-dependent';
 
     var imageTemplateReference = $(addImage).data('imageTemplateReference');
     var pjaxContainerName      = '#' + $(addImage).data('pjaxContainerName');
@@ -160,6 +161,24 @@
             timeout: 2500
         });
     });
+
+    $(document).on('click', '.view-images-block-conditions', function() {
+
+        $('#images-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+
+        $.pjax({
+            url: showConditionsListModal + '?conditionTemplateReference=' + $(this).data('conditionTemplateId')
+            + '&pjaxName=' + pjaxContainerName.substr(1)
+            + '&modalName=' + pjaxImagesModalName.substr(1),
+            container: '#images-pjax-container',
+            scrollTo: false,
+            push: false,
+            type: "POST",
+            timeout: 2500
+        });
+    });
+
+
 
     function goBackValidator() {
         var returnUrl = $(pjaxContainerName).data('returnUrlValidators');

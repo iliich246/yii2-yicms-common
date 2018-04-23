@@ -18,7 +18,7 @@ $js = <<<JS
     var pjaxContainer   = $(conditionDataListModal).parent('.pjax-container');
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
 
-    var returnUrl       = $(pjaxContainer).data('returnUrl');
+    var returnUrl       = $(pjaxContainer).data('returnUrlConditions');
 
     var backButton        = $('.condition-values-list-back');
     var addNewValueButton = $('.add-new-condition-value-button');
@@ -26,6 +26,7 @@ $js = <<<JS
     $(backButton).on('click', goBack);
 
     function goBack() {
+
         $.pjax({
             url: returnUrl,
             container: pjaxContainerId,
