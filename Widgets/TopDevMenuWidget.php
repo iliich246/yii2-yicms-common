@@ -17,6 +17,7 @@ class TopDevMenuWidget extends AbstractTopMenuWidget
     public $order = [
         'common',
         'pages',
+        'essences',
 
         //'custom_test1',
 

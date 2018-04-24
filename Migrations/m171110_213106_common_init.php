@@ -83,7 +83,6 @@ class m171110_213106_common_init extends Migration
             'field_order'              => $this->integer(),
             'editable'                 => $this->boolean(),
             'visible'                  => $this->boolean(),
-            'is_main'                  => $this->boolean(),
         ]);
 
         $this->createIndex(
