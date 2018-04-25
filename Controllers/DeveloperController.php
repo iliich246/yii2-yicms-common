@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
+use yii\base\Model;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -11,10 +12,12 @@ use Iliich246\YicmsCommon\Base\DevFilter;
 use Iliich246\YicmsCommon\Base\CommonUser;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Languages\DefaultLanguageForm;
 use Iliich246\YicmsCommon\Widgets\ReloadAlertWidget;
 use Iliich246\YicmsCommon\FreeEssences\FreeEssences;
+use Iliich246\YicmsCommon\FreeEssences\FreeEssenceNamesTranslatesForm;
 use Iliich246\YicmsCommon\Fields\DevFieldsGroup;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
@@ -439,6 +442,55 @@ class DeveloperController extends Controller
             return $this->redirect(Url::toRoute(['free-essences-list']));
 
         throw new CommonException('Delete error');
+    }
+
+    /**
+     * Displays page for work with admin translations of free essences
+     * @param $id
+     * @return string
+     * @throws CommonException
+     * @throws NotFoundHttpException
+     */
+    public function actionFreeEssenceTranslates($id)
+    {
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($id);
+
+        if (!$freeEssence)
+            throw new NotFoundHttpException('Wrong free essence ID');
+
+        $languages = Language::getInstance()->usedLanguages();
+
+        $translateModels = [];
+
+        foreach($languages as $key => $language) {
+            $pageTranslate = new FreeEssenceNamesTranslatesForm();
+            $pageTranslate->setLanguage($language);
+            $pageTranslate->setFreeEssence($freeEssence);
+            $pageTranslate->loadFromDb();
+
+            $translateModels[$key] = $pageTranslate;
+        }
+
+        if (Model::loadMultiple($translateModels, Yii::$app->request->post()) &&
+            Model::validateMultiple($translateModels)) {
+
+            /** @var FreeEssenceNamesTranslatesForm $translateModel */
+            foreach($translateModels as $key=>$translateModel) {
+                $translateModel->save();
+            }
+
+            return $this->render('/developer/free_essence_translates', [
+                'freeEssence'     => $freeEssence,
+                'translateModels' => $translateModels,
+                'success'         => true,
+            ]);
+        }
+
+        return $this->render('/developer/free_essence_translates', [
+            'freeEssence'     => $freeEssence,
+            'translateModels' => $translateModels,
+        ]);
     }
 
     /**

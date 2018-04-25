@@ -13,18 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class FreeEssenceNamesTranslatesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of page in current model language
-     */
+    /** @var string name of page in current model language */
     public $name;
-    /**
-     * @var string description of page on current model language
-     */
+    /** @var string description of page on current model language */
     public $description;
-
-    /**
-     * @var FreeEssences associated with this model
-     */
+    /** @var FreeEssences associated with this model */
     private $freeEssence;
 
     /**
@@ -33,7 +26,7 @@ class FreeEssenceNamesTranslatesForm extends AbstractTranslateForm
     public function attributeLabels()
     {
         return [
-            'name' => 'Field name on language "' . $this->language->name . '"',
+            'name'        => 'Field name on language "' . $this->language->name . '"',
             'description' => 'Description of field on language "' . $this->language->name . '"',
         ];
     }
@@ -54,7 +47,7 @@ class FreeEssenceNamesTranslatesForm extends AbstractTranslateForm
      */
     public static function getViewName()
     {
-        //return '@yicms-common/Views/translates/field_name_translate';
+        return '@yicms-common/Views/translates/free_essence_names_translates';
     }
 
     /**
@@ -75,7 +68,6 @@ class FreeEssenceNamesTranslatesForm extends AbstractTranslateForm
         $this->getCurrentTranslateDb()->name = $this->name;
         $this->getCurrentTranslateDb()->description = $this->description;
         $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
-        $this->getCurrentTranslateDb()->common_fields_template_id = $this->fieldTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
     }
@@ -120,7 +112,7 @@ class FreeEssenceNamesTranslatesForm extends AbstractTranslateForm
     {
         $this->currentTranslateDb = new FreeEssenceNamesTranslatesDb();
         $this->currentTranslateDb->common_language_id = $this->language->id;
-        $this->currentTranslateDb->common_language_id = $this->freeEssence->id;
+        $this->currentTranslateDb->common_free_essence_id = $this->freeEssence->id;
 
         return $this->currentTranslateDb->save();
     }
