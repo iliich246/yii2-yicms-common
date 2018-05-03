@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Conditions;
 
 use Yii;
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
@@ -213,6 +214,32 @@ class Condition extends ActiveRecord
             $array[$index] = $value->getName($language);
 
         return $array;
+    }
+
+    /**
+     * Generates reference key
+     * @return string
+     * @throws CommonException
+     */
+    public static function generateReference()
+    {
+        $value = strrev(uniqid());
+
+        $coincidence = true;
+        $counter = 0;
+
+        while($coincidence) {
+            if (!self::find()->where([
+                'condition_reference' => $value
+            ])->one()) return $value;
+
+            if ($counter++ > 100) {
+                Yii::error('Looping', __METHOD__);
+                throw new CommonException('Looping in ' . __METHOD__);
+            }
+        }
+
+        throw new CommonException('Can`t reach there 0_0' . __METHOD__);
     }
 
 
