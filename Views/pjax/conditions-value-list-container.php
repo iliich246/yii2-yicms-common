@@ -18,7 +18,9 @@ $js = <<<JS
     var pjaxContainer   = $(conditionDataListModal).parent('.pjax-container');
     var pjaxContainerId = '#' + $(pjaxContainer).attr('id');
 
-    var returnUrl       = $(pjaxContainer).data('returnUrlConditions');
+    var returnUrl       = $(pjaxContainer).data('returnUrlConditionsList');
+
+    console.log(returnUrl);
 
     var backButton        = $('.condition-values-list-back');
     var addNewValueButton = $('.add-new-condition-value-button');
@@ -38,6 +40,9 @@ $js = <<<JS
     }
 
     $(addNewValueButton).on('click', function() {
+
+        $(pjaxContainer).data('returnUrlConditionsValue', $(this).data('returnUrlConditionsValue'));
+
         $.pjax({
             url: createConditionValueUrl + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
             container: pjaxContainerId,
@@ -73,6 +78,8 @@ $js = <<<JS
     });
 
     $('.condition-value-block-item').on('click', function() {
+        $(pjaxContainer).data('returnUrlConditionsValue', $(this).data('returnUrlConditionsValue'));
+
         $.pjax({
             url: updateConditionValueUrl
                  + '?conditionValueId=' + $(this).data('conditionValueId'),
@@ -112,7 +119,12 @@ $this->registerJs($js);
     </div>
     <div class="modal-body">
         <button class="btn btn-primary add-new-condition-value-button"
-                data-condition-template-id="<?= $conditionTemplate->id ?>">
+            data-condition-template-id="<?= $conditionTemplate->id ?>"
+            data-return-url-conditions-value="<?= \yii\helpers\Url::toRoute([
+                '/common/dev-conditions/condition-values-list',
+                'conditionTemplateId' => $conditionTemplate->id,
+            ]) ?>"
+        >
             Add new condition data
         </button>
         <hr>

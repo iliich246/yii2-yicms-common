@@ -44,7 +44,7 @@ $js = <<<JS
 
     $(addNewConditionButton).on('click', function() {
 
-        $(pjaxContainer).data('returnUrlFields', $(conditionsListModal).data('returnUrlFields'));
+        $(pjaxContainer).data('returnUrlConditions', $(conditionsListModal).data('returnUrlConditions'));
 
         $.pjax({
             url: emptyModalUrl

@@ -49,7 +49,7 @@ $js = <<<JS
     $('.condition-data-list-modal').on('click', function() {
         var conditionTemplateId = $(this).data('conditionTemplateId');
 
-        $(pjaxContainer).data('returnUrlConditions', $(this).data('returnUrl'));
+        $(pjaxContainer).data('returnUrlConditionsList', $(this).data('returnUrlConditionsList'));
 
         $.pjax({
             url: conditionDataList + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),
@@ -264,7 +264,7 @@ else $return = 'false';
 
             <p class="btn btn-primary condition-data-list-modal"
                data-condition-template-id="<?= $devConditionGroup->conditionTemplate->id ?>"
-               data-return-url="<?= \yii\helpers\Url::toRoute([
+               data-return-url-conditions-list="<?= \yii\helpers\Url::toRoute([
                    '/common/dev-conditions/load-modal-dependent',
                    'conditionTemplateReference' => $devConditionGroup->conditionTemplate->condition_template_reference,
                    'conditionTemplateId'        => $devConditionGroup->conditionTemplate->id,

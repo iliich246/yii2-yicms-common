@@ -123,16 +123,18 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id' => ConditionsDevModalWidget::getPjaxContainerId(),
-                'class' => 'pjax-container',
-                'data-return-url' => '0',
+                'id'                               => ConditionsDevModalWidget::getPjaxContainerId(),
+                'class'                            => 'pjax-container',
+                'data-return-url'                  => '0',
+                'data-return-url-conditions-list'  => '0',
+                'data-return-url-conditions-value' => '0'
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => ConditionsDevModalWidget::getFormName(),
-            'action' => $widget->action,
+            'id'      => ConditionsDevModalWidget::getFormName(),
+            'action'  => $widget->action,
             'options' => [
-                'data-pjax' => true,
+                'data-pjax'        => true,
                 'data-yicms-saved' => $widget->dataSaved,
             ],
         ]);
@@ -222,7 +224,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
 
                     <p class="btn btn-primary condition-data-list"
                        data-condition-template-id="<?= $widget->devConditionsGroup->conditionTemplate->id ?>"
-                       data-return-url="<?= \yii\helpers\Url::toRoute([
+                       data-return-url-conditions-list="<?= \yii\helpers\Url::toRoute([
                            '/common/dev-conditions/load-modal',
                            'conditionTemplateId' => $widget->devConditionsGroup->conditionTemplate->id,
                        ]) ?>"

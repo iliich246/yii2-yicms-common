@@ -88,7 +88,7 @@
     $(document).on('click', '.condition-data-list', function() {
         var conditionTemplateId = $(this).data('conditionTemplateId');
 
-        $('#conditions-pjax-container').data('returnUrlConditions', $(this).data('returnUrlConditions'));
+        $('#conditions-pjax-container').data('returnUrlConditionsList', $(this).data('returnUrlConditionsList'));
 
         $.pjax({
             url: conditionDataList + '?conditionTemplateId=' + $(this).data('conditionTemplateId'),

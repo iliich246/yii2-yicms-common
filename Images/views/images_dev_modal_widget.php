@@ -133,11 +133,15 @@ else
     <div class="modal-dialog modal-lg">
         <?php Pjax::begin([
             'options' => [
-                'id'                         => ImagesDevModalWidget::getPjaxContainerId(),
-                'class'                      => 'pjax-container',
-                'data-return-url'            => '0',
-                'data-return-url-fields'     => '0',
-                'data-return-url-validators' => '0',
+                'id'                               => ImagesDevModalWidget::getPjaxContainerId(),
+                'class'                            => 'pjax-container',
+                'data-return-url'                  => '0',
+                'data-return-url-validators'       => '0',
+                'data-return-url-fields'           => '0',
+                'data-return-url-conditions'       => '0',
+                'data-return-url-conditions-list'  => '0',
+                'data-return-url-conditions-value' => '0'
+
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
