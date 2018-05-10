@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Files\FilesDevModalWidget;
 use Iliich246\YicmsCommon\Files\DevFilesGroup;
 use Iliich246\YicmsCommon\Files\FilesBlock;
