@@ -32,11 +32,11 @@ class FieldsHandler extends AbstractHandler
     public function getField($name)
     {
         return $this->getOrSet($name, function() use($name) {
-           return Field::getInstance(
-               $this->aggregator->getFieldTemplateReference(),
-               $this->aggregator->getFieldReference(),
-               $name
-           );
+            return Field::getInstance(
+                $this->aggregator->getFieldTemplateReference(),
+                $this->aggregator->getFieldReference(),
+                $name
+            );
         });
     }
 }
