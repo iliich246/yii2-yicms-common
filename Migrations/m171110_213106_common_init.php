@@ -237,6 +237,8 @@ class m171110_213106_common_init extends Migration
             'filename'           => $this->string(),
             'size'               => $this->integer(),
             'type'               => $this->string(),
+            'editable'           => $this->boolean(),
+            'visible'            => $this->boolean(),
         ]);
 
         $this->addForeignKey('common_file_translates-to-common_files',
@@ -466,6 +468,8 @@ class m171110_213106_common_init extends Migration
             'id'                           => $this->primaryKey(),
             'common_condition_template_id' => $this->integer(),
             'value_name'                   => $this->string(),
+            'condition_value_order'        => $this->integer(),
+            'is_default'                   => $this->boolean(),
         ]);
 
         $this->addForeignKey('common_conditions_values-to-common_conditions_templates',
@@ -490,6 +494,7 @@ class m171110_213106_common_init extends Migration
             'common_condition_value_id' => $this->integer(),
             'common_language_id'        => $this->integer(),
             'name'                      => $this->string(),
+            'description'               => $this->string(),
         ]);
 
         $this->addForeignKey('common_conditions_value_names-to-common_conditions_values',
