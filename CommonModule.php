@@ -131,8 +131,8 @@ class CommonModule extends AbstractConfigurableModule implements
         $dev = -1;
         $admin = 0;
 
-        $selected = $dev;
-//        $selected = $admin;
+  //      $selected = $dev;
+        $selected = $admin;
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);

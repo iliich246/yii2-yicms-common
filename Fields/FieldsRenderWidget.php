@@ -11,19 +11,11 @@ use yii\bootstrap\Widget;
  */
 class FieldsRenderWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-
-    /**
-     * @var array of translate models
-     */
+    /** @var array of translate models */
     public $fieldsArray;
-
-    /**
-     * @var bool if true widget will render in modal window mode
-     */
+    /** @var bool if true widget will render in modal window mode */
     public $isModal;
 
     /**

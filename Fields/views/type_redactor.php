@@ -1,6 +1,6 @@
 <?php
 
-/** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget*/
+/** @var $widget Iliich246\YicmsCommon\Fields\FieldTypeWidget */
 
 $infoString = '';
 $optionsTemplate = '';
@@ -37,50 +37,49 @@ if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
     else
         $infoString .= '<span class="glyphicon glyphicon-remove" aria-hidden="true"
                           data-toggle="tooltip" data-placement="top" title="Field template editable only for developer"></span>';
+}
 
-    $optionsTemplate = '<div class="dropdown field-dropdown" style="display: inline; float: right">
+$optionsTemplate = '<div class="dropdown field-dropdown" style="display: inline; float: right">
                         <a id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             options<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dLabel">';
 
-    $widget->isModal ? $fieldVisibleClass = 'field-visible-link-modal' : $fieldVisibleClass = 'field-visible-link';
+$widget->isModal ? $fieldVisibleClass = 'field-visible-link-modal' : $fieldVisibleClass = 'field-visible-link';
 
-
-    if ($widget->fieldModel->isVisible())
-        $optionsTemplate .=
-            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+if ($widget->fieldModel->isVisible())
+    $optionsTemplate .=
+        '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
              class="' . $fieldVisibleClass . '">
             <p>Change to invisible</p>
         </li>';
-    else
-        $optionsTemplate .=
-            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+else
+    $optionsTemplate .=
+        '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
              class="' . $fieldVisibleClass . '">
             <p>Change to visible</p>
         </li>';
 
-    if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
+if (\Iliich246\YicmsCommon\CommonModule::isUnderDev()) {
 
-        $widget->isModal ? $fieldEditableClass = 'field-editable-link-modal' : $fieldEditableClass = 'field-editable-link';
+    $widget->isModal ? $fieldEditableClass = 'field-editable-link-modal' : $fieldEditableClass = 'field-editable-link';
 
-        if ($widget->fieldModel->isEditable())
-            $optionsTemplate .=
-                '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+    if ($widget->fieldModel->isEditable())
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
                  class="' . $fieldEditableClass . '">
                 <p>Change to not editable(Dev)</p>
             </li>';
-        else
-            $optionsTemplate .=
-                '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
+    else
+        $optionsTemplate .=
+            '<li data-field-id="' . $widget->fieldModel->getFieldId() . '"
                  class="' . $fieldEditableClass . '">
                  <p>Change to editable(Dev)</p>
             </li>';
-    }
-
-    $optionsTemplate .= '   </ul>
-                    </div>';
 }
+
+$optionsTemplate .= '   </ul>
+                    </div>';
 
 ?>
 

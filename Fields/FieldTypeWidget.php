@@ -15,17 +15,11 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 class FieldTypeWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-    /**
-     * @var Model|FieldRenderInterface instance of model, that`s widget will be render
-     */
+    /** @var Model|FieldRenderInterface instance of model, that`s widget will be render */
     public $fieldModel;
-    /**
-     * @var bool if true widget will render in modal window mode
-     */
+    /** @var bool if true widget will render in modal window mode */
     public $isModal;
 
     /**
