@@ -55,7 +55,7 @@ $js = <<<JS
                     deleteActive = false;
                 });
             } else {
-                var deleteButtonRow = $('.delete-button-row');
+                var deleteButtonRow = $('.delete-button-row-field');
 
                 var template = _.template($('#delete-with-pass-template').html());
                 $(deleteButtonRow).empty();
@@ -167,6 +167,7 @@ else
                         Create new field
                     <?php else: ?>
                         Update existed field (<?= $widget->devFieldGroup->fieldTemplate->program_name ?>)
+                        <?= $widget->devFieldGroup->fieldTemplate->id ?>
                     <?php endif; ?>
                 </h3>
             </div>
@@ -202,7 +203,7 @@ else
                 ?>
 
                 <?php if ($widget->devFieldGroup->scenario == DevFieldsGroup::SCENARIO_UPDATE): ?>
-                    <div class="row delete-button-row">
+                    <div class="row delete-button-row-field">
                         <div class="col-xs-12">
                             <br>
 

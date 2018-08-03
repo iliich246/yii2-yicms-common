@@ -54,7 +54,7 @@ $js = <<<JS
                     deleteActive = false;
                 });
             } else {
-                var deleteButtonRow = $('.delete-button-row');
+                var deleteButtonRow = $('.delete-button-row-files');
 
                 var template = _.template($('#delete-with-pass-template').html());
                 $(deleteButtonRow).empty();
@@ -210,7 +210,7 @@ else
                 ])
                 ?>
                 <?php if ($widget->devFilesGroup->scenario == DevFilesGroup::SCENARIO_UPDATE): ?>
-                    <div class="row delete-button-row">
+                    <div class="row delete-button-row-files">
                         <div class="col-xs-12">
 
                             <br>

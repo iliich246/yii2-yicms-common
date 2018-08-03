@@ -53,7 +53,7 @@ $js = <<<JS
                     deleteActive = false;
                 });
             } else {
-                var deleteButtonRow = $('.delete-button-row');
+                var deleteButtonRow = $('.delete-button-row-condition');
 
                 var template = _.template($('#delete-with-pass-template').html());
                 $(deleteButtonRow).empty();
@@ -181,7 +181,7 @@ $this->registerAssetBundle(\Iliich246\YicmsCommon\Assets\LodashAsset::className(
                 ?>
 
                 <?php if ($widget->devConditionsGroup->scenario == DevConditionsGroup::SCENARIO_UPDATE): ?>
-                    <div class="row delete-button-row">
+                    <div class="row delete-button-row-condition">
                         <div class="col-xs-12">
 
                             <br>

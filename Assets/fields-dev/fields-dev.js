@@ -25,6 +25,11 @@
 
     $(pjaxContainerName).on('pjax:success', function(event) {
 
+        var fieldTemplateHidden = $('#field-template-id-hidden');
+
+        if ($(fieldTemplateHidden).val())
+            $(addField).data('currentSelectedFieldTemplate', $(fieldTemplateHidden).val());
+
         var fieldForm = $('#create-update-fields');
 
         if ($(fieldForm).data('saveAndExit')) {
