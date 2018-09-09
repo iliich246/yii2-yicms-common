@@ -75,7 +75,7 @@ $js = <<<JS
             } else {
                 var deleteButtonRow = $('.delete-button-row');
 
-                var template = _.template($('#delete-with-pass-template').html());
+                var template = _.template($('#delete-with-pass-template-free-essence').html());
                 $(deleteButtonRow).empty();
                 $(deleteButtonRow).append(template);
 
@@ -310,7 +310,7 @@ JS;
                         </button>
                     </div>
                 </div>
-                <script type="text/template" id="delete-with-pass-template">
+                <script type="text/template" id="delete-with-pass-template-free-essence">
                     <div class="col-xs-12">
                         <br>
                         <label for="page-delete-password-input">

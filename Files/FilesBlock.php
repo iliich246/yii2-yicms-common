@@ -11,6 +11,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
@@ -62,7 +63,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function init()
     {
-        $this->visible = true;
+        $this->visible  = true;
         $this->editable = true;
         parent::init();
     }
@@ -200,15 +201,6 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    public function delete()
-    {
-        return true;
-    }
-
-    /**
      * Renames parent method on concrete name
      * @return File
      */
@@ -306,16 +298,51 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getEntityQuery()
     {
-        if (CommonModule::isUnderDev() || $this->editable)
-            return File::find()
+        if (CommonModule::isUnderDev() || $this->editable) {
+            $fileQuery = File::find()
                 ->where([
                     'common_files_template_id' => $this->id,
-                    'file_reference' => $this->currentFileReference,
                 ])
                 ->indexBy('id')
                 ->orderBy(['file_order' => SORT_ASC]);
 
+            if ($this->currentFileReference)
+                $fileQuery->andWhere([
+                    'file_reference' => $this->currentFileReference]);
+
+            return $fileQuery;
+        }
+
         return new ActiveQuery(File::className());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function deleteSequence()
+    {
+        foreach(FilesNamesTranslatesDb::find()->where([
+            'common_files_template_id' => $this->id,
+        ])->all() as $fileName)
+            if (!$fileName->delete()) return false;
+
+        $fieldTemplateReferences = FieldTemplate::find()->where([
+            'field_template_reference' => $this->getFieldTemplateReference()
+        ])->all();
+
+        if ($fieldTemplateReferences)
+            foreach($fieldTemplateReferences as $fieldTemplate)
+                $fieldTemplate->delete();
+
+        $validators = ValidatorDb::find()->where([
+            'validator_reference' => $this->validator_reference
+        ])->all();
+
+        if ($validators)
+            foreach($validators as $validator)
+                $validator->delete();
+
+        return true;
     }
 
     /**

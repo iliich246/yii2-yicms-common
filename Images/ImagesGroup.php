@@ -189,7 +189,7 @@ class ImagesGroup extends AbstractGroup
             $this->imageEntity->size          = $this->imageEntity->image->size;
             $this->imageEntity->type          = FileHelper::getMimeType($path . $name);
 
-            $success = $this->imageEntity->save();
+            $success = $this->imageEntity->save(false);
 
             if (!$success) return false;
 
@@ -235,7 +235,7 @@ class ImagesGroup extends AbstractGroup
                 $imageTranslateForm->getCurrentTranslateDb()->size = $imageTranslateForm->translatedImage->size;
                 $imageTranslateForm->getCurrentTranslateDb()->type = FileHelper::getMimeType($path . $name);
 
-                if (!$imageTranslateForm->getCurrentTranslateDb()->save()) $success = false;
+                if (!$imageTranslateForm->getCurrentTranslateDb()->save(false)) $success = false;
 
                 $this->scenario == self::SCENARIO_UPDATE ?
                     CropProcessor::handle($this->imageEntity, $oldSystemName) :

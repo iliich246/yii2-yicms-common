@@ -14,21 +14,13 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class FileValidatorForm extends AbstractValidatorForm
 {
-    /**
-     * @var integer the maximum number of bytes required for the uploaded file
-     */
+    /** @var integer the maximum number of bytes required for the uploaded file */
     public $maxSize;
-    /**
-     * @var integer the minimum number of bytes required for the uploaded file
-     */
+    /** @var integer the minimum number of bytes required for the uploaded file */
     public $minSize;
-    /**
-     * @var string a list of file MIME types that are allowed to be uploaded
-     */
+    /** @var string a list of file MIME types that are allowed to be uploaded */
     public $mimeTypes;
-    /**
-     * @var string a list of file name extensions that are allowed to be uploaded
-     */
+    /** @var string a list of file name extensions that are allowed to be uploaded */
     public $extensions;
     /**
      * @var array of messages of validator on all languages
@@ -55,7 +47,6 @@ class FileValidatorForm extends AbstractValidatorForm
      * the error message used when the file has an mime type that is not allowed by $mimeTypes property
      */
     public $wrongMimeType;
-
     /**
      * @inheritdoc
      */

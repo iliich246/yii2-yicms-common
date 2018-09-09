@@ -24,17 +24,11 @@ abstract class AbstractTranslateForm extends Model
     const SCENARIO_CREATE = 0;
     const SCENARIO_UPDATE = 1;
 
-    /**
-     * @var LanguagesDb instance of language that associated with model
-     */
+    /** @var LanguagesDb instance of language that associated with model */
     protected $language;
-    /**
-     * @var ActiveRecord instance of translate db associated with model
-     */
+    /** @var ActiveRecord instance of translate db associated with model */
     protected $currentTranslateDb;
-    /**
-     * @var string keep name of model for id
-     */
+    /** @var string keep name of model for id */
     private $idName;
 
     /**

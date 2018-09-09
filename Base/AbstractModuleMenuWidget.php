@@ -14,9 +14,7 @@ use yii\bootstrap\Widget;
  */
 abstract class AbstractModuleMenuWidget extends Widget
 {
-    /**
-     * @var string current route
-     */
+    /** @var string current route */
     public $route;
 
     /**

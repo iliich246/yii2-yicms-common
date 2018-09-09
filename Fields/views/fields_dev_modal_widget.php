@@ -141,7 +141,7 @@ else
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
-            'id' => FieldsDevModalWidget::getFormName(),
+            'id'      => FieldsDevModalWidget::getFormName(),
             'action'  => $widget->action,
             'options' => [
                 'data-pjax'                       => true,

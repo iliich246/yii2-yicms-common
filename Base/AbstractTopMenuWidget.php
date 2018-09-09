@@ -31,9 +31,7 @@ abstract class AbstractTopMenuWidget extends Widget
      * 'block1 and block2 - names of views in view directory corresponding to custom widget
      */
     public $order = [];
-    /**
-     * @var array with widgets that must be rendered
-     */
+    /** @var array with widgets that must be rendered */
     public $widgets = [];
 
     /**

@@ -21,15 +21,11 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  */
 class Condition extends ActiveRecord
 {
-
+    /** @var string value of condition */
     public $value;
-    /**
-     * @var ConditionTemplate instance of condition template
-     */
+    /** @var ConditionTemplate instance of condition template */
     private $template = null;
-    /**
-     * @var ConditionsNamesTranslatesDb[]
-     */
+    /** @var ConditionsNamesTranslatesDb[] instances */
     private $translation;
 
     /**
@@ -197,6 +193,56 @@ class Condition extends ActiveRecord
     }
 
     /**
+     * Returns fetch from db instance of condition
+     * @param $conditionTemplateReference
+     * @param $conditionReference
+     * @param $programName
+     * @return null
+     * @throws CommonException
+     */
+    public static function getInstance($conditionTemplateReference, $conditionReference, $programName)
+    {
+        if (is_null($template = ConditionTemplate::getInstance($conditionTemplateReference, $programName))) {
+            Yii::warning(
+                "Can`t fetch for " . static::className() .
+                " name = $programName and conditionTemplateReference = $conditionTemplateReference",
+                __METHOD__);
+
+            if (defined('YICMS_STRICT')) {
+                throw new CommonException(
+                    "YICMS_STRICT_MODE:
+                Can`t fetch for " . static::className() .
+                    " name = $programName and conditionTemplateReference = $conditionTemplateReference");
+            }
+
+            return null;
+        };
+
+        /** @var self $condition */
+        $condition = self::find()->where([
+            'common_condition_template_id' => $template->id,
+            'condition_reference'           => $conditionReference,
+        ])->one();
+
+        if ($condition) {
+            $condition->template = $template;
+            return $condition;
+        }
+
+        Yii::warning(
+            "Can`t fetch for " . static::className() . " name = $programName and conditionReference = $conditionReference",
+            __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException(
+                "YICMS_STRICT_MODE:
+                Can`t fetch for " . static::className() . " name = $programName and conditionReference = $conditionReference");
+        }
+
+        return null;
+    }
+
+    /**
      * Returns list of values for dropdown lists
      * @param LanguagesDb|null $language
      * @return array
@@ -241,7 +287,4 @@ class Condition extends ActiveRecord
 
         throw new CommonException('Can`t reach there 0_0' . __METHOD__);
     }
-
-
-
 }

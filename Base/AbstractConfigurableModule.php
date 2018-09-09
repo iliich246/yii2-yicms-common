@@ -27,10 +27,7 @@ abstract class AbstractConfigurableModule extends Module
      * If data provider has no concrete property, this property will be configured by default
      */
     public $configurable = [];
-
-    /**
-     * @var ConfiguratorInterface instance of configurator;
-     */
+    /** @var ConfiguratorInterface instance of configurator */
     protected $configurator;
 
     /**

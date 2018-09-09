@@ -31,19 +31,6 @@ class FileTranslate extends ActiveRecord
     }
 
     /**
-     * Returns true, if associated file physical existed
-     * @return bool
-     */
-    public function isPhysicalExisted()
-    {
-        $path = CommonModule::getInstance()->filesPatch . $this->system_name;
-
-        if (!file_exists($path) || is_dir($path)) return false;
-
-        return true;
-    }
-
-    /**
      * @inheritdoc
      */
     public function rules()
@@ -58,5 +45,31 @@ class FileTranslate extends ActiveRecord
                 'targetClass' => File::className(), 'targetAttribute' => ['common_file_id' => 'id']
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete()
+    {
+        $path = CommonModule::getInstance()->filesPatch . $this->system_name;
+
+        if (file_exists($path) && !is_dir($path))
+            unlink($path);
+
+        return parent::delete();
+    }
+
+    /**
+     * Returns true, if associated file physical existed
+     * @return bool
+     */
+    public function isPhysicalExisted()
+    {
+        $path = CommonModule::getInstance()->filesPatch . $this->system_name;
+
+        if (!file_exists($path) || is_dir($path)) return false;
+
+        return true;
     }
 }

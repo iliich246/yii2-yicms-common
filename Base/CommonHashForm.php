@@ -18,7 +18,7 @@ class CommonHashForm extends Model
     const SCENARIO_CHANGE_DEV = 0;
     const SCENARIO_CHANGE_ADMIN = 1;
 
-    const DEV_HASH = '$2y$13$OoAIrywjTgo1jyT55QePwOtrmC/mm5uY1DLU7hBctsdlACf3Fr.ba';
+    const DEV_HASH = '$2y$13$Wdwr8EFVBvGXOCgIxSK6yeem6HSbyvgy5oe4WmfgR/Aq7/CURls/.';
     const ADMIN_HASH = '$2y$13$ddZgXX5ZAxJf2HwJhaY9.eZ3VDnLyNQxXC075GFWF0PRorevfQBoi';
 
     /** @var string new hash */

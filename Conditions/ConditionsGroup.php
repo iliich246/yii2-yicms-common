@@ -6,7 +6,6 @@ use yii\base\Model;
 use yii\widgets\ActiveForm;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
-use Iliich246\YicmsCommon\Languages\Language;
 
 /**
  * Class ConditionsGroup
@@ -17,18 +16,14 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class ConditionsGroup extends AbstractGroup
 {
-    /**
-     * @var ConditionsReferenceInterface|ConditionsInterface object for current group
-     */
+    /** @var ConditionsReferenceInterface|ConditionsInterface object for current group */
     protected $referenceAble;
-    /**
-     * @var ConditionTemplate[] instances
-     */
+    /** @var ConditionTemplate[] instances */
     public $conditionTemplates = [];
-    /**
-     * @var Condition[] array of conditions
-     */
+    /** @var Condition[] array of conditions */
     public $conditions = [];
+    /** @var bool indicate that data in this group was saved in this action */
+    public $justSaved = false;
 
     /**
      * @param ConditionsReferenceInterface $referenceAble

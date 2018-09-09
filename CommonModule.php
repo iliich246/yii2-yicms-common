@@ -131,8 +131,8 @@ class CommonModule extends AbstractConfigurableModule implements
         $dev = -1;
         $admin = 0;
 
-  //      $selected = $dev;
-        $selected = $admin;
+        $selected = $dev;
+        //$selected = $admin;
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);
@@ -141,8 +141,8 @@ class CommonModule extends AbstractConfigurableModule implements
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;
         //Language::getInstance()->setLanguage(LanguagesDb::instanceByCode('ru-RU'));
-        //Yii::$app->language = LanguagesDb::instanceByCode('en-EU')->code;
-        Yii::$app->language = LanguagesDb::instanceByCode('ru-RU')->code;
+        Yii::$app->language = LanguagesDb::instanceByCode('en-EU')->code;
+        //Yii::$app->language = LanguagesDb::instanceByCode('ru-RU')->code;
         //Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
 
     }

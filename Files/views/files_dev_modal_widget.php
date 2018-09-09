@@ -64,6 +64,9 @@ $js = <<<JS
                 var buttonDelete  = $('#button-delete-with-pass');
 
                 $(buttonDelete).on('click', function() {
+
+                console.log([passwordInput, $(passwordInput).val()]);
+
                     $.pjax({
                         url: '{$deleteLink}' + fileTemplateId + '&deletePass=' + $(passwordInput).val(),
                         container: '#update-files-list-container',

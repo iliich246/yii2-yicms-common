@@ -12,13 +12,9 @@ use yii\db\ActiveQuery;
  */
 abstract class AbstractEntityBlock extends AbstractTemplate
 {
-    /**
-     * @var AbstractEntity[] that`s contains this block
-     */
+    /** @var AbstractEntity[] that`s contains this block */
     private $entityBuffer = null;
-    /**
-     * @var bool sets true, when entity block is nonexistent (can`t be fetched from db)
-     */
+    /** @var bool sets true, when entity block is nonexistent (can`t be fetched from db)/ */
     private $isNonexistent = false;
 
     /**
@@ -111,9 +107,22 @@ abstract class AbstractEntityBlock extends AbstractTemplate
         return $value;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete()
     {
+        if ($this->isEntities()) {
+            foreach($this->getEntities() as $entity)
+                $entity->delete();
+        }
 
+        if (!$this->deleteSequence() && defined('YICMS_STRICT'))
+            throw new CommonException(
+                "YICMS_STRICT_MODE:
+                Can`t perform delete sequence for " . static::className());
+
+        return parent::delete();
     }
 
     /**
@@ -133,6 +142,12 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      * @return ActiveQuery
      */
     abstract public function getEntityQuery();
+
+    /**
+     * Implements actions for correct delete children objects
+     * @return bool
+     */
+    abstract protected function deleteSequence();
 
     /**
      * Returns class of entity of concrete block

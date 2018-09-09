@@ -12,6 +12,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
+use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
@@ -255,14 +256,6 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * @inheritdoc
-     */
-    public function delete()
-    {
-        return true;
-    }
-
-    /**
      * Renames parent method on concrete name
      * @return Image
      */
@@ -430,6 +423,35 @@ class ImagesBlock extends AbstractEntityBlock implements
                 ->orderBy(['image_order' => SORT_ASC]);
 
         return new ActiveQuery(Image::className());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function deleteSequence()
+    {
+        foreach(ImagesNamesTranslatesDb::find()->where([
+            'common_images_template_id' => $this->id,
+        ])->all() as $imageName)
+            if (!$imageName->delete()) return false;
+
+        $fieldTemplateReferences = FieldTemplate::find()->where([
+            'field_template_reference' => $this->getFieldTemplateReference()
+        ])->all();
+
+        if ($fieldTemplateReferences)
+            foreach($fieldTemplateReferences as $fieldTemplate)
+                $fieldTemplate->delete();
+
+        $validators = ValidatorDb::find()->where([
+            'validator_reference' => $this->validator_reference
+        ])->all();
+
+        if ($validators)
+            foreach($validators as $validator)
+                $validator->delete();
+
+        return true;
     }
 
     /**

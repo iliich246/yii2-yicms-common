@@ -4,6 +4,8 @@ namespace Iliich246\YicmsCommon\Images;
 
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
+use yii\validators\SafeValidator;
+use yii\validators\RequiredValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
@@ -271,6 +273,32 @@ class Image extends AbstractEntity implements
     /**
      * @inheritdoc
      */
+    protected function deleteSequence()
+    {
+        $imageTranslates = ImageTranslate::find()->where([
+            'common_image_id' => $this->id,
+        ])->all();
+
+        if ($imageTranslates)
+            foreach($imageTranslates as $imageTranslate)
+                $imageTranslate->delete();
+
+        //TODO: physical delete images
+
+        $fields = Field::find()->where([
+            'common_fields_template_id' => $this->id//mistake
+        ])->all();
+
+        if ($fields)
+            foreach($fields as $field)
+                $field->delete();
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldHandler()
     {
         if (!$this->fieldHandler)
@@ -354,7 +382,24 @@ class Image extends AbstractEntity implements
      */
     public function prepareValidators()
     {
+        $validators = $this->getValidatorBuilder()->build();
 
+        if (!$validators) {
+
+            $safeValidator = new SafeValidator();
+            $safeValidator->attributes = ['image'];
+            $this->validators[] = $safeValidator;
+
+            return;
+        }
+
+        foreach ($validators as $validator) {
+
+            if ($validator instanceof RequiredValidator && !$this->isNewRecord) continue;
+
+            $validator->attributes = ['image'];
+            $this->validators[] = $validator;
+        }
     }
 
     /**
@@ -375,15 +420,15 @@ class Image extends AbstractEntity implements
      */
     public function getValidatorReference()
     {
-        $fileBlock = $this->getImagesBlock();
+        $imageBlock = $this->getImagesBlock();
 
-        if (!$fileBlock->validator_reference) {
-            $fileBlock->validator_reference = ValidatorBuilder::generateValidatorReference();
-            $fileBlock->scenario = ImagesBlock::SCENARIO_UPDATE;
-            $fileBlock->save(false);
+        if (!$imageBlock->validator_reference) {
+            $imageBlock->validator_reference = ValidatorBuilder::generateValidatorReference();
+            $imageBlock->scenario = ImagesBlock::SCENARIO_UPDATE;
+            $imageBlock->save(false);
         }
 
-        return $fileBlock->validator_reference;
+        return $imageBlock->validator_reference;
     }
 
     /**

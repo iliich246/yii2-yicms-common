@@ -31,11 +31,6 @@ class ImageTranslate extends ActiveRecord
         return '{{%common_image_translates}}';
     }
 
-    public function isPhysicalExisted()
-    {
-        return true;
-    }
-
     /**
      * @inheritdoc
      */
@@ -51,5 +46,25 @@ class ImageTranslate extends ActiveRecord
                 'targetClass' => Image::className(), 'targetAttribute' => ['common_image_id' => 'id']
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete()
+    {
+        //TODO: implement physical deleting of files
+
+        return parent::delete();
+    }
+
+    /**
+     * Returns true, if associated file physical existed
+     * @return bool
+     */
+    public function isPhysicalExisted()
+    {
+        //TODO: implement this method
+        return true;
     }
 }

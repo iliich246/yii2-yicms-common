@@ -18,18 +18,22 @@ abstract class AbstractEntity extends ActiveRecord
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
 
-    /**
-     * @var AbstractEntityBlock instance of entity block that keep this entity
-     */
+    /** @var AbstractEntityBlock instance of entity block that keep this entity */
     protected $entityBlock;
-    /**
-     * @var bool sets true, when entity is nonexistent (can`t be fetched from db)
-     */
+    /** @var bool sets true, when entity is nonexistent (can`t be fetched from db) */
     protected $isNonexistent = false;
 
+    /**
+     * @inheritdoc
+     */
     public function delete()
     {
+        if (!$this->deleteSequence() && defined('YICMS_STRICT'))
+            throw new CommonException(
+            "YICMS_STRICT_MODE:
+                Can`t perform delete sequence for " . static::className());
 
+        return parent::delete();
     }
 
     public function isEntity()
@@ -39,6 +43,7 @@ abstract class AbstractEntity extends ActiveRecord
 
     /**
      * Set`s entity as nonexistent
+     * @return void
      */
     public function setNoExistent()
     {
@@ -100,6 +105,12 @@ abstract class AbstractEntity extends ActiveRecord
 
         return $this->entityBlock = $this->entityBlockQuery()->one();
     }
+
+    /**
+     * Implements actions for correct delete children objects
+     * @return bool
+     */
+    abstract protected function deleteSequence();
 
     /**
      * Return path to physical destination of this entity

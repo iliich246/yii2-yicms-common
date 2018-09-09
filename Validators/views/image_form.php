@@ -2,11 +2,11 @@
 
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
-use Iliich246\YicmsCommon\Validators\FileValidatorForm;
+use Iliich246\YicmsCommon\Validators\ImageValidatorForm;
 use Iliich246\YicmsCommon\Languages\Language;
 
 /** @var $this \yii\web\View */
-/** @var $validatorForm FileValidatorForm */
+/** @var $validatorForm ImageValidatorForm */
 /** @var $pjaxContainer string */
 /** @var $returnBack boolean */
 
@@ -32,7 +32,7 @@ $js = <<<JS
 
         if (isReturn) goBack();
 
-        $(backButton).on('click', goBack);
+         $(backButton).on('click', goBack);
 
         $(deleteButton).on('click', function() {
             if (!($(this).hasClass('validator-confirm-state'))) {
@@ -70,11 +70,10 @@ $js = <<<JS
 JS;
 
 $this->registerJs($js);
-
 ?>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'file-validator-form',
+    'id' => 'image-validator-form',
     'options' => [
         'class' => 'validator-form',
         'data-pjax' => true,
@@ -84,18 +83,16 @@ $this->registerJs($js);
     ],
 ]);
 ?>
-
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="modal-title">
-            File validator
+            Image validator
 
             <span class="glyphicon glyphicon-arrow-left validator-form-back" aria-hidden="true" style="float: right;margin-right: 20px"></span>
 
         </h3>
     </div>
-
     <div class="modal-body">
 
         <?= $form->field($validatorForm, 'isActivate')->checkbox() ?>
@@ -133,13 +130,45 @@ $this->registerJs($js);
                 ->label("Wrong mime type error message for language $language->name") ?>
         <?php endforeach; ?>
 
+        <?php foreach(Language::getInstance()->usedLanguages() as $language): ?>
+            <?= $form->field($validatorForm, "notImage['$language->code']")
+                ->label("Not image error message for language $language->name") ?>
+        <?php endforeach; ?>
+
+        <?= $form->field($validatorForm, 'minWidth') ?>
+
+        <?= $form->field($validatorForm, 'maxWidth') ?>
+
+        <?= $form->field($validatorForm, 'minHeight') ?>
+
+        <?= $form->field($validatorForm, 'maxHeight') ?>
+
+        <?php foreach(Language::getInstance()->usedLanguages() as $language): ?>
+            <?= $form->field($validatorForm, "underWidth['$language->code']")
+                ->label("Under width error message for language $language->name") ?>
+        <?php endforeach; ?>
+
+        <?php foreach(Language::getInstance()->usedLanguages() as $language): ?>
+            <?= $form->field($validatorForm, "overWidth['$language->code']")
+                ->label("Over width error message for language $language->name") ?>
+        <?php endforeach; ?>
+
+        <?php foreach(Language::getInstance()->usedLanguages() as $language): ?>
+            <?= $form->field($validatorForm, "underHeight['$language->code']")
+                ->label("Under height error message for language $language->name") ?>
+        <?php endforeach; ?>
+
+        <?php foreach(Language::getInstance()->usedLanguages() as $language): ?>
+            <?= $form->field($validatorForm, "overHeight['$language->code']")
+                ->label("Over height error message for language $language->name") ?>
+        <?php endforeach; ?>
+
         <button type="button"
                 class="btn btn-danger"
                 id="validator-delete">
             Delete validator
         </button>
     </div>
-
     <div class="modal-footer">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         <?= Html::submitButton('Save and back',

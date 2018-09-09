@@ -13,6 +13,7 @@ use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
@@ -238,6 +239,35 @@ class File extends AbstractEntity implements
         return FilesBlock::find()->where([
             'id' => $this->common_files_template_id
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function deleteSequence()
+    {
+        $fileTranslates = FileTranslate::find()->where([
+            'common_file_id' => $this->id,
+        ])->all();
+
+        if ($fileTranslates)
+            foreach($fileTranslates as $fileTranslate)
+                $fileTranslate->delete();
+
+        $path = CommonModule::getInstance()->filesPatch . $this->system_name;
+
+        if (file_exists($path) && !is_dir($path))
+            unlink($path);
+
+        $fields = Field::find()->where([
+            'common_fields_template_id' => $this->id//mistake
+        ])->all();
+
+        if ($fields)
+            foreach($fields as $field)
+                $field->delete();
+
+        return true;
     }
 
     /**

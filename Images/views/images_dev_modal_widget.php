@@ -56,12 +56,12 @@ $js = <<<JS
             } else {
                 var deleteButtonRow = $('.delete-button-row-image');
                 
-                var template = _.template($('#delete-with-pass-template').html());
+                var template = _.template($('#delete-with-pass-template-image').html());
                 $(deleteButtonRow).empty();
                 $(deleteButtonRow).append(template);
 
                 var passwordInput = $('#images-block-delete-password-input');
-                var buttonDelete  = $('#button-delete-with-pass');
+                var buttonDelete  = $('#button-delete-with-pass-image');
 
                 $(buttonDelete).on('click', function() {
                     $.pjax({
@@ -255,7 +255,7 @@ else
                             </button>
                         </div>
                     </div>
-                    <script type="text/template" id="delete-with-pass-template">
+                    <script type="text/template" id="delete-with-pass-template-image">
                         <div class="col-xs-12">
                             <br>
                             <label for="images-block-delete-password-input">
@@ -270,7 +270,7 @@ else
                             <br>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="button-delete-with-pass"
+                                    id="button-delete-with-pass-image"
                                 >
                                 Yes, i am absolutely seriously!!!
                             </button>

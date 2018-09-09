@@ -13,8 +13,9 @@
     var conditionTemplateReference = $(addCondition).data('conditionTemplateReference');
     var pjaxContainerName          = '#' + $(addCondition).data('pjaxContainerName');
     var pjaxConditionsModalName    = '#' + $(addCondition).data('conditionModalName');
+    var imageLoaderScr             = $(addCondition).data('loaderImageSrc');
 
-    var imageLoaderScr = $(addCondition).data('loaderImageSrc');
+    var redirectToUpdateNeedSecondPjaxRequest = false;
 
     $(pjaxContainerName).on('pjax:send', function() {
         $(pjaxConditionsModalName)
@@ -24,6 +25,47 @@
     });
 
     $(pjaxContainerName).on('pjax:success', function(event) {
+
+        var conditionTemplateHidden = $('#condition-template-id-hidden');
+
+        if ($(conditionTemplateHidden).val())
+            $(addCondition).data('currentSelectedConditionTemplate', $(conditionTemplateHidden).val());
+
+        var conditionForm = $('#create-update-conditions');
+
+        if ($(conditionForm).data('saveAndExit')) {
+            $(pjaxConditionsModalName).modal('hide');
+
+            $.pjax({
+                url: updateConditionListUrl + '?conditionTemplateReference=' + conditionTemplateReference,
+                container: '#update-conditions-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            return;
+        }
+
+        var redirectToUpdate           = $(conditionForm).data('redirectToUpdateCondition');
+        var fieldTemplateIdForRedirect = $(conditionForm).data('conditionTemplateIdRedirect');
+
+        if (redirectToUpdate) {
+            $.pjax({
+                url: updateConditionListUrl + '?conditionTemplateReference=' + conditionTemplateReference,
+                container: '#update-conditions-list-container',
+                scrollTo: false,
+                push: false,
+                type: "POST",
+                timeout: 2500
+            });
+
+            redirectToUpdateNeedSecondPjaxRequest = fieldTemplateIdForRedirect;
+
+            return;
+        }
+
 
         var isValidatorResponse = !!($('.validator-response').length);
 
@@ -42,6 +84,13 @@
 
         if (!isValidatorResponse)
             $(pjaxContainerName).modal('hide');
+    });
+
+    $('#update-conditions-list-container').on('pjax:success', function(event) {
+        if (redirectToUpdateNeedSecondPjaxRequest) {
+            loadModal(redirectToUpdateNeedSecondPjaxRequest);
+            redirectToUpdateNeedSecondPjaxRequest = false;
+        }
     });
 
     $(document).on('click', '.condition-item p', function(event) {

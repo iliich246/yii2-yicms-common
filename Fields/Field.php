@@ -43,25 +43,15 @@ class Field extends ActiveRecord implements
     const MODE_DEFAULT = 0;
     const MODE_ALERT = 1;
 
-    /**
-     * @var int keeps mode of field
-     */
+    /** @var int keeps mode of field */
     private $mode = self::MODE_DEFAULT;
-    /**
-     * @var FieldTranslate[] array of field translations
-     */
+    /** @var FieldTranslate[] array of field translations */
     private $translation = null;
-    /**
-     * @var FieldTemplate instance of field template
-     */
+    /** @var FieldTemplate instance of field template */
     private $template;
-    /**
-     * @var ValidatorBuilder instance
-     */
+    /** @var ValidatorBuilder instance */
     private $validatorBuilder;
-    /**
-     * @var FieldsNamesTranslatesDb[]
-     */
+    /** @var FieldsNamesTranslatesDb[] */
     private $fieldNamesTranslations;
 
     /**
@@ -268,7 +258,7 @@ class Field extends ActiveRecord implements
     }
 
     /**
-     * Return fetched from db instance of field
+     * Return fetch from db instance of field
      * @param $fieldTemplateReference
      * @param $fieldReference
      * @param $programName

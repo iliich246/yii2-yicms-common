@@ -15,18 +15,14 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class DevConditionsGroup extends AbstractGroup
 {
-    /**
-     * @var string conditionTemplateReference value for current group
-     */
+    /** @var string conditionTemplateReference value for current group */
     protected $conditionTemplateReference;
-    /**
-     * @var ConditionTemplate current condition block template with group is working (create or update)
-     */
+    /** @var ConditionTemplate current condition block template with group is working (create or update) */
     public $conditionTemplate;
-    /**
-     * @var ConditionNamesTranslatesForm[]
-     */
+    /** @var ConditionNamesTranslatesForm[] */
     public $conditionNameTranslates;
+    /** @var bool indicate that data in this group was saved in this action */
+    public $justSaved = false;
 
     /**
      * Sets conditionTemplateReference
@@ -131,6 +127,8 @@ class DevConditionsGroup extends AbstractGroup
             if ($needSaveConditionTemplateName)
                 $conditionNameTranslate->save();
         }
+
+        $this->justSaved = true;
 
         //TODO: makes error handling
         return true;
