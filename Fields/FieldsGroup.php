@@ -17,24 +17,19 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class FieldsGroup extends AbstractGroup
 {
-    /**
-     * @var FieldReferenceInterface|FieldsInterface object for current group
-     */
+    /** @var FieldReferenceInterface|FieldsInterface object for current group */
     protected $referenceAble;
     /**
      * @var array of fields program names that`s will not rendered by standard render method
      * this field will not be visible or must be rendered manually
      */
     public $renderFieldsExceptions = [];
-    /**
-     * @var FieldTemplate[] instances that`s must has translates
-     */
+    /** @var FieldTemplate[] instances that`s must has translates */
     public $translateAbleFieldTemplates;
-    /**
-     * @var FieldTemplate[] instances without translates
-     */
+    /** @var FieldTemplate[] instances without translates */
     public $singleFieldTemplates;
-    /** @var FieldTranslateForm[] of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
+    /**
+     * @var FieldTranslateForm[] of FieldTranslateForm that`s can be handled by Yii Model::validate and load methods in format
      * [key1] => FieldTranslateForm1
      * ...
      * [keyN] => FieldTranslateFormN
@@ -57,9 +52,7 @@ class FieldsGroup extends AbstractGroup
      * ...
      */
     public $translateFormsArray = [];
-    /**
-     * @var Field[] array of fields without translates
-     */
+    /** @var Field[] array of fields without translates */
     public $singleFields = [];
 
     /**

@@ -22,30 +22,17 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 {
     const SCENARIO_LOAD_VIA_PJAX = 0x02;
 
-    /**
-     * @var string value of translated field
-     */
+    /** @var string value of translated field */
     public $value;
-    /**
-     * @var FieldTemplate associated with this model
-     */
+    /** @var FieldTemplate associated with this model */
     private $fieldTemplate;
-    /**
-     * @var Field
-     */
+    /** @var Field instance */
     private $field;
-    /**
-     * @var FieldsInterface|FieldReferenceInterface
-     */
+    /** @var FieldsInterface|FieldReferenceInterface */
     private $fieldAble;
-
-    /**
-     * @var string value of field reference
-     */
+    /** @var string value of field reference */
     private $fieldReference;
-    /**
-     * @var ValidatorBuilder instance
-     */
+    /** @var ValidatorBuilder instance */
     private $validatorBuilder;
 
     /**
