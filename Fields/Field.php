@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 use yii\validators\SafeValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -27,6 +28,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  */
 class Field extends ActiveRecord implements
     FieldRenderInterface,
+    FictiveInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface
 {
@@ -53,6 +55,8 @@ class Field extends ActiveRecord implements
     private $validatorBuilder;
     /** @var FieldsNamesTranslatesDb[] */
     private $fieldNamesTranslations;
+    /** @var bool keeps state of fictive value */
+    private $isFictive = false;
 
     /**
      * @inheritdoc
@@ -98,6 +102,7 @@ class Field extends ActiveRecord implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function attributeLabels()
     {
@@ -387,6 +392,15 @@ class Field extends ActiveRecord implements
     }
 
     /**
+     * Sets field template for this field (uses for fictive field)
+     * @param FieldTemplate $template
+     */
+    public function setTemplate(FieldTemplate $template)
+    {
+        $this->template = $template;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getFieldId()
@@ -396,6 +410,7 @@ class Field extends ActiveRecord implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getFieldName()
     {
@@ -418,6 +433,7 @@ class Field extends ActiveRecord implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getFieldDescription()
     {
@@ -448,6 +464,7 @@ class Field extends ActiveRecord implements
 
     /**
      * Method config validators for this model
+     * @throws CommonException
      */
     public function prepareValidators()
     {
@@ -481,6 +498,8 @@ class Field extends ActiveRecord implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
+     * @throws \yii\base\Exception
      */
     public function getValidatorReference()
     {
@@ -493,5 +512,29 @@ class Field extends ActiveRecord implements
         }
 
         return $fieldTemplate->validator_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFictive()
+    {
+        $this->isFictive = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearFictive()
+    {
+        $this->isFictive = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFictive()
+    {
+        return $this->isFictive;
     }
 }

@@ -16,21 +16,13 @@ use Iliich246\YicmsCommon\Fields\FieldTranslate;
  */
 class FileTranslateForm extends AbstractTranslateForm
 {
-    /**
-     * @var string value of translated field
-     */
+    /** @var string value of translated field */
     public $filename;
-    /**
-     * @var UploadedFile
-     */
+    /** @var UploadedFile */
     public $translatedFile;
-    /**
-     * @var FilesBlock associated with this model
-     */
+    /** @var FilesBlock associated with this model */
     private $fieldBlock;
-    /**
-     * @var File associated instance
-     */
+    /** @var File associated instance */
     private $fileEntity;
 
     /**

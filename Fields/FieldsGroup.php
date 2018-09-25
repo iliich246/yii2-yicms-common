@@ -75,6 +75,7 @@ class FieldsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function initialize()
     {
@@ -117,6 +118,8 @@ class FieldsGroup extends AbstractGroup
             }
         }
 
+        //throw new \Exception(print_r($this->translateAbleFieldTemplates,true));
+
         foreach($this->singleFieldTemplates as $singleFieldTemplate) {
             $singleField = Field::find()->where([
                 'field_reference'           => $this->referenceAble->getFieldReference(),
@@ -142,8 +145,9 @@ class FieldsGroup extends AbstractGroup
 
     /**
      * This method must be used in pjax actions when do not created FieldReferenceInterface object
-     * @param string $fieldTemplateReference
+     * @param $fieldTemplateReference
      * @param Field $field
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function initializePjax($fieldTemplateReference, Field $field)
     {

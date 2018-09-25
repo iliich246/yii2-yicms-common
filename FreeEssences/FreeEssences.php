@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
@@ -52,6 +53,7 @@ class FreeEssences extends ActiveRecord implements
     ImagesReferenceInterface,
     ConditionsReferenceInterface,
     ConditionsInterface,
+    FictiveInterface,
     SortOrderInterface
 {
     use SortOrderTrait;
@@ -59,21 +61,13 @@ class FreeEssences extends ActiveRecord implements
     const SCENARIO_CREATE = 0;
     const SCENARIO_UPDATE = 1;
 
-    /**
-     * @var FieldsHandler instance of field handler object
-     */
+    /** @var FieldsHandler instance of field handler object */
     private $fieldHandler;
-    /**
-     * @var FilesHandler
-     */
+    /** @var FilesHandler */
     private $fileHandler;
-    /**
-     * @var ImagesHandler
-     */
+    /** @var ImagesHandler */
     private $imageHandler;
-    /**
-     * @var ConditionsHandler
-     */
+    /** @var ConditionsHandler */
     private $conditionHandler;
 
     /**
@@ -141,14 +135,14 @@ class FreeEssences extends ActiveRecord implements
      */
     public static function getByName($programName)
     {
-        /** @var self $page */
+        /** @var self $freeEssence */
         $freeEssence = self::find()
             ->where(['program_name' => $programName])
             ->one();
 
         if ($freeEssence) return $freeEssence;
 
-        Yii::error("Сan not find free essence with name " . $freeEssence, __METHOD__);
+        Yii::error("Сan not find free essence with name " . $programName, __METHOD__);
 
         if (defined('YICMS_STRICT')) {
             throw new CommonException('Сan not find free essence with name ' . $programName);
@@ -487,5 +481,29 @@ class FreeEssences extends ActiveRecord implements
     public function getOrderAble()
     {
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFictive()
+    {
+        return false;
     }
 }

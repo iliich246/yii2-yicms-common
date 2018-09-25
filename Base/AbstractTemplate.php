@@ -219,7 +219,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
         //\Yii::warning('FETCHING DATA = ');
         return static::find()->where([
             static::getTemplateReferenceName() => $templateReference,
-            'program_name' => $programName
+            'program_name'                     => $programName
         ])->one();
     }
 

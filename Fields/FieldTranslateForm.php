@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilderInterface;
@@ -28,7 +29,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
     private $fieldTemplate;
     /** @var Field instance */
     private $field;
-    /** @var FieldsInterface|FieldReferenceInterface */
+    /** @var FieldsInterface|FieldReferenceInterface|FictiveInterface */
     private $fieldAble;
     /** @var string value of field reference */
     private $fieldReference;
@@ -142,6 +143,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
         if ($this->scenario == self::SCENARIO_LOAD_VIA_PJAX) return $this->getCurrentTranslatePjax();
 
+        if ($this->fieldAble->isFictive()) return [];
+
         $this->currentTranslateDb = FieldTranslate::find()
             ->where([
                 'common_fields_represent_id' => $this->getField()->id,
@@ -159,7 +162,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * Variant of translate loader for pjax using of this class
-     * @return FieldTranslate|null
+     * @return array|FieldTranslate|null|\yii\db\ActiveRecord
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getCurrentTranslatePjax()
     {

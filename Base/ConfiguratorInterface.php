@@ -10,7 +10,7 @@ namespace Iliich246\YicmsCommon\Base;
 interface ConfiguratorInterface
 {
     /**
-     *
+     * Method for configure
      * @return void
      */
     public function configure();
