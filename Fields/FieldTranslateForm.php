@@ -17,6 +17,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  * @author iliich246 <iliich246@gmail.com>
  */
 class FieldTranslateForm extends AbstractTranslateForm implements
+    FictiveInterface,
     FieldRenderInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface
@@ -348,5 +349,31 @@ class FieldTranslateForm extends AbstractTranslateForm implements
         }
 
         return  $fieldTemplate->validator_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFictive()
+    {
+        if (!$this->fieldAble) return false;
+
+        return $this->fieldAble->isFictive();
     }
 }

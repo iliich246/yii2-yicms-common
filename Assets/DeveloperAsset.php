@@ -25,5 +25,6 @@ class DeveloperAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapPluginAsset',
         'Iliich246\YicmsCommon\Assets\BootboxAsset',
+        'Iliich246\YicmsCommon\Assets\LodashAsset',
     ];
 }

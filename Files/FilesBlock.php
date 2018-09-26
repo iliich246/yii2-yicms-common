@@ -342,6 +342,8 @@ class FilesBlock extends AbstractEntityBlock implements
             foreach($validators as $validator)
                 $validator->delete();
 
+        //TODO: add deleting of files
+
         return true;
     }
 

@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\widgets\ActiveForm;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractGroup;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 
 /**
@@ -17,7 +18,7 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class FieldsGroup extends AbstractGroup
 {
-    /** @var FieldReferenceInterface|FieldsInterface object for current group */
+    /** @var FieldReferenceInterface|FieldsInterface|FictiveInterface object for current group */
     protected $referenceAble;
     /**
      * @var array of fields program names that`s will not rendered by standard render method
@@ -118,26 +119,34 @@ class FieldsGroup extends AbstractGroup
             }
         }
 
-        //throw new \Exception(print_r($this->translateAbleFieldTemplates,true));
-
         foreach($this->singleFieldTemplates as $singleFieldTemplate) {
-            $singleField = Field::find()->where([
-                'field_reference'           => $this->referenceAble->getFieldReference(),
-                'common_fields_template_id' => $singleFieldTemplate->id
-            ])->one();
 
-            if (!$singleField) {
-                $singleField                            = new Field();
-                $singleField->field_reference           = $this->referenceAble->getFieldReference();
-                $singleField->common_fields_template_id = $singleFieldTemplate->id;
-                $singleField->value                     = null;
-                $singleField->visible                   = true;
-                $singleField->editable                  = true;
+            if (!$this->referenceAble->isFictive()) {
 
-                $singleField->save();
+                $singleField = Field::find()->where([
+                    'field_reference' => $this->referenceAble->getFieldReference(),
+                    'common_fields_template_id' => $singleFieldTemplate->id
+                ])->one();
+
+                if (!$singleField) {
+                    $singleField = new Field();
+                    $singleField->field_reference = $this->referenceAble->getFieldReference();
+                    $singleField->common_fields_template_id = $singleFieldTemplate->id;
+                    $singleField->value = null;
+                    $singleField->visible = true;
+                    $singleField->editable = true;
+
+                    $singleField->save();
+                }
+
+                $singleField->prepareValidators();
+            } else {
+                $singleField = new Field();
+                $singleField->setFictive();
+                $singleField->setTemplate($singleFieldTemplate);
+
+                $singleField->prepareValidators();
             }
-
-            $singleField->prepareValidators();
 
             $this->singleFields["$singleFieldTemplate->id"] = $singleField;
         }

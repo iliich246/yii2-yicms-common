@@ -9,6 +9,7 @@ use yii\validators\SafeValidator;
 use yii\validators\RequiredValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -52,6 +53,7 @@ class File extends AbstractEntity implements
     FieldReferenceInterface,
     ConditionsInterface,
     ConditionsReferenceInterface,
+    FictiveInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface
 {
@@ -455,5 +457,29 @@ class File extends AbstractEntity implements
     public function getOrderAble()
     {
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFictive()
+    {
+        return false;
     }
 }

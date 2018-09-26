@@ -6,7 +6,7 @@
 $infoString = '';
 $optionsTemplate = '';
 
-//if (!$widget->fieldModel->isFictive()) {
+if (!$widget->fieldModel->isFictive()) {
     if ($widget->fieldModel->isVisible())
         $infoString .= '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"
                           data-toggle="tooltip" data-placement="top" title="Field is visible"></span>';
@@ -83,7 +83,7 @@ $optionsTemplate = '';
 
     $optionsTemplate .= '   </ul>
                     </div>';
-//}
+}
 
 ?>
 
