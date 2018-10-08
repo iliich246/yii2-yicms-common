@@ -20,27 +20,16 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class FilesGroup extends AbstractGroup
 {
-    /**
-     * @var string fileTemplateReference value for current group
-     */
+    /** @var string fileTemplateReference value for current group */
     protected $fileTemplateReference;
-    /**
-     * @var string current fileReference key
-     */
+    /** @var string current fileReference key */
     public $fileReference;
-    /**
-     * @var FilesBlock instance
-     */
+    /** @var FilesBlock instance */
     public $fileBlock;
-    /**
-     * @var File instance for this group
-     */
+    /** @var File instance for this group */
     public $fileEntity;
-    /**
-     * @var FileTranslateForm[]
-     */
+    /** @var FileTranslateForm[] */
     public $translateForms = [];
-
 
     /**
      * Set current fileTemplateReference
@@ -80,12 +69,15 @@ class FilesGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function initialize()
     {
         if ($this->scenario == self::SCENARIO_CREATE) {
             $this->fileEntity = new File();
             $this->fileEntity->setEntityBlock($this->fileBlock);
+            $this->fileEntity->editable = true;
+            $this->fileEntity->visible  = true;
         }
 
         $this->fileEntity->prepareValidators();
@@ -156,6 +148,8 @@ class FilesGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     public function save()
     {
@@ -223,6 +217,7 @@ class FilesGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     public function render(ActiveForm $form)
     {
