@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use Iliich246\YicmsCommon\Conditions\Condition;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -246,6 +247,15 @@ class File extends AbstractEntity implements
     /**
      * @inheritdoc
      */
+    public function delete()
+    {
+        $this->deleteSequence();
+        return parent::delete();
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function deleteSequence()
     {
         $fileTranslates = FileTranslate::find()->where([
@@ -261,13 +271,38 @@ class File extends AbstractEntity implements
         if (file_exists($path) && !is_dir($path))
             unlink($path);
 
-        $fields = Field::find()->where([
-            'common_fields_template_id' => $this->id//mistake
+        /** @var FilesBlock $fileBlock */
+        $fileBlock = $this->getEntityBlock();
+
+        /** @var FieldTemplate $fieldTemplates */
+        $fieldTemplates = FieldTemplate::find()->where([
+            'field_template_reference' => $fileBlock->getFieldTemplateReference(),
         ])->all();
 
-        if ($fields)
-            foreach($fields as $field)
-                $field->delete();
+        foreach($fieldTemplates as $fieldTemplate) {
+            /** @var Field $field */
+            $field = Field::find()->where([
+                'common_fields_template_id' => $fieldTemplate->id,
+                'field_reference'           => $this->field_reference,
+            ])->one();
+
+            if ($field) $field->delete();
+        }
+
+        /** @var ConditionTemplate $conditionTemplates */
+        $conditionTemplates = ConditionTemplate::find()->where([
+            'condition_template_reference' => $fileBlock->getConditionTemplateReference(),
+        ])->all();
+
+        foreach($conditionTemplates as $conditionTemplate) {
+            /** @var Condition $condition */
+            $condition = Condition::find()->where([
+                'common_condition_template_id' => $conditionTemplate->id,
+                'condition_reference'          => $this->condition_reference
+            ])->one();
+
+            if ($condition) $condition->delete();
+        }
 
         return true;
     }
