@@ -32,17 +32,20 @@ abstract class AbstractConfigurableModule extends Module
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function init()
     {
         $this->checkConfigurableArray();
-        $this->configurator =  new DataBaseConfigurator($this);
+        $this->configurator = new DataBaseConfigurator($this);
         $this->configurator->configure();
+
+        parent::init();
     }
 
     /**
      * Method checks configurable array and deletes non existent element from him
-     * @return array
+     * @return void
      */
     private function checkConfigurableArray()
     {
