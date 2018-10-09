@@ -22,14 +22,9 @@ class ConditionTemplate extends AbstractTemplate
     const TYPE_RADIO    = 1;
     const TYPE_SELECT   = 2;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     protected static $buffer = [];
-
-    /**
-     * @var ConditionValues[]
-     */
+    /** @var ConditionValues[] */
     private $values;
 
     /**

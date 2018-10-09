@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
 /**
  * Class AbstractTemplate
  *
- * All templates must inherit this class. This class implements methods for buffering and basic CRUD methods.
+ * All templates must inherit this class. This class implements methods for buffering and basic methods.
  *
  * @property integer $id
  * @property string $program_name
@@ -37,7 +37,7 @@ use yii\db\ActiveRecord;
 abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterface
 {
     use SortOrderTrait;
-
+    /** @var null|array description of field in description of class  */
     private static $buffer = null;
 
     const EVENT_BEFORE_FETCH = 0x99;
@@ -144,6 +144,31 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     }
 
     /**
+     * Returns instance of template object with data fetched from database by id;
+     * @param $id
+     * @return AbstractTemplate|static
+     */
+    public static function getInstanceById($id)
+    {
+        /** @var array $templateReferenceBlock */
+        foreach (static::$buffer as $templateReferenceBlock) {
+            /** @var AbstractTemplate $abstractTemplateInstance */
+            foreach($templateReferenceBlock as $abstractTemplateInstance) {
+                if ($abstractTemplateInstance->id == $id) return $abstractTemplateInstance;
+            }
+        }
+
+        /** @var static $abstractTemplateInstance */
+        $abstractTemplateInstance = self::findOne($id);
+        $templateReference = $abstractTemplateInstance->getTemplateReference();
+        $programName = $abstractTemplateInstance->program_name;
+
+        static::setToCache($templateReference, $programName, $abstractTemplateInstance);
+
+        return $abstractTemplateInstance;
+    }
+
+    /**
      * Generates template reference key
      * @return string
      * @throws CommonException
@@ -183,6 +208,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     }
 
     /**
+     * Returns data form cache by keys
      * @param $templateReference
      * @param $programName
      * @return static|bool
@@ -191,6 +217,20 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     {
         if (isset(static::$buffer[$templateReference]) && array_key_exists($programName, static::$buffer[$templateReference]))
             return static::$buffer[$templateReference][$programName];
+
+        return false;
+    }
+
+    /**
+     * Checks data in cache by keys
+     * @param $templateReference
+     * @param $programName
+     * @return bool
+     */
+    private static function isInCache($templateReference, $programName)
+    {
+        if (isset(static::$buffer[$templateReference]) && array_key_exists($programName, static::$buffer[$templateReference]))
+            return true;
 
         return false;
     }

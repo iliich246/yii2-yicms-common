@@ -22,6 +22,9 @@ class LanguagesDb extends ActiveRecord
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
 
+    /** @var self[] buffer array */
+    private static $buffer = [];
+
     /**
      * @inheritdoc
      */
@@ -134,8 +137,17 @@ class LanguagesDb extends ActiveRecord
      */
     public static function instanceByCode($code)
     {
-        return self::find()->where([
+        if (isset(self::$buffer[$code]))
+            return self::$buffer[$code];
+
+        $language = self::find()->where([
             'code' => $code
         ])->one();
+
+        if (!$language) return false; //TODO: handle error
+
+        self::$buffer[$code] = $language;
+
+        return $language;
     }
 }

@@ -3,13 +3,13 @@
 namespace Iliich246\YicmsCommon\Languages;
 
 use Yii;
-use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\CommonException;
 
 /**
  * Class Language
  *
- * Part of common module for work with system languages
+ * Part of common module for work with languages system
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -18,21 +18,12 @@ class Language
     const COOKIE_TYPE = 1;
     const SESSION_TYPE = 2;
 
-    /**
-     * @var LanguageMethodInterface current language method object
-     */
+    /** @var LanguageMethodInterface current language method object */
     private $languageMethod;
-
-    /**
-     * @var LanguagesDb current system language
-     */
+    /** @var LanguagesDb current system language */
     private $currentLanguage = null;
-
-    /**
-     * @var LanguagesDb[] languages used in system
-     */
+    /** @var LanguagesDb[] languages used in system */
     private $usedLanguages = null;
-
     /** @var Language instance for singleton */
     private static $instance = null;
 
@@ -109,9 +100,7 @@ class Language
 
         $language = Yii::$app->language;
 
-        $languageDb = LanguagesDb::find()
-            ->where(['code' => $language])
-            ->one();
+        $languageDb = LanguagesDb::instanceByCode($language);
 
         if (!$languageDb)
             throw new CommonException("Can`t find language in database (language code = $language)");
