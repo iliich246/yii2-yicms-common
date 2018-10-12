@@ -48,6 +48,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function init()
     {
@@ -251,7 +252,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
      * Fetch from data base template object
      * @param $templateReference
      * @param $programName
-     * @return static
+     * @return array|null|ActiveRecord
      */
     private static function fetchTemplate($templateReference, $programName)
     {

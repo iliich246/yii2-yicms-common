@@ -16,6 +16,7 @@ abstract class AbstractGroup extends Component
     const SCENARIO_CREATE = 0x01;
     const SCENARIO_UPDATE = 0x02;
 
+    /** @inheritdoc */
     public $scenario = self::SCENARIO_DEFAULT;
 
     /**

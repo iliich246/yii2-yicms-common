@@ -3,7 +3,6 @@
 namespace Iliich246\YicmsCommon\Conditions;
 
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
-use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
 
 /**
  * Class ConditionTemplate
@@ -72,7 +71,7 @@ class ConditionTemplate extends AbstractTemplate
 
     /**
      * Returns array of condition types
-     * @return array
+     * @return array|bool
      */
     public static function getTypes()
     {

@@ -13,17 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class ConditionNamesTranslatesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of page in current model language
-     */
+    /** @var string name of page in current model language */
     public $name;
-    /**
-     * @var string description of page on current model language
-     */
+    /** @var string description of page on current model language */
     public $description;
-    /**
-     * @var ConditionTemplate associated with this model
-     */
+    /** @var ConditionTemplate associated with this model */
     private $conditionTemplate;
 
     /**

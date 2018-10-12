@@ -70,6 +70,7 @@ abstract class AbstractTranslateForm extends Model
     /**
      * Return true, if current language is active for this model
      * @return bool
+     * @throws CommonException
      */
     public function isActive()
     {

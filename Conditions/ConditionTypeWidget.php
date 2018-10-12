@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Conditions;
 
-use yii\base\Model;
 use yii\bootstrap\Widget;
 use Iliich246\YicmsCommon\Base\CommonException;
 
@@ -13,21 +12,16 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 class ConditionTypeWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-    /**
-     * @var Condition instance of condition, that`s widget will be render
-     */
+    /** @var Condition instance of condition, that`s widget will be render */
     public $condition;
-    /**
-     * @var bool if true widget will render in modal window mode
-     */
+    /** @var bool if true widget will render in modal window mode */
     public $isModal;
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function run()
     {
@@ -48,11 +42,8 @@ class ConditionTypeWidget extends Widget
                 throw new CommonException("Unknown type of condition");
         }
 
-        //return $view;
-
         return $this->render($view, [
             'widget' => $this
         ]);
     }
-
 }

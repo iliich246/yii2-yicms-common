@@ -77,6 +77,7 @@ abstract class AbstractTopMenuWidget extends Widget
     /**
      * Make correct widgets order correspond order array
      * @param $modulesArray
+     * @throws CommonException
      */
     private function findOrder($modulesArray)
     {

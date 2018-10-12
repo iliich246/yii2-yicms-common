@@ -2,9 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Conditions;
 
-use yii\base\Model;
 use yii\bootstrap\Widget;
-use Iliich246\YicmsCommon\Base\CommonException;
 
 /**
  * Class ConditionRenderWidget
@@ -15,17 +13,11 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 class ConditionRenderWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-    /**
-     * @var Condition instance of model, that`s widget will be render
-     */
+    /** @var Condition instance of model, that`s widget will be render */
     public $conditionsArray;
-    /**
-     * @var bool if true widget will render in modal window mode
-     */
+    /** @var bool if true widget will render in modal window mode */
     public $isModal;
 
     /**

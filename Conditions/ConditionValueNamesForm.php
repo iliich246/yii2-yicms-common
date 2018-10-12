@@ -13,17 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class ConditionValueNamesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of value in current model language
-     */
+    /** @var string name of value in current model language */
     public $valueName;
-    /**
-     * @var string description of value on current model language
-     */
+    /** @var string description of value on current model language */
     public $valueDescription;
-    /**
-     * @var ConditionValues associated with this model
-     */
+    /** @var ConditionValues associated with this model */
     private $conditionValue;
 
     /**

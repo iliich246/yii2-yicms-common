@@ -109,6 +109,7 @@ class CommonModule extends AbstractConfigurableModule implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function bootstrap($app)
     {

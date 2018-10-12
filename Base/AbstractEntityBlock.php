@@ -82,6 +82,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public static function getInstance($templateReference, $programName)
     {
@@ -127,7 +128,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate
 
     /**
      * Return array of fetched from db instances of entities
-     * @return static[]
+     * @return void
      */
     private function fetchEntities()
     {

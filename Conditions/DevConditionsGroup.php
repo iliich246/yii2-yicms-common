@@ -35,6 +35,7 @@ class DevConditionsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function initialize($conditionsBlockId = null)
     {
@@ -137,6 +138,7 @@ class DevConditionsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function render(ActiveForm $form)
     {

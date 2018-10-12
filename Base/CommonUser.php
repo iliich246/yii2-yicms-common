@@ -146,6 +146,7 @@ class CommonUser implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -154,6 +155,7 @@ class CommonUser implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getAuthKey()
     {
@@ -162,6 +164,7 @@ class CommonUser implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function validateAuthKey($authKey)
     {
