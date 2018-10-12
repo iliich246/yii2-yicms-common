@@ -89,10 +89,10 @@ class CommonModule extends AbstractConfigurableModule implements
     public function init()
     {
         //TODO: change namespace to correct $yicmsLocation
-        $this->controllerMap['admin'] = 'app\yicms\Common\Controllers\AdminController';
+        $this->controllerMap['admin']        = 'app\yicms\Common\Controllers\AdminController';
         $this->controllerMap['admin-fields'] = 'app\yicms\Common\Controllers\AdminFieldsController';
-        $this->controllerMap['admin-files'] = 'app\yicms\Common\Controllers\AdminFilesController';
-        $this->controllerMap['files'] = 'app\yicms\Common\Controllers\AdminFilesController';
+        $this->controllerMap['admin-files']  = 'app\yicms\Common\Controllers\AdminFilesController';
+        $this->controllerMap['files']        = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
         $this->filesPatch           = Yii::$app->basePath . $this->filesPatch;
@@ -132,7 +132,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $admin = 0;
 
         $selected = $dev;
-        $selected = $admin;
+        //$selected = $admin;
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);
