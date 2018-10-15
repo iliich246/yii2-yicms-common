@@ -11,17 +11,11 @@ use yii\bootstrap\Widget;
  */
 class FilesRenderWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-    /**
-     * @var FilesGroup instance
-     */
+    /** @var FilesGroup instance */
     public $filesGroup;
-    /**
-     * @var FilesBlock instance
-     */
+    /** @var FilesBlock instance */
     public $filesBlock;
 
     /**

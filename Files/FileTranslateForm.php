@@ -149,5 +149,4 @@ class FileTranslateForm extends AbstractTranslateForm
 
         return $this->currentTranslateDb->save();
     }
-
 }

@@ -13,18 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class FileNamesTranslatesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of file block template in current model language
-     */
+    /** @var string name of file block template in current model language */
     public $name;
-    /**
-     * @var string description of file block template on current model language
-     */
+    /** @var string description of file block template on current model language */
     public $description;
-
-    /**
-     * @var FilesBlock associated with this model
-     */
+    /** @var FilesBlock associated with this model */
     private $fileBlockTemplate;
 
     /**
