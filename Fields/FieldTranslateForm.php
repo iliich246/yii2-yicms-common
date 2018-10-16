@@ -114,7 +114,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * Saves record in data base
-     * @return bool
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function save()
     {
@@ -137,6 +137,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getCurrentTranslateDb()
     {
@@ -149,7 +150,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
         $this->currentTranslateDb = FieldTranslate::find()
             ->where([
                 'common_fields_represent_id' => $this->getField()->id,
-                'common_language_id' => $this->language->id
+                'common_language_id'         => $this->language->id
         ])->one();
 
         if (!$this->currentTranslateDb)
@@ -174,7 +175,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
         $this->currentTranslateDb = FieldTranslate::find()
             ->where([
                 'common_fields_represent_id' => $this->field->id,
-                'common_language_id' => $this->language->id
+                'common_language_id'         => $this->language->id
             ])->one();
 
         $this->value = $this->currentTranslateDb->value;
@@ -194,9 +195,9 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
             $field = new Field();
             $field->common_fields_template_id = $this->fieldTemplate->id;
-            $field->field_reference = $this->fieldAble->getFieldReference();
-            $field->visible = true;
-            $field->editable = true;
+            $field->field_reference           = $this->fieldAble->getFieldReference();
+            $field->visible                   = true;
+            $field->editable                  = true;
 
             $field->save(false);
         }
@@ -211,10 +212,10 @@ class FieldTranslateForm extends AbstractTranslateForm implements
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new FieldTranslate();
-        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb                             = new FieldTranslate();
+        $this->currentTranslateDb->common_language_id         = $this->language->id;
         $this->currentTranslateDb->common_fields_represent_id = $this->getField()->id;
-        $this->currentTranslateDb->value = null;
+        $this->currentTranslateDb->value                      = null;
 
         return $this->currentTranslateDb->save();
     }
@@ -277,6 +278,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * Method config validators for this model
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function prepareValidators()
     {
@@ -337,6 +339,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \yii\base\Exception
      */
     public function getValidatorReference()
     {

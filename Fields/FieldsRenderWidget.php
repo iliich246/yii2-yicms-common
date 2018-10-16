@@ -28,7 +28,7 @@ class FieldsRenderWidget extends Widget
 
         if (count($this->fieldsArray) == 1)
             return $this->render('single_fields',[
-                'widget' => $this,
+                'widget'      => $this,
                 'fieldsArray' => current($this->fieldsArray),
             ]);
 
@@ -41,6 +41,7 @@ class FieldsRenderWidget extends Widget
      * Proxy isActive method from PagesFieldTranslateModel
      * @param array $modelsList
      * @return bool
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function isActive(array $modelsList)
     {

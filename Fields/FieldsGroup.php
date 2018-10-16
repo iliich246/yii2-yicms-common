@@ -243,6 +243,7 @@ class FieldsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function save()
     {
@@ -265,6 +266,7 @@ class FieldsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     public function render(ActiveForm $form, $isModal = false)
     {
