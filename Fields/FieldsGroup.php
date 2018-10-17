@@ -255,6 +255,7 @@ class FieldsGroup extends AbstractGroup
                 $success = $translateForm->save();
             }
 
+
         if ($success && $this->singleFields)
             foreach($this->singleFields as $singleField) {
                 if (!$success) return false;

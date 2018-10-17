@@ -27,13 +27,9 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
     const SCENARIO_UPDATE       = 0x02;
     const SCENARIO_CHANGE_ORDER = 0x03;
 
-    /**
-     * @var ConditionTemplate instance associated with this object
-     */
+    /** @var ConditionTemplate instance associated with this object */
     private $conditionTemplate;
-    /**
-     * @var ConditionValueNamesDb[]
-     */
+    /** @var ConditionValueNamesDb[] */
     private $translation;
 
     /**
@@ -115,8 +111,13 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
     {
         if (!$this->hasErrors()) {
 
+            if ($this->scenario == self::SCENARIO_CREATE)
+                $conditionTemplate = $this->conditionTemplate->id;
+            else
+                $conditionTemplate = $this->common_condition_template_id;
+
             $query = self::find()->where([
-                'common_condition_template_id' => $this->common_condition_template_id,
+                'common_condition_template_id' => $conditionTemplate,
                 'value_name'                   => $this->value_name,
             ]);
 

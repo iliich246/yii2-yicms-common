@@ -175,6 +175,7 @@ class DeveloperConditionsController extends Controller
      * @param $conditionTemplateReference
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
     public function actionUpdateConditionsListContainer($conditionTemplateReference)
     {
@@ -195,12 +196,13 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
-     *
+     * Creates dependent templates list
      * @param $conditionTemplateReference
      * @param $pjaxName
      * @param $modalName
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
     public function actionUpdateConditionsListContainerDependent($conditionTemplateReference, $pjaxName, $modalName)
     {
@@ -221,11 +223,13 @@ class DeveloperConditionsController extends Controller
     /**
      * Action for delete conditions template
      * @param $conditionTemplateId
-     * @param bool|false $deletePass
+     * @param bool $deletePass
      * @return string
      * @throws BadRequestHttpException
      * @throws CommonException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteConditionsBlockTemplate($conditionTemplateId, $deletePass = false)
     {
@@ -259,6 +263,7 @@ class DeveloperConditionsController extends Controller
      * @param $conditionTemplateId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionConditionTemplateUpOrder($conditionTemplateId)
@@ -289,6 +294,7 @@ class DeveloperConditionsController extends Controller
      * @param $conditionTemplateId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionConditionTemplateDownOrder($conditionTemplateId)
@@ -315,11 +321,13 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Action for up dependent condition template order
      * @param $conditionTemplateId
      * @param $pjaxName
      * @param $modalName
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionConditionTemplateUpOrderDependent($conditionTemplateId,
@@ -350,11 +358,13 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Action for down dependent condition template order
      * @param $conditionTemplateId
      * @param $pjaxName
      * @param $modalName
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionConditionTemplateDownOrderDependent($conditionTemplateId,
@@ -414,9 +424,11 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Action for create condition value
      * @param $conditionTemplateId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionCreateConditionValue($conditionTemplateId)
@@ -450,7 +462,6 @@ class DeveloperConditionsController extends Controller
             Model::loadMultiple($conditionValuesTranslates, Yii::$app->request->post())) {
 
             if ($conditionValue->validate() && Model::validateMultiple($conditionValuesTranslates)) {
-
                 $conditionValue->save();
 
                 /** @var ConditionValueNamesForm $conditionValuesTranslate */
@@ -481,9 +492,11 @@ class DeveloperConditionsController extends Controller
     }
 
     /**
+     * Action for update condition value
      * @param $conditionValueId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionUpdateConditionValue($conditionValueId)
@@ -551,11 +564,13 @@ class DeveloperConditionsController extends Controller
     /**
      * Delete selected condition value
      * @param $conditionValueId
-     * @param bool|false $deletePass
+     * @param bool $deletePass
      * @return string
      * @throws BadRequestHttpException
      * @throws CommonException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteConditionValue($conditionValueId, $deletePass = false)
     {

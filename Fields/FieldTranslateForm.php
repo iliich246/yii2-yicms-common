@@ -120,6 +120,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
     {
         /** @var FieldTranslate $translate */
         $translate = $this->getCurrentTranslateDb();
+
+
         $translate->value = $this->value;
 
         return $translate->save(false);
@@ -141,6 +143,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
      */
     public function getCurrentTranslateDb()
     {
+
+
         if ($this->currentTranslateDb) return $this->currentTranslateDb;
 
         if ($this->scenario == self::SCENARIO_LOAD_VIA_PJAX) return $this->getCurrentTranslatePjax();

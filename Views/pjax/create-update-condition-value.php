@@ -28,9 +28,9 @@ $js = <<<JS
     var isReturn         = $(conditionValueModal).data('returnBack');
     var isRedirectUpdate = $(conditionValueModal).data('redirectUpdate');
 
-    if (isReturn) goBack();
+    if (isReturn) return goBack();
 
-    if (isRedirectUpdate) redirectUpdate();
+    if (isRedirectUpdate) return redirectUpdate();
 
     $(backButton).on('click', function(){
         goBack();
@@ -58,7 +58,7 @@ $js = <<<JS
         });
     }
 
-    $('#condition-value-delete').on('click',  function() {
+    $(deleteButton).on('click',  function() {
 
         var button = ('#condition-value-delete');
 
