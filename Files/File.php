@@ -255,6 +255,8 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function deleteSequence()
     {
