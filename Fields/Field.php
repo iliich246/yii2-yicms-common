@@ -133,6 +133,8 @@ class Field extends ActiveRecord implements
 
     /**
      * Returns translate of field on current language or value of field according field language mode
+     * @return bool|string
+     * @throws CommonException
      */
     public function __toString()
     {
