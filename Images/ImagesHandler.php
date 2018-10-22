@@ -28,11 +28,11 @@ class ImagesHandler extends AbstractHandler
     public function getImageBlock($name)
     {
         return $this->getOrSet($name, function() use($name) {
-//            return FilesBlock::getInstance(
-//                $this->aggregator->getFieldTemplateReference(),
-//                $this->aggregator->getFieldReference(),
-//                $name
-//            );
+            return ImagesBlock::getInstance(
+                $this->aggregator->getImageTemplateReference(),
+                $name,
+                $this->aggregator->getImageReference()
+            );
         });
     }
 }

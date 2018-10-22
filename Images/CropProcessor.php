@@ -22,9 +22,7 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 class CropProcessor extends Component
 {
-    /**
-     * @var ImagesProcessorInterface instance
-     */
+    /** @var ImagesProcessorInterface instance */
     private $imageEntity;
     /**
      * x data from crop
@@ -96,8 +94,6 @@ class CropProcessor extends Component
         if (file_exists(CommonModule::getInstance()->imagesCropPath . $oldSystemName) &&
             !is_dir(CommonModule::getInstance()->imagesCropPath . $oldSystemName))
             unlink(CommonModule::getInstance()->imagesCropPath . $oldSystemName);
-
-
     }
 
     /**

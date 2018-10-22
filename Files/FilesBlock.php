@@ -75,7 +75,7 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         return array_merge(parent::attributeLabels(),[
             'createStandardFields' => 'Create standard fields (filename)',
-            'max_files' => 'Maximum files in block'
+            'max_files'            => 'Maximum files in block'
         ]);
     }
 
@@ -152,7 +152,7 @@ class FilesBlock extends AbstractEntityBlock implements
         if ($array) return $array;
 
         $array = [
-            self::LANGUAGE_TYPE_SINGLE => 'Single type',
+            self::LANGUAGE_TYPE_SINGLE       => 'Single type',
             self::LANGUAGE_TYPE_TRANSLATABLE => 'Translatable type',
         ];
 
@@ -183,11 +183,11 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * @inheritdoc
      */
-    public static function getInstance($templateReference, $programName, $currentFieldReference = null)
+    public static function getInstance($templateReference, $programName, $currentFileReference = null)
     {
         $value = parent::getInstance($templateReference, $programName);
 
-        if (!$value->currentFileReference) $value->currentFileReference = $currentFieldReference;
+        if (!$value->currentFileReference) $value->currentFileReference = $currentFileReference;
 
         return $value;
     }

@@ -11,17 +11,11 @@ use yii\bootstrap\Widget;
  */
 class ImagesRenderWidget extends Widget
 {
-    /**
-     * @var \yii\bootstrap\ActiveForm form, for render control elements in tabs
-     */
+    /** @var \yii\bootstrap\ActiveForm form, for render control elements in tabs */
     public $form;
-    /**
-     * @var ImagesGroup instance
-     */
+    /** @var ImagesGroup instance */
     public $imagesGroup;
-    /**
-     * @var ImagesBlock instance
-     */
+    /** @var ImagesBlock instance */
     public $imagesBlock;
 
     /**

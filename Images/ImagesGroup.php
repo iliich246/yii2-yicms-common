@@ -21,25 +21,15 @@ use Iliich246\YicmsCommon\Languages\Language;
  */
 class ImagesGroup extends AbstractGroup
 {
-    /**
-     * @var string imageTemplateReference value for current group
-     */
+    /** @var string imageTemplateReference value for current group */
     protected $imageTemplateReference;
-    /**
-     * @var ImagesBlock instance associated with this block
-     */
+    /** @var ImagesBlock instance associated with this block */
     public $imagesBlock;
-    /**
-     * @var string current image reference key
-     */
+    /** @var string current image reference key */
     public $imageReference;
-    /**
-     * @var Image instance for this group
-     */
+    /** @var Image instance for this group */
     public $imageEntity;
-    /**
-     * @var ImageTranslateForm[]
-     */
+    /** @var ImageTranslateForm[] */
     public $translateForms = [];
 
     /**
@@ -258,7 +248,7 @@ class ImagesGroup extends AbstractGroup
     public function render(ActiveForm $form)
     {
         return ImagesRenderWidget::widget([
-            'form' => $form,
+            'form'        => $form,
             'imagesGroup' => $this,
             'imagesBlock' => $this->imagesBlock,
         ]);
@@ -272,10 +262,10 @@ class ImagesGroup extends AbstractGroup
     {
         if ($this->imageEntity->isNewRecord) {
             $this->imageEntity->common_images_templates_id = $this->imagesBlock->id;
-            $this->imageEntity->image_reference = $this->imageReference;
-            $this->imageEntity->image_order = $this->imageEntity->maxOrder();
-            $this->imageEntity->visible = true;
-            $this->imageEntity->editable = true;
+            $this->imageEntity->image_reference            = $this->imageReference;
+            $this->imageEntity->image_order                = $this->imageEntity->maxOrder();
+            $this->imageEntity->visible                    = true;
+            $this->imageEntity->editable                   = true;
 
             $this->imageEntity->save();
         }

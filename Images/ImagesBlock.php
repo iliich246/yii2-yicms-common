@@ -248,6 +248,50 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function getInstance($templateReference, $programName, $currentImageReference = null)
+    {
+        $value = parent::getInstance($templateReference, $programName);
+
+        if (!$value->currentImageReference) $value->currentImageReference = $currentImageReference;
+
+        return $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImages()
+    {
+        return $this->isEntities();
+    }
+
+    /**
+     * @return int
+     */
+    public function countImages()
+    {
+        return $this->countEntities();
+    }
+
+    /**
+     * @return \Iliich246\YicmsCommon\Base\AbstractEntity[]|Image[]
+     */
+    public function getImages()
+    {
+        return $this->getEntities();
+    }
+
+    /**
+     * @return bool|\Iliich246\YicmsCommon\Base\AbstractEntity|Image
+     */
+    public function getImage()
+    {
+        return $this->getEntity();
+    }
+    
+    /**
      * @return bool
      */
     public function isConstraints()
@@ -255,22 +299,54 @@ class ImagesBlock extends AbstractEntityBlock implements
         return true;
     }
 
-    /**
-     * Renames parent method on concrete name
-     * @return Image
-     */
-    public function getImage()
+    public function getSrc($language = null)
     {
-        return $this->getEntity();
+        $this->getImage()->getSrc($language);
     }
 
     /**
-     * Renames parent method on concrete name
-     * @return Image[]
+     * Proxy method setDefaultMode to first image in block
+     * @return Image
      */
-    public function getImages()
+    public function setDefaultMode()
     {
-        return $this->getEntities();
+        return $this->getImage()->setDefaultMode();
+    }
+
+    /**
+     * Proxy method outputCropped to first image in block
+     * @return Image
+     */
+    public function outputCropped()
+    {
+        return $this->getImage()->outputCropped();
+    }
+
+    /**
+     * Proxy method outputOriginal to first image in block
+     * @return Image
+     */
+    public function outputOriginal()
+    {
+        return $this->getImage()->outputOriginal();
+    }
+
+    /**
+     * Proxy method outputThumbnail to first image in block
+     * @return Image
+     */
+    public function outputThumbnail($type)
+    {
+        return $this->outputThumbnail($type);
+    }
+
+    /**
+     * Proxy method disableThumbnail to first image in block
+     * @return Image
+     */
+    public function disableThumbnail()
+    {
+        return $this->getImage()->disableThumbnail();
     }
 
     /**

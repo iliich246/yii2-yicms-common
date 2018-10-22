@@ -10,6 +10,7 @@ use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
@@ -53,9 +54,13 @@ class Image extends AbstractEntity implements
     ConditionsReferenceInterface,
     ValidatorBuilderInterface,
     ValidatorReferenceInterface,
-    ImagesProcessorInterface
+    ImagesProcessorInterface,
+    FictiveInterface
 {
     use SortOrderTrait;
+
+    const ORIGINALS_MODE = 0;
+    const CROPPED_MODE   = 1;
 
     /** @var UploadedFile loaded image */
     public $image;
@@ -69,6 +74,10 @@ class Image extends AbstractEntity implements
     private $validatorBuilder;
     /** @var ImageTranslate[] array of buffered translates */
     public $imageTranslates;
+    /** @var null|string keeps mode of thumbnails */
+    private $thumbnailMode = null;
+    /** @var int keep images mode  */
+    private $imageMode = self::ORIGINALS_MODE;
 
     /**
      * @inheritdoc
@@ -244,6 +253,67 @@ class Image extends AbstractEntity implements
     }
 
     /**
+     * Restore image output mode to default mode
+     * @return $this
+     */
+    public function setDefaultMode()
+    {
+        if ($this->getImagesBlock()->crop_type == ImagesBlock::NO_CROP)
+            $this->outputOriginal();
+        else
+            $this->outputCropped();
+
+        $this->disableThumbnail();
+
+        return $this;
+    }
+
+    /**
+     * Sets image to cropped mode
+     * @return $this
+     */
+    public function outputCropped()
+    {
+        $this->imageMode = self::CROPPED_MODE;
+
+        return $this;
+    }
+
+    /**
+     * Sets image to original mode
+     * @return $this
+     */
+    public function outputOriginal()
+    {
+        $this->imageMode = self::ORIGINALS_MODE;
+
+        return $this;
+    }
+
+    /**
+     * Sets original to output thumbnails mode
+     * @param $type
+     * @return $this
+     */
+    public function outputThumbnail($type)
+    {
+        $this->thumbnailMode = $type;
+
+        return $this;
+    }
+
+    /**
+     * Disable image thumbnails mode
+     * @return $this
+     */
+    public function disableThumbnail()
+    {
+        $this->thumbnailMode = null;
+
+        return $this;
+    }
+
+    /**
      * Returns buffered image translate db
      * @param LanguagesDb $language
      * @return ImageTranslate
@@ -253,7 +323,7 @@ class Image extends AbstractEntity implements
         if (isset($this->imageTranslates[$language->id])) return $this->imageTranslates[$language->id];
 
         $this->imageTranslates[$language->id] = ImageTranslate::find()->where([
-            'common_image_id' => $this->id,
+            'common_image_id'    => $this->id,
             'common_language_id' => $language->id
         ])->one();
 
@@ -438,7 +508,7 @@ class Image extends AbstractEntity implements
     {
         return self::find()->where([
             'common_images_templates_id' => $this->common_images_templates_id,
-            'image_reference' => $this->image_reference,
+            'image_reference'            => $this->image_reference,
         ]);
     }
 
@@ -480,5 +550,29 @@ class Image extends AbstractEntity implements
     public function getOrderAble()
     {
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearFictive()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFictive()
+    {
+        return false;
     }
 }

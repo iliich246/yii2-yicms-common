@@ -13,17 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class ImageNamesTranslatesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of image block template in current model language
-     */
+    /** @var string name of image block template in current model language */
     public $name;
-    /**
-     * @var string description of image block template on current model language
-     */
+    /** @var string description of image block template on current model language */
     public $description;
-    /**
-     * @var ImagesBlock associated with this model
-     */
+    /** @var ImagesBlock associated with this model */
     private $imageBlockTemplate;
 
     /**
@@ -32,7 +26,7 @@ class ImageNamesTranslatesForm extends AbstractTranslateForm
     public function attributeLabels()
     {
         return [
-            'name' => 'Image block name on language "' . $this->language->name . '"',
+            'name'        => 'Image block name on language "' . $this->language->name . '"',
             'description' => 'Description of image block on language "' . $this->language->name . '"',
         ];
     }
@@ -71,9 +65,9 @@ class ImageNamesTranslatesForm extends AbstractTranslateForm
      */
     public function save()
     {
-        $this->getCurrentTranslateDb()->name = $this->name;
-        $this->getCurrentTranslateDb()->description = $this->description;
-        $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
+        $this->getCurrentTranslateDb()->name                      = $this->name;
+        $this->getCurrentTranslateDb()->description               = $this->description;
+        $this->getCurrentTranslateDb()->common_language_id        = $this->language->id;
         $this->getCurrentTranslateDb()->common_images_template_id = $this->imageBlockTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
@@ -97,7 +91,7 @@ class ImageNamesTranslatesForm extends AbstractTranslateForm
 
         $this->currentTranslateDb = ImagesNamesTranslatesDb::find()
             ->where([
-                'common_language_id' => $this->language->id,
+                'common_language_id'        => $this->language->id,
                 'common_images_template_id' => $this->imageBlockTemplate->id,
             ])
             ->one();
@@ -117,8 +111,8 @@ class ImageNamesTranslatesForm extends AbstractTranslateForm
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new ImagesNamesTranslatesDb();
-        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb                            = new ImagesNamesTranslatesDb();
+        $this->currentTranslateDb->common_language_id        = $this->language->id;
         $this->currentTranslateDb->common_images_template_id = $this->imageBlockTemplate->id;
 
         return $this->currentTranslateDb->save();
