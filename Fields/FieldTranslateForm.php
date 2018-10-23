@@ -221,7 +221,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
         $this->currentTranslateDb->common_fields_represent_id = $this->getField()->id;
         $this->currentTranslateDb->value                      = null;
 
-        return $this->currentTranslateDb->save();
+        return $this->currentTranslateDb->save(false);
     }
 
     /**

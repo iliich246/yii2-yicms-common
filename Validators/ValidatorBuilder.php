@@ -46,9 +46,7 @@ class ValidatorBuilder extends Component
         $validatorReference = $this->referenceAble->getValidatorReference();
 
         /** @var ValidatorDb[] $validatorsDb */
-        $validatorsDb = ValidatorDb::find()->where([
-            'validator_reference' => $validatorReference
-        ])->all();
+        $validatorsDb = ValidatorDb::getInstancesByReference($validatorReference);
 
         if (!$validatorsDb) return false;
 
