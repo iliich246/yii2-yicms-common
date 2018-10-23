@@ -110,7 +110,7 @@ class ImagesThumbnails extends ActiveRecord
 
             $query = static::find()->where([
                 'common_images_templates_id' => $this->common_images_templates_id,
-                'program_name' => $this->program_name
+                'program_name'               => $this->program_name
             ]);
 
             if ($this->scenario == self::SCENARIO_UPDATE)
@@ -130,4 +130,6 @@ class ImagesThumbnails extends ActiveRecord
     {
         $this->imagesBlock = $imagesBlock;
     }
+
+    //public static function getInstance($template)
 }

@@ -2,6 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Conditions\Condition;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
+use Yii;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
 use yii\validators\SafeValidator;
@@ -76,6 +79,8 @@ class Image extends AbstractEntity implements
     public $imageTranslates;
     /** @var null|string keeps mode of thumbnails */
     private $thumbnailMode = null;
+    /** @var null|ImagesThumbnails current active image thumbnail */
+    private $currentThumbnail = null;
     /** @var int keep images mode  */
     private $imageMode = self::ORIGINALS_MODE;
 
@@ -203,12 +208,20 @@ class Image extends AbstractEntity implements
             $systemName = $imageTranslate->system_name;
         }
 
-        if ($imagesBlock->crop_type == ImagesBlock::NO_CROP)
-            $path = CommonModule::getInstance()->imagesOriginalsWebPath . $systemName;
-        else
-            $path = CommonModule::getInstance()->imagesCropWebPath . $systemName;
+        if ($this->imageMode == self::ORIGINALS_MODE) {
+            if (!is_null($this->thumbnailMode)) {
+                $systemName = $this->currentThumbnail->program_name . '_' . $systemName;
+                return CommonModule::getInstance()->imagesThumbnailsWebPath . $systemName;
+            }
 
-        return $path;
+            return CommonModule::getInstance()->imagesOriginalsWebPath . $systemName;
+        }
+
+        //CROPPED_MODE
+        if (!is_null($this->thumbnailMode))
+            $systemName = $this->currentThumbnail->program_name . '_' .$systemName;
+
+        return CommonModule::getInstance()->imagesCropWebPath . $systemName;
     }
 
     /**
@@ -271,9 +284,23 @@ class Image extends AbstractEntity implements
     /**
      * Sets image to cropped mode
      * @return $this
+     * @throws CommonException
      */
     public function outputCropped()
     {
+        if ($this->getImagesBlock()->crop_type == ImagesBlock::NO_CROP) {
+            Yii::warning(
+                "Can`t set image to output cropped images mode, he has no crop mode",
+                __METHOD__);
+
+            if (defined('YICMS_STRICT')) {
+                throw new CommonException(
+                    "Can`t set image to output cropped images mode, he has no crop mode");
+            }
+
+            return $this;
+        }
+
         $this->imageMode = self::CROPPED_MODE;
 
         return $this;
@@ -292,12 +319,35 @@ class Image extends AbstractEntity implements
 
     /**
      * Sets original to output thumbnails mode
-     * @param $type
+     * @param $name
      * @return $this
+     * @throws CommonException
      */
-    public function outputThumbnail($type)
+    public function outputThumbnail($name)
     {
-        $this->thumbnailMode = $type;
+        /** @var ImagesThumbnails $thumbnail */
+        $thumbnail = ImagesThumbnails::find()->where([
+            'common_images_templates_id' => $this->getImagesBlock()->id,
+            'program_name'               => $name
+        ])->one();
+
+        if (!$thumbnail) {
+            Yii::warning(
+                "Can`t find thumbnail mode $name",
+                __METHOD__);
+
+            if (defined('YICMS_STRICT')) {
+                throw new CommonException(
+                    "Can`t find thumbnail mode $name");
+            }
+
+            if (is_null($this->thumbnailMode)) $this->thumbnailMode = null;
+
+            return $this;
+        }
+
+        $this->thumbnailMode    = $name;
+        $this->currentThumbnail = $thumbnail;
 
         return $this;
     }
@@ -308,6 +358,7 @@ class Image extends AbstractEntity implements
      */
     public function disableThumbnail()
     {
+        $this->thumbnailMode = null;
         $this->thumbnailMode = null;
 
         return $this;
@@ -343,6 +394,15 @@ class Image extends AbstractEntity implements
     /**
      * @inheritdoc
      */
+    public function delete()
+    {
+        $this->deleteSequence();
+        return parent::delete();
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function deleteSequence()
     {
         $imageTranslates = ImageTranslate::find()->where([
@@ -353,15 +413,40 @@ class Image extends AbstractEntity implements
             foreach($imageTranslates as $imageTranslate)
                 $imageTranslate->delete();
 
-        //TODO: physical delete images
+        //TODO: add physical files deleting
 
-        $fields = Field::find()->where([
-            'common_fields_template_id' => $this->id//mistake
+        /** @var ImagesBlock $imageBlock */
+        $imageBlock = $this->getEntityBlock();
+
+        /** @var FieldTemplate $fieldTemplates */
+        $fieldTemplates = FieldTemplate::find()->where([
+            'field_template_reference' => $imageBlock->getFieldTemplateReference(),
         ])->all();
 
-        if ($fields)
-            foreach($fields as $field)
-                $field->delete();
+        foreach($fieldTemplates as $fieldTemplate) {
+            /** @var Field $field */
+            $field = Field::find()->where([
+                'common_fields_template_id' => $fieldTemplate->id,
+                'field_reference'           => $this->field_reference,
+            ])->one();
+
+            if ($field) $field->delete();
+        }
+
+        /** @var ConditionTemplate $conditionTemplates */
+        $conditionTemplates = ConditionTemplate::find()->where([
+            'condition_template_reference' => $imageBlock->getConditionTemplateReference(),
+        ])->all();
+
+        foreach($conditionTemplates as $conditionTemplate) {
+            /** @var Condition $condition */
+            $condition = Condition::find()->where([
+                'common_condition_template_id' => $conditionTemplate->id,
+                'condition_reference'          => $this->condition_reference
+            ])->one();
+
+            if ($condition) $condition->delete();
+        }
 
         return true;
     }
