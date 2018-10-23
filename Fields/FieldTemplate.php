@@ -87,7 +87,7 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
 
     /**
      * Return array of field types
-     * @return array
+     * @return array|bool
      */
     public static function getTypes()
     {
@@ -106,7 +106,7 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
 
     /**
      * Return array of field language types
-     * @return array
+     * @return array|bool
      */
     public static function getLanguageTypes()
     {
@@ -127,11 +127,6 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
      */
     public function save($runValidation = true, $attributes = null)
     {
-        //TODO: delete this in production, it`s needed only for debug
-        if ($this->scenario === self::SCENARIO_DEFAULT) {
-            throw new \yii\base\Exception('DEFUALT SCENARIO IT`S WRONG');
-        }
-
         if ($this->scenario === self::SCENARIO_CREATE) {
             $this->field_order = $this->maxOrder();
         }
@@ -268,6 +263,8 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \yii\base\Exception
      */
     public function getValidatorReference()
     {

@@ -446,6 +446,7 @@ class m171110_213106_common_init extends Migration
             'condition_reference'          => $this->string(),
             'common_value_id'              => $this->integer(),
             'editable'                     => $this->boolean(),
+            'checkbox_state'               => $this->boolean(),
         ]);
 
         $this->createIndex(

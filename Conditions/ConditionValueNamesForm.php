@@ -125,8 +125,8 @@ class ConditionValueNamesForm extends AbstractTranslateForm
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new ConditionValueNamesDb();
-        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb                            = new ConditionValueNamesDb();
+        $this->currentTranslateDb->common_language_id        = $this->language->id;
         $this->currentTranslateDb->common_condition_value_id = $this->conditionValue->id;
 
         return $this->currentTranslateDb->save();

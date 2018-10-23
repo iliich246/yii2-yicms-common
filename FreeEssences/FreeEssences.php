@@ -174,6 +174,7 @@ class FreeEssences extends ActiveRecord implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function afterValidate()
     {

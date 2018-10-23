@@ -3,7 +3,6 @@
 namespace Iliich246\YicmsCommon\Validators;
 
 use yii\bootstrap\Widget;
-use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 
 /**
  * Class FieldsDevValidatorWidget
@@ -12,24 +11,13 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  */
 class ValidatorsListWidget extends Widget
 {
-    /**
-     * @var ValidatorReferenceInterface instance of associated field template
-     */
+    /** @var ValidatorReferenceInterface instance of associated field template */
     public $validatorReference;
-
-    /**
-     * @var string url for returning to requester of validators block
-     */
+    /** @var string url for returning to requester of validators block */
     public $returnUrl;
-
-    /**
-     * @var string id of owner modal window
-     */
+    /** @var string id of owner modal window */
     public $ownerModalId;
-
-    /**
-     * @var string name of pjax container that`s contains that widget
-     */
+    /** @var string name of pjax container that`s contains that widget */
     public $ownerPjaxContainerName;
 
     /**

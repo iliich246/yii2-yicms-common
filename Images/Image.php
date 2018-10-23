@@ -2,8 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use Iliich246\YicmsCommon\Conditions\Condition;
-use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Yii;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -18,9 +16,11 @@ use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\Field;
+use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\Condition;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\ConditionsHandler;
 use Iliich246\YicmsCommon\Conditions\ConditionsInterface;
@@ -158,6 +158,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getPath(LanguagesDb $language = null)
     {
@@ -268,6 +269,7 @@ class Image extends AbstractEntity implements
     /**
      * Restore image output mode to default mode
      * @return $this
+     * @throws CommonException
      */
     public function setDefaultMode()
     {
@@ -402,6 +404,9 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function deleteSequence()
     {
@@ -472,6 +477,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getFieldTemplateReference()
     {
@@ -480,6 +486,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getFieldReference()
     {
@@ -512,6 +519,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getConditionTemplateReference()
     {
@@ -520,6 +528,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getConditionReference()
     {
@@ -533,6 +542,7 @@ class Image extends AbstractEntity implements
 
     /**
      * Method config validators for this model
+     * @throws CommonException
      * @return void
      */
     public function prepareValidators()
@@ -572,6 +582,7 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getValidatorReference()
     {

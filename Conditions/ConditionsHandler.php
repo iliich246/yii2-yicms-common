@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Base\AbstractHandler;
  *
  * @property ConditionsReferenceInterface $aggregator
  *
- * @package Iliich246\YicmsCommon\Conditions
+ * @author iliich246 <iliich246@gmail.com>
  */
 class ConditionsHandler extends AbstractHandler
 {
@@ -27,7 +27,7 @@ class ConditionsHandler extends AbstractHandler
     /**
      * Return instance of condition by name
      * @param $name
-     * @return bool|object
+     * @return Condition|object
      */
     public function getCondition($name)
     {

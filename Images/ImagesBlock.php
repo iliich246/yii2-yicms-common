@@ -34,6 +34,9 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  * @property integer $crop_height
  * @property integer $crop_width
  *
+ * @method Image getEntity()
+ * @method Image[] getEntities()
+ *
  * @author iliich246 <iliich246@gmail.com>
  */
 class ImagesBlock extends AbstractEntityBlock implements
@@ -153,7 +156,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * Return array of image types
-     * @return array
+     * @return array|bool
      */
     public static function getTypes()
     {
@@ -180,7 +183,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * Return array of field language types
-     * @return array
+     * @return array|bool
      */
     public static function getLanguageTypes()
     {
@@ -207,7 +210,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * Returns array of crop types types
-     * @return array
+     * @return array|bool
      */
     public static function getCropTypes()
     {
@@ -249,9 +252,12 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @return AbstractEntityBlock|ImagesBlock|null
+     * @throws CommonException
      */
     public static function getInstance($templateReference, $programName, $currentImageReference = null)
     {
+        /** @var ImagesBlock $value */
         $value = parent::getInstance($templateReference, $programName);
 
         if (!$value->currentImageReference) $value->currentImageReference = $currentImageReference;
@@ -299,6 +305,11 @@ class ImagesBlock extends AbstractEntityBlock implements
         return true;
     }
 
+    /**
+     * Proxy method getSrc to first image in block
+     * @param null $language
+     * @throws CommonException
+     */
     public function getSrc($language = null)
     {
         $this->getImage()->getSrc($language);
@@ -307,6 +318,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Proxy method setDefaultMode to first image in block
      * @return Image
+     * @throws CommonException
      */
     public function setDefaultMode()
     {
@@ -316,6 +328,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Proxy method outputCropped to first image in block
      * @return Image
+     * @throws CommonException
      */
     public function outputCropped()
     {
@@ -427,6 +440,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Return true if this block has fields
      * @return bool
+     * @throws CommonException
      */
     public function hasFields()
     {
@@ -436,6 +450,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Return true if this block has conditions
      * @return bool
+     * @throws CommonException
      */
     public function hasConditions()
     {
@@ -444,6 +459,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getFieldTemplateReference()
     {
@@ -457,6 +473,8 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * Unneeded method, but i don`t want to create more interfaces without serious reason
+     * Some SOLID principles are crying)))
+     * @throws CommonException
      */
     public function getFieldReference()
     {
@@ -465,6 +483,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getConditionTemplateReference()
     {
@@ -503,6 +522,9 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function deleteSequence()
     {
@@ -590,6 +612,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function getValidatorReference()
     {

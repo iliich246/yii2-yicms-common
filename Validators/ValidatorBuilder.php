@@ -13,9 +13,7 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 class ValidatorBuilder extends Component
 {
-    /**
-     * @var ValidatorReferenceInterface instance
-     */
+    /** @var ValidatorReferenceInterface instance */
     private $referenceAble;
 
     /**
@@ -65,7 +63,7 @@ class ValidatorBuilder extends Component
 
             $result[] = $yiiValidator;
         }
-        //throw new \yii\base\Exception(print_r($ss, true));
+
         return $result;
     }
 

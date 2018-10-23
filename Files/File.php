@@ -212,8 +212,8 @@ class File extends AbstractEntity implements
         return Url::toRoute([
             '/common/files/upload-file',
             'fileBlockId' => $this->getFileBlock()->id,
-            'fileId' => $this->id,
-            'language' => $language->id
+            'fileId'      => $this->id,
+            'language'    => $language->id
         ]);
     }
 

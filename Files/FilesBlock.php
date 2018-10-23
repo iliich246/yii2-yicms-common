@@ -116,7 +116,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * Return array of field types
-     * @return array
+     * @return array|bool
      */
     public static function getTypes()
     {
@@ -143,7 +143,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * Return array of field language types
-     * @return array
+     * @return array|bool
      */
     public static function getLanguageTypes()
     {
@@ -185,6 +185,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public static function getInstance($templateReference, $programName, $currentFileReference = null)
     {
+        /** @var FilesBlock $value */
         $value = parent::getInstance($templateReference, $programName);
 
         if (!$value->currentFileReference) $value->currentFileReference = $currentFileReference;
@@ -216,6 +217,30 @@ class FilesBlock extends AbstractEntityBlock implements
     public function getFiles()
     {
         return $this->getEntities();
+    }
+
+    /**
+     * Proxy method uploadUrl to first file in block
+     * @param LanguagesDb|null $language
+     * @param bool $onlyPhysicalExistedFiles
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function uploadUrl(LanguagesDb $language= null, $onlyPhysicalExistedFiles = true)
+    {
+        return $this->getFile()->uploadUrl($language, $onlyPhysicalExistedFiles);
+    }
+
+    /**
+     * Proxy method getFileName to first file in block
+     * @param LanguagesDb|null $language
+     * @param bool $addExtension
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function getFileName(LanguagesDb $language = null, $addExtension = false)
+    {
+        return $this->getFile()->getFileName($language, $addExtension);
     }
 
     /**
@@ -318,6 +343,8 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function deleteSequence()
     {

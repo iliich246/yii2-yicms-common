@@ -16,10 +16,7 @@ class RequiredValidatorForm extends AbstractValidatorForm
 {
     /** @var array of messages of validator on all languages  */
     public $message;
-
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public $serializeAble = [
         'message',
     ];
@@ -36,6 +33,7 @@ class RequiredValidatorForm extends AbstractValidatorForm
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function buildValidator()
     {

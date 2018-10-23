@@ -40,17 +40,17 @@ class DevConditionsGroup extends AbstractGroup
     public function initialize($conditionsBlockId = null)
     {
         if (!$conditionsBlockId) {
-            $this->conditionTemplate = new ConditionTemplate();
+            $this->conditionTemplate                               = new ConditionTemplate();
             $this->conditionTemplate->condition_template_reference = $this->conditionTemplateReference;
-            $this->conditionTemplate->scenario = ConditionTemplate::SCENARIO_CREATE;
-            $this->scenario = self::SCENARIO_CREATE;
+            $this->conditionTemplate->scenario                     = ConditionTemplate::SCENARIO_CREATE;
+            $this->scenario                                        = self::SCENARIO_CREATE;
         } else {
             $this->conditionTemplate = ConditionTemplate::findOne($conditionsBlockId);
 
             if (!$this->conditionTemplate) throw new CommonException("Wrong conditionsBlockId = $conditionsBlockId");
 
             $this->conditionTemplate->scenario = ConditionTemplate::SCENARIO_UPDATE;
-            $this->scenario = self::SCENARIO_UPDATE;
+            $this->scenario                    = self::SCENARIO_UPDATE;
         }
 
         $languages = Language::getInstance()->usedLanguages();

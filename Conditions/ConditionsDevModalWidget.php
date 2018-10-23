@@ -21,10 +21,6 @@ class ConditionsDevModalWidget extends Widget
     public $deleteLink;
     /** @var string keeps current form action */
     public $action;
-    /** @var FieldTemplate[] array of translate able fields for current file block template */
-    //public $fieldTemplatesTranslatable;
-    /** @var FieldTemplate[] array of single fields for current file block template */
-    //public $fieldTemplatesSingle;
     /** @var string if true widget must close modal window after save data */
     public $saveAndExit = 'false';
 

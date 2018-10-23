@@ -16,6 +16,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  * @property string $condition_reference
  * @property integer $common_value_id
  * @property integer $editable
+ * @property integer $checkbox_state
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -27,6 +28,8 @@ class Condition extends ActiveRecord
     private $template = null;
     /** @var ConditionsNamesTranslatesDb[] instances */
     private $translation;
+    /** @var string name of condition value */
+    private $valueName = null;
 
     /**
      * @inheritdoc
@@ -34,6 +37,8 @@ class Condition extends ActiveRecord
     public function init()
     {
         $this->on(self::EVENT_AFTER_FIND, function() {
+
+            if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) return;
 
             if (is_null($this->common_value_id)) {
                 $valueId = $this->getTemplate()->defaultValueId();
@@ -64,8 +69,9 @@ class Condition extends ActiveRecord
     {
         return [
             ['value', 'string'],
+            ['value', 'validateValue'],
             ['condition_reference', 'string', 'max' => '255'],
-            ['editable', 'boolean'],
+            [['editable', 'checkbox_state'], 'boolean'],
             [
                 ['common_value_id'], 'exist', 'skipOnError' => true,
                 'targetClass' => ConditionValues::className(), 'targetAttribute' => ['common_value_id' => 'id']
@@ -78,24 +84,102 @@ class Condition extends ActiveRecord
     }
 
     /**
+     * Validates value.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateValue($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+
+            if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) return;
+
+            $conditionValue = ConditionValues::findOne($this->value);
+
+            if (!$conditionValue)
+                $this->addError($attribute, 'Wrong value');
+        }
+    }
+
+    /**
      * @inheritdoc
      */
     public function save($runValidation = true, $attributeNames = null)
     {
         if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
-            if ($this->value == 0) $this->common_value_id = null;
-            else {
-                $values = $this->getTemplate()->getValuesList();
-                reset($values);
-                /** @var ConditionValues $value */
-                $value = current($values);
-                $this->common_value_id = $value->id;
-            }
+            if (!$this->value)
+                $this->checkbox_state = false;
+            else
+                $this->checkbox_state = true;
         }else {
             $this->common_value_id = $this->value;
         }
 
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Return string name of condition value
+     * @return string
+     */
+    public function value()
+    {
+        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX)
+            return !!$this->checkbox_state;
+
+        if (!is_null($this->valueName)) return $this->valueName;
+        return $this->valueName = ConditionValues::findOne($this->common_value_id)->value_name;
+    }
+
+    /**
+     * Return true if conditions sets to true in checkbox mode
+     * @return bool
+     * @throws CommonException
+     */
+    public function isTrue()
+    {
+        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
+            if (!!$this->checkbox_state) return true;
+            return false;
+        }
+
+        Yii::warning(
+            "Try to use true/false methods of condition on none checkbox type",
+            __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException(
+                "Try to use true/false methods of condition on none checkbox type");
+        }
+
+        if (!!$this->checkbox_state) return true;
+        return false;
+    }
+
+    /**
+     * Return true if conditions sets to false in checkbox mode
+     * @return bool
+     * @throws CommonException
+     */
+    public function isFalse()
+    {
+        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
+            if (!!$this->checkbox_state) return false;
+            return true;
+        }
+
+        Yii::warning(
+            "Try to use true/false methods of condition on none checkbox type",
+            __METHOD__);
+
+        if (defined('YICMS_STRICT')) {
+            throw new CommonException(
+                "Try to use true/false methods of condition on none checkbox type");
+        }
+
+        if (!!$this->checkbox_state) return false;
+        return true;
     }
 
     /**

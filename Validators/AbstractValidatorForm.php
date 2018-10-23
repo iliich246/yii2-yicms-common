@@ -13,9 +13,7 @@ use Iliich246\YicmsCommon\Base\CommonException;
  */
 abstract class AbstractValidatorForm extends Model
 {
-    /**
-     * @var array of build in validators forms
-     */
+    /** @var array of build in validators forms */
     public static $builtInValidators = [
         'required' => 'Iliich246\YicmsCommon\Validators\RequiredValidatorForm',
         'string'   => 'Iliich246\YicmsCommon\Validators\StringValidatorForm',
@@ -23,25 +21,15 @@ abstract class AbstractValidatorForm extends Model
         'file'     => 'Iliich246\YicmsCommon\Validators\FileValidatorForm',
         'image'    => 'Iliich246\YicmsCommon\Validators\ImageValidatorForm',
     ];
-    /**
-     * @var array buffer of validator db with index by validatorReference
-     */
+    /** @var array buffer of validator db with index by validatorReference */
     private static $validatorsDbBuffer;
-    /**
-     * @var boolean is this validator is activated
-     */
+    /** @var boolean is this validator is activated */
     public $isActivate;
-    /**
-     * @var string class of yii validator, for which this form
-     */
+    /** @var string class of yii validator, for which this form */
     public $validator;
-    /**
-     * @var array of fields of class that must be saved in database
-     */
+    /** @var array of fields of class that must be saved in database */
     public $serializeAble = [];
-    /**
-     * @var ValidatorDb instance associated with this validator form
-     */
+    /** @var ValidatorDb instance associated with this validator form */
     private $validatorDb;
 
     /**
@@ -135,7 +123,8 @@ abstract class AbstractValidatorForm extends Model
         $validatorsDb = ValidatorDb::find()
             ->where([
                 'validator_reference' => $validatorReference
-            ])->indexBy('validator')
+            ])
+            ->indexBy('validator')
             ->all();
 
         self::$validatorsDbBuffer[$validatorReference] = $validatorsDb;
@@ -230,8 +219,7 @@ abstract class AbstractValidatorForm extends Model
     }
 
     /**
-     * Method checks configurable array and deletes non existent element from him
-     * @return array
+     * Method checks configurable array and deletes non existent element from him     *
      */
     private function checkSerializeAbleArray()
     {

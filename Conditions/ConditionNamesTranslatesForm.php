@@ -65,9 +65,9 @@ class ConditionNamesTranslatesForm extends AbstractTranslateForm
      */
     public function save()
     {
-        $this->getCurrentTranslateDb()->name = $this->name;
-        $this->getCurrentTranslateDb()->description = $this->description;
-        $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
+        $this->getCurrentTranslateDb()->name                         = $this->name;
+        $this->getCurrentTranslateDb()->description                  = $this->description;
+        $this->getCurrentTranslateDb()->common_language_id           = $this->language->id;
         $this->getCurrentTranslateDb()->common_condition_template_id = $this->conditionTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
@@ -91,7 +91,7 @@ class ConditionNamesTranslatesForm extends AbstractTranslateForm
 
         $this->currentTranslateDb = ConditionsNamesTranslatesDb::find()
             ->where([
-                'common_language_id' => $this->language->id,
+                'common_language_id'           => $this->language->id,
                 'common_condition_template_id' => $this->conditionTemplate->id,
             ])
             ->one();
@@ -111,8 +111,8 @@ class ConditionNamesTranslatesForm extends AbstractTranslateForm
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new ConditionsNamesTranslatesDb();
-        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb                               = new ConditionsNamesTranslatesDb();
+        $this->currentTranslateDb->common_language_id           = $this->language->id;
         $this->currentTranslateDb->common_condition_template_id = $this->conditionTemplate->id;
 
         return $this->currentTranslateDb->save();
