@@ -53,7 +53,7 @@ class Field extends ActiveRecord implements
     private $template;
     /** @var ValidatorBuilder instance */
     private $validatorBuilder;
-    /** @var FieldsNamesTranslatesDb[] */
+    /** @var FieldsNamesTranslatesDb[] buffer for language */
     private $fieldNamesTranslations;
     /** @var bool keeps state of fictive value */
     private $isFictive = false;
@@ -457,7 +457,7 @@ class Field extends ActiveRecord implements
         if (!isset($this->fieldNamesTranslations[$language->id])) {
             $this->fieldNamesTranslations[$language->id] = FieldsNamesTranslatesDb::find()->where([
                 'common_fields_template_id' => $this->getTemplate()->id,
-                'common_language_id' => $language->id,
+                'common_language_id'        => $language->id,
             ])->one();
         }
 

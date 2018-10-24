@@ -27,6 +27,8 @@ class CommonModule extends AbstractConfigurableModule implements
      * will place generated code
      */
     public $yicmsLocation = '@app/yicms';
+    /** @var string namespace of admin part of yicms */
+    public $yicmsNamespace = 'app\yicms';
     /** @var IdentityInterface|YicmsUserInterface */
     public $user;
     /** @var string default user language, there using language codes like 'ru-RU' or 'en-EU' */
@@ -133,7 +135,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $admin = 0;
 
         $selected = $dev;
-        $selected = $admin;
+        //$selected = $admin;
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);

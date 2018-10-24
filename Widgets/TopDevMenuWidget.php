@@ -29,16 +29,8 @@ class TopDevMenuWidget extends AbstractTopMenuWidget
     /**
      * @inheritdoc
      */
-    protected static function getNameSpace()
+    protected function getMode()
     {
-        return __NAMESPACE__;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getType()
-    {
-        return 'Dev';
+        return self::DEV_MODE;
     }
 }

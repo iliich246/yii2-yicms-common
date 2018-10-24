@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Base;
 
+use Iliich246\YicmsCommon\CommonModule;
 use Yii;
 use yii\base\Widget;
 
@@ -15,6 +16,9 @@ use yii\base\Widget;
  */
 abstract class AbstractTopMenuWidget extends Widget
 {
+    //Modes of widget
+    const DEV_MODE   = 0;
+    const ADMIN_MODE = 1;
     /**
      * @var array order of render of menu elements of modules and custom blocks
      * This field is set in the classes inheritors
@@ -43,7 +47,7 @@ abstract class AbstractTopMenuWidget extends Widget
 
         $this->findOrder($this->findModuleWidgets());
 
-        return $this->render('main_' . strtolower(self::getType()) . '_menu', [
+        return $this->render('top_' . strtolower($this->getType()) . '_menu', [
             'widget' => $this,
         ]);
     }
@@ -110,7 +114,15 @@ abstract class AbstractTopMenuWidget extends Widget
 
         /** @var AbstractConfigurableModule $yicmsModule */
         foreach ($yicmsModules as $yicmsModule) {
-            $class = $yicmsModule->getNameSpace() . '\Widgets\Module' . self::getType() . 'MenuWidget';
+            if ($this->getMode() == self::DEV_MODE) {
+                $class = $yicmsModule->getNameSpace() . '\Widgets\ModuleDevMenuWidget';
+            } else {
+                $class = CommonModule::getInstance()->yicmsNamespace . '\\' .
+                         $yicmsModule->getModuleName() . '\Widgets\ModuleMenuWidget';
+
+
+
+            }
 
             if (class_exists($class)) {
                 /** @var $class AbstractModuleMenuWidget */
@@ -132,7 +144,7 @@ abstract class AbstractTopMenuWidget extends Widget
 
         if ($customName) return $customName;
 
-        $customName = 'app\modules\common\widgets\Custom' . $this->_type . 'MenuWidget';
+        $customName = 'app\modules\common\widgets\Custom' . $this->getType() . 'MenuWidget';
 
         if (!class_exists($customName))
             throw new CommonException('Custom menu class not found for ' . $this->_type . ' menu');
@@ -141,20 +153,20 @@ abstract class AbstractTopMenuWidget extends Widget
     }
 
     /**
-     * Returns type of widget (Dev or Admin)
+     * Return string type of widget
      * @return string
      */
-    protected static function getType()
+    private function getType()
     {
-        return static::getType();
+        if ($this->getMode() == self::DEV_MODE)
+            return 'Dev';
+
+        return 'Admin';
     }
 
     /**
-     * Returns namespace of descendant
-     * @return mixed
+     * Return mode of widget
+     * @return integer
      */
-    protected static function getNameSpace()
-    {
-        return static::getNameSpace();
-    }
+    abstract protected function getMode();
 }
