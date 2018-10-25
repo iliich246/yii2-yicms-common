@@ -43,8 +43,6 @@ abstract class AbstractTopMenuWidget extends Widget
      */
     public function run()
     {
-        //$this->findOrder(array_merge($this->findModuleWidgets(), $this->findCustomWidgets()));
-
         $this->findOrder($this->findModuleWidgets());
 
         return $this->render('top_' . strtolower($this->getType()) . '_menu', [
@@ -60,19 +58,13 @@ abstract class AbstractTopMenuWidget extends Widget
     public function renderMenuWidgets()
     {
         $result = '';
-        //$customClassName = $this->getCustomClassName();
 
         foreach ($this->widgets as $key => $widgetClass) {
+            if (!class_exists($widgetClass)) continue;
 
-            // if ($widgetClass == $customClassName) {
-            /** @var AbstractCustomMenuWidget $customObj */
-            //    $customObj = new $widgetClass();
-            //   $result .= $customObj->run($key);
-            //} else {
-            /** @var AbstractModuleMenuWidget $moduleWidget */
+            /** @var Widget $moduleWidget */
             $moduleWidget = new $widgetClass();
             $result .= $moduleWidget->run();
-            // }
         }
 
         return $result;
@@ -92,7 +84,7 @@ abstract class AbstractTopMenuWidget extends Widget
             }
 
             if (strripos($item, 'custom_') !== false)
-                $this->widgets[$item] = $this->getCustomClassName();
+                $this->widgets[$item] = $this->getCustomClassName($item);
         }
     }
 
@@ -119,9 +111,6 @@ abstract class AbstractTopMenuWidget extends Widget
             } else {
                 $class = CommonModule::getInstance()->yicmsNamespace . '\\' .
                          $yicmsModule->getModuleName() . '\Widgets\ModuleMenuWidget';
-
-
-
             }
 
             if (class_exists($class)) {
@@ -135,21 +124,33 @@ abstract class AbstractTopMenuWidget extends Widget
 
     /**
      * Return custom menu widget class name
+     * @param $name
      * @return string
      * @throws CommonException
      */
-    private function getCustomClassName()
+    private function getCustomClassName($name)
     {
-        static $customName = false;
+        if ($this->getMode() == self::DEV_MODE) {
+            $class = CommonModule::getInstance()->getNameSpace() . '\Widgets\'';
+        } else {
+            $class = CommonModule::getInstance()->yicmsNamespace . '\\' .
+                CommonModule::getInstance()->getModuleName() . '\Widgets\\';
+        }
 
-        if ($customName) return $customName;
+        $customName = preg_replace('/custom_+&?/','',$name);
+        $customName = ucfirst($customName);
 
-        $customName = 'app\modules\common\widgets\Custom' . $this->getType() . 'MenuWidget';
+        $class .= $customName . 'MenuCustomWidget';
 
-        if (!class_exists($customName))
-            throw new CommonException('Custom menu class not found for ' . $this->_type . ' menu');
+        $resultClasses = [];
 
-        return $customName;
+        if (class_exists($class)) {
+            return $class;
+        }
+
+        return false;
+
+
     }
 
     /**
