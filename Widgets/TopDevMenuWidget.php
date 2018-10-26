@@ -18,7 +18,7 @@ class TopDevMenuWidget extends AbstractTopMenuWidget
         'common',
         'pages',
         'essences',
-
+        'feedback',
         //'custom_test1',
 
         //'auth',

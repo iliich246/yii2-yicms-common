@@ -45,6 +45,8 @@ abstract class AbstractTopMenuWidget extends Widget
     {
         $this->findOrder($this->findModuleWidgets());
 
+
+
         return $this->render('top_' . strtolower($this->getType()) . '_menu', [
             'widget' => $this,
         ]);
