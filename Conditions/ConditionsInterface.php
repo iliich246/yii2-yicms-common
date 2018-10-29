@@ -12,7 +12,7 @@ namespace Iliich246\YicmsCommon\Conditions;
 interface ConditionsInterface
 {
     /**
-     * @return ConditionTemplate object, that aggregated in object with conditions functionality.
+     * @return ConditionsHandler object, that aggregated in object with conditions functionality.
      */
     public function getConditionsHandler();
 
