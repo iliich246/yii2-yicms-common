@@ -114,7 +114,7 @@ class FieldsGroup extends AbstractGroup
                 $fieldTranslate->loadFromDb();
                 $fieldTranslate->prepareValidators();
 
-                $this->translateForms["$languageKey-$fieldTemplateKey"] = $fieldTranslate;
+                $this->translateForms["$languageKey-$fieldTemplateKey"]     = $fieldTranslate;
                 $this->translateFormsArray[$languageKey][$fieldTemplateKey] = $fieldTranslate;
             }
         }
@@ -124,17 +124,17 @@ class FieldsGroup extends AbstractGroup
             if (!$this->referenceAble->isFictive()) {
 
                 $singleField = Field::find()->where([
-                    'field_reference' => $this->referenceAble->getFieldReference(),
+                    'field_reference'           => $this->referenceAble->getFieldReference(),
                     'common_fields_template_id' => $singleFieldTemplate->id
                 ])->one();
 
                 if (!$singleField) {
-                    $singleField = new Field();
-                    $singleField->field_reference = $this->referenceAble->getFieldReference();
+                    $singleField                            = new Field();
+                    $singleField->field_reference           = $this->referenceAble->getFieldReference();
                     $singleField->common_fields_template_id = $singleFieldTemplate->id;
-                    $singleField->value = null;
-                    $singleField->visible = true;
-                    $singleField->editable = true;
+                    $singleField->value                     = null;
+                    $singleField->visible                   = true;
+                    $singleField->editable                  = true;
 
                     $singleField->save();
                 }
