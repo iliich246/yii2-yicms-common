@@ -388,7 +388,7 @@ class Field extends ActiveRecord implements
     {
         if ($this->template) return $this->template;
 
-        $this->template = FieldTemplate::findOne($this->common_fields_template_id);
+        $this->template = FieldTemplate::getInstanceById($this->common_fields_template_id);
 
         return $this->template;
     }
