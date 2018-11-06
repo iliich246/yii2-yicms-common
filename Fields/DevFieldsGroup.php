@@ -48,6 +48,7 @@ class DevFieldsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function initialize($fieldTemplateId = null)
     {
@@ -57,7 +58,7 @@ class DevFieldsGroup extends AbstractGroup
             $this->fieldTemplate->scenario = FieldTemplate::SCENARIO_CREATE;
             $this->scenario = self::SCENARIO_CREATE;
         } else {
-            $this->fieldTemplate = FieldTemplate::findOne($fieldTemplateId);
+            $this->fieldTemplate = FieldTemplate::getInstanceById($fieldTemplateId);
 
             if (!$this->fieldTemplate) throw new CommonException("Wrong fieldTemplateId = $fieldTemplateId");
 
@@ -156,6 +157,7 @@ class DevFieldsGroup extends AbstractGroup
 
     /**
      * @inheritdoc
+     * @throws CommonException
      */
     public function render(ActiveForm $form)
     {

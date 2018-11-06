@@ -13,18 +13,11 @@ use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
  */
 class FieldNamesTranslatesForm extends AbstractTranslateForm
 {
-    /**
-     * @var string name of page in current model language
-     */
+    /** @var string name of page in current model language */
     public $name;
-    /**
-     * @var string description of page on current model language
-     */
+    /** @var string description of page on current model language */
     public $description;
-
-    /**
-     * @var FieldTemplate associated with this model
-     */
+    /** @var FieldTemplate associated with this model */
     private $fieldTemplate;
 
     /**
@@ -33,7 +26,7 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
     public function attributeLabels()
     {
         return [
-            'name' => 'Field name on language "' . $this->language->name . '"',
+            'name'        => 'Field name on language "' . $this->language->name . '"',
             'description' => 'Description of field on language "' . $this->language->name . '"',
         ];
     }
@@ -72,9 +65,9 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
      */
     public function save()
     {
-        $this->getCurrentTranslateDb()->name = $this->name;
-        $this->getCurrentTranslateDb()->description = $this->description;
-        $this->getCurrentTranslateDb()->common_language_id = $this->language->id;
+        $this->getCurrentTranslateDb()->name                      = $this->name;
+        $this->getCurrentTranslateDb()->description               = $this->description;
+        $this->getCurrentTranslateDb()->common_language_id        = $this->language->id;
         $this->getCurrentTranslateDb()->common_fields_template_id = $this->fieldTemplate->id;
 
         return $this->getCurrentTranslateDb()->save();
@@ -98,7 +91,7 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
 
         $this->currentTranslateDb = FieldsNamesTranslatesDb::find()
             ->where([
-                'common_language_id' => $this->language->id,
+                'common_language_id'        => $this->language->id,
                 'common_fields_template_id' => $this->fieldTemplate->id,
             ])
             ->one();
@@ -106,7 +99,7 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
         if (!$this->currentTranslateDb)
             $this->createTranslateDb();
         else {
-            $this->name = $this->currentTranslateDb->name;
+            $this->name        = $this->currentTranslateDb->name;
             $this->description = $this->currentTranslateDb->description;
         }
 
@@ -118,8 +111,8 @@ class FieldNamesTranslatesForm extends AbstractTranslateForm
      */
     protected function createTranslateDb()
     {
-        $this->currentTranslateDb = new FieldsNamesTranslatesDb();
-        $this->currentTranslateDb->common_language_id = $this->language->id;
+        $this->currentTranslateDb                            = new FieldsNamesTranslatesDb();
+        $this->currentTranslateDb->common_language_id        = $this->language->id;
         $this->currentTranslateDb->common_fields_template_id = $this->fieldTemplate->id;
 
         return $this->currentTranslateDb->save();

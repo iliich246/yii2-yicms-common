@@ -197,7 +197,7 @@ else
                 </div>
 
                 <?= SimpleTabsTranslatesWidget::widget([
-                    'form' => $form,
+                    'form'            => $form,
                     'translateModels' => $widget->devFieldGroup->fieldNameTranslates,
                 ])
                 ?>
