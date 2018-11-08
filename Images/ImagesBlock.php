@@ -65,14 +65,22 @@ class ImagesBlock extends AbstractEntityBlock implements
     const CROP_VIEW_MODE_2 = 0x03;
     const CROP_VIEW_MODE_3 = 0x04;
 
-    /** @var bool if true for this block will be created standard fields like filename */
+    /** @var bool if true for this block will be created standard images like filename */
     public $createStandardFields = true;
     /** @var ImagesNamesTranslatesDb[] buffer */
     private $imageNamesTranslates = [];
-    /** @var string fileReference for what files group must be fetched */
+    /** @var string imageReference for what files group must be fetched */
     private $currentImageReference;
     /** @inheritdoc */
     protected static $buffer = [];
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%common_images_templates}}';
+    }
 
     /**
      * @inheritdoc
@@ -97,14 +105,6 @@ class ImagesBlock extends AbstractEntityBlock implements
             'crop_width'           => 'Crop width',
             'fill_color'           => "\nFill color",
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%common_images_templates}}';
     }
 
     /**
@@ -518,6 +518,11 @@ class ImagesBlock extends AbstractEntityBlock implements
                 ->orderBy(['image_order' => SORT_ASC]);
 
         return new ActiveQuery(Image::className());
+    }
+
+    public function delete()
+    {
+        //parent::delete();
     }
 
     /**

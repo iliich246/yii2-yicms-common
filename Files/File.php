@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use Iliich246\YicmsCommon\Conditions\Condition;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -20,6 +19,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\Condition;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\ConditionsHandler;
 use Iliich246\YicmsCommon\Conditions\ConditionsInterface;
@@ -339,6 +339,7 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getFieldReference()
     {
@@ -379,6 +380,7 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getConditionReference()
     {
@@ -392,7 +394,7 @@ class File extends AbstractEntity implements
 
     /**
      * Method config validators for this model
-     * @return void
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function prepareValidators()
     {
@@ -431,6 +433,7 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getValidatorReference()
     {
