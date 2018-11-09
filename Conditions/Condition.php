@@ -327,7 +327,7 @@ class Condition extends ActiveRecord
     }
 
     /**
-     * Returns list of values for dropdown lists
+     * Returns list of values for drop down lists
      * @param LanguagesDb|null $language
      * @return array
      * @throws \Iliich246\YicmsCommon\Base\CommonException

@@ -8,7 +8,6 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  * Class ConditionTemplate
  *
  * @property string $condition_template_reference
- * @property string $program_name,
  * @property integer $type
  * @property integer $condition_order
  * @property bool $editable
