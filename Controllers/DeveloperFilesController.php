@@ -93,6 +93,7 @@ class DeveloperFilesController extends Controller
      * @param $fileTemplateReference
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
     public function actionUpdateFilesListContainer($fileTemplateReference)
     {
@@ -115,11 +116,13 @@ class DeveloperFilesController extends Controller
     /**
      * Action for delete file block template
      * @param $fileTemplateId
-     * @param bool|false $deletePass
+     * @param bool $deletePass
      * @return string
      * @throws BadRequestHttpException
      * @throws CommonException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteFileBlockTemplate($fileTemplateId, $deletePass = false)
     {
