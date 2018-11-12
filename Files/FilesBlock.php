@@ -308,7 +308,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
             $data = FilesNamesTranslatesDb::find()->where([
                     'common_files_template_id' => $this->id,
-                    'common_language_id' => $language->id,
+                    'common_language_id'       => $language->id,
                 ])->one();
 
             if (!$data) $this->fileNamesTranslates[$language->id] = null;
@@ -388,6 +388,7 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * Return true if this block has fields
      * @return bool
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function hasFields()
     {
@@ -396,6 +397,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getFieldTemplateReference()
     {
@@ -417,6 +419,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getConditionTemplateReference()
     {
@@ -496,6 +499,7 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getValidatorReference()
     {
