@@ -44,7 +44,7 @@ class DevFilesGroup extends AbstractGroup
             $this->filesBlock->scenario = FilesBlock::SCENARIO_CREATE;
             $this->scenario = self::SCENARIO_CREATE;
         } else {
-            $this->filesBlock = FilesBlock::findOne($filesBlockId);
+            $this->filesBlock = FilesBlock::getInstanceById($filesBlockId);
 
             if (!$this->filesBlock) throw new CommonException("Wrong filesBlock = $filesBlockId");
 
