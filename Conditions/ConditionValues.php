@@ -81,7 +81,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
      */
     public function getConditionTemplate()
     {
-        return ConditionTemplate::findOne($this->common_condition_template_id);
+        return ConditionTemplate::getInstanceById($this->common_condition_template_id);
     }
 
     /**
@@ -126,7 +126,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
             $count = $query->all();
 
-            if ($count)$this->addError($attribute, 'Field with same name already existed');
+            if ($count)$this->addError($attribute, 'Value with same name already existed');
         }
     }
 

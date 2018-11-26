@@ -105,7 +105,7 @@ class ConditionValueNamesForm extends AbstractTranslateForm
 
         $this->currentTranslateDb = ConditionValueNamesDb::find()
             ->where([
-                'common_language_id' => $this->language->id,
+                'common_language_id'        => $this->language->id,
                 'common_condition_value_id' => $this->conditionValue->id,
             ])
             ->one();
@@ -113,7 +113,7 @@ class ConditionValueNamesForm extends AbstractTranslateForm
         if (!$this->currentTranslateDb)
             $this->createTranslateDb();
         else {
-            $this->valueName = $this->currentTranslateDb->name;
+            $this->valueName        = $this->currentTranslateDb->name;
             $this->valueDescription = $this->currentTranslateDb->description;
         }
 

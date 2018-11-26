@@ -436,7 +436,7 @@ class DeveloperConditionsController extends Controller
         if (!Yii::$app->request->isPjax) throw new BadRequestHttpException();
 
         /** @var ConditionTemplate $conditionTemplate */
-        $conditionTemplate = ConditionTemplate::findOne($conditionTemplateId);
+        $conditionTemplate = ConditionTemplate::getInstanceById($conditionTemplateId);
 
         if (!$conditionTemplate) throw new NotFoundHttpException('Wrong conditionTemplateId');
 

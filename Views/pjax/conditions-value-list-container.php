@@ -20,15 +20,12 @@ $js = <<<JS
 
     var returnUrl       = $(pjaxContainer).data('returnUrlConditionsList');
 
-    console.log(returnUrl);
-
     var backButton        = $('.condition-values-list-back');
     var addNewValueButton = $('.add-new-condition-value-button');
 
     $(backButton).on('click', goBack);
 
     function goBack() {
-
         $.pjax({
             url: returnUrl,
             container: pjaxContainerId,
