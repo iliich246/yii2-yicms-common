@@ -187,7 +187,7 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
     <?php $form = ActiveForm::begin([
         'id' => 'condition-create-update-value-form',
         'options' => [
-            'data-pjax' => true,
+            'data-pjax'        => true,
             'data-return-back' => $return
         ],
     ]);
@@ -204,7 +204,7 @@ $conditionValue->isNewRecord ? $conditionValueId = '0' : $conditionValueId = $co
         </div>
 
         <?= SimpleTabsTranslatesWidget::widget([
-            'form' => $form,
+            'form'            => $form,
             'translateModels' => $conditionValuesTranslates,
         ])
         ?>

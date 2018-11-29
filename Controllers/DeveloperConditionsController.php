@@ -599,7 +599,6 @@ class DeveloperConditionsController extends Controller
             'conditionTemplate' => $conditionTemplate,
             'conditionValues'   => $conditionValues
         ]);
-
     }
 
     /**
