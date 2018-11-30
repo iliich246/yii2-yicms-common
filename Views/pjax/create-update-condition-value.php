@@ -12,7 +12,6 @@ use Iliich246\YicmsCommon\Widgets\SimpleTabsTranslatesWidget;
 
 $js = <<<JS
 ;(function() {
-
     var conditionValueModal = $('.condition-create-update-value-modal');
     var deleteButton        = $('#condition-value-delete');
     var backButton          = $('.condition-create-update-value-back');
