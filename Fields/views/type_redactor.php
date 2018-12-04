@@ -80,6 +80,19 @@ if (!$widget->fieldModel->isFictive()) {
 
     $optionsTemplate .= '   </ul>
                     </div>';
+
+    if ($widget->fieldModel->getFieldDescription()) {
+        $labelOptions = [
+            'class'          => 'redactor-label',
+            'data-toggle'    => 'tooltip',
+            'data-placement' => 'top',
+            'title'          => $widget->fieldModel->getFieldDescription()
+        ];
+    } else {
+        $labelOptions = [
+            'class' => 'redactor-label',
+        ];
+    }
 }
 ?>
 
@@ -90,6 +103,7 @@ if (!$widget->fieldModel->isFictive()) {
         {input}
         {error}
     ',
+    'labelOptions' => $labelOptions
 ])
     ->widget(\yii\redactor\widgets\Redactor::className())
 ?>

@@ -80,6 +80,19 @@ if (!$widget->fieldModel->isFictive()) {
 
     $optionsTemplate .= '   </ul>
                     </div>';
+
+    if ($widget->fieldModel->getFieldDescription()) {
+        $labelOptions = [
+            'class'          => 'text-area-label',
+            'data-toggle'    => 'tooltip',
+            'data-placement' => 'top',
+            'title'          => $widget->fieldModel->getFieldDescription()
+        ];
+    } else {
+        $labelOptions = [
+            'class' => 'text-area-label',
+        ];
+    }
 }
 ?>
 
@@ -90,4 +103,5 @@ if (!$widget->fieldModel->isFictive()) {
         {input}
         {error}
     ',
+    'labelOptions' => $labelOptions
 ])->textarea() ?>

@@ -41,7 +41,6 @@ if (!$widget->fieldModel->isFictive()) {
                           data-toggle="tooltip" data-placement="top" title="Field template editable only for developer"></span>';
     }
 
-
     $optionsTemplate = '<div class="dropdown field-dropdown" style="display: inline; float: right">
                         <a id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             options<span class="caret"></span>
@@ -83,6 +82,19 @@ if (!$widget->fieldModel->isFictive()) {
 
     $optionsTemplate .= '   </ul>
                     </div>';
+
+    if ($widget->fieldModel->getFieldDescription()) {
+        $labelOptions = [
+            'class'          => 'field-label',
+            'data-toggle'    => 'tooltip',
+            'data-placement' => 'top',
+            'title'          => $widget->fieldModel->getFieldDescription()
+        ];
+    } else {
+        $labelOptions = [
+            'class' => 'field-label',
+        ];
+    }
 }
 
 ?>
@@ -95,7 +107,5 @@ if (!$widget->fieldModel->isFictive()) {
         {input}
         {error}
         ',
-    'labelOptions' => [
-        'class' => 'penis',
-    ]
+    'labelOptions' => $labelOptions
 ])->textInput() ?>
