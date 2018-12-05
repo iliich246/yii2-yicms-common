@@ -143,8 +143,6 @@ class FieldTranslateForm extends AbstractTranslateForm implements
      */
     public function getCurrentTranslateDb()
     {
-
-
         if ($this->currentTranslateDb) return $this->currentTranslateDb;
 
         if ($this->scenario == self::SCENARIO_LOAD_VIA_PJAX) return $this->getCurrentTranslatePjax();
@@ -191,7 +189,7 @@ class FieldTranslateForm extends AbstractTranslateForm implements
      * Returns Field associated with this form
      * @return Field
      */
-    private function getField()
+    public function getField()
     {
         if ($this->field) return $this->field;
 

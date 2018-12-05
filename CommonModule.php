@@ -139,7 +139,7 @@ class CommonModule extends AbstractConfigurableModule implements
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);
-
+        //Yii::$app->user->logout();
         /** END OF DEBUG CODE */
 
         Yii::$app->sourceLanguage = $this->defaultLanguage;

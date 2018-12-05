@@ -140,34 +140,43 @@ class Field extends ActiveRecord implements
     {
         if (!$this->getTemplate()->visible) {
 
-            if ($this->mode == self::MODE_DEFAULT) return false;
+            if ($this->mode == self::MODE_DEFAULT) return '';
 
-            return 'Field template for this field is invisible';
+            if (CommonModule::isUnderDev())
+                return 'Field template for this field is invisible (dev)';
+
+            return '';
         }
 
         if (!$this->visible) {
             if ($this->mode == self::MODE_DEFAULT) return false;
 
-            return 'Field is invisible';
+            if (CommonModule::isUnderDev() || CommonModule::isUnderAdmin())
+                return 'Field is invisible';
+
+            return '';
         }
 
         if ($this->getLanguageType() == FieldTemplate::LANGUAGE_TYPE_SINGLE) {
             if ($this->mode == self::MODE_DEFAULT) {
-                if (!$this->value) {
+                if (!trim($this->value)) {
                     Yii::warning("Empty field value for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
                     return false;
                 }
 
-                return $this->value;
+                return (string)$this->value;
             }
 
-            if ($this->value) return $this->value;
+            if (trim($this->value)) return $this->value;
 
             Yii::warning("Empty field value for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
 
-            if ($this->mode == self::MODE_DEFAULT) return false;
+            if ($this->mode == self::MODE_DEFAULT) return '';
 
-            return 'Warning! Empty value';
+            if (CommonModule::isUnderDev() || CommonModule::isUnderAdmin())
+                return 'Warning! Empty value';
+
+            return '';
         }
 
         return $this->getTranslate();
@@ -240,28 +249,33 @@ class Field extends ActiveRecord implements
 
         /** @var FieldTranslate $translate */
         if ($translate = $this->translation[$language->id]) {
-
             if ($this->mode == self::MODE_DEFAULT) {
-                if (!$translate->value) {
+                if (!trim($translate->value)) {
                     Yii::warning("Empty text of translation on \"$language->name\" language for field "
                         . $this->getTemplate()->program_name, __METHOD__);
 
-                    return false;
+                    return '';
                 }
             }
 
-            if ($translate->value) return $translate->value;
+            if (trim($translate->value)) return $translate->value;
 
             Yii::warning("Empty field translate for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
 
-            return 'Warning! empty field translate';
+            if (CommonModule::isUnderDev() || CommonModule::isUnderAdmin())
+                return 'Warning! empty field translate';
+
+            return '';
         }
 
         Yii::warning("No translate for field \"" . $this->getTemplate()->program_name . '"', __METHOD__);
 
-        if ($this->mode == self::MODE_DEFAULT) return false;
+        if ($this->mode == self::MODE_DEFAULT) return '';
 
-        return 'Warning! No field translate';
+        if (CommonModule::isUnderDev() || CommonModule::isUnderAdmin())
+            return 'Warning! No field translate';
+
+        return '';
     }
 
     /**

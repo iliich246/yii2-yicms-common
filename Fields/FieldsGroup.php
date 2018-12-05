@@ -112,6 +112,9 @@ class FieldsGroup extends AbstractGroup
                 $fieldTranslate->setLanguage($language);
                 $fieldTranslate->setFieldAble($this->referenceAble);
                 $fieldTranslate->loadFromDb();
+
+                if (!CommonModule::isUnderDev() && !$fieldTranslate->getField()->editable) continue;
+
                 $fieldTranslate->prepareValidators();
 
                 $this->translateForms["$languageKey-$fieldTemplateKey"]     = $fieldTranslate;
@@ -138,6 +141,8 @@ class FieldsGroup extends AbstractGroup
 
                     $singleField->save();
                 }
+
+                if (!CommonModule::isUnderDev() && !$singleField->editable) continue;
 
                 $singleField->prepareValidators();
             } else {
