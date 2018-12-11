@@ -520,9 +520,16 @@ class ImagesBlock extends AbstractEntityBlock implements
         return new ActiveQuery(Image::className());
     }
 
+    /**
+     * @inheritdoc
+     * @throws CommonException
+     */
     public function delete()
     {
-        //parent::delete();
+        if ($this->deleteSequence())
+            return parent::delete();
+
+        return false;
     }
 
     /**
@@ -553,6 +560,12 @@ class ImagesBlock extends AbstractEntityBlock implements
         if ($validators)
             foreach($validators as $validator)
                 $validator->delete();
+
+        foreach (Image::find()->where([
+            'common_images_templates_id' => $this->id
+        ])->all() as $image) {
+            $image->delete();
+        }
 
         return true;
     }

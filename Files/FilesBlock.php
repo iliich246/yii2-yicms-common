@@ -343,6 +343,18 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function delete()
+    {
+        if ($this->deleteSequence())
+            return parent::delete();
+
+        return false;
+    }
+
+    /**
+     * @inheritdoc
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
@@ -369,7 +381,11 @@ class FilesBlock extends AbstractEntityBlock implements
             foreach($validators as $validator)
                 $validator->delete();
 
-        //TODO: add deleting of files
+        foreach (File::find()->where([
+            'common_files_template_id' => $this->id
+        ])->all() as $file) {
+            $file->delete();
+        }
 
         return true;
     }
