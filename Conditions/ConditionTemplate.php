@@ -23,7 +23,7 @@ class ConditionTemplate extends AbstractTemplate
     /** @inheritdoc */
     protected static $buffer = [];
     /** @var ConditionValues[] */
-    private $values;
+    private $values = null;
 
     /**
      * @inheritdoc
@@ -153,12 +153,23 @@ class ConditionTemplate extends AbstractTemplate
     }
 
     /**
+     * Returns true if condition has any values
+     * @return bool
+     */
+    public function isValues()
+    {
+        if (!is_null($this->values)) return !!count($this->values);
+
+        return !!count($this->getValuesList());
+    }
+
+    /**
      * Returns buffered list of values of template
      * @return ConditionValues[]
      */
     public function getValuesList()
     {
-        if ($this->values) return $this->values;
+        if (!is_null($this->values)) return $this->values;
 
         $this->values = ConditionValues::find()->where([
             'common_condition_template_id' => $this->id,

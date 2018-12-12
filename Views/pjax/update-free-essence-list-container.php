@@ -12,7 +12,9 @@ use yii\helpers\Url;
     'options' => [
         'id' => 'update-free-essences-list-container'
     ],
-    'linkSelector' => false,
+    'enablePushState'    => false,
+    'enableReplaceState' => false,
+    'linkSelector'       => false,
 ]) ?>
 <div class="list-block">
     <?php foreach($freeEssences as $freeEssence): ?>

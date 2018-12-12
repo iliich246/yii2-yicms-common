@@ -43,7 +43,9 @@ FieldsDevAsset::register($this);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'update-fields-list-container'
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <div class="list-block">
                 <?php if (isset($fieldTemplatesTranslatable)): ?>

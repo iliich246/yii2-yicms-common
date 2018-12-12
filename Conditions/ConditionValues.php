@@ -23,8 +23,8 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 {
     use SortOrderTrait;
 
-    const SCENARIO_CREATE       = 0x01;
-    const SCENARIO_UPDATE       = 0x02;
+    const SCENARIO_CREATE = 0x01;
+    const SCENARIO_UPDATE = 0x02;
     const SCENARIO_CHANGE_ORDER = 0x03;
 
     /** @var ConditionTemplate instance associated with this object */
@@ -118,7 +118,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
             $query = self::find()->where([
                 'common_condition_template_id' => $conditionTemplate,
-                'value_name'                   => $this->value_name,
+                'value_name' => $this->value_name,
             ]);
 
             if ($this->scenario == self::SCENARIO_UPDATE)
@@ -126,7 +126,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
             $count = $query->all();
 
-            if ($count)$this->addError($attribute, 'Value with same name already existed');
+            if ($count) $this->addError($attribute, 'Value with same name already existed');
         }
     }
 
@@ -141,18 +141,19 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
             if (!self::find()->where([
                 'common_condition_template_id' => $this->common_condition_template_id
-            ])->count()) $this->is_default = true;
+            ])->count()
+            ) $this->is_default = true;
         }
 
         if ($this->is_default && $this->scenario != self::SCENARIO_CHANGE_ORDER) {
 
             /** @var self $other */
-            foreach(self::find()->where([
+            foreach (self::find()->where([
                 'common_condition_template_id' => $this->common_condition_template_id
             ])->all() as $other) {
                 if (!$other->is_default) continue;
 
-                $other->scenario   = self::SCENARIO_UPDATE;
+                $other->scenario = self::SCENARIO_UPDATE;
                 $other->is_default = false;
 
                 $other->save(false);
@@ -162,6 +163,15 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
         $this->value_name = strtoupper($this->value_name);
 
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Save for inner purposes
+     * @return bool
+     */
+    protected function simpleSave()
+    {
+        return parent::save(false);
     }
 
     /**
@@ -195,7 +205,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
         $this->translation[$language->id] = ConditionValueNamesDb::find()->where([
             'common_condition_value_id' => $this->id,
-            'common_language_id'        => $language->id,
+            'common_language_id' => $language->id,
         ])->one();
 
         if ($this->translation[$language->id]) {
@@ -224,7 +234,7 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
 
         $this->translation[$language->id] = ConditionValueNamesDb::find()->where([
             'common_condition_value_id' => $this->id,
-            'common_language_id'        => $language->id,
+            'common_language_id' => $language->id,
         ])->one();
 
         if ($this->translation[$language->id])
@@ -242,8 +252,29 @@ class ConditionValues extends ActiveRecord implements SortOrderInterface
             'common_condition_value_id' => $this->id,
         ])->all();
 
-        foreach($valuesNames as $valuesName)
+        foreach ($valuesNames as $valuesName)
             $valuesName->delete();
+
+        /** @var Condition[] $conditionsWithThisValue */
+        $conditionsWithThisValue = Condition::find()->where([
+            'common_value_id' => $this->id
+        ])->all();
+
+        foreach ($conditionsWithThisValue as $condition) {
+            $condition->common_value_id = null;
+            $condition->simpleSave();
+        }
+
+        if ($this->is_default && (count($this->getConditionTemplate()->getValuesList()) > 1)) {
+            $valuesArray = $this->getConditionTemplate()->getValuesList();
+            unset($valuesArray[$this->id]);
+            reset($valuesArray);
+
+            /** @var self $firstValue */
+            $firstValue = current($valuesArray);
+            $firstValue->is_default = true;
+            $firstValue->simpleSave();
+        }
 
         return parent::delete();
     }

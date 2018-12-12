@@ -57,7 +57,9 @@ $this->registerJs($js);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'pjax-language-config-container',
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]); ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'set-language-config-form',

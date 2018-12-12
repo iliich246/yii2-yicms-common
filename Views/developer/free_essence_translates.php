@@ -67,7 +67,9 @@ $this->registerJs($js, $this::POS_READY);
             <?php $pjax = Pjax::begin([
                 'options' => [
                     'id' => 'edit-free-essences-names-container',
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'edit-free-essences-names-form',

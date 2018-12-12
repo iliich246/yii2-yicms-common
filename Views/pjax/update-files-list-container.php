@@ -39,7 +39,9 @@ FilesDevAsset::register($this);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'update-files-list-container'
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <div class="list-block">
                 <?php foreach ($filesBlocks as $filesBlock): ?>

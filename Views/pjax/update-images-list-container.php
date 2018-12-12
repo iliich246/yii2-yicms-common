@@ -39,7 +39,9 @@ ImagesDevAsset::register($this);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'update-images-list-container'
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <div class="list-block">
                 <?php foreach ($imagesBlocks as $imageBlock): ?>

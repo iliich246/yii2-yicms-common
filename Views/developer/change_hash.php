@@ -32,7 +32,10 @@ use Iliich246\YicmsCommon\Base\CommonHashForm;
                     <h3>Change admin hash</h3>
                 <?php endif; ?>
             </div>
-            <?php $pjax = Pjax::begin() ?>
+            <?php $pjax = Pjax::begin([
+                'enablePushState'    => false,
+                'enableReplaceState' => false
+            ]) ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'change-hash-form',
             ]);

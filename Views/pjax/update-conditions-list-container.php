@@ -40,7 +40,9 @@ ConditionsDevAsset::register($this);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'update-conditions-list-container'
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <div class="list-block">
                 <?php foreach ($conditionsTemplates as $conditionsTemplate): ?>

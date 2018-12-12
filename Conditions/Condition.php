@@ -27,7 +27,7 @@ class Condition extends ActiveRecord
     /** @var ConditionTemplate instance of condition template */
     private $template = null;
     /** @var ConditionsNamesTranslatesDb[] instances */
-    private $translation;
+    private $translation = null;
     /** @var string name of condition value */
     private $valueName = null;
 
@@ -38,7 +38,10 @@ class Condition extends ActiveRecord
     {
         $this->on(self::EVENT_AFTER_FIND, function() {
 
-            if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) return;
+            if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
+                $this->value = !!$this->checkbox_state;
+                return;
+            };
 
             if (is_null($this->common_value_id)) {
                 $valueId = $this->getTemplate()->defaultValueId();
@@ -233,7 +236,7 @@ class Condition extends ActiveRecord
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         if (!is_null($this->translation[$language->id])) {
-            if (trim($this->translation[$language->id]->name) !== '') return $this->getTemplate()->program_name;
+            if (trim($this->translation[$language->id]->name) == '') return $this->getTemplate()->program_name;
             return trim($this->translation[$language->id]->name);
         }
 
@@ -260,7 +263,7 @@ class Condition extends ActiveRecord
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         if (!is_null($this->translation[$language->id])) {
-            if (trim($this->translation[$language->id]->description) !== '') return false;
+            if (trim($this->translation[$language->id]->description) == '') return false;
             return trim($this->translation[$language->id]->description);
         }
 
@@ -324,6 +327,15 @@ class Condition extends ActiveRecord
         }
 
         return null;
+    }
+
+    /**
+     * Returns true if condition has any values
+     * @return bool
+     */
+    public function isValues()
+    {
+        return $this->getTemplate()->isValues();
     }
 
     /**

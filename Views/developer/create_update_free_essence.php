@@ -260,7 +260,9 @@ JS;
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'update-free-essence-container',
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]) ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'create-update-free-essence-form',

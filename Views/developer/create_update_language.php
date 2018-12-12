@@ -83,7 +83,9 @@ $this->registerJs($js);
             <?php Pjax::begin([
                 'options' => [
                     'id' => 'pjax-language-create-update-container',
-                ]
+                ],
+                'enablePushState'    => false,
+                'enableReplaceState' => false
             ]); ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'create-update-language-form',
