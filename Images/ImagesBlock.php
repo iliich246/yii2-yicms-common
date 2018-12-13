@@ -282,6 +282,14 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * @return bool|\Iliich246\YicmsCommon\Base\AbstractEntity|Image
+     */
+    public function getImage()
+    {
+        return $this->getEntity();
+    }
+
+    /**
      * @return \Iliich246\YicmsCommon\Base\AbstractEntity[]|Image[]
      */
     public function getImages()
@@ -290,11 +298,13 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * @return bool|\Iliich246\YicmsCommon\Base\AbstractEntity|Image
+     * Proxy getFileName() method to magical __toString()
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
-    public function getImage()
+    public function __toString()
     {
-        return $this->getEntity();
+        return 'Nooo!!!';
     }
     
     /**
@@ -312,7 +322,12 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getSrc($language = null)
     {
-        $this->getImage()->getSrc($language);
+        if ($this->isNonexistent()) {
+            //$bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register()
+            //$src = $bundle->baseUrl . '/loader.svg';
+        }
+
+        return $this->getImage()->getSrc($language);
     }
 
     /**

@@ -15,9 +15,10 @@ abstract class AbstractEntityBlock extends AbstractTemplate
     /** @var AbstractEntity[] that`s contains this block */
     private $entityBuffer = null;
     /** @var bool if true image block will behaviour as nonexistent   */
-    private $isNonexistent = false;
+    protected $isNonexistent = false;
     /** @var string value for keep program name in nonexistent mode */
-    private $nonexistentProgramName;
+    protected $nonexistentProgramName;
+
     /**
      * @inheritdoc
      */
@@ -141,6 +142,23 @@ abstract class AbstractEntityBlock extends AbstractTemplate
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function generateTemplateReference()
+    {
+        return parent::generateTemplateReference();
+    }
+
+    /**
+     * Returns true if block in nonexistent state
+     * @return bool
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
+    }
+
+    /**
      * Return query for searching entities for concrete entity block
      * @return ActiveQuery
      */
@@ -157,12 +175,4 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      * @return string
      */
      abstract protected function getNoExistentEntity();
-
-    /**
-     * @inheritdoc
-     */
-    public static function generateTemplateReference()
-    {
-        return parent::generateTemplateReference();
-    }
 }

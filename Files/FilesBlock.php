@@ -220,6 +220,16 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Proxy getFileName() method to magical __toString()
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function __toString()
+    {
+        return (string)$this->getFileName();
+    }
+
+    /**
      * Proxy method uploadUrl to first file in block
      * @param LanguagesDb|null $language
      * @param bool $onlyPhysicalExistedFiles
@@ -228,6 +238,8 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function uploadUrl(LanguagesDb $language= null, $onlyPhysicalExistedFiles = true)
     {
+        if ($this->isNonexistent()) return false;
+
         return $this->getFile()->uploadUrl($language, $onlyPhysicalExistedFiles);
     }
 
@@ -240,6 +252,14 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFileName(LanguagesDb $language = null, $addExtension = false)
     {
+        if ($this->isNonexistent()) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS')) {
+                return '(DEV)  Try to output nonexistent file from file block "' . $this->nonexistentProgramName . '"';
+            }
+
+            return '';
+        }
+
         return $this->getFile()->getFileName($language, $addExtension);
     }
 

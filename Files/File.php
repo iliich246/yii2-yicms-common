@@ -111,7 +111,7 @@ class File extends AbstractEntity implements
 
     /**
      * Return FilesBlock associated with this file entity
-     * @return FilesBlock
+     * @return FilesBlock|array|\Iliich246\YicmsCommon\Base\AbstractEntityBlock|null|\yii\db\ActiveRecord
      */
     public function getFileBlock()
     {
@@ -127,6 +127,16 @@ class File extends AbstractEntity implements
     }
 
     /**
+     * Proxy getFileName() method to magical __toString()
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function __toString()
+    {
+        return $this->getFileName();
+    }
+
+    /**
      * Return translated file name
      * @param LanguagesDb|null $language
      * @param bool|false $addExtension
@@ -135,7 +145,7 @@ class File extends AbstractEntity implements
      */
     public function getFileName(LanguagesDb $language = null, $addExtension = false)
     {
-        if ($this->isNonexistent) {
+        if ($this->isNonexistent()) {
             if (CommonModule::isUnderDev()) return 'None existent file';
             return false;
         }
@@ -331,6 +341,8 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @return int|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getFieldTemplateReference()
     {
@@ -372,6 +384,7 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
      */
     public function getConditionTemplateReference()
     {
