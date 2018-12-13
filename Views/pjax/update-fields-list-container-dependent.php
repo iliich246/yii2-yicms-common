@@ -1,9 +1,6 @@
 <?php
 
-use yii\widgets\Pjax;
-use Iliich246\YicmsCommon\Assets\FieldsDevAsset;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
-use Iliich246\YicmsCommon\Fields\FieldsDevModalWidget;
 
 /** @var $this \yii\web\View */
 /** @var $fieldTemplateReference string */

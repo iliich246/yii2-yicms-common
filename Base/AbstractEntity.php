@@ -22,6 +22,8 @@ abstract class AbstractEntity extends ActiveRecord
     protected $entityBlock;
     /** @var bool sets true, when entity is nonexistent (can`t be fetched from db) */
     protected $isNonexistent = false;
+    /** @var string value for keep program name in nonexistent mode */
+    private $nonexistentProgramName;
 
     /**
      * @inheritdoc
@@ -45,9 +47,18 @@ abstract class AbstractEntity extends ActiveRecord
      * Set`s entity as nonexistent
      * @return void
      */
-    public function setNoExistent()
+    public function setNonexistent()
     {
         $this->isNonexistent = true;
+    }
+
+    /**
+     * Returns image nonexistent state
+     * @return bool
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
     }
 
     /**

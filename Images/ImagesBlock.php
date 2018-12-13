@@ -437,6 +437,14 @@ class ImagesBlock extends AbstractEntityBlock implements
         return $this->imageNamesTranslates[$language->id];
     }
 
+    protected function getNoExistentEntity()
+    {
+        $nonexistentImage = new Image();
+        $nonexistentImage->setNonexistent();
+        //$nonexistentImage
+        //$nonexistentImage->setEntityBlock()
+    }
+
     /**
      * Return true if this block has fields
      * @return bool

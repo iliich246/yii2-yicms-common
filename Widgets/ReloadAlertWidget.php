@@ -20,10 +20,8 @@ class ReloadAlertWidget extends Widget
 
     /** @var null|integer type of widget  */
     public $type = null;
-
     /** @var null|string title of message */
     public $title = null;
-
     /** @var null|string message text */
     public $message = null;
 
@@ -35,8 +33,8 @@ class ReloadAlertWidget extends Widget
         $data = Yii::$app->session->getFlash('_reload_alert');
 
         if ($data) {
-            $this->type = $data['type'];
-            $this->title = $data['title'];
+            $this->type    = $data['type'];
+            $this->title   = $data['title'];
             $this->message = $data['message'];
         }
 

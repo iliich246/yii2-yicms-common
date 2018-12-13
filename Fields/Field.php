@@ -57,6 +57,10 @@ class Field extends ActiveRecord implements
     private $fieldNamesTranslations;
     /** @var bool keeps state of fictive value */
     private $isFictive = false;
+    /** @var bool if true field will behaviour as nonexistent   */
+    private $isNonexistent = false;
+    /** @var string value for keep program name in nonexistent mode */
+    private $nonexistentProgramName;
 
     /**
      * @inheritdoc
@@ -138,6 +142,13 @@ class Field extends ActiveRecord implements
      */
     public function __toString()
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS'))
+                return '(DEV) Try to output nonexistent field by name "' . $this->nonexistentProgramName . '"';
+
+            return '';
+        };
+
         if (!$this->getTemplate()->visible) {
 
             if ($this->mode == self::MODE_DEFAULT) return '';
@@ -187,6 +198,8 @@ class Field extends ActiveRecord implements
      */
     public function delete()
     {
+        if ($this->isNonexistent) return false;
+
         $fieldTranslates = FieldTranslate::find()->where([
             'common_fields_represent_id' => $this->id
         ])->all();
@@ -194,7 +207,7 @@ class Field extends ActiveRecord implements
         foreach ($fieldTranslates as $fieldTranslate)
             $fieldTranslate->delete();
 
-        parent::delete();
+        return parent::delete();
     }
 
     /**
@@ -207,6 +220,8 @@ class Field extends ActiveRecord implements
      */
     public function isTranslate(LanguagesDb $language = null)
     {
+        if ($this->isNonexistent) return false;
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         if (!is_null($this->translation[$language->id])) {
@@ -237,6 +252,13 @@ class Field extends ActiveRecord implements
      */
     public function getTranslate(LanguagesDb $language = null)
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS'))
+                return '(DEV) Try to output nonexistent field by name "' . $this->nonexistentProgramName . '"';
+
+            return '';
+        };
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         //language buffer empty
@@ -301,7 +323,11 @@ class Field extends ActiveRecord implements
                 " name = $programName and fieldTemplateReference = $fieldTemplateReference");
             }
 
-            return null;
+            $nonexistentField                         = new static();
+            $nonexistentField->isNonexistent          = true;
+            $nonexistentField->nonexistentProgramName = $programName;
+
+            return $nonexistentField;
         };
 
         /** @var self $field */
@@ -325,7 +351,11 @@ class Field extends ActiveRecord implements
                 Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference");
         }
 
-        return null;
+        $nonexistentField                         = new self();
+        $nonexistentField->isNonexistent          = true;
+        $nonexistentField->nonexistentProgramName = $programName;
+
+        return $nonexistentField;
     }
 
     /**
@@ -352,6 +382,15 @@ class Field extends ActiveRecord implements
         }
 
         throw new CommonException('Can`t reach there 0_0' . __METHOD__);
+    }
+
+    /**
+     * Returns field nonexistent state
+     * @return bool
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
     }
 
     /**

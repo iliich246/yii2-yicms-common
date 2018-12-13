@@ -3,8 +3,8 @@
 namespace Iliich246\YicmsCommon\Widgets;
 
 use Yii;
-use Iliich246\YicmsCommon\Base\AbstractModuleMenuWidget;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\AbstractModuleMenuWidget;
 
 /**
  * Class ModuleDevMenuWidget

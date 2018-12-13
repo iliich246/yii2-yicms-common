@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
 
 /* @var $this \yii\web\View */

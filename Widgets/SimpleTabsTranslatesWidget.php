@@ -2,10 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Widgets;
 
-use Iliich246\YicmsCommon\Base\CommonException;
 use Yii;
 use yii\base\Widget;
 use Iliich246\YicmsCommon\Base\AbstractTranslateForm;
+use Iliich246\YicmsCommon\Base\CommonException;
 
 /**
  * Class SimpleTabsTranslatesWidget
@@ -32,18 +32,13 @@ class SimpleTabsTranslatesWidget extends Widget
      * ]
      */
     public $translateModels;
-    /**
-     * @var mixed arbitrary data
-     */
+    /** @var mixed arbitrary data */
     public $data;
     /**
-     * Prefix for modify bootstrap tabs if form has more than one same tab essences
-     * @var bool|string
+     * @var bool|string prefix for modify bootstrap tabs if form has more than one same tab essences
      */
     public $tabModification = false;
-    /**
-     * @var string path to translate view
-     */
+    /** @var string path to translate view */
     private $translateView;
 
     /**

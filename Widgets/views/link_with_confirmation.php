@@ -1,8 +1,5 @@
 <?php
 
-use app\assets\src\BootBoxAsset;
-use app\modules\common\Module;
-
 /* @var $this \yii\web\View */
 /* @var $widget \Iliich246\YicmsCommon\Widgets\LinkWithConfirmationWidget */
 

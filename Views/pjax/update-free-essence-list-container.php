@@ -1,7 +1,7 @@
 <?php
 
-use yii\widgets\Pjax;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
 
 /* @var $this \yii\web\View */
 /* @var $freeEssences \Iliich246\YicmsCommon\FreeEssences\FreeEssences[] */

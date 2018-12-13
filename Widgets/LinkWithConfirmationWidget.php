@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Widgets;
 
-use Iliich246\YicmsCommon\CommonModule;
 use yii\bootstrap\Widget;
 
 /**
@@ -24,50 +23,26 @@ use yii\bootstrap\Widget;
 //])
 class LinkWithConfirmationWidget extends Widget
 {
-    /**
-     * @var string url, that will be inserted in href
-     */
+    /** @var string url, that will be inserted in href */
     public $url;
-
-    /**
-     * @var string title of bootbox block
-     */
+    /** @var string title of bootbox block */
     public $title;
-
-    /**
-     * @var string message in bootbox block
-     */
+    /** @var string message in bootbox block */
     public $message;
-
-    /**
-     * @var string link text
-     */
+    /** @var string link text */
     public $caption;
-
-    /**
-     * @var string label on ok button in message
-     */
+    /** @var string label on ok button in message */
     public $okLabel = 'Ok';
-
-    /**
-     * @var string label of cancel button in message
-     */
+    /** @var string label of cancel button in message */
     public $cancelLabel = 'Cancel';
-
-    /**
-     * @var bool if true markup for all button block will be inserted
-     */
+    /** @var bool if true markup for all button block will be inserted */
     public $withBlock = true;
-
     /** @var bool glyphicon for button, if false will be returned standard markup */
     public $glyphicon = false;
-
     /** @var bool if true link will have data-pjax */
     public $viaPjax = true;
-
     /** @var string id of pjax container  */
     public $pjaxContainer = false;
-
 
     /**
      * @inheritdoc

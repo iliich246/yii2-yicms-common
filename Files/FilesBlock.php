@@ -393,10 +393,10 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * @inheritdoc
      */
-    protected static function getNoExistentEntity()
+    protected function getNoExistentEntity()
     {
         $file = new File();
-        $file->setNoExistent();
+        $file->setNonexistent();
 
         return $file;
     }

@@ -14,9 +14,10 @@ abstract class AbstractEntityBlock extends AbstractTemplate
 {
     /** @var AbstractEntity[] that`s contains this block */
     private $entityBuffer = null;
-    /** @var bool sets true, when entity block is nonexistent (can`t be fetched from db)/ */
+    /** @var bool if true image block will behaviour as nonexistent   */
     private $isNonexistent = false;
-
+    /** @var string value for keep program name in nonexistent mode */
+    private $nonexistentProgramName;
     /**
      * @inheritdoc
      */
@@ -31,7 +32,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      */
     public function getEntity()
     {
-        if ($this->isNonexistent) return (self::getNoExistentEntity());
+        if ($this->isNonexistent) return $this->getNoExistentEntity();
 
         if (is_null($this->entityBuffer)) $this->fetchEntities();
 
@@ -100,8 +101,9 @@ abstract class AbstractEntityBlock extends AbstractTemplate
                 Can`t fetch for " . static::className() . " name = $programName and templateReference = $templateReference");
         }
 
-        $value = new static();
-        $value->isNonexistent = true;
+        $value                         = new static();
+        $value->isNonexistent          = true;
+        $value->nonexistentProgramName = $programName;
 
         self::setToCache($templateReference, $programName, $value);
 
@@ -154,10 +156,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate
      * Returns class of entity of concrete block
      * @return string
      */
-     protected static function getNoExistentEntity()
-     {
-         return static::getNoExistentEntity();
-     }
+     abstract protected function getNoExistentEntity();
 
     /**
      * @inheritdoc
