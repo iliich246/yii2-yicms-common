@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-abstract class AbstractEntity extends ActiveRecord
+abstract class AbstractEntity extends ActiveRecord implements NonexistentInterface
 {
     const SCENARIO_CREATE = 0x00;
     const SCENARIO_UPDATE = 0x01;
@@ -41,24 +41,6 @@ abstract class AbstractEntity extends ActiveRecord
     public function isEntity()
     {
 
-    }
-
-    /**
-     * Set`s entity as nonexistent
-     * @return void
-     */
-    public function setNonexistent()
-    {
-        $this->isNonexistent = true;
-    }
-
-    /**
-     * Returns image nonexistent state
-     * @return bool
-     */
-    public function isNonexistent()
-    {
-        return $this->isNonexistent;
     }
 
     /**
@@ -115,6 +97,38 @@ abstract class AbstractEntity extends ActiveRecord
         if ($this->entityBlock) return $this->entityBlock;
 
         return $this->entityBlock = $this->entityBlockQuery()->one();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistent()
+    {
+        $this->isNonexistent = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNonexistentName()
+    {
+        return $this->nonexistentProgramName;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistentName($name)
+    {
+        $this->nonexistentProgramName = $name;
     }
 
     /**

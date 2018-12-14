@@ -8,6 +8,7 @@ use yii\validators\SafeValidator;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
+use Iliich246\YicmsCommon\Base\NonexistentInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -30,7 +31,8 @@ class Field extends ActiveRecord implements
     FieldRenderInterface,
     FictiveInterface,
     ValidatorBuilderInterface,
-    ValidatorReferenceInterface
+    ValidatorReferenceInterface,
+    NonexistentInterface
 {
     /**
      * Modes of field
@@ -385,12 +387,35 @@ class Field extends ActiveRecord implements
     }
 
     /**
-     * Returns field nonexistent state
-     * @return bool
+     * @inheritdoc
      */
     public function isNonexistent()
     {
         return $this->isNonexistent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistent()
+    {
+        $this->isNonexistent = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNonexistentName()
+    {
+        return $this->nonexistentProgramName;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistentName($name)
+    {
+        $this->nonexistentProgramName = $name;
     }
 
     /**

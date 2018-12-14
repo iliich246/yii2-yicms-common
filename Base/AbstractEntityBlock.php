@@ -10,7 +10,7 @@ use yii\db\ActiveQuery;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-abstract class AbstractEntityBlock extends AbstractTemplate
+abstract class AbstractEntityBlock extends AbstractTemplate implements NonexistentInterface
 {
     /** @var AbstractEntity[] that`s contains this block */
     private $entityBuffer = null;
@@ -150,12 +150,35 @@ abstract class AbstractEntityBlock extends AbstractTemplate
     }
 
     /**
-     * Returns true if block in nonexistent state
-     * @return bool
+     * @inheritdoc
      */
     public function isNonexistent()
     {
         return $this->isNonexistent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistent()
+    {
+        $this->isNonexistent = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNonexistentName()
+    {
+        return $this->nonexistentProgramName;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistentName($name)
+    {
+        $this->nonexistentProgramName = $name;
     }
 
     /**
