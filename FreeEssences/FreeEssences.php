@@ -8,6 +8,7 @@ use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
+use Iliich246\YicmsCommon\Base\NonexistentInterface;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
@@ -54,7 +55,8 @@ class FreeEssences extends ActiveRecord implements
     ConditionsReferenceInterface,
     ConditionsInterface,
     FictiveInterface,
-    SortOrderInterface
+    SortOrderInterface,
+    NonexistentInterface
 {
     use SortOrderTrait;
 
@@ -69,6 +71,10 @@ class FreeEssences extends ActiveRecord implements
     private $imageHandler;
     /** @var ConditionsHandler */
     private $conditionHandler;
+    /** @var bool keep nonexistent state of page */
+    private $isNonexistent = false;
+    /** @var string keeps name of nonexistent page */
+    private $nonexistentName;
 
     /**
      * @param array $config
@@ -148,7 +154,11 @@ class FreeEssences extends ActiveRecord implements
             throw new CommonException('Сan not find free essence with name ' . $programName);
         }
 
-        return new self();
+        $nonexistentFreeEssence = new self();
+        $nonexistentFreeEssence->setNonexistent();
+        $nonexistentFreeEssence->nonexistentName = $programName;
+
+        return $nonexistentFreeEssence;
     }
 
     /**
@@ -200,6 +210,8 @@ class FreeEssences extends ActiveRecord implements
      */
     public function save($runValidation = true, $attributeNames = null)
     {
+        if ($this->isNonexistent) return false;
+
         if ($this->scenario === self::SCENARIO_CREATE) {
             $this->free_essences_order = $this->maxOrder();
         }
@@ -212,6 +224,8 @@ class FreeEssences extends ActiveRecord implements
      */
     public function delete()
     {
+        if ($this->isNonexistent) return false;
+
         /** @var FieldTemplate[] $fieldTemplates */
         $fieldTemplates = FieldTemplate::find()->where([
             'field_template_reference' => $this->getFieldTemplateReference(),
@@ -261,6 +275,8 @@ class FreeEssences extends ActiveRecord implements
      */
     public function isConstraints()
     {
+        if ($this->isNonexistent) return false;
+
         /** @var FieldTemplate[] $fieldTemplates */
         $fieldTemplates = FieldTemplate::find()->where([
             'field_template_reference' => $this->getFieldTemplateReference(),
@@ -506,5 +522,37 @@ class FreeEssences extends ActiveRecord implements
     public function isFictive()
     {
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistent()
+    {
+        $this->isNonexistent = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNonexistentName()
+    {
+        return $this->nonexistentName;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistentName($name)
+    {
+        $this->nonexistentName = $name;
     }
 }

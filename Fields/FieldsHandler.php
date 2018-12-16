@@ -36,6 +36,7 @@ class FieldsHandler extends AbstractHandler
             $nonexistentField = new Field();
             $nonexistentField->setNonexistent();
             $nonexistentField->setNonexistentName($name);
+
             return $nonexistentField;
         }
 

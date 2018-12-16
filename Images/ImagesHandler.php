@@ -26,7 +26,7 @@ class ImagesHandler extends AbstractHandler
     /**
      * Returns instance of image block template by name
      * @param $name
-     * @return bool|object
+     * @return ImagesBlock|bool
      */
     public function getImageBlock($name)
     {

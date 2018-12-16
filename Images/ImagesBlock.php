@@ -4,6 +4,7 @@ namespace Iliich246\YicmsCommon\Images;
 
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Assets\DeveloperAsset;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -298,13 +299,13 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * Proxy getFileName() method to magical __toString()
-     * @return bool|string
-     * @throws \Iliich246\YicmsCommon\Base\CommonException
-     */
+    * Proxy getSrc() method to magical __toString()
+    * @return bool|string
+    * @throws \Iliich246\YicmsCommon\Base\CommonException
+    */
     public function __toString()
     {
-        return 'Nooo!!!';
+        return $this->getSrc();
     }
     
     /**
@@ -318,13 +319,17 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Proxy method getSrc to first image in block
      * @param null $language
+     * @return bool|string
      * @throws CommonException
      */
     public function getSrc($language = null)
     {
         if ($this->isNonexistent()) {
-            //$bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register()
-            //$src = $bundle->baseUrl . '/loader.svg';
+            $asset = new DeveloperAsset();
+            $asset->publish(\Yii::$app->assetManager);
+
+            $src = $asset->baseUrl . '/no-image.png';
+            return $src;
         }
 
         return $this->getImage()->getSrc($language);
@@ -452,12 +457,15 @@ class ImagesBlock extends AbstractEntityBlock implements
         return $this->imageNamesTranslates[$language->id];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function getNoExistentEntity()
     {
         $nonexistentImage = new Image();
         $nonexistentImage->setNonexistent();
-        //$nonexistentImage
-        //$nonexistentImage->setEntityBlock()
+
+        return $nonexistentImage;
     }
 
     /**

@@ -325,9 +325,9 @@ class Field extends ActiveRecord implements
                 " name = $programName and fieldTemplateReference = $fieldTemplateReference");
             }
 
-            $nonexistentField                         = new static();
-            $nonexistentField->isNonexistent          = true;
-            $nonexistentField->nonexistentProgramName = $programName;
+            $nonexistentField = new static();
+            $nonexistentField->setNonexistent();
+            $nonexistentField->setNonexistentName($programName);
 
             return $nonexistentField;
         };
@@ -353,9 +353,9 @@ class Field extends ActiveRecord implements
                 Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference");
         }
 
-        $nonexistentField                         = new self();
-        $nonexistentField->isNonexistent          = true;
-        $nonexistentField->nonexistentProgramName = $programName;
+        $nonexistentField = new static();
+        $nonexistentField->setNonexistent();
+        $nonexistentField->setNonexistentName($programName);
 
         return $nonexistentField;
     }

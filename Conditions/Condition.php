@@ -4,7 +4,9 @@ namespace Iliich246\YicmsCommon\Conditions;
 
 use Yii;
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Base\CommonException;
+use Iliich246\YicmsCommon\Base\NonexistentInterface;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 
@@ -20,7 +22,7 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class Condition extends ActiveRecord
+class Condition extends ActiveRecord implements NonexistentInterface
 {
     /** @var string value of condition */
     public $value;
@@ -30,6 +32,10 @@ class Condition extends ActiveRecord
     private $translation = null;
     /** @var string name of condition value */
     private $valueName = null;
+    /** @var bool if true image block will behaviour as nonexistent   */
+    protected $isNonexistent = false;
+    /** @var string value for keep program name in nonexistent mode */
+    protected $nonexistentProgramName;
 
     /**
      * @inheritdoc
@@ -123,11 +129,27 @@ class Condition extends ActiveRecord
     }
 
     /**
+     * Proxy value() method to magical __toString()
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->value();
+    }
+
+    /**
      * Return string name of condition value
      * @return string
      */
     public function value()
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS'))
+                return '(DEV) Try to output nonexistent condition by name "' . $this->nonexistentProgramName . '"';
+
+            return null;
+        }
+
         if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX)
             return !!$this->checkbox_state;
 
@@ -142,6 +164,13 @@ class Condition extends ActiveRecord
      */
     public function isTrue()
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS'))
+                return '(DEV) Try to output nonexistent condition by name "' . $this->nonexistentProgramName . '"';
+
+            return null;
+        }
+
         if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
             if (!!$this->checkbox_state) return true;
             return false;
@@ -167,6 +196,13 @@ class Condition extends ActiveRecord
      */
     public function isFalse()
     {
+        if ($this->isNonexistent) {
+            if (CommonModule::isUnderDev() && defined('YICMS_ALERTS'))
+                return '(DEV) Try to output nonexistent condition by name "' . $this->nonexistentProgramName . '"';
+
+            return null;
+        }
+
         if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
             if (!!$this->checkbox_state) return false;
             return true;
@@ -302,7 +338,11 @@ class Condition extends ActiveRecord
                     " name = $programName and conditionTemplateReference = $conditionTemplateReference");
             }
 
-            return null;
+            $nonexistentCondition = new static();
+            $nonexistentCondition->setNonexistent();
+            $nonexistentCondition->setNonexistentName($programName);
+
+            return $nonexistentCondition;
         };
 
         /** @var self $condition */
@@ -326,7 +366,11 @@ class Condition extends ActiveRecord
                 Can`t fetch for " . static::className() . " name = $programName and conditionReference = $conditionReference");
         }
 
-        return null;
+        $nonexistentCondition = new static();
+        $nonexistentCondition->setNonexistent();
+        $nonexistentCondition->setNonexistentName($programName);
+
+        return $nonexistentCondition;
     }
 
     /**
@@ -335,6 +379,9 @@ class Condition extends ActiveRecord
      */
     public function isValues()
     {
+        if ($this->isNonexistent)
+            return false;
+
         return $this->getTemplate()->isValues();
     }
 
@@ -382,5 +429,37 @@ class Condition extends ActiveRecord
         }
 
         throw new CommonException('Can`t reach there 0_0' . __METHOD__);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isNonexistent()
+    {
+        return $this->isNonexistent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistent()
+    {
+        $this->isNonexistent = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNonexistentName()
+    {
+        return $this->nonexistentProgramName;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setNonexistentName($name)
+    {
+        $this->nonexistentProgramName = $name;
     }
 }

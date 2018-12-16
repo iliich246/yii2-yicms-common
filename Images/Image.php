@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Assets\DeveloperAsset;
 use Yii;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -193,7 +194,13 @@ class Image extends AbstractEntity implements
      */
     public function getSrc(LanguagesDb $language = null)
     {
-        if ($this->isNonexistent) return false;
+        if ($this->isNonexistent()) {
+            $asset = new DeveloperAsset();
+            $asset->publish(\Yii::$app->assetManager);
+
+            $src = $asset->baseUrl . '/no-image.png';
+            return $src;
+        }
 
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
@@ -264,6 +271,16 @@ class Image extends AbstractEntity implements
         }
 
         return $name;
+    }
+
+    /**
+     * Proxy getSrc() method to magical __toString()
+     * @return bool|string
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     */
+    public function __toString()
+    {
+        return (string)$this->getSrc();
     }
 
     /**
