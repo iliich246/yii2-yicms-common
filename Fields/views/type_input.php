@@ -82,21 +82,20 @@ if (!$widget->fieldModel->isFictive()) {
 
     $optionsTemplate .= '   </ul>
                     </div>';
-
-    if ($widget->fieldModel->getFieldDescription()) {
-        $labelOptions = [
-            'class'          => 'field-label',
-            'data-toggle'    => 'tooltip',
-            'data-placement' => 'top',
-            'title'          => $widget->fieldModel->getFieldDescription()
-        ];
-    } else {
-        $labelOptions = [
-            'class' => 'field-label',
-        ];
-    }
 }
 
+if ($widget->fieldModel->getFieldDescription()) {
+    $labelOptions = [
+        'class' => 'field-label',
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top',
+        'title' => $widget->fieldModel->getFieldDescription()
+    ];
+} else {
+    $labelOptions = [
+        'class' => 'field-label',
+    ];
+}
 ?>
 
 <?= $widget->form->field($widget->fieldModel, $widget->fieldModel->getKey(), [

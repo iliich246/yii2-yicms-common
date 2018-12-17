@@ -348,7 +348,7 @@ class Condition extends ActiveRecord implements NonexistentInterface
         /** @var self $condition */
         $condition = self::find()->where([
             'common_condition_template_id' => $template->id,
-            'condition_reference'           => $conditionReference,
+            'condition_reference'          => $conditionReference,
         ])->one();
 
         if ($condition) {
@@ -356,21 +356,7 @@ class Condition extends ActiveRecord implements NonexistentInterface
             return $condition;
         }
 
-        Yii::warning(
-            "Can`t fetch for " . static::className() . " name = $programName and conditionReference = $conditionReference",
-            __METHOD__);
-
-        if (defined('YICMS_STRICT')) {
-            throw new CommonException(
-                "YICMS_STRICT_MODE:
-                Can`t fetch for " . static::className() . " name = $programName and conditionReference = $conditionReference");
-        }
-
-        $nonexistentCondition = new static();
-        $nonexistentCondition->setNonexistent();
-        $nonexistentCondition->setNonexistentName($programName);
-
-        return $nonexistentCondition;
+        return null;
     }
 
     /**

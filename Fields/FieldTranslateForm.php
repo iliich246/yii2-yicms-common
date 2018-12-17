@@ -121,7 +121,6 @@ class FieldTranslateForm extends AbstractTranslateForm implements
         /** @var FieldTranslate $translate */
         $translate = $this->getCurrentTranslateDb();
 
-
         $translate->value = $this->value;
 
         return $translate->save(false);

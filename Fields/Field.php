@@ -343,21 +343,7 @@ class Field extends ActiveRecord implements
             return $field;
         }
 
-        Yii::warning(
-            "Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference",
-            __METHOD__);
-
-        if (defined('YICMS_STRICT')) {
-            throw new CommonException(
-                "YICMS_STRICT_MODE:
-                Can`t fetch for " . static::className() . " name = $programName and fieldReference = $fieldReference");
-        }
-
-        $nonexistentField = new static();
-        $nonexistentField->setNonexistent();
-        $nonexistentField->setNonexistentName($programName);
-
-        return $nonexistentField;
+        return null;
     }
 
     /**

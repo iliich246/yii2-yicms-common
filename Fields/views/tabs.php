@@ -28,9 +28,9 @@ $tabSelector = uniqid();
                 <?php foreach($translateModelList as $field): ?>
 
                     <?= \Iliich246\YicmsCommon\Fields\FieldTypeWidget::widget([
-                        'form' => $widget->form,
+                        'form'       => $widget->form,
                         'fieldModel' => $field,
-                        'isModal' => $widget->isModal
+                        'isModal'    => $widget->isModal
                     ]) ?>
 
                 <?php endforeach; ?>

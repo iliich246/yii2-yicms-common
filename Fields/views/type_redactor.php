@@ -80,20 +80,21 @@ if (!$widget->fieldModel->isFictive()) {
 
     $optionsTemplate .= '   </ul>
                     </div>';
-
-    if ($widget->fieldModel->getFieldDescription()) {
-        $labelOptions = [
-            'class'          => 'redactor-label',
-            'data-toggle'    => 'tooltip',
-            'data-placement' => 'top',
-            'title'          => $widget->fieldModel->getFieldDescription()
-        ];
-    } else {
-        $labelOptions = [
-            'class' => 'redactor-label',
-        ];
-    }
 }
+
+if ($widget->fieldModel->getFieldDescription()) {
+    $labelOptions = [
+        'class' => 'redactor-label',
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top',
+        'title' => $widget->fieldModel->getFieldDescription()
+    ];
+} else {
+    $labelOptions = [
+        'class' => 'redactor-label',
+    ];
+}
+
 ?>
 
 <?= $widget->form->field($widget->fieldModel, $widget->fieldModel->getKey(), [

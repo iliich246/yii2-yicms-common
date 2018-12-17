@@ -9,6 +9,8 @@ use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
+use Iliich246\YicmsCommon\Languages\Language;
+use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\FieldsHandler;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldsInterface;
@@ -310,6 +312,36 @@ class FreeEssences extends ActiveRecord implements
             if ($conditionTemplate->isConstraints()) return true;
 
         return false;
+    }
+
+    /**
+     * Returns name of free essence
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws CommonException
+     */
+    public function name(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        if (!FreeEssenceNamesTranslatesDb::getTranslate($this->id, $language->id)) return $this->program_name;
+
+        return FreeEssenceNamesTranslatesDb::getTranslate($this->id, $language->id)->name;
+    }
+
+    /**
+     * Returns description of free essence
+     * @param LanguagesDb|null $language
+     * @return string
+     * @throws CommonException
+     */
+    public function description(LanguagesDb $language = null)
+    {
+        if (!$language) $language = Language::getInstance()->getCurrentLanguage();
+
+        if (!FreeEssenceNamesTranslatesDb::getTranslate($this->id, $language->id)) return $this->program_name;
+
+        return FreeEssenceNamesTranslatesDb::getTranslate($this->id, $language->id)->description;
     }
 
     /**

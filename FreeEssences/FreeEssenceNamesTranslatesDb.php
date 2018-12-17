@@ -18,6 +18,9 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  */
 class FreeEssenceNamesTranslatesDb extends ActiveRecord
 {
+    /** @var array buffer of translates in view $buffer[<free-essence-id>][<language-id>] */
+    private static $buffer;
+
     /**
      * @inheritdoc
      */
@@ -43,5 +46,22 @@ class FreeEssenceNamesTranslatesDb extends ActiveRecord
                 'targetClass' => FreeEssences::className(), 'targetAttribute' => ['common_free_essence_id' => 'id']
             ],
         ];
+    }
+
+    /**
+     * @param $freeEssenceId
+     * @param $languageId
+     * @return self|null
+     */
+    public static function getTranslate($freeEssenceId, $languageId) {
+        if (isset(self::$buffer[$freeEssenceId][$languageId]))
+            return self::$buffer[$freeEssenceId][$languageId];
+
+        $translation = self::find()->where([
+            'common_free_essence_id' => $freeEssenceId,
+            'common_language_id'     => $languageId,
+        ])->one();
+
+        return self::$buffer[$freeEssenceId][$languageId] = $translation;
     }
 }
