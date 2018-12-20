@@ -234,12 +234,14 @@ class File extends AbstractEntity implements
      */
     private function getFileTranslate(LanguagesDb $language)
     {
-        if (isset($this->fileTranslates[$language->id])) return $this->fileTranslates[$language->id];
-
-        $this->fileTranslates[$language->id] = FileTranslate::find()->where([
-            'common_file_id' => $this->id,
-            'common_language_id' => $language->id
-        ])->one();
+        if (!isset($this->fileTranslates[$language->id]) &&
+            !is_null($this->fileTranslates[$language->id])
+        ) {
+            $this->fileTranslates[$language->id] = FileTranslate::find()->where([
+                'common_file_id'     => $this->id,
+                'common_language_id' => $language->id
+            ])->one();
+        }
 
         return $this->fileTranslates[$language->id];
     }
