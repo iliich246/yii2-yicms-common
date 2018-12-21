@@ -36,7 +36,7 @@ abstract class AbstractHandler
      * @param object $data the object to be cached
      * @return void
      */
-    protected function setToCache($key, $data)
+    public function setToCache($key, $data)
     {
         $this->buffer[$key] = $data;
     }

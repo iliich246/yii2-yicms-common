@@ -140,6 +140,8 @@ class FieldsGroup extends AbstractGroup
                     $singleField->editable                  = true;
 
                     $singleField->save();
+
+                    $this->referenceAble->getFieldHandler()->setToCache($singleFieldTemplate->program_name, $singleField);
                 }
 
                 if (!CommonModule::isUnderDev() && !$singleField->editable) continue;

@@ -86,6 +86,8 @@ class ConditionsGroup extends AbstractGroup
                 $condition->editable                     = true;
 
                 $condition->save();
+
+                $this->referenceAble->getConditionsHandler()->setToCache($conditionTemplate->program_name, $condition);
             }
 
             $this->conditions["$conditionTemplate->id"] = $condition;

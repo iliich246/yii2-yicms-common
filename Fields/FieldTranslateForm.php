@@ -201,6 +201,8 @@ class FieldTranslateForm extends AbstractTranslateForm implements
             $field->editable                  = true;
 
             $field->save(false);
+
+            $this->fieldAble->getFieldHandler()->setToCache($this->fieldTemplate->program_name, $field);
         }
 
         $this->field = $field;
