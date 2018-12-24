@@ -56,13 +56,15 @@ class Field extends ActiveRecord implements
     /** @var ValidatorBuilder instance */
     private $validatorBuilder;
     /** @var FieldsNamesTranslatesDb[] buffer for language */
-    private $fieldNamesTranslations;
+    private $fieldNamesTranslations = [];
     /** @var bool keeps state of fictive value */
     private $isFictive = false;
     /** @var bool if true field will behaviour as nonexistent   */
     private $isNonexistent = false;
     /** @var string value for keep program name in nonexistent mode */
     private $nonexistentProgramName;
+
+    public $unic;
 
     /**
      * @inheritdoc
@@ -92,6 +94,8 @@ class Field extends ActiveRecord implements
     public function init()
     {
         if (defined('YICMS_ALERTS')) $this->setAlertMode();
+
+        $this->unic = uniqid();
 
 //        $this->on(self::EVENT_AFTER_FIND, function() {
 //
@@ -480,7 +484,6 @@ class Field extends ActiveRecord implements
      */
     public function getFieldName()
     {
-        //TODO: delete duplicate db requests
         $fieldName = $this->getFieldNameTranslate(Language::getInstance()->getCurrentLanguage());
 
         if ($fieldName && trim($fieldName->name) && CommonModule::isUnderAdmin()) return $fieldName->name;
@@ -518,8 +521,7 @@ class Field extends ActiveRecord implements
      */
     public function getFieldNameTranslate(LanguagesDb $language)
     {
-        if (!isset($this->fieldNamesTranslations[$language->id]) &&
-            !is_null($this->fieldNamesTranslations[$language->id])) {
+        if (!array_key_exists($language->id, $this->fieldNamesTranslations)) {
             $this->fieldNamesTranslations[$language->id] = FieldsNamesTranslatesDb::find()->where([
                 'common_fields_template_id' => $this->getTemplate()->id,
                 'common_language_id'        => $language->id,

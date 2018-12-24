@@ -324,8 +324,7 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     private function getFileNameTranslate(LanguagesDb $language)
     {
-        if (!isset($this->fileNamesTranslates[$language->id])) {
-
+        if (!array_key_exists($language->id, $this->fileNamesTranslates)) {
             $data = FilesNamesTranslatesDb::find()->where([
                     'common_files_template_id' => $this->id,
                     'common_language_id'       => $language->id,

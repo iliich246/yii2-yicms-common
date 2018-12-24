@@ -443,7 +443,7 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     private function getImageNameTranslate(LanguagesDb $language)
     {
-        if (!isset($this->imageNamesTranslates[$language->id])) {
+        if (!array_key_exists($language->id, $this->imageNamesTranslates)) {
 
             $data = ImagesNamesTranslatesDb::find()->where([
                 'common_images_template_id' => $this->id,
