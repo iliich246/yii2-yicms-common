@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Yii;
+use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\validators\SafeValidator;
 use Iliich246\YicmsCommon\CommonModule;
@@ -231,7 +232,7 @@ class Field extends ActiveRecord implements
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         if (!is_null($this->translation[$language->id])) {
-            if (trim($this->translation[$language->id]->name) !== '') return true;
+            if (trim($this->translation[$language->id]->value) !== '') return true;
             return false;
         }
 

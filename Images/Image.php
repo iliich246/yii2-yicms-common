@@ -194,13 +194,14 @@ class Image extends AbstractEntity implements
      */
     public function getSrc(LanguagesDb $language = null)
     {
-        if ($this->isNonexistent()) {
+        if ($this->isNonexistent() && CommonModule::isUnderDev() && defined('YICMS_ALERTS')) {
             $asset = new DeveloperAsset();
             $asset->publish(\Yii::$app->assetManager);
 
             $src = $asset->baseUrl . '/no-image.png';
             return $src;
-        }
+        } else if ($this->isNonexistent())
+            return '';
 
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 

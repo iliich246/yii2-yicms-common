@@ -40,7 +40,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate implements Nonexiste
         foreach($this->entityBuffer as $entity)
             return $entity;
 
-        return false;
+        return $this->getNoExistentEntity();
     }
 
     /**

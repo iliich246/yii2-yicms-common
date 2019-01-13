@@ -324,13 +324,14 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getSrc($language = null)
     {
-        if ($this->isNonexistent()) {
+        if ($this->isNonexistent() && CommonModule::isUnderDev() && defined('YICMS_ALERTS')) {
             $asset = new DeveloperAsset();
             $asset->publish(\Yii::$app->assetManager);
 
-            $src = $asset->baseUrl . '/no-image.png';
+            $src = $asset->baseUrl . '/no-image-block.png';
             return $src;
-        }
+        } else if ($this->isNonexistent())
+            return '';
 
         return $this->getImage()->getSrc($language);
     }
