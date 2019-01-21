@@ -94,6 +94,7 @@ class DeveloperImagesController extends Controller
      * @param $imageTemplateReference
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      */
     public function actionUpdateImagesListContainer($imageTemplateReference)
     {
@@ -117,11 +118,13 @@ class DeveloperImagesController extends Controller
     /**
      * Action for delete image block template
      * @param $imageTemplateId
-     * @param bool|false $deletePass
+     * @param bool $deletePass
      * @return string
      * @throws BadRequestHttpException
      * @throws CommonException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteImageBlockTemplate($imageTemplateId, $deletePass = false)
     {
@@ -155,6 +158,7 @@ class DeveloperImagesController extends Controller
      * @param $imageTemplateId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionImageTemplateUpOrder($imageTemplateId)
@@ -185,6 +189,7 @@ class DeveloperImagesController extends Controller
      * @param $imageTemplateId
      * @return string
      * @throws BadRequestHttpException
+     * @throws CommonException
      * @throws NotFoundHttpException
      */
     public function actionImageTemplateDownOrder($imageTemplateId)
@@ -328,6 +333,8 @@ class DeveloperImagesController extends Controller
      * @return false|int|void
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteThumbnailConfigurator($thumbnailId)
     {

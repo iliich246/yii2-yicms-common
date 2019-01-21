@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
 /** @var $this \yii\web\View */
 /** @var $widget ImagesDevModalWidget */
-/** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
+/** @var $bundle \Iliich246\YicmsCommon\Assets\DeveloperAsset */
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 

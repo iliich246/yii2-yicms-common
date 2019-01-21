@@ -309,11 +309,16 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
     
     /**
+     * Returns true if image block has constraints
      * @return bool
      */
     public function isConstraints()
     {
-        return true;
+        if (Image::find()->where([
+            'common_images_templates_id' => $this->id,
+        ])->one()) return true;
+
+        return false;
     }
 
     /**
