@@ -194,11 +194,16 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Return true if file block has constrains
      * @return bool
      */
     public function isConstraints()
     {
-        return true;
+        if (File::find()->where([
+            'common_files_template_id' => $this->id
+        ])->one()) return true;
+
+        return false;
     }
 
     /**

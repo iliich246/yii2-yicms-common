@@ -62,7 +62,7 @@ $js = <<<JS
                 $(deleteButtonRow).append(template);
 
                 var passwordInput = $('#field-delete-password-input');
-                var buttonDelete  = $('#button-delete-with-pass');
+                var buttonDelete  = $('#field-button-delete-with-pass');
 
                 $(buttonDelete).on('click', function() {
 
@@ -234,7 +234,7 @@ else
                             <br>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="button-delete-with-pass"
+                                    id="field-button-delete-with-pass"
                                 >
                                 Yes, i am absolutely seriously!!!
                             </button>

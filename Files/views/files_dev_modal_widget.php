@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Validators\ValidatorsListWidget;
 
 /** @var $this \yii\web\View */
 /** @var $widget FilesDevModalWidget */
-/** @var \Iliich246\YicmsCommon\Assets\DeveloperAsset $bundle */
+/** @var $bundle \Iliich246\YicmsCommon\Assets\DeveloperAsset */
 
 $bundle = \Iliich246\YicmsCommon\Assets\DeveloperAsset::register($this);
 
@@ -61,7 +61,7 @@ $js = <<<JS
                 $(deleteButtonRow).append(template);
 
                 var passwordInput = $('#file-block-delete-password-input');
-                var buttonDelete  = $('#button-delete-with-pass');
+                var buttonDelete  = $('#file-button-delete-with-pass');
 
                 $(buttonDelete).on('click', function() {
                     $.pjax({
@@ -242,7 +242,7 @@ else
                             <br>
                             <button type="button"
                                     class="btn btn-danger"
-                                    id="button-delete-with-pass"
+                                    id="file-button-delete-with-pass"
                                 >
                                 Yes, i am absolutely seriously!!!
                             </button>
