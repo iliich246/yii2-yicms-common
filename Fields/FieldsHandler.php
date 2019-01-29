@@ -32,7 +32,6 @@ class FieldsHandler extends AbstractHandler
      */
     public function getField($name)
     {
-
         if ($this->aggregator->isNonexistent()) {
             $nonexistentField = new Field();
             $nonexistentField->setNonexistent();
