@@ -43,7 +43,7 @@ class FilesBlock extends AbstractEntityBlock implements
      * Files types
      */
     const TYPE_MULTIPLICITY = 0;
-    const TYPE_ONE_FILE = 1;
+    const TYPE_ONE_FILE     = 1;
     /**
      * Language types of files
      * Type define is file have translates or file has one instance independent of languages
@@ -115,7 +115,7 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * Return array of field types
+     * Return array of file block types
      * @return array|bool
      */
     public static function getTypes()
@@ -125,7 +125,7 @@ class FilesBlock extends AbstractEntityBlock implements
         if ($array) return $array;
 
         $array = [
-            self::TYPE_ONE_FILE => 'One file',
+            self::TYPE_ONE_FILE     => 'One file',
             self::TYPE_MULTIPLICITY => 'Multiple files',
         ];
 
@@ -142,7 +142,7 @@ class FilesBlock extends AbstractEntityBlock implements
     }
 
     /**
-     * Return array of field language types
+     * Return array of file block language types
      * @return array|bool
      */
     public static function getLanguageTypes()

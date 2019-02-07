@@ -222,7 +222,7 @@ class FilesGroup extends AbstractGroup
     public function render(ActiveForm $form)
     {
         return FilesRenderWidget::widget([
-            'form' => $form,
+            'form'       => $form,
             'filesGroup' => $this,
             'filesBlock' => $this->fileBlock,
         ]);
