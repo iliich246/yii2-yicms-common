@@ -11,6 +11,7 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  * @property integer $type
  * @property integer $condition_order
  * @property bool $editable
+ * @property bool $checkbox_state_default
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -19,6 +20,9 @@ class ConditionTemplate extends AbstractTemplate
     const TYPE_CHECKBOX = 0;
     const TYPE_RADIO    = 1;
     const TYPE_SELECT   = 2;
+
+    const DEFAULT_VALUE_TRUE  = 1;
+    const DEFAULT_VALUE_FALSE = 0;
 
     /** @inheritdoc */
     protected static $buffer = [];
@@ -30,8 +34,10 @@ class ConditionTemplate extends AbstractTemplate
      */
     public function init()
     {
-        $this->editable = true;
-        $this->type     = self::TYPE_CHECKBOX;
+        $this->editable               = true;
+        $this->type                   = self::TYPE_CHECKBOX;
+        $this->checkbox_state_default = false;
+
         parent::init();
     }
 
@@ -51,6 +57,17 @@ class ConditionTemplate extends AbstractTemplate
         return array_merge(parent::rules(), [
             [['type'], 'integer'],
             [['editable'], 'boolean'],
+            [['checkbox_state_default'], 'integer']
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'checkbox_state_default' => 'Default checkbox value',
         ]);
     }
 
@@ -61,9 +78,9 @@ class ConditionTemplate extends AbstractTemplate
     {
         $prevScenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = array_merge($prevScenarios[self::SCENARIO_CREATE],
-            ['type', 'editable']);
+            ['type', 'editable', 'checkbox_state_default']);
         $scenarios[self::SCENARIO_UPDATE] = array_merge($prevScenarios[self::SCENARIO_UPDATE],
-            ['type', 'editable']);
+            ['type', 'editable', 'checkbox_state_default']);
 
         return $scenarios;
     }
@@ -82,6 +99,24 @@ class ConditionTemplate extends AbstractTemplate
             self::TYPE_CHECKBOX => 'Check box type',
             self::TYPE_RADIO    => 'Radio group type',
             self::TYPE_SELECT   => 'Select dropdown type',
+        ];
+
+        return $array;
+    }
+
+    /**
+     * Returns array of condition checkbox default values
+     * @return array|bool
+     */
+    public static function getCheckBoxDefaultList()
+    {
+        static $array = false;
+
+        if ($array) return $array;
+
+        $array = [
+            self::DEFAULT_VALUE_FALSE => 'FALSE',
+            self::DEFAULT_VALUE_TRUE  => 'TRUE',
         ];
 
         return $array;
@@ -191,6 +226,15 @@ class ConditionTemplate extends AbstractTemplate
         }
 
         return null;
+    }
+
+    /**
+     * Returns default checkbox value for this template
+     * @return bool
+     */
+    public function defaultCheckboxValue()
+    {
+        return !!$this->checkbox_state_default;
     }
 
     /**

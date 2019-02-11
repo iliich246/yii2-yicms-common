@@ -429,6 +429,7 @@ class m171110_213106_common_init extends Migration
             'type'                         => $this->smallInteger(),
             'condition_order'              => $this->integer(),
             'editable'                     => $this->boolean(),
+            'checkbox_state_default'       => $this->boolean(),
         ]);
 
         $this->createIndex(

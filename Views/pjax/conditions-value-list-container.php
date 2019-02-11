@@ -111,7 +111,7 @@ $this->registerJs($js);
                   style="float: right;margin-right: 20px"></span>
         </h3>
         <?php if ($conditionTemplate->type == \Iliich246\YicmsCommon\Conditions\ConditionTemplate::TYPE_CHECKBOX): ?>
-        <h4>For "checkbox" condition type used only first value, other values will be ignored</h4>
+        <h4>For "checkbox" condition type all this values will be ignored</h4>
         <?php endif; ?>
     </div>
     <div class="modal-body">

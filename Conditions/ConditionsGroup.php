@@ -84,6 +84,10 @@ class ConditionsGroup extends AbstractGroup
                 $condition->condition_reference          = $this->referenceAble->getConditionReference();
                 $condition->common_value_id              = $conditionTemplate->defaultValueId();
                 $condition->editable                     = true;
+                $condition->checkbox_state               = $conditionTemplate->defaultCheckboxValue();
+
+                if ($conditionTemplate->type == ConditionTemplate::TYPE_CHECKBOX)
+                    $condition->value = (string)$condition->checkbox_state;
 
                 $condition->save();
 

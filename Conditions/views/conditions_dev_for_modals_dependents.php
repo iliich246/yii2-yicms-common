@@ -207,6 +207,11 @@ else $return = 'false';
                     ConditionTemplate::getTypes())
                 ?>
             </div>
+            <div class="col-sm-4 col-xs-12">
+                <?= $form->field($devConditionGroup->conditionTemplate, 'checkbox_state_default')->dropDownList(
+                    ConditionTemplate::getCheckBoxDefaultList())
+                ?>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-4 col-xs-12 ">
