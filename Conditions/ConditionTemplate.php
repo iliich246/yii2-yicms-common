@@ -57,7 +57,7 @@ class ConditionTemplate extends AbstractTemplate
         return array_merge(parent::rules(), [
             [['type'], 'integer'],
             [['editable'], 'boolean'],
-            [['checkbox_state_default'], 'integer']
+            [['checkbox_state_default'], 'boolean']
         ]);
     }
 
