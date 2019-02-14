@@ -37,7 +37,6 @@ class RequiredValidatorForm extends AbstractValidatorForm
      */
     public function buildValidator()
     {
-
         if (!$this->isActivate) return false;
 
         $validator = new RequiredValidator();
