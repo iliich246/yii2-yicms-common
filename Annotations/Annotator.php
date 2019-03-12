@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Annotation;
+namespace Iliich246\YicmsCommon\Annotations;
 
 use Yii;
 use yii\base\Component;
@@ -13,7 +13,7 @@ use yii\base\Component;
 class Annotator extends Component
 {
     /** @var AnnotatorFileInterface object */
-    private $annotatorFile;
+    private $annotatorFileObject;
 
     /**
      * Sets AnnotatorFileInterface owner of this object
@@ -21,6 +21,16 @@ class Annotator extends Component
      */
     public function setAnnotatorFileObject(AnnotatorFileInterface $instance)
     {
-        $this->annotatorFile = $instance;
+        $this->annotatorFileObject = $instance;
+    }
+
+    private function createAnnotatorFile()
+    {
+
+    }
+
+    private function openAnnotatorFile()
+    {
+
     }
 }

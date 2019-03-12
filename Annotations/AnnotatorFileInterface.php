@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Annotation;
+namespace Iliich246\YicmsCommon\Annotations;
 
 /**
  * Interface AnnotatorFileInterface

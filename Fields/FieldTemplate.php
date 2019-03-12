@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\ValidatorBuilder;
@@ -20,7 +21,9 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterface
+class FieldTemplate extends AbstractTemplate implements
+    ValidatorReferenceInterface,
+    AnnotatorStringInterface
 {
     /**
      * Types of fields
@@ -275,5 +278,13 @@ class FieldTemplate extends AbstractTemplate implements ValidatorReferenceInterf
         }
 
         return $this->validator_reference;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotatorStringBlockName()
+    {
+        return 'FIELDS';
     }
 }

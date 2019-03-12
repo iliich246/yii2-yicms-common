@@ -35,6 +35,8 @@ class CommonModule extends AbstractConfigurableModule implements
     public $defaultLanguage = 'en-EU';
     /** @var int method that used for store information about language between requests */
     public $languageMethod = Language::COOKIE_TYPE;
+    /** @var string name of directory for annotation files */
+    public $annotationsDirectory = 'Models';
 
     /**
      * Block of fields with various paths
