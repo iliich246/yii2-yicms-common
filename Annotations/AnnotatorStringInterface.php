@@ -10,7 +10,9 @@ namespace Iliich246\YicmsCommon\Annotations;
 interface AnnotatorStringInterface
 {
     /**
-     * @return string name of annotation block
+     * Return array of string annotations
+     * @param $searchData
+     * @return mixed
      */
-    public static function getAnnotatorStringBlockName();
+    public static function getAnnotationsStringArray($searchData);
 }

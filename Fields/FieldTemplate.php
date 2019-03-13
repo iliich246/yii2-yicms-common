@@ -283,8 +283,27 @@ class FieldTemplate extends AbstractTemplate implements
     /**
      * @inheritdoc
      */
-    public static function getAnnotatorStringBlockName()
+    public static function getAnnotationsStringArray($searchData)
     {
-        return 'FIELDS';
+        /** @var self[] $templates */
+        $templates = self::find()->where([
+            'field_template_reference' => $searchData
+        ])->orderBy([
+            'field_order' => SORT_ASC
+        ])->all();
+
+        if (!$templates) return [];
+
+        $result = [
+            ' *' . PHP_EOL,
+            ' * FIELDS' . PHP_EOL,
+        ];
+
+        foreach ($templates as $template) {
+            $result[] = ' * @property $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property $field_' . $template->program_name . ' ' . PHP_EOL;
+        }
+
+        return $result;
     }
 }
