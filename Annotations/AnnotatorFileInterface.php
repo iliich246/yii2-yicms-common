@@ -26,4 +26,18 @@ interface AnnotatorFileInterface
      * @return string
      */
     public function getAnnotationFilePath();
+
+    /**
+     * Return namespace of annotation file
+     * @return string
+     */
+    public static function getAnnotationFileNamespace();
+
+    /**
+     * Return path for annotation template file
+     * @return string
+     */
+    public static function getAnnotationTemplateFile();
+
+
 }
