@@ -21,11 +21,11 @@ class Annotator extends Component
     private $annotatorReflect;
     /** @var SplFileObject of annotator file */
     private $fileResource;
-
+    /** @var array of strings of file */
     private $fileStringArray = [];
-
+    /** @var null|integer number of string of begin of auto annotation  */
     private $autoBlockStartIndex = null;
-
+    /** @var array for keep auto annotations */
     private $autoAnnotationsArray = [];
 
     /**

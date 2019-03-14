@@ -4,6 +4,10 @@ namespace Iliich246\YicmsCommon\Files;
 
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Annotations\Annotator;
+use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
@@ -37,7 +41,10 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
 class FilesBlock extends AbstractEntityBlock implements
     FieldReferenceInterface,
     ValidatorReferenceInterface,
-    ConditionsReferenceInterface
+    ConditionsReferenceInterface,
+    AnnotateInterface,
+    AnnotatorFileInterface,
+    AnnotatorStringInterface
 {
     /**
      * Files types
@@ -57,6 +64,10 @@ class FilesBlock extends AbstractEntityBlock implements
     private $currentFileReference;
     /** @inheritdoc */
     protected static $buffer = [];
+    /** @var Annotator instance */
+    private $annotator = null;
+    /** @var AnnotatorFileInterface instance */
+    private static $parentFileAnnotator;
 
     /**
      * @inheritdoc
@@ -550,5 +561,110 @@ class FilesBlock extends AbstractEntityBlock implements
         }
 
         return $this->validator_reference;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
+     */
+    public function annotate()
+    {
+                
+        $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public function getAnnotator()
+    {
+        if (!is_null($this->annotator)) return $this->annotator;
+
+        $this->annotator = new Annotator();
+        $this->annotator->setAnnotatorFileObject($this);
+        $this->annotator->prepare();
+
+        return $this->annotator;
+    }
+
+    /**
+     * Sets parent file annotator
+     * @param AnnotatorFileInterface $fileAnnotator
+     */
+    public static function setParentFileAnnotator(AnnotatorFileInterface $fileAnnotator)
+    {
+        self::$parentFileAnnotator = $fileAnnotator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFileName()
+    {
+        return ucfirst(mb_strtolower($this->program_name)) . 'FileBlock';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFilePath()
+    {
+        if (!is_dir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+            self::$parentFileAnnotator->getAnnotationFileName()))
+            mkdir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+                self::$parentFileAnnotator->getAnnotationFileName());
+
+        return self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+        self::$parentFileAnnotator->getAnnotationFileName() . '/Files';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public static function getAnnotationTemplateFile()
+    {
+        $class = new \ReflectionClass(self::class);
+        return dirname($class->getFileName())  . '/annotations/file_block.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationFileNamespace()
+    {
+        return self::$parentFileAnnotator->getAnnotationFileNamespace() . '\\'
+        . self::$parentFileAnnotator->getAnnotationFileName() . '\\'
+        . 'Files';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationsStringArray($searchData)
+    {
+        /** @var self[] $templates */
+        $templates = self::find()->where([
+            'file_template_reference' => $searchData
+        ])->orderBy([
+            'file_order' => SORT_ASC
+        ])->all();
+
+        if (!$templates) return [];
+
+        $result = [
+            ' *' . PHP_EOL,
+            ' * FILES' . PHP_EOL,
+        ];
+
+        foreach ($templates as $template) {
+            $result[] = ' * @property Penis $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property Penis $file_' . $template->program_name . ' ' . PHP_EOL;
+            $template->annotate();
+        }
+
+        return $result;
     }
 }

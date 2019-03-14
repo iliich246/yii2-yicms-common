@@ -300,8 +300,8 @@ class FieldTemplate extends AbstractTemplate implements
         ];
 
         foreach ($templates as $template) {
-            $result[] = ' * @property $' . $template->program_name . ' ' . PHP_EOL;
-            $result[] = ' * @property $field_' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property string $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property string $field_' . $template->program_name . ' ' . PHP_EOL;
         }
 
         return $result;

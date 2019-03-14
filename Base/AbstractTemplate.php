@@ -136,6 +136,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
             return $value;
         }
 
+        /** @var AbstractTemplate $value */
         $value = self::fetchTemplate($templateReference, $programName);
 
         if ($value)

@@ -2,13 +2,15 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+use app\yicms\Pages\Models\Test\Files\File_m;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
 
 /**
  * Class FilesHandler
  *
- * @property FilesReferenceInterface|NonexistentInterface $aggregator
+ * @property FilesReferenceInterface|NonexistentInterface|AnnotatorFileInterface $aggregator
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -36,13 +38,29 @@ class FilesHandler extends AbstractHandler
             $nonexistentFileBlock->setNonexistentName($name);
             return $nonexistentFileBlock;
         }
-        
+
         return $this->getOrSet($name, function() use($name) {
+            if ($this->aggregator instanceof AnnotatorFileInterface) {
+
+                /** @var FilesBlock $className */
+                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+                    $this->aggregator->getAnnotationFileName() . '\\Files\\' .
+                    ucfirst(mb_strtolower($name));
+
+                if (class_exists($className))
+                    return $className::getInstance(
+                        $this->aggregator->getFileTemplateReference(),
+                        $name,
+                        $this->aggregator->getFileReference()
+                    );
+            }
+
             return FilesBlock::getInstance(
                 $this->aggregator->getFileTemplateReference(),
                 $name,
                 $this->aggregator->getFileReference()
             );
+
         });
     }
 }
