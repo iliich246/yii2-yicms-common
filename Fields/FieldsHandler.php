@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
 
@@ -41,11 +42,34 @@ class FieldsHandler extends AbstractHandler
         }
 
         return $this->getOrSet($name, function() use($name) {
+            if ($this->aggregator instanceof AnnotatorFileInterface) {
+
+                /** @var Field $className */
+                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+                    $this->aggregator->getAnnotationFileName() . '\\Fields\\' .
+                    ucfirst(mb_strtolower($name));
+
+                if (class_exists($className))
+                    return $className::getInstance(
+                        $this->aggregator->getFieldTemplateReference(),
+                        $this->aggregator->getFieldReference(),
+                        $name
+                    );
+            }
+
             return Field::getInstance(
                 $this->aggregator->getFieldTemplateReference(),
                 $this->aggregator->getFieldReference(),
                 $name
             );
         });
+
+//        return $this->getOrSet($name, function() use($name) {
+//            return Field::getInstance(
+//                $this->aggregator->getFieldTemplateReference(),
+//                $this->aggregator->getFieldReference(),
+//                $name
+//            );
+//        });
     }
 }

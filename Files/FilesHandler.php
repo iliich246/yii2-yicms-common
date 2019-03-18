@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use app\yicms\Pages\Models\Test\Files\File_m;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;

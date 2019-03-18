@@ -72,7 +72,7 @@ class Annotator extends Component
      */
     public function getExtendsUseClass()
     {
-        return $this->annotatorReflect->getName();
+        return $this->annotatorFileObject->getExtendsUseClass();
     }
 
     /**
@@ -81,11 +81,9 @@ class Annotator extends Component
      */
     public function getExtendsClassName()
     {
-        return $this->annotatorReflect->getShortName();
+        return $this->annotatorFileObject->getExtendsClassName();
     }
 
-
-    private $isAutoBlock = false;
     private $lineNumber;
 
     /**

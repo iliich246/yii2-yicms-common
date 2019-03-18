@@ -2,6 +2,9 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Annotations\Annotator;
+use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 use Iliich246\YicmsCommon\Validators\ValidatorDb;
@@ -23,6 +26,8 @@ use Iliich246\YicmsCommon\Validators\ValidatorReferenceInterface;
  */
 class FieldTemplate extends AbstractTemplate implements
     ValidatorReferenceInterface,
+    AnnotateInterface,
+    AnnotatorFileInterface,
     AnnotatorStringInterface
 {
     /**
@@ -44,6 +49,10 @@ class FieldTemplate extends AbstractTemplate implements
      * @inheritdoc
      */
     protected static $buffer = [];
+    /** @var Annotator instance */
+    private $annotator = null;
+    /** @var AnnotatorFileInterface instance */
+    private static $parentFileAnnotator;
 
     /**
      * @inheritdoc
@@ -281,6 +290,98 @@ class FieldTemplate extends AbstractTemplate implements
     }
 
     /**
+     * Sets parent file annotator
+     * @param AnnotatorFileInterface $fileAnnotator
+     */
+    public static function setParentFileAnnotator(AnnotatorFileInterface $fileAnnotator)
+    {
+        self::$parentFileAnnotator = $fileAnnotator;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
+     */
+    public function annotate()
+    {
+        $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public function getAnnotator()
+    {
+        if (!is_null($this->annotator)) return $this->annotator;
+
+        $this->annotator = new Annotator();
+        $this->annotator->setAnnotatorFileObject($this);
+        $this->annotator->prepare();
+
+        return $this->annotator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFilePath()
+    {
+        if (!is_dir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+            self::$parentFileAnnotator->getAnnotationFileName()))
+            mkdir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+                self::$parentFileAnnotator->getAnnotationFileName());
+
+        return self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+        self::$parentFileAnnotator->getAnnotationFileName() . '/Fields';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\Fields\Field';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'Field';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public static function getAnnotationTemplateFile()
+    {
+        $class = new \ReflectionClass(self::class);
+        return dirname($class->getFileName())  . '/annotations/field.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationFileNamespace()
+    {
+        return self::$parentFileAnnotator->getAnnotationFileNamespace() . '\\'
+        . self::$parentFileAnnotator->getAnnotationFileName() . '\\'
+        . 'Fields';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFileName()
+    {
+        return ucfirst(mb_strtolower($this->program_name));
+    }
+
+    /**
      * @inheritdoc
      */
     public static function getAnnotationsStringArray($searchData)
@@ -302,6 +403,7 @@ class FieldTemplate extends AbstractTemplate implements
         foreach ($templates as $template) {
             $result[] = ' * @property string $' . $template->program_name . ' ' . PHP_EOL;
             $result[] = ' * @property string $field_' . $template->program_name . ' ' . PHP_EOL;
+            $template->annotate();
         }
 
         return $result;

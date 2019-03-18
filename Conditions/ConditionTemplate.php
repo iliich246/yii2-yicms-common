@@ -2,6 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Conditions;
 
+use Iliich246\YicmsCommon\Annotations\Annotator;
+use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Base\AbstractTemplate;
 
 /**
@@ -15,7 +19,10 @@ use Iliich246\YicmsCommon\Base\AbstractTemplate;
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class ConditionTemplate extends AbstractTemplate
+class ConditionTemplate extends AbstractTemplate implements
+    AnnotateInterface,
+    AnnotatorFileInterface,
+    AnnotatorStringInterface
 {
     const TYPE_CHECKBOX = 0;
     const TYPE_RADIO    = 1;
@@ -28,6 +35,10 @@ class ConditionTemplate extends AbstractTemplate
     protected static $buffer = [];
     /** @var ConditionValues[] */
     private $values = null;
+    /** @var Annotator instance */
+    private $annotator = null;
+    /** @var AnnotatorFileInterface instance */
+    private static $parentFileAnnotator;
 
     /**
      * @inheritdoc
@@ -301,5 +312,105 @@ class ConditionTemplate extends AbstractTemplate
     protected static function getTemplateReferenceName()
     {
         return 'condition_template_reference';
+    }
+
+    /**
+     * Sets parent file annotator
+     * @param AnnotatorFileInterface $fileAnnotator
+     */
+    public static function setParentFileAnnotator(AnnotatorFileInterface $fileAnnotator)
+    {
+        self::$parentFileAnnotator = $fileAnnotator;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
+     */
+    public function annotate()
+    {
+        $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public function getAnnotator()
+    {
+        if (!is_null($this->annotator)) return $this->annotator;
+
+        $this->annotator = new Annotator();
+        $this->annotator->setAnnotatorFileObject($this);
+        $this->annotator->prepare();
+
+        return $this->annotator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFilePath()
+    {
+        if (!is_dir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+            self::$parentFileAnnotator->getAnnotationFileName()))
+            mkdir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+                self::$parentFileAnnotator->getAnnotationFileName());
+
+        return self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+        self::$parentFileAnnotator->getAnnotationFileName() . '/Conditions';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\Conditions\Condition';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'Condition';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public static function getAnnotationTemplateFile()
+    {
+        $class = new \ReflectionClass(self::class);
+        return dirname($class->getFileName())  . '/annotations/condition.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationFileNamespace()
+    {
+        return self::$parentFileAnnotator->getAnnotationFileNamespace() . '\\'
+        . self::$parentFileAnnotator->getAnnotationFileName() . '\\'
+        . 'Conditions';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFileName()
+    {
+        return ucfirst(mb_strtolower($this->program_name));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationsStringArray($searchData)
+    {
+        
     }
 }

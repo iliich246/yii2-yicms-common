@@ -11,6 +11,7 @@ use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Annotations\Annotator;
 use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
@@ -608,6 +609,22 @@ class File extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\Files\File';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'File';
+    }
+
+    /**
+     * @inheritdoc
      * @throws \ReflectionException
      */
     public static function getAnnotationTemplateFile()
@@ -626,10 +643,7 @@ class File extends AbstractEntity implements
         . 'Files';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function getAnnotationsStringArray($searchData)
+    public static function getAnnotationsStringArray($data)
     {
 
     }

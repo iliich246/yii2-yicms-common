@@ -622,6 +622,22 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\Files\FilesBlock';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'FilesBlock';
+    }
+
+    /**
+     * @inheritdoc
      * @throws \ReflectionException
      */
     public static function getAnnotationTemplateFile()

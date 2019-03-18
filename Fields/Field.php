@@ -48,6 +48,8 @@ class Field extends ActiveRecord implements
     const MODE_DEFAULT = 0;
     const MODE_ALERT = 1;
 
+    const EVENT_AFTER_FETCH = 'afterFetch';
+
     /** @var int keeps mode of field */
     private $mode = self::MODE_DEFAULT;
     /** @var FieldTranslate[] array of field translations */
@@ -155,6 +157,8 @@ class Field extends ActiveRecord implements
 
             return '';
         };
+
+        $this->trigger(self::EVENT_AFTER_FETCH);
 
         if (!$this->getTemplate()->visible) {
 
@@ -337,8 +341,8 @@ class Field extends ActiveRecord implements
             return $nonexistentField;
         };
 
-        /** @var self $field */
-        $field = self::find()->where([
+        /** @var static $field */
+        $field = static::find()->where([
             'common_fields_template_id' => $template->id,
             'field_reference'           => $fieldReference
         ])->one();

@@ -28,6 +28,18 @@ interface AnnotatorFileInterface
     public function getAnnotationFilePath();
 
     /**
+     * Return correct use record for parent class
+     * @return string
+     */
+    public function getExtendsUseClass();
+
+    /**
+     * Returns name of parent class
+     * @return string
+     */
+    public function getExtendsClassName();
+
+    /**
      * Return namespace of annotation file
      * @return string
      */
