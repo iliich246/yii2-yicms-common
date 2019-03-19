@@ -130,6 +130,15 @@ class File extends AbstractEntity implements
     }
 
     /**
+     * Proxy parent method with concrete method name
+     * @param FilesBlock $filesBlock
+     */
+    public function setFileBlock(FilesBlock $filesBlock)
+    {
+        $this->setEntityBlock($filesBlock);
+    }
+
+    /**
      * @inheritdoc
      */
     protected static function getReferenceName()
@@ -590,7 +599,7 @@ class File extends AbstractEntity implements
      */
     public function getAnnotationFileName()
     {
-        return ucfirst(mb_strtolower($this->program_name)) . 'File';
+        return ucfirst(mb_strtolower($this->getFileBlock()->program_name)) . 'File';
     }
 
     /**

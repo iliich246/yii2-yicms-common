@@ -128,6 +128,10 @@ class Annotator extends Component
         return $this->fileStringArray;
     }
 
+    /**
+     * Method add annotation array
+     * @param $array
+     */
     public function addAnnotationArray($array)
     {
         $this->autoAnnotationsArray = array_merge($this->autoAnnotationsArray, $array);

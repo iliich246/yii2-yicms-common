@@ -411,6 +411,6 @@ class ConditionTemplate extends AbstractTemplate implements
      */
     public static function getAnnotationsStringArray($searchData)
     {
-        
+
     }
 }

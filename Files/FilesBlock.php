@@ -570,7 +570,17 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function annotate()
     {
-                
+        $annotationArray = FileBlockAnnotatorString::getAnnotationsStringArray($this);
+
+        $this->getAnnotator()->addAnnotationArray($annotationArray);
+
+        $file = new File();
+        $file->setParentFileAnnotator(self::$parentFileAnnotator);
+        $file->setFileBlock($this);
+
+        $file->getAnnotator()->addAnnotationArray($annotationArray);
+        $file->getAnnotator()->finish();
+
         $this->getAnnotator()->finish();
     }
 
@@ -676,8 +686,14 @@ class FilesBlock extends AbstractEntityBlock implements
         ];
 
         foreach ($templates as $template) {
-            $result[] = ' * @property Penis $' . $template->program_name . ' ' . PHP_EOL;
-            $result[] = ' * @property Penis $file_' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $file_' . $template->program_name . ' ' . PHP_EOL;
             $template->annotate();
         }
 
