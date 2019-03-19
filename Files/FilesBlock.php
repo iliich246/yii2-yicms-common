@@ -668,6 +668,8 @@ class FilesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
      */
     public static function getAnnotationsStringArray($searchData)
     {

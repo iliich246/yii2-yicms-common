@@ -2,13 +2,18 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use Iliich246\YicmsCommon\Assets\DeveloperAsset;
+
 use Yii;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
 use yii\validators\SafeValidator;
 use yii\validators\RequiredValidator;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Annotations\Annotator;
+use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
+use Iliich246\YicmsCommon\Assets\DeveloperAsset;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
@@ -59,7 +64,10 @@ class Image extends AbstractEntity implements
     ValidatorBuilderInterface,
     ValidatorReferenceInterface,
     ImagesProcessorInterface,
-    FictiveInterface
+    FictiveInterface,
+    AnnotateInterface,
+    AnnotatorFileInterface,
+    AnnotatorStringInterface
 {
     use SortOrderTrait;
 
@@ -84,6 +92,10 @@ class Image extends AbstractEntity implements
     private $currentThumbnail = null;
     /** @var int keep images mode  */
     private $imageMode = self::ORIGINALS_MODE;
+    /** @var Annotator instance */
+    private $annotator = null;
+    /** @var AnnotatorFileInterface instance */
+    private static $parentFileAnnotator;
 
     /**
      * @inheritdoc
@@ -131,6 +143,15 @@ class Image extends AbstractEntity implements
     public function getImagesBlock()
     {
         return $this->getEntityBlock();
+    }
+
+    /**
+     * Proxy parent method with concrete method name
+     * @param ImagesBlock $imagesBlock
+     */
+    public function setImagesBlock(ImagesBlock $imagesBlock)
+    {
+        $this->setEntityBlock($imagesBlock);
     }
 
     /**
@@ -689,5 +710,107 @@ class Image extends AbstractEntity implements
     public function isFictive()
     {
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
+     */
+    public function annotate()
+    {
+        $this->getAnnotator()->addAnnotationArray(
+            FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
+        );
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public function getAnnotator()
+    {
+        if (!is_null($this->annotator)) return $this->annotator;
+
+        $this->annotator = new Annotator();
+        $this->annotator->setAnnotatorFileObject($this);
+        $this->annotator->prepare();
+
+        return $this->annotator;
+    }
+
+    /**
+     * Sets parent file annotator
+     * @param AnnotatorFileInterface $fileAnnotator
+     */
+    public static function setParentFileAnnotator(AnnotatorFileInterface $fileAnnotator)
+    {
+        self::$parentFileAnnotator = $fileAnnotator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFileName()
+    {
+        return ucfirst(mb_strtolower($this->getImagesBlock()->program_name)) . 'Image';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFilePath()
+    {
+        if (!is_dir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+            self::$parentFileAnnotator->getAnnotationFileName()))
+            mkdir(self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+                self::$parentFileAnnotator->getAnnotationFileName());
+
+        return self::$parentFileAnnotator->getAnnotationFilePath() . '/' .
+            self::$parentFileAnnotator->getAnnotationFileName() . '/Images';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\Images\Image';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'Image';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public static function getAnnotationTemplateFile()
+    {
+        $class = new \ReflectionClass(self::class);
+        return dirname($class->getFileName())  . '/annotations/image.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationFileNamespace()
+    {
+        return self::$parentFileAnnotator->getAnnotationFileNamespace() . '\\'
+            . self::$parentFileAnnotator->getAnnotationFileName() . '\\'
+            . 'Images';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationsStringArray($data)
+    {
+
     }
 }

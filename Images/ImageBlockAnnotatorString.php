@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Files;
+namespace Iliich246\YicmsCommon\Images;
 
 use yii\base\Component;
 use Iliich246\YicmsCommon\Base\CommonException;
@@ -8,17 +8,17 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 
 /**
- * Class FileBlockAnnotatorString
+ * Class ImageBlockAnnotatorString
  *
  * This class needed only for generation annotation string.
  *
  * @author iliich246 <iliich246@gmail.com>
  */
-class FileBlockAnnotatorString extends Component implements AnnotatorStringInterface
+class ImageBlockAnnotatorString extends Component implements AnnotatorStringInterface
 {
     /**
      * @inheritdoc
-     * @param FilesBlock $searchData
+     * @param ImagesBlock $searchData
      * @throws CommonException
      */
     public static function getAnnotationsStringArray($searchData)

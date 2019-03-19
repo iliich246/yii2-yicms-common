@@ -652,6 +652,9 @@ class File extends AbstractEntity implements
         . 'Files';
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function getAnnotationsStringArray($data)
     {
 

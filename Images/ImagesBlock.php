@@ -698,7 +698,18 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function annotate()
     {
+        $annotationArray = ImageBlockAnnotatorString::getAnnotationsStringArray($this);
 
+        $this->getAnnotator()->addAnnotationArray($annotationArray);
+
+        $image = new Image();
+        $image->setParentFileAnnotator(self::$parentFileAnnotator);
+        $image->setImagesBlock($this);
+
+        $image->getAnnotator()->addAnnotationArray($annotationArray);
+        $image->getAnnotator()->finish();
+
+        $this->getAnnotator()->finish();
     }
 
     /**
@@ -785,6 +796,8 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
+     * @throws CommonException
+     * @throws \ReflectionException
      */
     public static function getAnnotationsStringArray($searchData)
     {
