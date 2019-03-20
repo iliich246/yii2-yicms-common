@@ -359,6 +359,11 @@ class FilesBlock extends AbstractEntityBlock implements
     public function getEntityQuery()
     {
         if (CommonModule::isUnderDev() || $this->editable) {
+            //TODO: return annotator file if exist
+            //$className = $this->getAnnotationFileNamespace() . '\\' .
+//                $this->aggregator->getAnnotationFileName() . '\\Files\\' .
+//                ucfirst(mb_strtolower($name));
+
             $fileQuery = File::find()
                 ->where([
                     'common_files_template_id' => $this->id,
@@ -614,6 +619,15 @@ class FilesBlock extends AbstractEntityBlock implements
     public function getAnnotationFileName()
     {
         return ucfirst(mb_strtolower($this->program_name)) . 'FileBlock';
+    }
+
+    /**
+     * Return name of concrete file class of concrete block after annotation
+     * @return string
+     */
+    public function getClassNameForFileClass()
+    {
+        return ucfirst(mb_strtolower($this->program_name)) . 'File';
     }
 
     /**

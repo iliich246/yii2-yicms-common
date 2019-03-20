@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Conditions;
 
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
 
@@ -36,10 +37,26 @@ class ConditionsHandler extends AbstractHandler
             $nonexistentImageBlock = new Condition();
             $nonexistentImageBlock->setNonexistent();
             $nonexistentImageBlock->setNonexistentName($name);
+
             return $nonexistentImageBlock;
         }
 
         return $this->getOrSet($name, function() use($name) {
+            if ($this->aggregator instanceof AnnotatorFileInterface) {
+
+                /** @var Condition $className */
+                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+                    $this->aggregator->getAnnotationFileName() . '\\Conditions\\' .
+                    ucfirst(mb_strtolower($name));
+
+                if (class_exists($className))
+                    return $className::getInstance(
+                        $this->aggregator->getConditionTemplateReference(),
+                        $this->aggregator->getConditionReference(),
+                        $name
+                    );
+            }
+
             return Condition::getInstance(
                 $this->aggregator->getConditionTemplateReference(),
                 $this->aggregator->getConditionReference(),

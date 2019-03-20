@@ -146,6 +146,17 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     }
 
     /**
+     * Return true if template with this name existed
+     * @param $templateReference
+     * @param $programName
+     * @return bool
+     */
+    public static function isTemplate($templateReference, $programName)
+    {
+        return !!self::getInstance($templateReference, $programName);
+    }
+
+    /**
      * Returns instance of template object with data fetched from database by id;
      * @param $id
      * @return AbstractTemplate|static

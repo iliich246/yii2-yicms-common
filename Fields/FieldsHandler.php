@@ -63,13 +63,12 @@ class FieldsHandler extends AbstractHandler
                 $name
             );
         });
+    }
 
-//        return $this->getOrSet($name, function() use($name) {
-//            return Field::getInstance(
-//                $this->aggregator->getFieldTemplateReference(),
-//                $this->aggregator->getFieldReference(),
-//                $name
-//            );
-//        });
+    public function isField($name)
+    {
+        if ($this->aggregator->isNonexistent()) return false;
+
+        return FieldTemplate::isTemplate($this->aggregator->getFieldTemplateReference(), $name);
     }
 }

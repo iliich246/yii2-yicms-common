@@ -411,6 +411,32 @@ class ConditionTemplate extends AbstractTemplate implements
      */
     public static function getAnnotationsStringArray($searchData)
     {
+        /** @var self[] $templates */
+        $templates = self::find()->where([
+            'condition_template_reference' => $searchData
+        ])->orderBy([
+            'condition_order' => SORT_ASC
+        ])->all();
 
+        if (!$templates) return [];
+
+        $result = [
+            ' *' . PHP_EOL,
+            ' * CONDITIONS' . PHP_EOL,
+        ];
+
+        foreach ($templates as $template) {
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $condition_' . $template->program_name . ' ' . PHP_EOL;
+            $template->annotate();
+        }
+
+        return $result;
     }
 }
