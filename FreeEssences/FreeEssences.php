@@ -2,8 +2,12 @@
 
 namespace Iliich246\YicmsCommon\FreeEssences;
 
+use Iliich246\YicmsCommon\CommonModule;
 use Yii;
 use yii\db\ActiveRecord;
+use Iliich246\YicmsCommon\Annotations\Annotator;
+use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
@@ -58,7 +62,9 @@ class FreeEssences extends ActiveRecord implements
     ConditionsInterface,
     FictiveInterface,
     SortOrderInterface,
-    NonexistentInterface
+    NonexistentInterface,
+    AnnotateInterface,
+    AnnotatorFileInterface
 {
     use SortOrderTrait;
 
@@ -77,6 +83,24 @@ class FreeEssences extends ActiveRecord implements
     private $isNonexistent = false;
     /** @var string keeps name of nonexistent page */
     private $nonexistentName;
+    /** @var Annotator instance */
+    private $annotator = null;
+    /** @var array of exception words for magical getter/setter */
+    protected static $annotationExceptionWords = [
+        'id',
+        'program_name',
+        'editable',
+        'visible',
+        'free_essences_order',
+        'field_template_reference',
+        'field_reference',
+        'file_template_reference',
+        'file_reference',
+        'image_template_reference',
+        'image_reference',
+        'condition_template_reference',
+        'condition_reference'
+    ];
 
     /**
      * @param array $config
@@ -133,6 +157,59 @@ class FreeEssences extends ActiveRecord implements
             ['program_name', 'string', 'max' => '50', 'tooLong' => 'Program name must be less than 50 symbols'],
             ['program_name', 'validateProgramName'],
         ];
+    }
+
+    /**
+     * Magical get method for use object annotations
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (in_array($name, self::$annotationExceptionWords))
+            return parent::__get($name);
+
+        if (strpos($name, 'field_') === 0) {
+            if ($this->isField(substr($name, 6)))
+                return $this->getFieldHandler()->getField(substr($name, 6));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'file_') === 0) {
+            if ($this->isFileBlock(substr($name, 5)))
+                return $this->getFileHandler()->getFileBlock(substr($name, 5));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'image_') === 0) {
+            if ($this->isImageBlock(substr($name, 6)))
+                return $this->getImagesHandler()->getImageBlock(substr($name, 6));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'condition_') === 0) {
+            if ($this->isCondition(substr($name, 10)))
+                return $this->getConditionsHandler()->getCondition(substr($name, 10));
+
+            return parent::__get($name);
+        }
+
+        if ($this->getFieldHandler()->isField($name))
+            return $this->getFieldHandler()->getField($name);
+
+        if ($this->getFileHandler()->isFileBlock($name))
+            return $this->getFileHandler()->getFileBlock($name);
+
+        if ($this->getImagesHandler()->isImageBlock($name))
+            return $this->getImagesHandler()->getImageBlock($name);
+
+        if ($this->getConditionsHandler()->isCondition($name))
+            return $this->getConditionsHandler()->getCondition($name);
+
+        return parent::__get($name);
     }
 
     /**
@@ -366,6 +443,14 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
+    public function isField($name)
+    {
+        return $this->getFieldHandler()->isField($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldTemplateReference()
     {
         return $this->field_template_reference;
@@ -396,6 +481,14 @@ class FreeEssences extends ActiveRecord implements
     public function getFileBlock($name)
     {
         return $this->getFileHandler()->getFileBlock($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFileBlock($name)
+    {
+        $this->getFileHandler()->isFileBlock($name);
     }
 
     /**
@@ -436,6 +529,14 @@ class FreeEssences extends ActiveRecord implements
     /**
      * @inheritdoc
      */
+    public function isImageBlock($name)
+    {
+        return $this->getImagesHandler()->isImageBlock($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getImageTemplateReference()
     {
         return $this->image_template_reference;
@@ -466,6 +567,14 @@ class FreeEssences extends ActiveRecord implements
     public function getCondition($name)
     {
         return $this->getConditionsHandler()->getCondition($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isCondition($name)
+    {
+        return $this->getConditionsHandler()->isCondition($name);
     }
 
     /**
@@ -586,5 +695,74 @@ class FreeEssences extends ActiveRecord implements
     public function setNonexistentName($name)
     {
         $this->nonexistentName = $name;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
+     */
+    public function annotate()
+    {
+        FieldTemplate::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
+        );
+
+        FilesBlock::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            FilesBlock::getAnnotationsStringArray($this->getFileTemplateReference())
+        );
+
+        ImagesBlock::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            ImagesBlock::getAnnotationsStringArray($this->getImageTemplateReference())
+        );
+
+        ConditionTemplate::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            ConditionTemplate::getAnnotationsStringArray($this->getConditionTemplateReference())
+        );
+
+        $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public function getAnnotator()
+    {
+        if (!is_null($this->annotator)) return $this->annotator;
+
+        $this->annotator = new Annotator();
+        $this->annotator->setAnnotatorFileObject($this);
+        $this->annotator->prepare();
+
+        return $this->annotator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFileName()
+    {
+        return ucfirst(mb_strtolower($this->program_name));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAnnotationFilePath()
+    {
+        $path = Yii::getAlias(CommonModule::getInstance()->yicmsLocation);
+        $path .= '/' . PagesModule::getInstance()->getModuleName();
+        $path .= '/' . CommonModule::getInstance()->annotationsDirectory;
+
+        return $path;
     }
 }

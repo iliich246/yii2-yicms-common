@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-
 use Yii;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -96,6 +95,23 @@ class Image extends AbstractEntity implements
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
     private static $parentFileAnnotator;
+    /** @var array of exception words for magical getter/setter */
+    protected static $annotationExceptionWords = [
+        'id',
+        'common_images_templates_id',
+        'image_reference',
+        'field_reference',
+        'condition_reference',
+        'system_name',
+        'original_name',
+        'image_order',
+        'size',
+        'type',
+        'editable',
+        'visible',
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * @inheritdoc
@@ -135,6 +151,39 @@ class Image extends AbstractEntity implements
         return [
             TimestampBehavior::className(),
         ];
+    }
+
+    /**
+     * Magical get method for use object annotations
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (in_array($name, self::$annotationExceptionWords))
+            return parent::__get($name);
+
+        if (strpos($name, 'field_') === 0) {
+            if ($this->isField(substr($name, 6)))
+                return $this->getFieldHandler()->getField(substr($name, 6));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'condition_') === 0) {
+            if ($this->isCondition(substr($name, 10)))
+                return $this->getConditionsHandler()->getCondition(substr($name, 10));
+
+            return parent::__get($name);
+        }
+
+        if ($this->getFieldHandler()->isField($name))
+            return $this->getFieldHandler()->getField($name);
+
+        if ($this->getConditionsHandler()->isCondition($name))
+            return $this->getConditionsHandler()->getCondition($name);
+
+        return parent::__get($name);
     }
 
     /**
@@ -517,6 +566,14 @@ class Image extends AbstractEntity implements
 
     /**
      * @inheritdoc
+     */
+    public function isField($name)
+    {
+        return $this->getFieldHandler()->isField($name);
+    }
+
+    /**
+     * @inheritdoc
      * @throws CommonException
      */
     public function getFieldTemplateReference()
@@ -555,6 +612,14 @@ class Image extends AbstractEntity implements
     public function getCondition($name)
     {
         return $this->getConditionsHandler()->getCondition($name);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isCondition($name)
+    {
+        return $this->getConditionsHandler()->isCondition($name);
     }
 
     /**

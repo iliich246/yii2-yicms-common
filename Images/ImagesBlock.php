@@ -85,6 +85,26 @@ class ImagesBlock extends AbstractEntityBlock implements
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
     private static $parentFileAnnotator;
+    /** @var array of exception words for magical getter/setter */
+    protected static $annotationExceptionWords = [
+        'id',
+        'image_template_reference',
+        'field_template_reference',
+        'condition_template_reference',
+        'validator_reference',
+        'type',
+        'language_type',
+        'file_order',
+        'image_order',
+        'type',
+        'editable',
+        'visible',
+        'max_images',
+        'fill_color',
+        'crop_type',
+        'crop_height',
+        'crop_width'
+    ];
 
     /**
      * @inheritdoc
@@ -164,6 +184,39 @@ class ImagesBlock extends AbstractEntityBlock implements
             ]);
 
         return $scenarios;
+    }
+
+    /**
+     * Magical get method for use object annotations
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (in_array($name, self::$annotationExceptionWords))
+            return parent::__get($name);
+
+        if (strpos($name, 'field_') === 0) {
+            if ($this->getImage()->isField(substr($name, 6)))
+                return $this->getImage()->getFieldHandler()->getField(substr($name, 6));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'condition_') === 0) {
+            if ($this->getImage()->isCondition(substr($name, 10)))
+                return $this->getImage()->getConditionsHandler()->getCondition(substr($name, 10));
+
+            return parent::__get($name);
+        }
+
+        if ($this->getImage()->getFieldHandler()->isField($name))
+            return $this->getImage()->getFieldHandler()->getField($name);
+
+        if ($this->getImage()->getConditionsHandler()->isCondition($name))
+            return $this->getImage()->getConditionsHandler()->getCondition($name);
+
+        return parent::__get($name);
     }
 
     /**
