@@ -65,6 +65,11 @@ class FieldsHandler extends AbstractHandler
         });
     }
 
+    /**
+     * Returns true if aggregator has field with name
+     * @param $name
+     * @return bool
+     */
     public function isField($name)
     {
         if ($this->aggregator->isNonexistent()) return false;

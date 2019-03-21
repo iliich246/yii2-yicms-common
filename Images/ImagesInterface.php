@@ -22,4 +22,11 @@ interface ImagesInterface
      * @return ImagesBlock
      */
     public function getImageBlock($name);
+
+    /**
+     * Returns true if aggregator has image block with name
+     * @param $name
+     * @return bool
+     */
+    public function isImageBlock($name);
 }

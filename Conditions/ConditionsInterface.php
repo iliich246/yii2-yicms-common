@@ -22,4 +22,11 @@ interface ConditionsInterface
      * @return ConditionTemplate
      */
     public function getCondition($name);
+
+    /**
+     * Returns true if aggregator has condition with name
+     * @param $name
+     * @return bool
+     */
+    public function isCondition($name);
 }

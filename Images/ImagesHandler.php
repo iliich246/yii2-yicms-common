@@ -45,4 +45,16 @@ class ImagesHandler extends AbstractHandler
             );
         });
     }
+
+    /**
+     * Returns true if aggregator has image block with name
+     * @param $name
+     * @return bool
+     */
+    public function isImageBlock($name)
+    {
+        if ($this->aggregator->isNonexistent()) return false;
+
+        return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name);
+    }
 }

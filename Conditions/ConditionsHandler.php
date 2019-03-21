@@ -64,4 +64,16 @@ class ConditionsHandler extends AbstractHandler
             );
         });
     }
+
+    /**
+     * Returns true if aggregator has condition with name
+     * @param $name
+     * @return bool
+     */
+    public function isCondition($name)
+    {
+        if ($this->aggregator->isNonexistent()) return false;
+
+        return ConditionTemplate::isTemplate($this->aggregator->getConditionTemplateReference(), $name);
+    }
 }

@@ -22,4 +22,11 @@ interface FilesInterface
      * @return FilesBlock
      */
     public function getFileBlock($name);
+
+    /**
+     * Returns true if aggregator has file block with name
+     * @param $name
+     * @return mixed
+     */
+    public function isFileBlock($name);
 }

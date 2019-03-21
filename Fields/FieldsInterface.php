@@ -24,5 +24,10 @@ interface FieldsInterface
      */
     public function getField($name);
 
-
+    /**
+     * Returns true if aggregator has field with name
+     * @param $name
+     * @return bool
+     */
+    public function isField($name);
 }

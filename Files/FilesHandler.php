@@ -62,4 +62,16 @@ class FilesHandler extends AbstractHandler
 
         });
     }
+
+    /**
+     * Returns true if aggregator has file block with name
+     * @param $name
+     * @return bool
+     */
+    public function isFileBlock($name)
+    {
+        if ($this->aggregator->isNonexistent()) return false;
+
+        return FilesBlock::isTemplate($this->aggregator->getFileTemplateReference(), $name);
+    }
 }
