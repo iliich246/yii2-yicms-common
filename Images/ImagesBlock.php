@@ -876,7 +876,7 @@ class ImagesBlock extends AbstractEntityBlock implements
             $result[] = ' * @property ' . '\\' .
                 $template->getAnnotationFileNamespace() . '\\' .
                 $template->getAnnotationFileName() .
-                ' $file_' . $template->program_name . ' ' . PHP_EOL;
+                ' $image_' . $template->program_name . ' ' . PHP_EOL;
             $template->annotate();
         }
 

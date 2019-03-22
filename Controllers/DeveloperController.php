@@ -266,6 +266,7 @@ class DeveloperController extends Controller
         if ($freeEssence->load(Yii::$app->request->post()) && $freeEssence->validate()) {
 
             if ($freeEssence->save()) {
+                $freeEssence->annotate();
                 return $this->redirect(Url::toRoute(['update-free-essence', 'id' => $freeEssence->id]));
             } else {
                 //TODO: add bootbox error
@@ -321,6 +322,8 @@ class DeveloperController extends Controller
                 //TODO: bootbox error
             }
 
+            $freeEssence->annotate();
+
             return FieldsDevModalWidget::widget([
                 'devFieldGroup' => $devFieldGroup,
                 'dataSaved' => true,
@@ -337,6 +340,8 @@ class DeveloperController extends Controller
             if (!$devFilesGroup->save()) {
                 //TODO: bootbox error
             }
+
+            $freeEssence->annotate();
 
             return FilesDevModalWidget::widget([
                 'devFilesGroup' => $devFilesGroup,
@@ -355,6 +360,8 @@ class DeveloperController extends Controller
                 //TODO: bootbox error
             }
 
+            $freeEssence->annotate();
+
             return ImagesDevModalWidget::widget([
                 'devImagesGroup' => $devImagesGroup,
                 'dataSaved' => true,
@@ -371,6 +378,8 @@ class DeveloperController extends Controller
             if (!$devConditionsGroup->save()) {
                 //TODO: bootbox error
             }
+
+            $freeEssence->annotate();
 
             return ConditionsDevModalWidget::widget([
                 'devConditionsGroup' => $devConditionsGroup,

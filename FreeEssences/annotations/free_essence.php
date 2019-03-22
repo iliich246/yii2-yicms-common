@@ -2,9 +2,9 @@
 
 /** @var $this yii\web\View */
 /** @var $annotator \Iliich246\YicmsCommon\Annotations\Annotator */
-/** @var $imageBlockInstance \Iliich246\YicmsCommon\Images\ImagesBlock */
+/** @var $freeEssenceInstance \Iliich246\YicmsCommon\FreeEssences\FreeEssences */
 
-$fileBlockInstance = $annotator->getAnnotatorFileObject();
+$freeEssenceInstance = $annotator->getAnnotatorFileObject();
 echo "<?php\n";
 ?>
 
@@ -28,5 +28,12 @@ use <?= $annotator->getExtendsUseClass() ?>;
 class <?= $annotator->getClassName() ?> extends <?= $annotator->getExtendsClassName() ?>
 
 {
-
+    /**
+    * @return self instance .
+    * @throws \Iliich246\YicmsPages\Base\PagesException
+    */
+    public static function getInstance()
+    {
+        return self::getByName('<?= $freeEssenceInstance->program_name ?>');
+    }
 }

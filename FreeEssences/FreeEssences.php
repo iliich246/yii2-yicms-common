@@ -221,7 +221,7 @@ class FreeEssences extends ActiveRecord implements
     public static function getByName($programName)
     {
         /** @var self $freeEssence */
-        $freeEssence = self::find()
+        $freeEssence = static::find()
             ->where(['program_name' => $programName])
             ->one();
 
@@ -760,9 +760,45 @@ class FreeEssences extends ActiveRecord implements
     public function getAnnotationFilePath()
     {
         $path = Yii::getAlias(CommonModule::getInstance()->yicmsLocation);
-        $path .= '/' . PagesModule::getInstance()->getModuleName();
+        $path .= '/' . CommonModule::getInstance()->getModuleName();
         $path .= '/' . CommonModule::getInstance()->annotationsDirectory;
 
         return $path;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsUseClass()
+    {
+        return 'Iliich246\YicmsCommon\FreeEssences\FreeEssences';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtendsClassName()
+    {
+        return 'FreeEssences';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \ReflectionException
+     */
+    public static function getAnnotationTemplateFile()
+    {
+        $class = new \ReflectionClass(self::class);
+        return dirname($class->getFileName())  . '/annotations/free_essence.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getAnnotationFileNamespace()
+    {
+        return CommonModule::getInstance()->yicmsNamespace . '\\' .
+        CommonModule::getInstance()->getModuleName() . '\\' .
+        CommonModule::getInstance()->annotationsDirectory;
     }
 }
