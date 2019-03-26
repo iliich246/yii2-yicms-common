@@ -129,6 +129,10 @@ $this->registerJs($js);
             <div class="row list-items">
                 <div class="col-xs-9 list-title">
                     <p data-condition-value-id="<?= $conditionValue->id ?>"
+                       data-return-url-conditions-value="<?= \yii\helpers\Url::toRoute([
+                           '/common/dev-conditions/condition-values-list',
+                           'conditionTemplateId' => $conditionTemplate->id,
+                       ]) ?>"
                        class="condition-value-block-item">
                         <?= $conditionValue->value_name ?>
                     </p>

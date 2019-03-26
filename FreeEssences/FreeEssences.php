@@ -87,6 +87,7 @@ class FreeEssences extends ActiveRecord implements
     private $annotator = null;
     /** @var array of exception words for magical getter/setter */
     protected static $annotationExceptionWords = [
+        'scenario',
         'id',
         'program_name',
         'editable',
