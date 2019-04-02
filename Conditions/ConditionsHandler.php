@@ -44,6 +44,13 @@ class ConditionsHandler extends AbstractHandler
         return $this->getOrSet($name, function() use($name) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
 
+                if (!$this->aggregator->isAnnotationActive())
+                    return Condition::getInstance(
+                        $this->aggregator->getConditionTemplateReference(),
+                        $this->aggregator->getConditionReference(),
+                        $name
+                    );
+
                 /** @var Condition $className */
                 $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
                     $this->aggregator->getAnnotationFileName() . '\\Conditions\\' .

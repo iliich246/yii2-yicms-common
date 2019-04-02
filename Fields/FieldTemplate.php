@@ -49,6 +49,8 @@ class FieldTemplate extends AbstractTemplate implements
      * @inheritdoc
      */
     protected static $buffer = [];
+    /** @var bool state of annotation necessity */
+    private $needToAnnotate = true;
     /** @var Annotator instance */
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
@@ -306,6 +308,30 @@ class FieldTemplate extends AbstractTemplate implements
     public function annotate()
     {
         $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offAnnotation()
+    {
+        $this->needToAnnotate = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function onAnnotation()
+    {
+        $this->needToAnnotate = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAnnotationActive()
+    {
+        return $this->needToAnnotate;
     }
 
     /**

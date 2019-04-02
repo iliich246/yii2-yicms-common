@@ -44,6 +44,13 @@ class FieldsHandler extends AbstractHandler
         return $this->getOrSet($name, function() use($name) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
 
+                if (!$this->aggregator->isAnnotationActive())
+                    return Field::getInstance(
+                        $this->aggregator->getFieldTemplateReference(),
+                        $this->aggregator->getFieldReference(),
+                        $name
+                    );
+
                 /** @var Field $className */
                 $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
                     $this->aggregator->getAnnotationFileName() . '\\Fields\\' .

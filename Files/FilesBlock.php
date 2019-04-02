@@ -64,6 +64,8 @@ class FilesBlock extends AbstractEntityBlock implements
     private $currentFileReference;
     /** @inheritdoc */
     protected static $buffer = [];
+    /** @var bool state of annotation necessity */
+    private $needToAnnotate = true;
     /** @var Annotator instance */
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
@@ -587,6 +589,30 @@ class FilesBlock extends AbstractEntityBlock implements
         $file->getAnnotator()->finish();
 
         $this->getAnnotator()->finish();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offAnnotation()
+    {
+        $this->needToAnnotate = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function onAnnotation()
+    {
+        $this->needToAnnotate = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAnnotationActive()
+    {
+        return $this->needToAnnotate;
     }
 
     /**

@@ -91,6 +91,8 @@ class Image extends AbstractEntity implements
     private $currentThumbnail = null;
     /** @var int keep images mode  */
     private $imageMode = self::ORIGINALS_MODE;
+    /** @var bool state of annotation necessity */
+    private $needToAnnotate = true;
     /** @var Annotator instance */
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
@@ -787,6 +789,30 @@ class Image extends AbstractEntity implements
         $this->getAnnotator()->addAnnotationArray(
             FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offAnnotation()
+    {
+        $this->needToAnnotate = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function onAnnotation()
+    {
+        $this->needToAnnotate = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAnnotationActive()
+    {
+        return $this->needToAnnotate;
     }
 
     /**

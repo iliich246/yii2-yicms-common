@@ -10,6 +10,20 @@ namespace Iliich246\YicmsCommon\Annotations;
 interface AnnotatorFileInterface
 {
     /**
+     * @return void off necessity of annotation
+     */
+    public function offAnnotation();
+
+    /**
+     * @return void on necessity of annotation
+     */
+    public function onAnnotation();
+
+    /**
+     * @return bool returns state of necessity of annotation
+     */
+    public function isAnnotationActive();
+    /**
      * Return configured annotator for current object
      * @return Annotator
      */
@@ -50,6 +64,4 @@ interface AnnotatorFileInterface
      * @return string
      */
     public static function getAnnotationTemplateFile();
-
-
 }

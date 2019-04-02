@@ -77,6 +77,8 @@ class File extends AbstractEntity implements
     private $validatorBuilder;
     /** @var FileTranslate[] array of buffered translates */
     public $fileTranslates;
+    /** @var bool state of annotation necessity */
+    private $needToAnnotate = true;
     /** @var Annotator instance */
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
@@ -634,6 +636,30 @@ class File extends AbstractEntity implements
         $this->getAnnotator()->addAnnotationArray(
             FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offAnnotation()
+    {
+        $this->needToAnnotate = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function onAnnotation()
+    {
+        $this->needToAnnotate = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAnnotationActive()
+    {
+        return $this->needToAnnotate;
     }
 
     /**
