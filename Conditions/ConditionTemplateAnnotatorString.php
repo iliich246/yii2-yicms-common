@@ -22,9 +22,13 @@ class ConditionTemplateAnnotatorString extends Component implements AnnotatorStr
      */
     public static function getAnnotationsStringArray($searchData)
     {
-        return [
-            "   const PENIS = 'penis1';" . PHP_EOL,
-            "   const PENIS2 = 'penis2';" . PHP_EOL,
-        ];
+        $result = [];
+
+        foreach ($searchData->getValuesList() as $value) {
+            $result[] =   "   const " . $value->value_name .
+                ' = ' . "'" . $value->value_name . "'" .  ";" . PHP_EOL;
+        }
+
+        return $result;
     }
 }

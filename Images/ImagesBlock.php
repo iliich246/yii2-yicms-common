@@ -90,6 +90,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     /** @var array of exception words for magical getter/setter */
     protected static $annotationExceptionWords = [
         'id',
+        'program_name',
         'image_template_reference',
         'field_template_reference',
         'condition_template_reference',
@@ -621,16 +622,37 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getEntityQuery()
     {
+        /** @var Image $className */
+        if (!is_null(self::$parentFileAnnotator) && self::$parentFileAnnotator->isAnnotationActive())
+            $className = substr($this->getAnnotationFileNamespace() . '\\'
+                . $this->getAnnotationFileName(), 0, -5);
+        else
+            $className = null;
+        //\Yii::error(print_r(substr($this->getAnnotationFileNamespace() . '\\' . $this->getAnnotationFileName(), 0, -5), true));
+
+        if (!class_exists($className)) {
+            if (CommonModule::isUnderDev() || $this->editable)
+                return Image::find()
+                    ->where([
+                        'common_images_templates_id' => $this->id,
+                        'image_reference' => $this->currentImageReference
+                    ])
+                    ->indexBy('id')
+                    ->orderBy(['image_order' => SORT_ASC]);
+
+            return new ActiveQuery(Image::className());
+        }
+
         if (CommonModule::isUnderDev() || $this->editable)
-            return Image::find()
+            return $className::find()
                 ->where([
                     'common_images_templates_id' => $this->id,
-                    'image_reference'            => $this->currentImageReference
+                    'image_reference' => $this->currentImageReference
                 ])
                 ->indexBy('id')
                 ->orderBy(['image_order' => SORT_ASC]);
 
-        return new ActiveQuery(Image::className());
+        return new ActiveQuery($className);
     }
 
     /**
@@ -767,14 +789,14 @@ class ImagesBlock extends AbstractEntityBlock implements
 
         $this->getAnnotator()->addAnnotationArray($annotationArray);
 
+        $this->getAnnotator()->finish();
+
         $image = new Image();
         $image->setParentFileAnnotator(self::$parentFileAnnotator);
         $image->setImagesBlock($this);
 
         $image->getAnnotator()->addAnnotationArray($annotationArray);
         $image->getAnnotator()->finish();
-
-        $this->getAnnotator()->finish();
     }
 
     /**
@@ -890,6 +912,10 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public static function getAnnotationsStringArray($searchData)
     {
+        //this for creates Images directory first
+        $self = new self();
+        $self->getAnnotator();
+
         /** @var self[] $templates */
         $templates = self::find()->where([
             'image_template_reference' => $searchData

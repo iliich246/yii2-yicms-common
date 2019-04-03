@@ -50,9 +50,6 @@ class FieldsHandler extends AbstractHandler
                         $this->aggregator->getFieldReference(),
                         $name
                     );
-                \Yii::error(print_r($name, true));
-                \Yii::error(print_r($this->aggregator->getAnnotator(), true));
-                //throw new \Exception(print_r($this->aggregator->getAnnotator(),true));
 
                 /** @var Field $className */
                 $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .

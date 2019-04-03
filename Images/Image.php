@@ -73,6 +73,8 @@ class Image extends AbstractEntity implements
     const ORIGINALS_MODE = 0;
     const CROPPED_MODE   = 1;
 
+    const EVENT_AFTER_FETCH = 'afterFetch';
+
     /** @var UploadedFile loaded image */
     public $image;
     /** @var mixed information about crop */
@@ -353,6 +355,8 @@ class Image extends AbstractEntity implements
      */
     public function __toString()
     {
+        $this->trigger(self::EVENT_AFTER_FETCH);
+
         return (string)$this->getSrc();
     }
 

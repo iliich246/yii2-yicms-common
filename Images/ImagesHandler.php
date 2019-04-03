@@ -51,11 +51,6 @@ class ImagesHandler extends AbstractHandler
                 $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
                     $this->aggregator->getAnnotationFileName() . '\\Images\\' .
                     ucfirst(mb_strtolower($name)) . 'ImageBlock';
-                /** @var ImagesBlock $ss */
-                $ss = new $className;
-                \Yii::error(print_r($ss::getInstance(                        $this->aggregator->getImageTemplateReference(),
-                    $name,
-                    $this->aggregator->getImageReference()) ,true));
 
                 if (class_exists($className))
                     $imagesBlock = $className::getInstance(
@@ -63,14 +58,12 @@ class ImagesHandler extends AbstractHandler
                         $name,
                         $this->aggregator->getImageReference()
                     );
-//                else
-//                    $imagesBlock = ImagesBlock::getInstance(
-//                        $this->aggregator->getImageTemplateReference(),
-//                        $name,
-//                        $this->aggregator->getImageReference()
-//                    );
-
-                //throw new \yii\base\Exception('There');
+                else
+                    $imagesBlock = ImagesBlock::getInstance(
+                        $this->aggregator->getImageTemplateReference(),
+                        $name,
+                        $this->aggregator->getImageReference()
+                    );
 
                 $imagesBlock->setParentFileAnnotator($this->aggregator);
 
