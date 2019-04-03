@@ -332,7 +332,11 @@ class ConditionTemplate extends AbstractTemplate implements
      */
     public function annotate()
     {
-        $this->getAnnotator()->finish();
+        $annotationArray = ConditionTemplateAnnotatorString::getAnnotationsStringArray($this);
+
+        $this->getAnnotator()->addAnnotationArray($annotationArray);
+
+        $this->getAnnotator()->finish(false);
     }
 
     /**

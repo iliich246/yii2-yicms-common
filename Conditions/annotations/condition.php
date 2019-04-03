@@ -20,14 +20,12 @@ use <?= $annotator->getExtendsUseClass() ?>;
 *
 * This class was generated automatically
 *
-* |||-> This part of annotation will be change automatically. Do not change it.
-*
-* |||<- End of block of auto annotation
-*
 * @author iliich246 <iliich246@gmail.com>
 */
 class <?= $annotator->getClassName() ?> extends <?= $annotator->getExtendsClassName() ?>
 
 {
+// |||-> This part of annotation will be change automatically. Do not change it.
 
+// |||<- End of block of auto annotation
 }

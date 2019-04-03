@@ -137,7 +137,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
         }
 
         /** @var AbstractTemplate $value */
-        $value = self::fetchTemplate($templateReference, $programName);
+        $value = static::fetchTemplate($templateReference, $programName);
 
         if ($value)
             self::setToCache($templateReference, $programName, $value);
@@ -269,7 +269,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     private static function fetchTemplate($templateReference, $programName)
     {
         Event::trigger(static::className(), self::EVENT_BEFORE_FETCH);
-        //\Yii::warning('FETCHING DATA = ');
+        //\Yii::warning(print_r(static::class,true));
         return static::find()->where([
             static::getTemplateReferenceName() => $templateReference,
             'program_name'                     => $programName

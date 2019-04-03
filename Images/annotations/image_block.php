@@ -8,7 +8,6 @@ $imageBlockInstance = $annotator->getAnnotatorFileObject();
 echo "<?php\n";
 ?>
 
-
 namespace <?= $annotator->getNamespace() ?>;
 
 use Yii;
@@ -29,6 +28,8 @@ use <?= $annotator->getExtendsUseClass() ?>;
 class <?= $annotator->getClassName() ?> extends <?= $annotator->getExtendsClassName() ?>
 
 {
+    /** @inheritdoc */
+    protected static $buffer = [];
 
 }
 

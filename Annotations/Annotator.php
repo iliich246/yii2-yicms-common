@@ -139,12 +139,14 @@ class Annotator extends Component
 
     /**
      * This method add auto annotations to annotation file
+     * @param bool|true $addEndStar
      */
-    public function finish()
+    public function finish($addEndStar = true)
     {
         $this->openAnnotatorFile('w');
 
-        $this->autoAnnotationsArray[] = ' *' . PHP_EOL;
+        if ($addEndStar)
+            $this->autoAnnotationsArray[] = ' *' . PHP_EOL;
 
         array_splice($this->fileStringArray, $this->autoBlockStartIndex, 0,  $this->autoAnnotationsArray);
 

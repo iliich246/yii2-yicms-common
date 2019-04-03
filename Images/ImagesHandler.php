@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractHandler;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
 
@@ -38,6 +39,44 @@ class ImagesHandler extends AbstractHandler
         }
 
         return $this->getOrSet($name, function() use($name) {
+            if ($this->aggregator instanceof AnnotatorFileInterface) {
+                if (!$this->aggregator->isAnnotationActive())
+                    return ImagesBlock::getInstance(
+                        $this->aggregator->getImageTemplateReference(),
+                        $name,
+                        $this->aggregator->getImageReference()
+                    );
+
+                /** @var ImagesBlock $className */
+                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+                    $this->aggregator->getAnnotationFileName() . '\\Images\\' .
+                    ucfirst(mb_strtolower($name)) . 'ImageBlock';
+                /** @var ImagesBlock $ss */
+                $ss = new $className;
+                \Yii::error(print_r($ss::getInstance(                        $this->aggregator->getImageTemplateReference(),
+                    $name,
+                    $this->aggregator->getImageReference()) ,true));
+
+                if (class_exists($className))
+                    $imagesBlock = $className::getInstance(
+                        $this->aggregator->getImageTemplateReference(),
+                        $name,
+                        $this->aggregator->getImageReference()
+                    );
+//                else
+//                    $imagesBlock = ImagesBlock::getInstance(
+//                        $this->aggregator->getImageTemplateReference(),
+//                        $name,
+//                        $this->aggregator->getImageReference()
+//                    );
+
+                //throw new \yii\base\Exception('There');
+
+                $imagesBlock->setParentFileAnnotator($this->aggregator);
+
+                return $imagesBlock;
+            }
+
             return ImagesBlock::getInstance(
                 $this->aggregator->getImageTemplateReference(),
                 $name,

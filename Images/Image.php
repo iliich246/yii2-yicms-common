@@ -786,6 +786,8 @@ class Image extends AbstractEntity implements
      */
     public function annotate()
     {
+        FieldTemplate::setParentFileAnnotator($this);
+
         $this->getAnnotator()->addAnnotationArray(
             FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
         );

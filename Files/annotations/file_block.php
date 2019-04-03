@@ -31,5 +31,6 @@ use <?= $annotator->getExtendsUseClass() ?>;
 class <?= $annotator->getClassName() ?> extends <?= $annotator->getExtendsClassName() ?>
 
 {
-
+    /** @inheritdoc */
+    protected static $buffer = [];
 }

@@ -353,7 +353,10 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getImage()
     {
-        return $this->getEntity();
+        $image = $this->getEntity();
+        $image->setParentFileAnnotator($this);
+
+        return $image;
     }
 
     /**
@@ -361,7 +364,14 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getImages()
     {
-        return $this->getEntities();
+        $images = $this->getEntities();
+
+        if (!$images) return [];
+
+        foreach($images as $image)
+            $image->setParentFileAnnotator($this);
+
+        return $images;
     }
 
     /**

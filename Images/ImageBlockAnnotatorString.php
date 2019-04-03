@@ -37,9 +37,17 @@ class ImageBlockAnnotatorString extends Component implements AnnotatorStringInte
             $result[] = ' * FIELDS' . PHP_EOL;
         }
 
+//        $image = new Image();
+//        $image->setParentFileAnnotator($searchData);
+//        $image->setImagesBlock($searchData);
+
+        FieldTemplate::setParentFileAnnotator($searchData);
+
         foreach($templates as $template) {
             $result[] = ' * @property string $' . $template->program_name . ' ' . PHP_EOL;
             $result[] = ' * @property string $field_' . $template->program_name . ' ' . PHP_EOL;
+
+            $template->annotate();
         }
 
         return $result;
