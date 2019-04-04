@@ -633,8 +633,16 @@ class File extends AbstractEntity implements
      */
     public function annotate()
     {
+        FieldTemplate::setParentFileAnnotator($this);
+
         $this->getAnnotator()->addAnnotationArray(
             FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
+        );
+
+        ConditionTemplate::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            ConditionTemplate::getAnnotationsStringArray($this->getConditionTemplateReference())
         );
     }
 

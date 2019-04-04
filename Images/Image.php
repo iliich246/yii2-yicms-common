@@ -795,6 +795,12 @@ class Image extends AbstractEntity implements
         $this->getAnnotator()->addAnnotationArray(
             FieldTemplate::getAnnotationsStringArray($this->getFieldTemplateReference())
         );
+
+        ConditionTemplate::setParentFileAnnotator($this);
+
+        $this->getAnnotator()->addAnnotationArray(
+            ConditionTemplate::getAnnotationsStringArray($this->getConditionTemplateReference())
+        );
     }
 
     /**

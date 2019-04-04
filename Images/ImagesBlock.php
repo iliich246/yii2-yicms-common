@@ -780,7 +780,7 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * @inheritdoc
-     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws CommonException
      * @throws \ReflectionException
      */
     public function annotate()

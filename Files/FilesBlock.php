@@ -581,14 +581,14 @@ class FilesBlock extends AbstractEntityBlock implements
 
         $this->getAnnotator()->addAnnotationArray($annotationArray);
 
+        $this->getAnnotator()->finish();
+
         $file = new File();
         $file->setParentFileAnnotator(self::$parentFileAnnotator);
         $file->setFileBlock($this);
 
         $file->getAnnotator()->addAnnotationArray($annotationArray);
         $file->getAnnotator()->finish();
-
-        $this->getAnnotator()->finish();
     }
 
     /**

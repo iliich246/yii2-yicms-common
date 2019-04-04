@@ -438,6 +438,8 @@ class ConditionTemplate extends AbstractTemplate implements
 
     /**
      * @inheritdoc
+     * @throws \Iliich246\YicmsCommon\Base\CommonException
+     * @throws \ReflectionException
      */
     public static function getAnnotationsStringArray($searchData)
     {

@@ -2,6 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use app\yicms\Pages\Models\Index\Images\ImageBlock;
+use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use yii\base\Component;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
@@ -19,6 +21,8 @@ class ImageBlockAnnotatorString extends Component implements AnnotatorStringInte
     /**
      * @inheritdoc
      * @param ImagesBlock $searchData
+     * @return array|mixed
+     * @throws \ReflectionException
      * @throws CommonException
      */
     public static function getAnnotationsStringArray($searchData)
@@ -37,16 +41,38 @@ class ImageBlockAnnotatorString extends Component implements AnnotatorStringInte
             $result[] = ' * FIELDS' . PHP_EOL;
         }
 
-//        $image = new Image();
-//        $image->setParentFileAnnotator($searchData);
-//        $image->setImagesBlock($searchData);
-
         FieldTemplate::setParentFileAnnotator($searchData);
 
         foreach($templates as $template) {
             $result[] = ' * @property string $' . $template->program_name . ' ' . PHP_EOL;
             $result[] = ' * @property string $field_' . $template->program_name . ' ' . PHP_EOL;
 
+            $template->annotate();
+        }
+
+        /** @var ConditionTemplate $conditionTemplates */
+        $conditionTemplates = ConditionTemplate::find()->where([
+            'condition_template_reference' => $searchData->getConditionTemplateReference()
+        ])->orderBy([
+            'condition_order' => SORT_ASC
+        ])->all();
+
+        if ($conditionTemplates) {
+            $result[] = ' * ' . PHP_EOL;
+            $result[] = ' * CONDITIONS' . PHP_EOL;
+        }
+
+        ConditionTemplate::setParentFileAnnotator($searchData);
+
+        foreach ($conditionTemplates as $template) {
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $' . $template->program_name . ' ' . PHP_EOL;
+            $result[] = ' * @property ' . '\\' .
+                $template->getAnnotationFileNamespace() . '\\' .
+                $template->getAnnotationFileName() .
+                ' $condition_' . $template->program_name . ' ' . PHP_EOL;
             $template->annotate();
         }
 
