@@ -628,7 +628,6 @@ class ImagesBlock extends AbstractEntityBlock implements
                 . $this->getAnnotationFileName(), 0, -5);
         else
             $className = null;
-        //\Yii::error(print_r(substr($this->getAnnotationFileNamespace() . '\\' . $this->getAnnotationFileName(), 0, -5), true));
 
         if (!class_exists($className)) {
             if (CommonModule::isUnderDev() || $this->editable)

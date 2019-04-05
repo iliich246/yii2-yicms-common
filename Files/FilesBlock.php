@@ -360,13 +360,34 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getEntityQuery()
     {
-        if (CommonModule::isUnderDev() || $this->editable) {
-            //TODO: return annotator file if exist
-            //$className = $this->getAnnotationFileNamespace() . '\\' .
-//                $this->aggregator->getAnnotationFileName() . '\\Files\\' .
-//                ucfirst(mb_strtolower($name));
+        /** @var File $className */
+        if (!is_null(self::$parentFileAnnotator) && self::$parentFileAnnotator->isAnnotationActive())
+            $className = substr($this->getAnnotationFileNamespace() . '\\'
+                . $this->getAnnotationFileName(), 0, -5);
+        else
+            $className = null;
 
-            $fileQuery = File::find()
+        if (!class_exists($className)) {
+            if (CommonModule::isUnderDev() || $this->editable) {
+                $fileQuery = File::find()
+                    ->where([
+                        'common_files_template_id' => $this->id,
+                    ])
+                    ->indexBy('id')
+                    ->orderBy(['file_order' => SORT_ASC]);
+
+                if ($this->currentFileReference)
+                    $fileQuery->andWhere([
+                        'file_reference' => $this->currentFileReference]);
+
+                return $fileQuery;
+            }
+
+            return new ActiveQuery(File::className());
+        }
+
+        if (CommonModule::isUnderDev() || $this->editable) {
+            $fileQuery = $className::find()
                 ->where([
                     'common_files_template_id' => $this->id,
                 ])
@@ -380,7 +401,7 @@ class FilesBlock extends AbstractEntityBlock implements
             return $fileQuery;
         }
 
-        return new ActiveQuery(File::className());
+        return new ActiveQuery($className);
     }
 
     /**
