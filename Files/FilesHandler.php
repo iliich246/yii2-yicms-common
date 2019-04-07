@@ -40,18 +40,34 @@ class FilesHandler extends AbstractHandler
 
         return $this->getOrSet($name, function() use($name) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
-
-                /** @var FilesBlock $className */
-                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
-                    $this->aggregator->getAnnotationFileName() . '\\Files\\' .
-                    ucfirst(mb_strtolower($name));
-
-                if (class_exists($className))
-                    return $className::getInstance(
+                if (!$this->aggregator->isAnnotationActive())
+                    return FilesBlock::getInstance(
                         $this->aggregator->getFileTemplateReference(),
                         $name,
                         $this->aggregator->getFileReference()
                     );
+
+                /** @var FilesBlock $className */
+                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+                    $this->aggregator->getAnnotationFileName() . '\\Files\\' .
+                    ucfirst(mb_strtolower($name)) . 'FileBlock';
+
+                if (class_exists($className))
+                    $filesBlock = $className::getInstance(
+                        $this->aggregator->getFileTemplateReference(),
+                        $name,
+                        $this->aggregator->getFileReference()
+                    );
+                else
+                    $filesBlock = FilesBlock::getInstance(
+                        $this->aggregator->getFileTemplateReference(),
+                        $name,
+                        $this->aggregator->getFileReference()
+                    );
+
+                $filesBlock->setParentFileAnnotator($this->aggregator);
+
+                return $filesBlock;
             }
 
             return FilesBlock::getInstance(
@@ -59,7 +75,6 @@ class FilesHandler extends AbstractHandler
                 $name,
                 $this->aggregator->getFileReference()
             );
-
         });
     }
 
