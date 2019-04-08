@@ -23,6 +23,9 @@ use <?= $annotator->getExtendsUseClass() ?>;
 *
 * |||<- End of block of auto annotation
 *
+* @method <?= $imageBlockInstance->getClassNameForImageClass() ?> getImage();
+* @method <?= $imageBlockInstance->getClassNameForImageClass() ?>[] getImages();
+*
 * @author iliich246 <iliich246@gmail.com>
 */
 class <?= $annotator->getClassName() ?> extends <?= $annotator->getExtendsClassName() ?>

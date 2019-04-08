@@ -858,6 +858,15 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Return name of concrete file class of concrete block after annotation
+     * @return string
+     */
+    public function getClassNameForImageClass()
+    {
+        return ucfirst(mb_strtolower($this->program_name)) . 'Image';
+    }
+
+    /**
      * @inheritdoc
      */
     public function getAnnotationFilePath()

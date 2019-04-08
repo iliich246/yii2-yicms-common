@@ -193,6 +193,7 @@ class DeveloperController extends Controller
      * Action for change dev hash
      * @return string|\yii\web\Response
      * @throws CommonException
+     * @throws \yii\base\Exception
      */
     public function actionChangeDevHash()
     {
@@ -218,6 +219,7 @@ class DeveloperController extends Controller
      * Action for change admin hash
      * @return string|\yii\web\Response
      * @throws CommonException
+     * @throws \yii\base\Exception
      */
     public function actionChangeAdminHash()
     {
@@ -257,6 +259,8 @@ class DeveloperController extends Controller
     /**
      * Creates new free essence
      * @return string|\yii\web\Response
+     * @throws CommonException
+     * @throws \ReflectionException
      */
     public function actionCreateFreeEssence()
     {
@@ -309,6 +313,8 @@ class DeveloperController extends Controller
                 'success' => $success
             ]);
         }
+
+        $freeEssence->annotate();
 
         //initialize fields group
         $devFieldGroup = new DevFieldsGroup();
