@@ -350,6 +350,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Renames parent method on concrete name
      * @return bool|\Iliich246\YicmsCommon\Base\AbstractEntity|Image
      */
     public function getImage()
@@ -361,6 +362,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     }
 
     /**
+     * Renames parent method on concrete name
      * @return \Iliich246\YicmsCommon\Base\AbstractEntity[]|Image[]
      */
     public function getImages()
@@ -382,7 +384,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     */
     public function __toString()
     {
-        return $this->getSrc();
+        return (string)$this->getSrc();
     }
     
     /**
@@ -406,6 +408,7 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function getSrc($language = null)
     {
+
         if ($this->isNonexistent() && CommonModule::isUnderDev() && defined('YICMS_ALERTS')) {
             $asset = new DeveloperAsset();
             $asset->publish(\Yii::$app->assetManager);

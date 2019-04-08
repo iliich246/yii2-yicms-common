@@ -284,6 +284,7 @@ class Image extends AbstractEntity implements
         if ($imagesBlock->language_type == ImagesBlock::LANGUAGE_TYPE_SINGLE)
             $systemName = $this->system_name;
         else {
+
             $imageTranslate = $this->getImageTranslate($language);
 
             if (!$imageTranslate) return false;
@@ -467,8 +468,7 @@ class Image extends AbstractEntity implements
      */
     private function getImageTranslate(LanguagesDb $language)
     {
-        if (!isset($this->imageTranslates[$language->id]) &&
-        !is_null($this->imageTranslates[$language->id])) {
+        if (!isset($this->imageTranslates[$language->id])) {
             $this->imageTranslates[$language->id] = ImageTranslate::find()->where([
                 'common_image_id'    => $this->id,
                 'common_language_id' => $language->id

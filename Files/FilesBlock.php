@@ -225,7 +225,10 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFile()
     {
-        return $this->getEntity();
+        $file = $this->getEntity();
+        $file->setParentFileAnnotator($this);
+
+        return $file;
     }
 
     /**
@@ -234,7 +237,14 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function getFiles()
     {
-        return $this->getEntities();
+        $files = $this->getEntities();
+
+        if (!$files) return [];
+
+        foreach($files as $file)
+            $file->setParentFileAnnotator($this);
+
+        return $files;
     }
 
     /**

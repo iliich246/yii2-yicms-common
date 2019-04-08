@@ -129,6 +129,8 @@ class ImagesGroup extends AbstractGroup
             return true;
         }
 
+
+
         return false;
     }
 
@@ -149,8 +151,8 @@ class ImagesGroup extends AbstractGroup
      */
     public function save()
     {
-        $image = $this->getImageExistedInDbEntity();
 
+        $image = $this->getImageExistedInDbEntity();
         $this->imageEntity->image_reference = $this->imageReference;
 
         $path = CommonModule::getInstance()->imagesOriginalsPath;
