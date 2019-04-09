@@ -923,10 +923,6 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public static function getAnnotationsStringArray($searchData)
     {
-        //this for creates Images directory first
-        $self = new self();
-        $self->getAnnotator();
-
         /** @var self[] $templates */
         $templates = self::find()->where([
             'image_template_reference' => $searchData
@@ -935,6 +931,10 @@ class ImagesBlock extends AbstractEntityBlock implements
         ])->all();
 
         if (!$templates) return [];
+
+        $self = new self();
+        if (!is_dir($self->getAnnotationFilePath()))
+            mkdir($self->getAnnotationFilePath());
 
         $result = [
             ' *' . PHP_EOL,

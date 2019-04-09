@@ -744,10 +744,6 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public static function getAnnotationsStringArray($searchData)
     {
-        //this for creates Files directory first
-        $self = new self();
-        $self->getAnnotator();
-
         /** @var self[] $templates */
         $templates = self::find()->where([
             'file_template_reference' => $searchData
@@ -756,6 +752,10 @@ class FilesBlock extends AbstractEntityBlock implements
         ])->all();
 
         if (!$templates) return [];
+
+        $self = new self();
+        if (!is_dir($self->getAnnotationFilePath()))
+            mkdir($self->getAnnotationFilePath());
 
         $result = [
             ' *' . PHP_EOL,
