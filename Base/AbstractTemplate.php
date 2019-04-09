@@ -139,7 +139,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
         /** @var AbstractTemplate $value */
         $value = static::fetchTemplate($templateReference, $programName);
 
-        if ($value)
+        if ($value || is_null($value))
             self::setToCache($templateReference, $programName, $value);
 
         return $value;
@@ -167,6 +167,9 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
         foreach (static::$buffer as $templateReferenceBlock) {
             /** @var AbstractTemplate $abstractTemplateInstance */
             foreach($templateReferenceBlock as $abstractTemplateInstance) {
+                
+                if (is_null($abstractTemplateInstance)) continue;
+
                 if ($abstractTemplateInstance->id == $id) return $abstractTemplateInstance;
             }
         }

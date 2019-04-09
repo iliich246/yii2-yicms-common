@@ -9,7 +9,7 @@ use Iliich246\YicmsCommon\Base\NonexistentInterface;
 /**
  * Class ImagesHandler
  *
- * @property ImagesReferenceInterface|NonexistentInterface $aggregator
+ * @property ImagesReferenceInterface|NonexistentInterface|AnnotatorFileInterface $aggregator
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -86,6 +86,14 @@ class ImagesHandler extends AbstractHandler
     public function isImageBlock($name)
     {
         if ($this->aggregator->isNonexistent()) return false;
+
+        /** @var ImagesBlock $className */
+        $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
+            $this->aggregator->getAnnotationFileName() . '\\Images\\' .
+            ucfirst(mb_strtolower($name)) . 'ImageBlock';
+
+        if (class_exists($className))
+            return $className::isTemplate($this->aggregator->getImageTemplateReference(), $name);
 
         return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name);
     }

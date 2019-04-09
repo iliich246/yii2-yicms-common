@@ -11,7 +11,7 @@ use Iliich246\YicmsCommon\Base\NonexistentInterface;
  *
  * Object of this class must aggregate any object, that must implement fields functionality.
  *
- * @property FieldReferenceInterface|NonexistentInterface $aggregator
+ * @property FieldReferenceInterface|NonexistentInterface|AnnotatorFileInterface $aggregator
  *
  * @author iliich246 <iliich246@gmail.com>
  */
@@ -41,7 +41,7 @@ class FieldsHandler extends AbstractHandler
             return $nonexistentField;
         }
 
-        return $this->getOrSet($name, function() use($name) {
+        return $this->getOrSet($name, function () use ($name) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
 
                 if (!$this->aggregator->isAnnotationActive())
@@ -52,9 +52,7 @@ class FieldsHandler extends AbstractHandler
                     );
 
                 /** @var Field $className */
-                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
-                    $this->aggregator->getAnnotationFileName() . '\\Fields\\' .
-                    ucfirst(mb_strtolower($name));
+                $className = $this->getFieldClassName($name);
 
                 if (class_exists($className))
                     return $className::getInstance(
@@ -82,5 +80,30 @@ class FieldsHandler extends AbstractHandler
         if ($this->aggregator->isNonexistent()) return false;
 
         return FieldTemplate::isTemplate($this->aggregator->getFieldTemplateReference(), $name);
+    }
+
+    /**
+     * Generates class name of field
+     * @param $name
+     * @return string
+     */
+    private function getFieldClassName($name)
+    {
+        if (substr($this->aggregator->getAnnotationFileNamespace(), -6) == 'Images') {
+
+            return substr($this->aggregator->getAnnotationFileNamespace(), 0, -6) .
+                'Fields\\' .
+                ucfirst(mb_strtolower($name));
+        }
+
+        if (substr($this->aggregator->getAnnotationFileNamespace(), -5) == 'Files') {
+            return substr($this->aggregator->getAnnotationFileNamespace(), 0, -5) .
+                'Fields\\' .
+                ucfirst(mb_strtolower($name));
+        }
+
+        return $this->aggregator->getAnnotationFileNamespace() . '\\' .
+            $this->aggregator->getAnnotationFileName() . '\\Fields\\' .
+            ucfirst(mb_strtolower($name));
     }
 }

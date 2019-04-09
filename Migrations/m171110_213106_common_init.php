@@ -6,6 +6,8 @@ use yii\db\Migration;
  * Class m171110_213106_common_init
  *
  * ALTER DATABASE <database_name> CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+ * ALTER DATABASE yicms CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+ *
  */
 class m171110_213106_common_init extends Migration
 {
