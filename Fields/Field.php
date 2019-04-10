@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Fields;
 
 use Yii;
+use yii\base\Event;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\validators\SafeValidator;
@@ -48,7 +49,7 @@ class Field extends ActiveRecord implements
     const MODE_DEFAULT = 0;
     const MODE_ALERT = 1;
 
-    const EVENT_AFTER_FETCH = 'afterFetch';
+    const EVENT_BEFORE_OUTPUT = 'beforeOutput';
 
     /** @var int keeps mode of field */
     private $mode = self::MODE_DEFAULT;
@@ -158,8 +159,6 @@ class Field extends ActiveRecord implements
             return '';
         };
 
-        $this->trigger(self::EVENT_AFTER_FETCH);
-
         if (!$this->getTemplate()->visible) {
 
             if ($this->mode == self::MODE_DEFAULT) return '';
@@ -186,7 +185,11 @@ class Field extends ActiveRecord implements
                     return false;
                 }
 
-                return (string)$this->value;
+                $fieldEvent = new FieldEvent();
+                $fieldEvent->result = (string)$this->value;
+                $this->trigger(self::EVENT_BEFORE_OUTPUT, $fieldEvent);
+
+                return (string)$fieldEvent->result;
             }
 
             if (trim($this->value)) return $this->value;
@@ -201,7 +204,11 @@ class Field extends ActiveRecord implements
             return '';
         }
 
-        return $this->getTranslate();
+        $fieldEvent = new FieldEvent();
+        $fieldEvent->result = (string)$this->getTranslate();;
+        $this->trigger(self::EVENT_BEFORE_OUTPUT, $fieldEvent);
+
+        return (string)$fieldEvent->result;
     }
 
     /**
