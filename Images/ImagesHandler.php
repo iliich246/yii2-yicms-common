@@ -87,6 +87,9 @@ class ImagesHandler extends AbstractHandler
     {
         if ($this->aggregator->isNonexistent()) return false;
 
+        if (!$this->aggregator->isAnnotationActive())
+            return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name);
+
         /** @var ImagesBlock $className */
         $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
             $this->aggregator->getAnnotationFileName() . '\\Images\\' .

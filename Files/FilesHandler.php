@@ -87,6 +87,9 @@ class FilesHandler extends AbstractHandler
     {
         if ($this->aggregator->isNonexistent()) return false;
 
+        if (!$this->aggregator->isAnnotationActive())
+            return FilesBlock::isTemplate($this->aggregator->getFileTemplateReference(), $name);
+
         /** @var FilesBlock $className */
         $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
             $this->aggregator->getAnnotationFileName() . '\\Files\\' .
