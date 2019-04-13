@@ -67,6 +67,14 @@ class ImagesHandler extends AbstractHandler
 
                 $imagesBlock->setParentFileAnnotator($this->aggregator);
 
+                \Yii::error(print_r([
+                    'name' => $name,
+                    'imageTemplateReference' => $this->aggregator->getImageTemplateReference(),
+                    'imageTemplate' => $this->aggregator->getImageReference(),
+                    'imageUnic' => $imagesBlock->unic,
+                    'image' => $imagesBlock->image_template_reference
+                ], true));
+
                 return $imagesBlock;
             }
 

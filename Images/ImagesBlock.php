@@ -72,7 +72,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     const CROP_VIEW_MODE_1 = 0x02;
     const CROP_VIEW_MODE_2 = 0x03;
     const CROP_VIEW_MODE_3 = 0x04;
-
+    public $unic;
     /** @var bool if true for this block will be created standard images like filename */
     public $createStandardFields = true;
     /** @var ImagesNamesTranslatesDb[] buffer */
@@ -122,6 +122,7 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function init()
     {
+        $this->unic = uniqid();
         $this->visible  = true;
         $this->editable = true;
         parent::init();
