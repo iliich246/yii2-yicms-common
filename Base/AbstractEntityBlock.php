@@ -13,7 +13,7 @@ use yii\db\ActiveQuery;
 abstract class AbstractEntityBlock extends AbstractTemplate implements NonexistentInterface
 {
     /** @var AbstractEntity[] that`s contains this block */
-    private $entityBuffer = null;
+    public $entityBuffer = null;
     /** @var bool if true image block will behaviour as nonexistent   */
     protected $isNonexistent = false;
     /** @var string value for keep program name in nonexistent mode */
@@ -83,12 +83,21 @@ abstract class AbstractEntityBlock extends AbstractTemplate implements Nonexiste
     }
 
     /**
+     * After cloning Entity block must clear entities buffer
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $this->entityBuffer = null;
+    }
+
+    /**
      * @inheritdoc
      * @throws CommonException
      */
-    public static function getInstance($templateReference, $programName)
+    public static function getInstance($templateReference, $programName, $variation = null)
     {
-        $value = parent::getInstance($templateReference, $programName);
+        $value = parent::getInstance($templateReference, $programName, $variation);
 
         if ($value) return $value;
 

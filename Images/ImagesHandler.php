@@ -27,9 +27,10 @@ class ImagesHandler extends AbstractHandler
     /**
      * Returns instance of image block template by name
      * @param $name
-     * @return ImagesBlock|bool
+     * @param null $variation
+     * @return bool|ImagesBlock|object
      */
-    public function getImageBlock($name)
+    public function getImageBlock($name, $variation = null)
     {
         if ($this->aggregator->isNonexistent()) {
             $nonexistentImageBlock = new ImagesBlock();
@@ -38,13 +39,14 @@ class ImagesHandler extends AbstractHandler
             return $nonexistentImageBlock;
         }
 
-        return $this->getOrSet($name, function() use($name) {
+        return $this->getOrSet($name, function() use($name, $variation) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
                 if (!$this->aggregator->isAnnotationActive())
                     return ImagesBlock::getInstance(
                         $this->aggregator->getImageTemplateReference(),
                         $name,
-                        $this->aggregator->getImageReference()
+                        $this->aggregator->getImageReference(),
+                        $variation
                     );
 
                 /** @var ImagesBlock $className */
@@ -56,24 +58,18 @@ class ImagesHandler extends AbstractHandler
                     $imagesBlock = $className::getInstance(
                         $this->aggregator->getImageTemplateReference(),
                         $name,
-                        $this->aggregator->getImageReference()
+                        $this->aggregator->getImageReference(),
+                        $variation
                     );
                 else
                     $imagesBlock = ImagesBlock::getInstance(
                         $this->aggregator->getImageTemplateReference(),
                         $name,
-                        $this->aggregator->getImageReference()
+                        $this->aggregator->getImageReference(),
+                        $variation
                     );
 
                 $imagesBlock->setParentFileAnnotator($this->aggregator);
-
-                \Yii::error(print_r([
-                    'name' => $name,
-                    'imageTemplateReference' => $this->aggregator->getImageTemplateReference(),
-                    'imageTemplate' => $this->aggregator->getImageReference(),
-                    'imageUnic' => $imagesBlock->unic,
-                    'image' => $imagesBlock->image_template_reference
-                ], true));
 
                 return $imagesBlock;
             }
@@ -81,7 +77,8 @@ class ImagesHandler extends AbstractHandler
             return ImagesBlock::getInstance(
                 $this->aggregator->getImageTemplateReference(),
                 $name,
-                $this->aggregator->getImageReference()
+                $this->aggregator->getImageReference(),
+                $variation
             );
         });
     }
@@ -89,14 +86,15 @@ class ImagesHandler extends AbstractHandler
     /**
      * Returns true if aggregator has image block with name
      * @param $name
+     * @param null $variation
      * @return bool
      */
-    public function isImageBlock($name)
+    public function isImageBlock($name, $variation = null)
     {
         if ($this->aggregator->isNonexistent()) return false;
 
         if (!$this->aggregator->isAnnotationActive())
-            return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name);
+            return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name, $variation);
 
         /** @var ImagesBlock $className */
         $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
@@ -104,8 +102,8 @@ class ImagesHandler extends AbstractHandler
             ucfirst(mb_strtolower($name)) . 'ImageBlock';
 
         if (class_exists($className))
-            return $className::isTemplate($this->aggregator->getImageTemplateReference(), $name);
+            return $className::isTemplate($this->aggregator->getImageTemplateReference(), $name, $variation);
 
-        return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name);
+        return ImagesBlock::isTemplate($this->aggregator->getImageTemplateReference(), $name, $variation);
     }
 }

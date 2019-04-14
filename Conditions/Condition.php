@@ -246,7 +246,7 @@ class Condition extends ActiveRecord implements NonexistentInterface
     {
         if ($this->template) return $this->template;
 
-        $this->template = ConditionTemplate::findOne($this->common_condition_template_id);
+        $this->template = ConditionTemplate::getInstanceById($this->common_condition_template_id);
 
         return $this->template;
     }

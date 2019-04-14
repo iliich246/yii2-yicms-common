@@ -29,7 +29,7 @@ class FilesHandler extends AbstractHandler
      * @param $name
      * @return bool|object
      */
-    public function getFileBlock($name)
+    public function getFileBlock($name, $variation = null)
     {
         if ($this->aggregator->isNonexistent()) {
             $nonexistentFileBlock = new FilesBlock();

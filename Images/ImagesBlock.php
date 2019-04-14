@@ -72,12 +72,12 @@ class ImagesBlock extends AbstractEntityBlock implements
     const CROP_VIEW_MODE_1 = 0x02;
     const CROP_VIEW_MODE_2 = 0x03;
     const CROP_VIEW_MODE_3 = 0x04;
-    public $unic;
+
     /** @var bool if true for this block will be created standard images like filename */
     public $createStandardFields = true;
     /** @var ImagesNamesTranslatesDb[] buffer */
     private $imageNamesTranslates = [];
-    /** @var string imageReference for what files group must be fetched */
+    /** @var string imageReference for what images group must be fetched */
     private $currentImageReference;
     /** @inheritdoc */
     protected static $buffer = [];
@@ -122,7 +122,6 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function init()
     {
-        $this->unic = uniqid();
         $this->visible  = true;
         $this->editable = true;
         parent::init();
@@ -133,7 +132,7 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     public function attributeLabels()
     {
-        return array_merge(parent::attributeLabels(),[
+        return array_merge(parent::attributeLabels(), [
             'createStandardFields' => 'Create standard fields (name, alt)',
             'max_images'           => 'Maximum images in block',
             'crop_type'            => 'Crop type',
@@ -324,12 +323,15 @@ class ImagesBlock extends AbstractEntityBlock implements
      * @return AbstractEntityBlock|ImagesBlock|null
      * @throws CommonException
      */
-    public static function getInstance($templateReference, $programName, $currentImageReference = null)
+    public static function getInstance($templateReference, $programName, $currentImageReference = null, $variation = null)
     {
         /** @var ImagesBlock $value */
-        $value = parent::getInstance($templateReference, $programName);
+        $value = parent::getInstance($templateReference, $programName, $variation);
 
-        if (!$value->currentImageReference) $value->currentImageReference = $currentImageReference;
+        if (is_null($currentImageReference)) return $value;
+
+        if ($value->currentImageReference != $currentImageReference)
+            $value->currentImageReference = $currentImageReference;
 
         return $value;
     }
@@ -638,7 +640,7 @@ class ImagesBlock extends AbstractEntityBlock implements
                 return Image::find()
                     ->where([
                         'common_images_templates_id' => $this->id,
-                        'image_reference' => $this->currentImageReference
+                        'image_reference'            => $this->currentImageReference
                     ])
                     ->indexBy('id')
                     ->orderBy(['image_order' => SORT_ASC]);
@@ -650,7 +652,7 @@ class ImagesBlock extends AbstractEntityBlock implements
             return $className::find()
                 ->where([
                     'common_images_templates_id' => $this->id,
-                    'image_reference' => $this->currentImageReference
+                    'image_reference'            => $this->currentImageReference
                 ])
                 ->indexBy('id')
                 ->orderBy(['image_order' => SORT_ASC]);

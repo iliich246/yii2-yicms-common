@@ -128,16 +128,26 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
      * Returns instance of template object with data fetched from database;
      * @param $templateReference
      * @param $programName
-     * @return static|null
+     * @param null $variation
+     * @return AbstractTemplate
      */
-    public static function getInstance($templateReference, $programName)
+    public static function getInstance($templateReference, $programName, $variation = null)
     {
-        //if (($value = self::getFromCache($templateReference, $programName)) !== false) {
-        //    return $value;
-        //}
+        if (($value = self::getFromCache($templateReference, $programName, $variation)) !== false) {
+            return $value;
+        }
 
-        /** @var AbstractTemplate $value */
-        $value = static::fetchTemplate($templateReference, $programName);
+        if ($variation)
+            if ($variationValue = static::findTemplateWithVariation($templateReference, $programName)) {
+                $value = clone($variationValue);
+            } else {
+                /** @var AbstractTemplate $value */
+                $value = static::fetchTemplate($templateReference, $programName);
+            }
+        else {
+            /** @var AbstractTemplate $value */
+            $value = static::fetchTemplate($templateReference, $programName);
+        }
 
         if ($value || is_null($value))
             self::setToCache($templateReference, $programName, $value);
@@ -146,14 +156,35 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
     }
 
     /**
+     * Find template for create clone of variation
+     * @param $templateReference
+     * @param $programName
+     * @return static|bool
+     */
+    private static function findTemplateWithVariation($templateReference, $programName)
+    {
+        foreach (static::$buffer as $bufferTemplateReference => $element) {
+            if (strripos($bufferTemplateReference, $templateReference) === false) continue;
+
+            if (isset(static::$buffer[$bufferTemplateReference][$programName]))
+                return static::$buffer[$bufferTemplateReference][$programName];
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
      * Return true if template with this name existed
      * @param $templateReference
      * @param $programName
+     * @param null $variation
      * @return bool
      */
-    public static function isTemplate($templateReference, $programName)
+    public static function isTemplate($templateReference, $programName, $variation = null)
     {
-        return !!self::getInstance($templateReference, $programName);
+        return !!self::getInstance($templateReference, $programName, $variation);
     }
 
     /**
@@ -175,7 +206,7 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
         }
 
         /** @var static $abstractTemplateInstance */
-        $abstractTemplateInstance = self::findOne($id);
+        $abstractTemplateInstance = static::findOne($id);
         $templateReference = $abstractTemplateInstance->getTemplateReference();
         $programName = $abstractTemplateInstance->program_name;
 
@@ -214,7 +245,6 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
      * Return list of templates
      * @param $templateReference
      * @return ActiveQuery
-     * @throws CommonException
      */
     public static function getListQuery($templateReference)
     {
@@ -227,12 +257,19 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
      * Returns data form cache by keys
      * @param $templateReference
      * @param $programName
+     * @param null $variation
      * @return static|bool
      */
-    private static function getFromCache($templateReference, $programName)
+    private static function getFromCache($templateReference, $programName, $variation = null)
     {
-        if (isset(static::$buffer[$templateReference]) && array_key_exists($programName, static::$buffer[$templateReference]))
-            return static::$buffer[$templateReference][$programName];
+        if (!$variation) {
+            if (isset(static::$buffer[$templateReference]) && array_key_exists($programName, static::$buffer[$templateReference]))
+                return static::$buffer[$templateReference][$programName];
+        } else {
+            if (isset(static::$buffer[$templateReference . '_' .$variation]) &&
+                array_key_exists($programName, static::$buffer[$templateReference . '_' .$variation]))
+                return static::$buffer[$templateReference . '_' .$variation][$programName];
+        }
 
         return false;
     }
@@ -253,14 +290,17 @@ abstract class AbstractTemplate extends ActiveRecord implements SortOrderInterfa
 
     /**
      * Stores a value identified by a key into cache.
-     * @param integer $templateReference
-     * @param string $programName
-     * @param self $value
-     * @return void
+     * @param $templateReference
+     * @param $programName
+     * @param $value
+     * @param null $variation
      */
-    protected static function setToCache($templateReference, $programName, $value)
+    protected static function setToCache($templateReference, $programName, $value, $variation = null)
     {
-        static::$buffer[$templateReference][$programName] = $value;
+        if (!$variation)
+            static::$buffer[$templateReference][$programName] = $value;
+        else
+            static::$buffer[$templateReference . '_' .$variation][$programName] = $value;
     }
 
     /**

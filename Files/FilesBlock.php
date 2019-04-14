@@ -201,7 +201,10 @@ class FilesBlock extends AbstractEntityBlock implements
         /** @var FilesBlock $value */
         $value = parent::getInstance($templateReference, $programName);
 
-        if (!$value->currentFileReference) $value->currentFileReference = $currentFileReference;
+        if (is_null($currentFileReference)) return $value;
+
+        if ($value->currentFileReference != $currentFileReference)
+            $value->currentFileReference = $currentFileReference;
 
         return $value;
     }
