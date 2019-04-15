@@ -27,7 +27,8 @@ class FilesHandler extends AbstractHandler
     /**
      * Returns instance of file block template by name
      * @param $name
-     * @return bool|object
+     * @param null $variation
+     * @return bool|FilesBlock|object
      */
     public function getFileBlock($name, $variation = null)
     {
@@ -38,13 +39,14 @@ class FilesHandler extends AbstractHandler
             return $nonexistentFileBlock;
         }
 
-        return $this->getOrSet($name, function() use($name) {
+        return $this->getOrSet($name, function() use($name, $variation) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
                 if (!$this->aggregator->isAnnotationActive())
                     return FilesBlock::getInstance(
                         $this->aggregator->getFileTemplateReference(),
                         $name,
-                        $this->aggregator->getFileReference()
+                        $this->aggregator->getFileReference(),
+                        $variation
                     );
 
                 /** @var FilesBlock $className */
@@ -56,13 +58,15 @@ class FilesHandler extends AbstractHandler
                     $filesBlock = $className::getInstance(
                         $this->aggregator->getFileTemplateReference(),
                         $name,
-                        $this->aggregator->getFileReference()
+                        $this->aggregator->getFileReference(),
+                        $variation
                     );
                 else
                     $filesBlock = FilesBlock::getInstance(
                         $this->aggregator->getFileTemplateReference(),
                         $name,
-                        $this->aggregator->getFileReference()
+                        $this->aggregator->getFileReference(),
+                        $variation
                     );
 
                 $filesBlock->setParentFileAnnotator($this->aggregator);
@@ -73,7 +77,8 @@ class FilesHandler extends AbstractHandler
             return FilesBlock::getInstance(
                 $this->aggregator->getFileTemplateReference(),
                 $name,
-                $this->aggregator->getFileReference()
+                $this->aggregator->getFileReference(),
+                $variation
             );
         });
     }

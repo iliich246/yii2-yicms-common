@@ -196,10 +196,10 @@ class FilesBlock extends AbstractEntityBlock implements
     /**
      * @inheritdoc
      */
-    public static function getInstance($templateReference, $programName, $currentFileReference = null)
+    public static function getInstance($templateReference, $programName, $currentFileReference = null, $variation = null)
     {
         /** @var FilesBlock $value */
-        $value = parent::getInstance($templateReference, $programName);
+        $value = parent::getInstance($templateReference, $programName, $variation);
 
         if (is_null($currentFileReference)) return $value;
 
