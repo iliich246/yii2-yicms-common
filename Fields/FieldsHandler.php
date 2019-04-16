@@ -41,6 +41,14 @@ class FieldsHandler extends AbstractHandler
             return $nonexistentField;
         }
 
+        //if ($name == 'alt')
+            \Yii::error(print_r([
+                $name,
+                //$this->aggregator
+            ], true));
+
+
+
         return $this->getOrSet($name, function () use ($name) {
             if ($this->aggregator instanceof AnnotatorFileInterface) {
                 if (!$this->aggregator->isAnnotationActive())
@@ -76,7 +84,14 @@ class FieldsHandler extends AbstractHandler
      */
     public function isField($name)
     {
+        \Yii::error(print_r([
+            $name,
+            $this->aggregator
+        ], true));
+
         if ($this->aggregator->isNonexistent()) return false;
+
+
 
         return FieldTemplate::isTemplate($this->aggregator->getFieldTemplateReference(), $name);
     }

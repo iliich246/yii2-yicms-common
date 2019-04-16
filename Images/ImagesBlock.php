@@ -2,6 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Conditions\Condition;
+use Iliich246\YicmsCommon\Fields\Field;
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Annotations\Annotator;
@@ -200,6 +202,14 @@ class ImagesBlock extends AbstractEntityBlock implements
             return parent::__get($name);
 
         if (strpos($name, 'field_') === 0) {
+            if ($this->getImage()->isNonexistent()) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
             if ($this->getImage()->isField(substr($name, 6)))
                 return $this->getImage()->getFieldHandler()->getField(substr($name, 6));
 
@@ -207,10 +217,22 @@ class ImagesBlock extends AbstractEntityBlock implements
         }
 
         if (strpos($name, 'condition_') === 0) {
+            if ($this->getImage()->isNonexistent()) {
+                $nonexistentImageBlock = new Condition();
+                $nonexistentImageBlock->setNonexistent();
+                $nonexistentImageBlock->setNonexistentName($name);
+
+                return $nonexistentImageBlock;
+            }
+
             if ($this->getImage()->isCondition(substr($name, 10)))
                 return $this->getImage()->getConditionsHandler()->getCondition(substr($name, 10));
 
             return parent::__get($name);
+        }
+
+        if ($this->getImage()->isNonexistent()) {
+            return 'zazaza';
         }
 
         if ($this->getImage()->getFieldHandler()->isField($name))

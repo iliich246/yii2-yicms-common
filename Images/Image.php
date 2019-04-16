@@ -164,6 +164,8 @@ class Image extends AbstractEntity implements
      */
     public function __get($name)
     {
+        //if ($this->isNonexistent()) return '';
+
         if (in_array($name, self::$annotationExceptionWords))
             return parent::__get($name);
 
