@@ -92,6 +92,8 @@ class ImagesBlock extends AbstractEntityBlock implements
     /** @var array of exception words for magical getter/setter */
     protected static $annotationExceptionWords = [
         'id',
+        'isNewRecord',
+        'scenario',
         'program_name',
         'image_template_reference',
         'field_template_reference',
@@ -100,7 +102,6 @@ class ImagesBlock extends AbstractEntityBlock implements
         'type',
         'language_type',
         'image_order',
-        'type',
         'editable',
         'visible',
         'max_images',

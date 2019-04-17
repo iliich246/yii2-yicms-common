@@ -77,18 +77,20 @@ class FilesBlock extends AbstractEntityBlock implements
     /** @var array of exception words for magical getter/setter */
     protected static $annotationExceptionWords = [
         'id',
+        'isNewRecord',
+        'scenario',
         'program_name',
-        'image_template_reference',
+        'file_template_reference',
         'field_template_reference',
         'condition_template_reference',
         'validator_reference',
         'type',
         'language_type',
         'file_order',
-        'type',
         'editable',
         'visible',
         'visible',
+        'max_files',
     ];
 
     /**
@@ -289,8 +291,12 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     public function __get($name)
     {
+        //return parent::__get($name);
+
         if (in_array($name, self::$annotationExceptionWords))
-        return parent::__get($name);
+            return parent::__get($name);
+
+        throw new \Exception(print_r($name,true));
 
         if (strpos($name, 'field_') === 0) {
             if ($this->getFile()->isNonexistent()) {
