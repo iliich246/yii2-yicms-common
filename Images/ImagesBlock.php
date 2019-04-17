@@ -99,7 +99,6 @@ class ImagesBlock extends AbstractEntityBlock implements
         'validator_reference',
         'type',
         'language_type',
-        'file_order',
         'image_order',
         'type',
         'editable',
@@ -194,7 +193,8 @@ class ImagesBlock extends AbstractEntityBlock implements
     /**
      * Magical get method for use object annotations
      * @param string $name
-     * @return mixed
+     * @return bool|Condition|mixed|object|string
+     * @throws CommonException
      */
     public function __get($name)
     {
@@ -218,11 +218,11 @@ class ImagesBlock extends AbstractEntityBlock implements
 
         if (strpos($name, 'condition_') === 0) {
             if ($this->getImage()->isNonexistent()) {
-                $nonexistentImageBlock = new Condition();
-                $nonexistentImageBlock->setNonexistent();
-                $nonexistentImageBlock->setNonexistentName($name);
+                $nonexistentCondition = new Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
 
-                return $nonexistentImageBlock;
+                return $nonexistentCondition;
             }
 
             if ($this->getImage()->isCondition(substr($name, 10)))
@@ -232,7 +232,29 @@ class ImagesBlock extends AbstractEntityBlock implements
         }
 
         if ($this->getImage()->isNonexistent()) {
-            return 'zazaza';
+            if (FieldTemplate::isTemplate($this->getFieldTemplateReference(), $name)) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
+            if (ConditionTemplate::isTemplate($this->getConditionTemplateReference(), $name)) {
+                $nonexistentCondition = new Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
+
+                return $nonexistentCondition;
+            }
+
+            if (defined('YICMS_STRICT'))
+                throw new CommonException('Can`t find any field for annotated Images Block');
+
+            if (defined('YICMS_ALERTS') && CommonModule::isUnderDev())
+                return 'Can`t find any field for annotated Images Block';
+
+            return '';
         }
 
         if ($this->getImage()->getFieldHandler()->isField($name))
@@ -575,6 +597,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     {
         $nonexistentImage = new Image();
         $nonexistentImage->setNonexistent();
+        $nonexistentImage->setImagesBlock($this);
 
         return $nonexistentImage;
     }

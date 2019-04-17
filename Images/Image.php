@@ -160,16 +160,23 @@ class Image extends AbstractEntity implements
     /**
      * Magical get method for use object annotations
      * @param string $name
-     * @return mixed
+     * @return bool|Condition|mixed|object|string
+     * @throws CommonException
      */
     public function __get($name)
     {
-        //if ($this->isNonexistent()) return '';
-
         if (in_array($name, self::$annotationExceptionWords))
             return parent::__get($name);
 
         if (strpos($name, 'field_') === 0) {
+            if ($this->isNonexistent()) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
             if ($this->isField(substr($name, 6)))
                 return $this->getFieldHandler()->getField(substr($name, 6));
 
@@ -177,10 +184,44 @@ class Image extends AbstractEntity implements
         }
 
         if (strpos($name, 'condition_') === 0) {
+            if ($this->isNonexistent()) {
+                $nonexistentCondition = new Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
+
+                return $nonexistentCondition;
+            }
+
             if ($this->isCondition(substr($name, 10)))
                 return $this->getConditionsHandler()->getCondition(substr($name, 10));
 
             return parent::__get($name);
+        }
+
+        if ($this->isNonexistent()) {
+            if (FieldTemplate::isTemplate($this->getFieldTemplateReference(), $name)) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
+            if (ConditionTemplate::isTemplate($this->getConditionTemplateReference(), $name)) {
+                $nonexistentCondition = new Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
+
+                return $nonexistentCondition;
+            }
+
+            if (defined('YICMS_STRICT'))
+                throw new CommonException('Can`t find any field for annotated Images Block');
+
+            if (defined('YICMS_ALERTS') && CommonModule::isUnderDev())
+                return 'Can`t find any field for annotated Images Block';
+
+            return '';
         }
 
         if ($this->getFieldHandler()->isField($name))

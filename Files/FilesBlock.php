@@ -2,6 +2,8 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
+
+use Iliich246\YicmsCommon\Base\CommonException;
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Annotations\Annotator;
@@ -11,8 +13,10 @@ use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
+use Iliich246\YicmsCommon\Fields\Field;
 use Iliich246\YicmsCommon\Fields\FieldTemplate;
 use Iliich246\YicmsCommon\Fields\FieldReferenceInterface;
+use Iliich246\YicmsCommon\Conditions\Condition;
 use Iliich246\YicmsCommon\Conditions\ConditionTemplate;
 use Iliich246\YicmsCommon\Conditions\ConditionsReferenceInterface;
 use Iliich246\YicmsCommon\Validators\ValidatorDb;
@@ -70,6 +74,22 @@ class FilesBlock extends AbstractEntityBlock implements
     private $annotator = null;
     /** @var AnnotatorFileInterface instance */
     private static $parentFileAnnotator;
+    /** @var array of exception words for magical getter/setter */
+    protected static $annotationExceptionWords = [
+        'id',
+        'program_name',
+        'image_template_reference',
+        'field_template_reference',
+        'condition_template_reference',
+        'validator_reference',
+        'type',
+        'language_type',
+        'file_order',
+        'type',
+        'editable',
+        'visible',
+        'visible',
+    ];
 
     /**
      * @inheritdoc
@@ -230,6 +250,7 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         $file = $this->getEntity();
         $file->setParentFileAnnotator($this);
+        $file->setFileBlock($this);
 
         return $file;
     }
@@ -258,6 +279,83 @@ class FilesBlock extends AbstractEntityBlock implements
     public function __toString()
     {
         return (string)$this->getFileName();
+    }
+
+    /**
+     * Magical get method for use object annotations
+     * @param string $name
+     * @return bool|Condition|mixed|object|string
+     * @throws CommonException
+     */
+    public function __get($name)
+    {
+        if (in_array($name, self::$annotationExceptionWords))
+        return parent::__get($name);
+
+        if (strpos($name, 'field_') === 0) {
+            if ($this->getFile()->isNonexistent()) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
+            if ($this->getFile()->isField(substr($name, 6)))
+                return $this->getFile()->getFieldHandler()->getField(substr($name, 6));
+
+            return parent::__get($name);
+        }
+
+        if (strpos($name, 'condition_') === 0) {
+            if ($this->getFile()->isNonexistent()) {
+                $nonexistentCondition = new \Iliich246\YicmsCommon\Conditions\Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
+
+                return $nonexistentCondition;
+            }
+
+            if ($this->getFile()->isCondition(substr($name, 10)))
+                return $this->getFile()->getConditionsHandler()->getCondition(substr($name, 10));
+
+            return parent::__get($name);
+        }
+
+        if ($this->getFile()->isNonexistent()) {
+            if (FieldTemplate::isTemplate($this->getFieldTemplateReference(), $name)) {
+                $nonexistentField = new Field();
+                $nonexistentField->setNonexistent();
+                $nonexistentField->setNonexistentName($name);
+
+                return $nonexistentField;
+            }
+
+            if (ConditionTemplate::isTemplate($this->getConditionTemplateReference(), $name)) {
+                $nonexistentCondition = new Condition();
+                $nonexistentCondition->setNonexistent();
+                $nonexistentCondition->setNonexistentName($name);
+
+                return $nonexistentCondition;
+            }
+
+            if (defined('YICMS_STRICT'))
+                throw new CommonException('Can`t find any field for annotated Files Block');
+
+            if (defined('YICMS_ALERTS') && CommonModule::isUnderDev())
+                return 'Can`t find any field for annotated Files Block';
+
+            return '';
+        }
+
+        if ($this->getFile()->getFieldHandler()->isField($name))
+            return $this->getFile()->getFieldHandler()->getField($name);
+
+        if ($this->getFile()->getConditionsHandler()->isCondition($name))
+            return $this->getFile()->getConditionsHandler()->getCondition($name);
+
+        return parent::__get($name);
+
     }
 
     /**
