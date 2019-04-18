@@ -2,14 +2,13 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-
-use Iliich246\YicmsCommon\Base\CommonException;
 use yii\db\ActiveQuery;
 use Iliich246\YicmsCommon\CommonModule;
 use Iliich246\YicmsCommon\Annotations\Annotator;
 use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
@@ -88,7 +87,6 @@ class FilesBlock extends AbstractEntityBlock implements
         'language_type',
         'file_order',
         'editable',
-        'visible',
         'visible',
         'max_files',
     ];
@@ -296,7 +294,7 @@ class FilesBlock extends AbstractEntityBlock implements
         if (in_array($name, self::$annotationExceptionWords))
             return parent::__get($name);
 
-        throw new \Exception(print_r($name,true));
+        //throw new \Exception(print_r($name,true));
 
         if (strpos($name, 'field_') === 0) {
             if ($this->getFile()->isNonexistent()) {

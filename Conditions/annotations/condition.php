@@ -2,7 +2,7 @@
 
 /** @var $this yii\web\View */
 /** @var $annotator \Iliich246\YicmsCommon\Annotations\Annotator */
-/** @var $conditionTemplate \Iliich246\YicmsCommon\Conditions\ConditionTemplate */
+/** @var $conditionTemplateInstance \Iliich246\YicmsCommon\Conditions\ConditionTemplate */
 
 $conditionTemplateInstance = $annotator->getAnnotatorFileObject();
 echo "<?php\n";
