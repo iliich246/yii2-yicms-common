@@ -103,7 +103,7 @@ class ConditionsHandler extends AbstractHandler
         }
 
         return $this->aggregator->getAnnotationFileNamespace() . '\\' .
-        $this->aggregator->getAnnotationFileName() . '\\Conditions\\' .
-        ucfirst(mb_strtolower($name));
+               $this->aggregator->getAnnotationFileName() . '\\Conditions\\' .
+               ucfirst(mb_strtolower($name));
     }
 }

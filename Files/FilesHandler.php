@@ -50,9 +50,7 @@ class FilesHandler extends AbstractHandler
                     );
 
                 /** @var FilesBlock $className */
-                $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
-                    $this->aggregator->getAnnotationFileName() . '\\Files\\' .
-                    ucfirst(mb_strtolower($name)) . 'FileBlock';
+                $className = $this->getClassName($name);
 
                 if (class_exists($className))
                     $filesBlock = $className::getInstance(
@@ -96,13 +94,23 @@ class FilesHandler extends AbstractHandler
             return FilesBlock::isTemplate($this->aggregator->getFileTemplateReference(), $name);
 
         /** @var FilesBlock $className */
-        $className = $this->aggregator->getAnnotationFileNamespace() . '\\' .
-            $this->aggregator->getAnnotationFileName() . '\\Files\\' .
-            ucfirst(mb_strtolower($name)) . 'FileBlock';
+        $className = $this->getClassName($name);
 
         if (class_exists($className))
             return $className::isTemplate($this->aggregator->getFileTemplateReference(), $name);
 
         return FilesBlock::isTemplate($this->aggregator->getFileTemplateReference(), $name);
+    }
+
+    /**
+     * Return class name for annotated file block
+     * @param $name
+     * @return string
+     */
+    private function getClassName($name)
+    {
+        return $this->aggregator->getAnnotationFileNamespace() . '\\' .
+               $this->aggregator->getAnnotationFileName() . '\\Files\\' .
+               ucfirst(mb_strtolower($name)) . 'FileBlock';
     }
 }
