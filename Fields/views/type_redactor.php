@@ -84,8 +84,8 @@ if (!$widget->fieldModel->isFictive()) {
 
 if ($widget->fieldModel->getFieldDescription()) {
     $labelOptions = [
-        'class' => 'redactor-label',
-        'data-toggle' => 'tooltip',
+        'class'          => 'redactor-label',
+        'data-toggle'    => 'tooltip',
         'data-placement' => 'top',
         'title' => $widget->fieldModel->getFieldDescription()
     ];

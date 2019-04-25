@@ -500,11 +500,13 @@ class ImagesBlock extends AbstractEntityBlock implements
 
     /**
      * Proxy method outputThumbnail to first image in block
-     * @return Image
+     * @param $type
+     * @return $this
+     * @throws CommonException
      */
     public function outputThumbnail($type)
     {
-        return $this->outputThumbnail($type);
+        return $this->getImage()->outputThumbnail($type);
     }
 
     /**

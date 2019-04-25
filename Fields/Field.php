@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -185,11 +186,11 @@ class Field extends ActiveRecord implements
                     return false;
                 }
 
-                $fieldEvent = new FieldEvent();
-                $fieldEvent->result = (string)$this->value;
-                $this->trigger(self::EVENT_BEFORE_OUTPUT, $fieldEvent);
+                $hookEvent = new HookEvent();
+                $hookEvent->setHook((string)$this->getTranslate());
 
-                return (string)$fieldEvent->result;
+                $this->trigger(self::EVENT_BEFORE_OUTPUT, $hookEvent);
+                return (string)$hookEvent->getHook();
             }
 
             if (trim($this->value)) return $this->value;
@@ -204,11 +205,11 @@ class Field extends ActiveRecord implements
             return '';
         }
 
-        $fieldEvent = new FieldEvent();
-        $fieldEvent->result = (string)$this->getTranslate();;
-        $this->trigger(self::EVENT_BEFORE_OUTPUT, $fieldEvent);
+        $hookEvent = new HookEvent();
+        $hookEvent->setHook((string)$this->getTranslate());
 
-        return (string)$fieldEvent->result;
+        $this->trigger(self::EVENT_BEFORE_OUTPUT, $hookEvent);
+        return (string)$hookEvent->getHook();
     }
 
     /**
