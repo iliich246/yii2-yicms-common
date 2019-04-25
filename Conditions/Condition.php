@@ -5,6 +5,7 @@ namespace Iliich246\YicmsCommon\Conditions;
 use Yii;
 use yii\db\ActiveRecord;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -24,6 +25,11 @@ use Iliich246\YicmsCommon\Languages\LanguagesDb;
  */
 class Condition extends ActiveRecord implements NonexistentInterface
 {
+    /**
+     * @event Event that is triggered before return condition value
+     */
+    const EVENT_BEFORE_OUTPUT = 'beforeOutput';
+
     /** @var string value of condition */
     public $value;
     /** @var ConditionTemplate instance of condition template */
@@ -150,11 +156,30 @@ class Condition extends ActiveRecord implements NonexistentInterface
             return null;
         }
 
-        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX)
-            return !!$this->checkbox_state;
+        $hookEvent = new HookEvent();
 
-        if (!is_null($this->valueName)) return $this->valueName;
-        return $this->valueName = ConditionValues::findOne($this->common_value_id)->value_name;
+        if ($this->getTemplate()->type == ConditionTemplate::TYPE_CHECKBOX) {
+            $hookEvent->setHook(!!$this->checkbox_state);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        if (!is_null($this->valueName)) {
+
+            $hookEvent->setHook( $this->valueName);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        $hookEvent->setHook($this->valueName = ConditionValues::findOne($this->common_value_id)->value_name);
+
+        $this->trigger(self::EVENT_BEFORE_OUTPUT, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**

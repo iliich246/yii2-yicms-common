@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Files;
 
-use Iliich246\YicmsCommon\Base\CommonException;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
@@ -13,10 +12,12 @@ use Iliich246\YicmsCommon\Annotations\Annotator;
 use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
+use Iliich246\YicmsCommon\Base\SortOrderTrait;
+use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\SortOrderInterface;
-use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
 use Iliich246\YicmsCommon\Fields\Field;
@@ -67,6 +68,21 @@ class File extends AbstractEntity implements
     AnnotatorStringInterface
 {
     use SortOrderTrait;
+
+    /**
+     * @event Event that is triggered before return file name value
+     */
+    const EVENT_BEFORE_OUTPUT_NAME = 'beforeOutputFileName';
+
+    /**
+     * @event Event that is triggered before return file path;
+     */
+    const EVENT_BEFORE_OUTPUT_PATH = 'beforeOutputFilePath';
+
+    /**
+     * @event Event that is triggered before return file url;
+     */
+    const EVENT_BEFORE_OUTPUT_URL = 'beforeOutputFileUrl';
 
     /** @var UploadedFile loaded file */
     public $file;
@@ -249,7 +265,7 @@ class File extends AbstractEntity implements
      */
     public function __toString()
     {
-        return $this->getFileName();
+        return (string)$this->getFileName();
     }
 
     /**
@@ -266,6 +282,8 @@ class File extends AbstractEntity implements
             return false;
         }
 
+        $hookEvent = new HookEvent();
+
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
         $fileTranslate = $this->getFileTranslate($language);
@@ -275,19 +293,37 @@ class File extends AbstractEntity implements
         else
             $extension = strrchr($fileTranslate->system_name, '.');
 
-        if ($fileTranslate && trim($fileTranslate->filename))
-            return !$addExtension ? $fileTranslate->filename :
-                                   $fileTranslate->filename . $extension;
+        if ($fileTranslate && trim($fileTranslate->filename)) {
 
-        if ($this->getFileBlock()->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
-            return !$addExtension ? $this->original_name :
-                                   $this->original_name . $extension;
+            $hookEvent->setHook(!$addExtension ? $fileTranslate->filename :
+                $fileTranslate->filename . $extension);
 
-        if ($fileTranslate)
-            return !$addExtension ? $fileTranslate->original_name :
-                                   $fileTranslate->original_name . $extension;
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_NAME, $hookEvent);
 
-        return false;
+            return $hookEvent->getHook();
+        }
+
+        if ($this->getFileBlock()->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE) {
+
+            $hookEvent->setHook( !$addExtension ? $this->original_name :
+                $this->original_name . $extension);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_NAME, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        if ($fileTranslate) {
+            $hookEvent->setHook( !$addExtension ? $fileTranslate->original_name :
+                $fileTranslate->original_name . $extension);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_NAME, $hookEvent);
+
+            return $hookEvent->getHook();
+
+        }
+
+        return '';
     }
 
     /**
@@ -305,19 +341,37 @@ class File extends AbstractEntity implements
         $filesBlock = $this->getFileBlock();
         $fileTranslate = $this->getFileTranslate($language);
 
+        $hookEvent = new HookEvent();
+
         if ($filesBlock->language_type == FilesBlock::LANGUAGE_TYPE_SINGLE)
             $systemName = $this->system_name;
         else {
-            if (!$fileTranslate) return false;
+            if (!$fileTranslate) {
+                $hookEvent->setHook(false);
+
+                $this->trigger(self::EVENT_BEFORE_OUTPUT_PATH, $hookEvent);
+
+                return $hookEvent->getHook();
+            }
 
             $systemName = $fileTranslate->system_name;
         }
 
         $path = CommonModule::getInstance()->filesPatch . $systemName;
 
-        if (!file_exists($path) || is_dir($path)) return false;
+        if (!file_exists($path) || is_dir($path)) {
+            $hookEvent->setHook(false);
 
-        return $path;
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_PATH, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        $hookEvent->setHook($path);
+
+        $this->trigger(self::EVENT_BEFORE_OUTPUT_PATH, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**
@@ -333,14 +387,26 @@ class File extends AbstractEntity implements
 
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
-        if ($onlyPhysicalExistedFiles && !$this->getPath()) return false;
+        $hookEvent = new HookEvent();
 
-        return Url::toRoute([
+        if ($onlyPhysicalExistedFiles && !$this->getPath()) {
+            $hookEvent->setHook(false);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_URL, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        $hookEvent->setHook(Url::toRoute([
             '/common/files/upload-file',
             'fileBlockId' => $this->getFileBlock()->id,
             'fileId'      => $this->id,
             'language'    => $language->id
-        ]);
+        ]));
+
+        $this->trigger(self::EVENT_BEFORE_OUTPUT_URL, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**

@@ -13,6 +13,7 @@ use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Assets\DeveloperAsset;
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Base\AbstractEntity;
 use Iliich246\YicmsCommon\Base\SortOrderTrait;
 use Iliich246\YicmsCommon\Base\CommonException;
@@ -73,7 +74,15 @@ class Image extends AbstractEntity implements
     const ORIGINALS_MODE = 0;
     const CROPPED_MODE   = 1;
 
-    const EVENT_AFTER_FETCH = 'afterFetch';
+    /**
+     * @event Event that is triggered before return file name value
+     */
+    const EVENT_BEFORE_OUTPUT_NAME = 'beforeOutputImageName';
+
+    /**
+     * @event Event that is triggered before return file path;
+     */
+    const EVENT_BEFORE_OUTPUT_SRC = 'beforeOutputImageSrc';
 
     /** @var UploadedFile loaded image */
     public $image;
@@ -311,14 +320,24 @@ class Image extends AbstractEntity implements
      */
     public function getSrc(LanguagesDb $language = null)
     {
+        $hookEvent = new HookEvent();
+
         if ($this->isNonexistent() && CommonModule::isUnderDev() && defined('YICMS_ALERTS')) {
             $asset = new DeveloperAsset();
             $asset->publish(\Yii::$app->assetManager);
 
-            $src = $asset->baseUrl . '/no-image.png';
-            return $src;
-        } else if ($this->isNonexistent())
-            return '';
+            $hookEvent->setHook($asset->baseUrl . '/no-image.png');
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_SRC, $hookEvent);
+
+            return $hookEvent->getHook();
+        } else if ($this->isNonexistent()) {
+            $hookEvent->setHook('');
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_SRC, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
 
         if (!$language) $language = Language::getInstance()->getCurrentLanguage();
 
@@ -338,21 +357,34 @@ class Image extends AbstractEntity implements
         if ($this->imageMode == self::ORIGINALS_MODE) {
             if (!is_null($this->thumbnailMode)) {
                 $systemName = $this->currentThumbnail->program_name . '_' . $systemName;
-                return CommonModule::getInstance()->imagesThumbnailsWebPath . $systemName;
+
+                $hookEvent->setHook(CommonModule::getInstance()->imagesThumbnailsWebPath . $systemName);
+
+                $this->trigger(self::EVENT_BEFORE_OUTPUT_SRC, $hookEvent);
+
+                return $hookEvent->getHook();
             }
 
-            return CommonModule::getInstance()->imagesOriginalsWebPath . $systemName;
+            $hookEvent->setHook(CommonModule::getInstance()->imagesOriginalsWebPath . $systemName);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_SRC, $hookEvent);
+
+            return $hookEvent->getHook();
         }
 
         //CROPPED_MODE
         if (!is_null($this->thumbnailMode))
             $systemName = $this->currentThumbnail->program_name . '_' .$systemName;
 
-        return CommonModule::getInstance()->imagesCropWebPath . $systemName;
+        $hookEvent->setHook(CommonModule::getInstance()->imagesCropWebPath . $systemName);
+
+        $this->trigger(self::EVENT_BEFORE_OUTPUT_SRC, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**
-     * Return name of file for admin list
+     * Return name of image for admin list
      * @param LanguagesDb|null $language
      * @return bool|int|null|string
      * @throws CommonException
@@ -375,7 +407,15 @@ class Image extends AbstractEntity implements
             $name = null;
         }
 
-        if ($name || trim($name)) return $name;
+        $hookEvent = new HookEvent();
+
+        if ($name || trim($name)) {
+            $hookEvent->setHook($name);
+
+            $this->trigger(self::EVENT_BEFORE_OUTPUT_NAME, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
 
         $imagesBlock = $this->getImagesBlock();
 
@@ -389,7 +429,11 @@ class Image extends AbstractEntity implements
             $name = $imageTranslate->original_name;
         }
 
-        return $name;
+        $hookEvent->setHook($name);
+
+        $this->trigger(self::EVENT_BEFORE_OUTPUT_NAME, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**
@@ -399,8 +443,6 @@ class Image extends AbstractEntity implements
      */
     public function __toString()
     {
-        $this->trigger(self::EVENT_AFTER_FETCH);
-
         return (string)$this->getSrc();
     }
 

@@ -8,6 +8,7 @@ use Iliich246\YicmsCommon\Annotations\Annotator;
 use Iliich246\YicmsCommon\Annotations\AnnotateInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorStringInterface;
 use Iliich246\YicmsCommon\Annotations\AnnotatorFileInterface;
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\AbstractEntityBlock;
 use Iliich246\YicmsCommon\Languages\Language;
@@ -60,6 +61,16 @@ class FilesBlock extends AbstractEntityBlock implements
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE = 1;
+
+    /**
+     * @event Event that is triggered before return file from block
+     */
+    const EVENT_BEFORE_GET_FILE = 'beforeGetFile';
+
+    /**
+     * @event Event that is triggered before return files from block
+     */
+    const EVENT_BEFORE_GET_FILES = 'beforeGetFiles';
 
     /** @var FilesNamesTranslatesDb[] buffer */
     private $fileNamesTranslates = [];
@@ -252,7 +263,12 @@ class FilesBlock extends AbstractEntityBlock implements
         $file->setParentFileAnnotator($this);
         $file->setFileBlock($this);
 
-        return $file;
+        $hookEvent = new HookEvent();
+        $hookEvent->setHook($file);
+
+        $this->trigger(self::EVENT_BEFORE_GET_FILE, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**
@@ -263,12 +279,26 @@ class FilesBlock extends AbstractEntityBlock implements
     {
         $files = $this->getEntities();
 
-        if (!$files) return [];
+        $hookEvent = new HookEvent();
 
-        foreach($files as $file)
+        if (!$files) {
+            $hookEvent->setHook([]);
+
+            $this->trigger(self::EVENT_BEFORE_GET_FILES, $hookEvent);
+
+            return $hookEvent->getHook();
+        };
+
+        foreach($files as $file) {
             $file->setParentFileAnnotator($this);
+            $file->setFileBlock($this);
+        }
 
-        return $files;
+        $hookEvent->setHook($files);
+
+        $this->trigger(self::EVENT_BEFORE_GET_FILES, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**

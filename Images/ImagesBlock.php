@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Conditions\Condition;
 use Iliich246\YicmsCommon\Fields\Field;
 use yii\db\ActiveQuery;
@@ -65,6 +66,16 @@ class ImagesBlock extends AbstractEntityBlock implements
      */
     const LANGUAGE_TYPE_TRANSLATABLE = 0;
     const LANGUAGE_TYPE_SINGLE       = 1;
+
+    /**
+     * @event Event that is triggered before return file from block
+     */
+    const EVENT_BEFORE_GET_IMAGE = 'beforeGetImage';
+
+    /**
+     * @event Event that is triggered before return files from block
+     */
+    const EVENT_BEFORE_GET_IMAGES = 'beforeGetImages';
 
     /**
      * Crop types
@@ -405,8 +416,14 @@ class ImagesBlock extends AbstractEntityBlock implements
     {
         $image = $this->getEntity();
         $image->setParentFileAnnotator($this);
+        $image->setImagesBlock($this);
 
-        return $image;
+        $hookEvent = new HookEvent();
+        $hookEvent->setHook($image);
+
+        $this->trigger(self::EVENT_BEFORE_GET_IMAGE, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**
@@ -417,12 +434,26 @@ class ImagesBlock extends AbstractEntityBlock implements
     {
         $images = $this->getEntities();
 
-        if (!$images) return [];
+        $hookEvent = new HookEvent();
 
-        foreach($images as $image)
+        if (!$images) {
+            $hookEvent->setHook([]);
+
+            $this->trigger(self::EVENT_BEFORE_GET_IMAGES, $hookEvent);
+
+            return $hookEvent->getHook();
+        }
+
+        foreach($images as $image) {
             $image->setParentFileAnnotator($this);
+            $image->setImagesBlock($this);
+        }
 
-        return $images;
+        $hookEvent->setHook($images);
+
+        $this->trigger(self::EVENT_BEFORE_GET_IMAGES, $hookEvent);
+
+        return $hookEvent->getHook();
     }
 
     /**

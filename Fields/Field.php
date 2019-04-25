@@ -2,13 +2,11 @@
 
 namespace Iliich246\YicmsCommon\Fields;
 
-use Iliich246\YicmsCommon\Base\HookEvent;
 use Yii;
-use yii\base\Event;
-use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\validators\SafeValidator;
 use Iliich246\YicmsCommon\CommonModule;
+use Iliich246\YicmsCommon\Base\HookEvent;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\FictiveInterface;
 use Iliich246\YicmsCommon\Base\NonexistentInterface;
@@ -50,6 +48,9 @@ class Field extends ActiveRecord implements
     const MODE_DEFAULT = 0;
     const MODE_ALERT = 1;
 
+    /**
+     * @event Event that is triggered before return field value
+     */
     const EVENT_BEFORE_OUTPUT = 'beforeOutput';
 
     /** @var int keeps mode of field */
