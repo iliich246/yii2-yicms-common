@@ -314,8 +314,6 @@ class DeveloperController extends Controller
             ]);
         }
 
-        $freeEssence->annotate();
-
         //initialize fields group
         $devFieldGroup = new DevFieldsGroup();
         $devFieldGroup->setFieldTemplateReference($freeEssence->getFieldTemplateReference());
@@ -414,6 +412,8 @@ class DeveloperController extends Controller
         $conditionTemplates = ConditionTemplate::getListQuery($freeEssence->getConditionTemplateReference())
                                         ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
                                         ->all();
+
+        $freeEssence->annotate();
 
         Url::remember('', 'dev');
 

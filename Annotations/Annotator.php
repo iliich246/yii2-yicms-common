@@ -84,7 +84,10 @@ class Annotator extends Component
         return $this->annotatorFileObject->getExtendsClassName();
     }
 
+    /** @var integer loop protector */
     private $lineNumber;
+
+    const MAX_LOOP_LINES = 10000;
 
     /**
      * This method prepare annotator for work
@@ -121,7 +124,7 @@ class Annotator extends Component
 
             $lineNumber++;
 
-            if ($this->lineNumber > 1000) break;
+            if ($this->lineNumber > self::MAX_LOOP_LINES) break;
         }
         $this->closeAnnotatorFile();
 

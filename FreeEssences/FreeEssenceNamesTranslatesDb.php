@@ -49,19 +49,25 @@ class FreeEssenceNamesTranslatesDb extends ActiveRecord
     }
 
     /**
+     * Return buffered translation
      * @param $freeEssenceId
      * @param $languageId
      * @return self|null
      */
-    public static function getTranslate($freeEssenceId, $languageId) {
-        if (isset(self::$buffer[$freeEssenceId][$languageId]))
-            return self::$buffer[$freeEssenceId][$languageId];
+    public static function getTranslate($freeEssenceId, $languageId)
+    {
+        if (isset(self::$buffer[$freeEssenceId][$languageId])) {
+            
+            if (array_key_exists($freeEssenceId, self::$buffer))
+                if (array_key_exists($languageId ,self::$buffer[$freeEssenceId]))
+                    return self::$buffer[$freeEssenceId][$languageId];
 
-        $translation = self::find()->where([
-            'common_free_essence_id' => $freeEssenceId,
-            'common_language_id'     => $languageId,
-        ])->one();
+            self::$buffer[$freeEssenceId][$languageId] = self::find()->where([
+                'common_free_essence_id' => $freeEssenceId,
+                'common_language_id'     => $languageId,
+            ])->one();
+        }
 
-        return self::$buffer[$freeEssenceId][$languageId] = $translation;
+        return self::$buffer[$freeEssenceId][$languageId];
     }
 }

@@ -90,6 +90,7 @@ class FreeEssences extends ActiveRecord implements
     /** @var array of exception words for magical getter/setter */
     protected static $annotationExceptionWords = [
         'scenario',
+        'isNewRecord',
         'id',
         'program_name',
         'editable',
@@ -170,6 +171,9 @@ class FreeEssences extends ActiveRecord implements
     public function __get($name)
     {
         if (in_array($name, self::$annotationExceptionWords))
+            return parent::__get($name);
+
+        if ($this->scenario == self::SCENARIO_CREATE)
             return parent::__get($name);
 
         if (strpos($name, 'field_') === 0) {
