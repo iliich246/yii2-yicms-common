@@ -57,7 +57,7 @@ class FreeEssenceNamesTranslatesDb extends ActiveRecord
     public static function getTranslate($freeEssenceId, $languageId)
     {
         if (isset(self::$buffer[$freeEssenceId][$languageId])) {
-            
+
             if (array_key_exists($freeEssenceId, self::$buffer))
                 if (array_key_exists($languageId ,self::$buffer[$freeEssenceId]))
                     return self::$buffer[$freeEssenceId][$languageId];
