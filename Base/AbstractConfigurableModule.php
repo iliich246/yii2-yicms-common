@@ -64,6 +64,12 @@ abstract class AbstractConfigurableModule extends Module
     abstract public function getNameSpace();
 
     /**
+     * Returns location of module class file
+     * @return mixed
+     */
+    abstract public function getModuleDir();
+
+    /**
      * Return name of module
      * @return string
      */

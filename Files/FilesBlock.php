@@ -88,6 +88,7 @@ class FilesBlock extends AbstractEntityBlock implements
     protected static $annotationExceptionWords = [
         'id',
         'isNewRecord',
+        'dirtyAttributes',
         'scenario',
         'program_name',
         'file_template_reference',
@@ -101,6 +102,8 @@ class FilesBlock extends AbstractEntityBlock implements
         'visible',
         'max_files',
     ];
+    /** @var array buffer of fields for reduce duplicated requests to db */
+    private static $blocksBuffer = [];
 
     /**
      * @inheritdoc

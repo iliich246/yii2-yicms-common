@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon;
 
+use Iliich246\YicmsCommon\Generator\Generator;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
@@ -26,7 +27,7 @@ class CommonModule extends AbstractConfigurableModule implements
      * @var string path to yicms files, changeable by developers; Also in that place code generators and annotators
      * will place generated code
      */
-    public $yicmsLocation = '@app/yicms';
+    public $yicmsLocation = '@app/yicms1';
     /** @var string namespace of admin part of yicms */
     public $yicmsNamespace = 'app\yicms';
     /** @var IdentityInterface|YicmsUserInterface */
@@ -137,7 +138,7 @@ class CommonModule extends AbstractConfigurableModule implements
         $admin = 0;
 
         $selected = $dev;
-        //$selected = $admin;
+        $selected = $admin;
 
         $user = CommonUser::findIdentity($selected);
         Yii::$app->user->login($user);
@@ -149,6 +150,11 @@ class CommonModule extends AbstractConfigurableModule implements
         Yii::$app->language = LanguagesDb::instanceByCode('en-EU')->code;
         //Yii::$app->language = LanguagesDb::instanceByCode('ru-RU')->code;
         //Yii::$app->language = Language::getInstance()->getCurrentLanguage()->code;
+
+        $generator = new Generator($this);
+        $generator->generate();
+
+
 
     }
 
@@ -182,6 +188,14 @@ class CommonModule extends AbstractConfigurableModule implements
     public function getNameSpace()
     {
         return __NAMESPACE__;
+    }
+
+    /**
+     * @inherited
+     */
+    public function getModuleDir()
+    {
+        return __DIR__;
     }
 
     /**

@@ -69,8 +69,8 @@ class Field extends ActiveRecord implements
     private $isNonexistent = false;
     /** @var string value for keep program name in nonexistent mode */
     private $nonexistentProgramName;
-
-    public $unic;
+    /** @var array buffer of fields for reduce duplicated requests to db */
+    private static $buffer = [];
 
     /**
      * @inheritdoc
@@ -100,19 +100,6 @@ class Field extends ActiveRecord implements
     public function init()
     {
         if (defined('YICMS_ALERTS')) $this->setAlertMode();
-
-        $this->unic = uniqid();
-
-//        $this->on(self::EVENT_AFTER_FIND, function() {
-//
-//            $validators = $this->getValidatorBuilder()->build();
-//
-//            if (!$validators) return;
-//
-//            foreach($validators as $validator)
-//                $this->validators[] = $validator;
-//        });
-
         parent::init();
     }
 
@@ -350,18 +337,40 @@ class Field extends ActiveRecord implements
             return $nonexistentField;
         };
 
-        /** @var static $field */
-        $field = static::find()->where([
-            'common_fields_template_id' => $template->id,
-            'field_reference'           => $fieldReference
-        ])->one();
+        if (self::isInBuffer($template->id, $fieldReference))
+            $field = self::$buffer[$template->id][$fieldReference];
+        else {
+            /** @var static $field */
+            $field = static::find()->where([
+                'common_fields_template_id' => $template->id,
+                'field_reference' => $fieldReference
+            ])->one();
+
+            if ($field)
+                self::$buffer[$template->id][$fieldReference] = $field;
+        }
 
         if ($field) {
             $field->template = $template;
+
             return $field;
         }
 
         return null;
+    }
+
+    /**
+     * Check isset field in buffer
+     * @param $commonFieldsTemplateId
+     * @param $fieldReference
+     * @return bool
+     */
+    private static function isInBuffer($commonFieldsTemplateId, $fieldReference)
+    {
+        if (isset(self::$buffer[$commonFieldsTemplateId][$fieldReference]))
+            return true;
+
+        return false;
     }
 
     /**

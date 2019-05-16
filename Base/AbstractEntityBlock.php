@@ -120,6 +120,7 @@ abstract class AbstractEntityBlock extends AbstractTemplate implements Nonexiste
         return $value;
     }
 
+
     /**
      * @inheritdoc
      */

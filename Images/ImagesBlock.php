@@ -104,6 +104,7 @@ class ImagesBlock extends AbstractEntityBlock implements
     protected static $annotationExceptionWords = [
         'id',
         'isNewRecord',
+        'dirtyAttributes',
         'scenario',
         'program_name',
         'image_template_reference',

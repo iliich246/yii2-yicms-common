@@ -42,6 +42,8 @@ class Condition extends ActiveRecord implements NonexistentInterface
     protected $isNonexistent = false;
     /** @var string value for keep program name in nonexistent mode */
     protected $nonexistentProgramName;
+    /** @var array buffer of fields for reduce duplicated requests to db */
+    private static $buffer = [];
 
     /**
      * @inheritdoc
@@ -370,11 +372,18 @@ class Condition extends ActiveRecord implements NonexistentInterface
             return $nonexistentCondition;
         };
 
-        /** @var self $condition */
-        $condition = self::find()->where([
-            'common_condition_template_id' => $template->id,
-            'condition_reference'          => $conditionReference,
-        ])->one();
+        if (self::isInBuffer($template->id, $conditionReference))
+            $condition = self::$buffer[$template->id][$conditionReference];
+        else {
+            /** @var self $condition */
+            $condition = self::find()->where([
+                'common_condition_template_id' => $template->id,
+                'condition_reference'          => $conditionReference,
+            ])->one();
+
+            if ($condition)
+                self::$buffer[$template->id][$conditionReference] = $condition;
+        }
 
         if ($condition) {
             $condition->template = $template;
@@ -382,6 +391,20 @@ class Condition extends ActiveRecord implements NonexistentInterface
         }
 
         return null;
+    }
+
+    /**
+     * Check isset condition in buffer
+     * @param $commonConditionTemplateId
+     * @param $fieldReference
+     * @return bool
+     */
+    private static function isInBuffer($commonConditionTemplateId, $fieldReference)
+    {
+        if (isset(self::$buffer[$commonConditionTemplateId][$fieldReference]))
+            return true;
+
+        return false;
     }
 
     /**
