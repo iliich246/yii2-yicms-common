@@ -1,4 +1,4 @@
-<?php
+<?php //template
 
 use Iliich246\YicmsCommon\Files\FilesBlock;
 use Iliich246\YicmsCommon\Files\FilesGroup;

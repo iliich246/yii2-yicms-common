@@ -1,6 +1,6 @@
 <?php
 
-namespace Iliich246\YicmsCommon\Generator;
+namespace Iliich246\YicmsCommon\Base;
 
 use Yii;
 use yii\base\Component;
@@ -17,7 +17,7 @@ class Generator extends Component
 {
     /** @var AbstractConfigurableModule|YicmsModuleInterface  */
     private $yicmsModule;
-
+    /** @var string directory of generator files */
     private $generatorDir;
 
     /**
@@ -31,10 +31,13 @@ class Generator extends Component
     }
 
     /**
-     *
+     * Method generates module user files
+     * @return void
      */
     public function generate()
     {
+        if (!$this->yicmsModule->isNeedGenerate()) return;
+
         $this->generatorDir = $this->yicmsModule->getModuleDir()
             . DIRECTORY_SEPARATOR
             . 'Views'
@@ -42,7 +45,7 @@ class Generator extends Component
             . 'generator';
 
         if (!file_exists($this->generatorDir) && !is_dir($this->generatorDir)) {
-            Yii::error('NO DIR!!!');
+
             return;
         }
 
@@ -57,9 +60,6 @@ class Generator extends Component
         if (!file_exists($moduleYicmsDir))
             mkdir($moduleYicmsDir);
 
-
-        //throw new \yii\base\Exception(print_r($generatorDir, true)); ;
-
         $generatorDirs = scandir($this->generatorDir);
         unset($generatorDirs[0]);
         unset($generatorDirs[1]);
@@ -67,30 +67,27 @@ class Generator extends Component
         $yicmsNamespace = CommonModule::getInstance()->yicmsNamespace . '\\' . $this->yicmsModule->getModuleName();
 
         foreach($generatorDirs as $dir) {
-
             $file = $this->generatorDir . DIRECTORY_SEPARATOR . $dir;
+            $destinationDir = $moduleYicmsDir . DIRECTORY_SEPARATOR . $dir;
 
             if (file_exists($file) && is_dir($file)) {
-                Yii::error($dir .' is dir');
-                $this->shareDir($file, $yicmsNamespace . '\\' . $dir);
+
+                if (!file_exists($destinationDir))
+                    mkdir($destinationDir);
+
+                $this->shareDir($file, $yicmsNamespace . '\\' . $dir, $destinationDir);
                 continue;
             }
-
-            if (file_exists($file))
-
-            Yii::error($dir . ' is_File');
-
         }
-
-        //Yii::error(print_r($dirs, true));
-        Yii::error(print_r($generatorDirs, true));
     }
 
     /**
+     * Share generator folder
      * @param $directory
      * @param $namespace
+     * @param $destinationDir
      */
-    private function shareDir($directory, $namespace)
+    private function shareDir($directory, $namespace, $destinationDir)
     {
         $sharedDir = scandir($directory);
 
@@ -102,24 +99,63 @@ class Generator extends Component
             $file = $directory . DIRECTORY_SEPARATOR . $dir;
 
             if (file_exists($file) && is_dir($file)) {
-                Yii::error($dir .' is dir');
-                $this->shareDir($file, $namespace . '\\' . $dir);
+                if (!file_exists($destinationDir . DIRECTORY_SEPARATOR . $dir))
+                    mkdir($destinationDir . DIRECTORY_SEPARATOR . $dir);
+
+                $this->shareDir($file,
+                    $namespace . '\\' . $dir,
+                    $destinationDir . DIRECTORY_SEPARATOR . $dir);
+
                 continue;
             }
 
             if (file_exists($file))
-                $this->shareFile($file, $namespace . '\\' . $dir);
+                $this->shareFile($file, $namespace, $destinationDir, $dir);
         }
 
         return;
     }
 
     /**
+     * Write file to destination
      * @param $file
      * @param $namespace
+     * @param $destinationDir
+     * @param $fileName
      */
-    private function shareFile($file, $namespace)
+    private function shareFile($file, $namespace, $destinationDir, $fileName)
     {
-        Yii::error($file . ' is_File');
+        $resource = new \SplFileObject($file, 'r');
+
+        $lineNumber = 0;
+        $result = '';
+        $insertNamespace = true;
+
+        while(!$resource->eof()) {
+
+            $line = $resource->fgets();
+
+            if ($lineNumber == 0 && preg_match("/template/", $line)) {
+                $line = '<?php' . PHP_EOL;
+                $insertNamespace = false;
+            }
+
+            if ($insertNamespace && $lineNumber > 1 && preg_match("/namespace/", $line)) {
+                $line = '';
+                $line = 'namespace ' . $namespace .';' . PHP_EOL;
+                $insertNamespace = false;
+            }
+
+            $result .= $line;
+
+            $lineNumber++;
+            if ($lineNumber > 50000) break;
+        }
+
+        $destinationFile = fopen($destinationDir . DIRECTORY_SEPARATOR . $fileName, "w");
+
+        fwrite($destinationFile, $result);
+
+        fclose($destinationFile);
     }
 }

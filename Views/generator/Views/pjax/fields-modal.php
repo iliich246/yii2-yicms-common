@@ -1,4 +1,4 @@
-<?php
+<?php //template
 
 use yii\bootstrap\ActiveForm;
 

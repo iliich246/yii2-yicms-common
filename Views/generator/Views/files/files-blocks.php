@@ -1,4 +1,4 @@
-<?php
+<?php //template
 
 use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Files\FilesBlock;

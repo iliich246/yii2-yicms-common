@@ -70,6 +70,12 @@ abstract class AbstractConfigurableModule extends Module
     abstract public function getModuleDir();
 
     /**
+     * Return true is module need generate user part of files
+     * @return bool
+     */
+    abstract public function isNeedGenerate();
+
+    /**
      * Return name of module
      * @return string
      */

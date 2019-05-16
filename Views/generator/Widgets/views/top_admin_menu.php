@@ -1,6 +1,8 @@
-<?php
+<?php //template
+
 /* @var $this \yii\web\View */
 /* @var $widget \Iliich246\YicmsCommon\Widgets\TopDevMenuWidget */
+
 ?>
 
 <div class="menu-items-block">

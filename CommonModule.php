@@ -2,10 +2,10 @@
 
 namespace Iliich246\YicmsCommon;
 
-use Iliich246\YicmsCommon\Generator\Generator;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
+use Iliich246\YicmsCommon\Base\Generator;
 use Iliich246\YicmsCommon\Base\CommonUser;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Base\YicmsUserInterface;
@@ -153,9 +153,6 @@ class CommonModule extends AbstractConfigurableModule implements
 
         $generator = new Generator($this);
         $generator->generate();
-
-
-
     }
 
     /**
@@ -196,6 +193,14 @@ class CommonModule extends AbstractConfigurableModule implements
     public function getModuleDir()
     {
         return __DIR__;
+    }
+
+    /**
+     * @inherited
+     */
+    public function isNeedGenerate()
+    {
+        return false;
     }
 
     /**

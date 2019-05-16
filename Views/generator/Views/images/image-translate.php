@@ -1,4 +1,4 @@
-<?php
+<?php //template
 
 use Iliich246\YicmsCommon\Images\ImagesBlock;
 use Iliich246\YicmsCommon\Images\ImagesGroup;

@@ -1,4 +1,4 @@
-<?php
+<?php //template
 
 /** @var $this yii\web\View */
 /** @var $fileBlock \Iliich246\YicmsCommon\Files\FilesBlock */
