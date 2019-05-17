@@ -27,7 +27,7 @@ class CommonModule extends AbstractConfigurableModule implements
      * @var string path to yicms files, changeable by developers; Also in that place code generators and annotators
      * will place generated code
      */
-    public $yicmsLocation = '@app/yicms1';
+    public $yicmsLocation = '@app/yicms';
     /** @var string namespace of admin part of yicms */
     public $yicmsNamespace = 'app\yicms';
     /** @var IdentityInterface|YicmsUserInterface */
@@ -140,8 +140,8 @@ class CommonModule extends AbstractConfigurableModule implements
         $selected = $dev;
         $selected = $admin;
 
-        $user = CommonUser::findIdentity($selected);
-        Yii::$app->user->login($user);
+        //$user = CommonUser::findIdentity($selected);
+        //Yii::$app->user->login($user);
         //Yii::$app->user->logout();
         /** END OF DEBUG CODE */
 

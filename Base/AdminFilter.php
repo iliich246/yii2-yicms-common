@@ -27,6 +27,8 @@ class AdminFilter extends ActionFilter
      */
     public function beforeAction($action)
     {
+
+
         if (Yii::$app->user->isGuest) {
             if ($this->redirect) return call_user_func($this->redirect);
             throw new NotFoundHttpException();
@@ -35,9 +37,10 @@ class AdminFilter extends ActionFilter
         /** @var YicmsUserInterface $user */
         $user = Yii::$app->user->identity;
 
-        if ($user->isDev()) return parent::beforeAction($action);
+        if ($user->isThisDev()) return parent::beforeAction($action);
+        //throw new \yii\base\Exception(print_r($user, true));
+        if (!$user->isThisAdmin()) {
 
-        if (!$user->isAdmin()) {
             if ($this->redirect) return call_user_func($this->redirect);
             throw new NotFoundHttpException();
         }

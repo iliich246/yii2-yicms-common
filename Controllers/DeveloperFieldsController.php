@@ -29,9 +29,10 @@ class DeveloperFieldsController extends Controller
     public function behaviors()
     {
         return [
-//            'root' => [
-//                'class' => DevFilter::className(),
-//            ],
+            'dev' => [
+                'class' => DevFilter::class,
+                'except' => ['change-field-editable'],
+            ],
         ];
     }
 

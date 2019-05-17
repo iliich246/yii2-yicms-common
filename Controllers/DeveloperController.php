@@ -51,10 +51,13 @@ class DeveloperController extends Controller
     public function behaviors()
     {
         return [
-//            'root' => [
-//                'class' => DevFilter::className(),
-//                'except' => ['login-as-root'],
-//            ],
+            'dev' => [
+                'class' => DevFilter::class,
+                'except' => ['login-as-dev'],
+                'redirect' => function() {
+                    return $this->redirect(Url::home());
+                }
+            ],
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
@@ -34,10 +35,12 @@ class DeveloperImagesController extends Controller
     public function behaviors()
     {
         return [
-//            'root' => [
-//                'class' => DevFilter::className(),
-//                'except' => ['change-field-editable'],
-//            ],
+            'dev' => [
+                'class' => DevFilter::class,
+                'redirect' => function() {
+                    return $this->redirect(Url::home());
+                }
+            ],
         ];
     }
 

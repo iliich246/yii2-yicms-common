@@ -26,13 +26,16 @@ class DevFilter extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (Yii::$app->user->isGuest) throw new NotFoundHttpException('1');
+        if (Yii::$app->user->isGuest) {
+            if ($this->redirect) return call_user_func($this->redirect);
+            throw new NotFoundHttpException();
+        }
 
         /** @var CommonUser $user */
         $user = Yii::$app->user->identity;
 
-        if (!$user->isDev()) {
-            if ($this->redirect) call_user_func($this->redirect);
+        if (!$user->isThisDev()) {
+            if ($this->redirect) return call_user_func($this->redirect);
             throw new NotFoundHttpException();
         }
 

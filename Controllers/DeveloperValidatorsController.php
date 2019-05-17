@@ -4,8 +4,10 @@ namespace Iliich246\YicmsCommon\Controllers;
 
 use Yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\BadRequestHttpException;
+use Iliich246\YicmsCommon\Base\DevFilter;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Validators\ValidatorDb;
 use Iliich246\YicmsCommon\Validators\AbstractValidatorForm;
@@ -23,10 +25,12 @@ class DeveloperValidatorsController extends Controller
     public function behaviors()
     {
         return [
-//            'root' => [
-//                'class' => DevFilter::className(),
-//                'except' => ['change-field-editable'],
-//            ],
+            'dev' => [
+                'class' => DevFilter::class,
+                'redirect' => function() {
+                    return $this->redirect(Url::home());
+                }
+            ],
         ];
     }
 
@@ -47,9 +51,8 @@ class DeveloperValidatorsController extends Controller
             if (!$validatorForm->save()) {
                 //TODO: return pjax error
             }
-            //throw new \yii\base\Exception(print_r($_POST, true));
-            if (Yii::$app->request->post('_saveAndBack')) {
 
+            if (Yii::$app->request->post('_saveAndBack')) {
                 return $this->renderAjax($validatorForm->getRenderView(), [
                     'validatorForm' => $validatorForm,
                     'returnBack' => true,

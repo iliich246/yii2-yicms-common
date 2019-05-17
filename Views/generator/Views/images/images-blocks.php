@@ -1,4 +1,4 @@
-<?php //template
+<?php
 
 use yii\widgets\Pjax;
 use Iliich246\YicmsCommon\Images\ImagesBlock;

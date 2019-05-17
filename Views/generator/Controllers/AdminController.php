@@ -2,7 +2,11 @@
 
 namespace app\yicms\Common\Controllers;
 
+use Iliich246\YicmsCommon\Base\AdminFilter;
+use Iliich246\YicmsCommon\Base\CommonUser;
+use Iliich246\YicmsCommon\Base\LoginModel;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use Iliich246\YicmsCommon\CommonModule;
@@ -36,11 +40,59 @@ class AdminController extends Controller
     public function behaviors()
     {
         return [
-//            'root' => [
-//                'class' => AdminFilter::className(),
-//                'except' => ['login-as-root'],
-//            ],
+            'admin' => [
+                'class' => AdminFilter::class,
+                'except' => ['login-as-admin', 'login'],
+                'redirect' => function() {
+                    return $this->redirect(Url::toRoute('login'));
+                }
+            ],
         ];
+    }
+
+    /**
+     * Login user via login page
+     * @return string|\yii\web\Response
+     */
+    public function actionLogin()
+    {
+        $this->layout = CommonModule::getInstance()->yicmsLocation . '/Common/Views/layouts/admin_login';
+
+        $model = new LoginModel();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->login();
+            return $this->redirect(Url::toRoute('/pages/admin'));
+        }
+
+        return $this->render(CommonModule::getInstance()->yicmsLocation  . '/Common/Views/admin/login', [
+            'model' => $model
+        ]);
+    }
+
+    /**
+     * Action for admin login via url
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionLoginAsAdmin()
+    {
+        $commonUser = new CommonUser();
+
+        if ($commonUser->loginAsAdmin())
+            return $this->redirect(Url::toRoute('/pages/admin'));
+
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * Logout user
+     * @return bool
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 
     /**

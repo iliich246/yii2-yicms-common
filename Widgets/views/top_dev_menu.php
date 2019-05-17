@@ -18,7 +18,7 @@
     </div>
     <div class="row button-block">
         <div class="col-xs-12">
-            <a href="#">Exit</a>
+            <a href="<?= \yii\helpers\Url::toRoute(['/common/admin/logout']) ?>">Exit</a>
         </div>
     </div>
 </div>

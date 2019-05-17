@@ -68,6 +68,16 @@ class CommonUser implements
     }
 
     /**
+     * Set user as admin
+     * @return bool
+     */
+    public function setAsAdmin()
+    {
+        $this->isAdmin = true;
+        return Yii::$app->user->login($this);
+    }
+
+    /**
      * @inheritdoc
      */
     public function isThisDev()
