@@ -60,7 +60,7 @@ class m171110_213106_common_init extends Migration
             'imagesOriginalsWebPath'  => $this->string(),
             'imagesCropWebPath'       => $this->string(),
             'imagesThumbnailsWebPath' => $this->string(),
-            'is_generated'            => $this->boolean(),
+            'isGenerated'             => $this->boolean(),
             'strongGenerating'        => $this->boolean(),
         ]);
 
