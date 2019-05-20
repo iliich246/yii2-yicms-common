@@ -107,6 +107,12 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['files']        = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
+        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
+            DIRECTORY_SEPARATOR .
+            'iliich246' .
+            DIRECTORY_SEPARATOR .
+            'yii2-yicms-common');
+
         parent::init();
 
         $this->filesPatch           = Yii::$app->basePath . $this->filesPatch;
