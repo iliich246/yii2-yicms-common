@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "iliich246\\yicmsCommon\\": ""
+            "Iliich246\\YicmsCommon\\": ""
         }
     },
     "extra": {
@@ -29,5 +29,11 @@
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }
