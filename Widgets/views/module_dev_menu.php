@@ -35,12 +35,16 @@ use yii\helpers\Url;
             Free essences list
         </a>
         <a <?php if (
-            ($widget->route == 'common/dev/create-free-essences')
+            ($widget->route == 'common/dev/create-free-essence')
             ||
-            ($widget->route == 'common/dev/update-free-essences')
+            ($widget->route == 'common/dev/update-free-essence')
         ):?> class="active" <?php endif; ?>
-            href="<?= Url::toRoute('/common/dev/create-free-essences') ?>">
+            href="<?= Url::toRoute('/common/dev/create-free-essence') ?>">
             Create/update free essence
+        </a>
+        <a <?php if ($widget->route == 'common/dev/maintenance'): ?> class="active" <?php endif; ?>
+            href="<?= Url::toRoute('/common/dev/maintenance') ?>">
+            Maintenance
         </a>
     </div>
 </div>

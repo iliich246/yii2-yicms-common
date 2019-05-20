@@ -5,8 +5,8 @@ use yii\widgets\Pjax;
 use yii\bootstrap\ActiveForm;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
 
-/* @var $this \yii\web\View */
-/* @var $model CommonHashForm */
+/** @var $this \yii\web\View */
+/** @var $model CommonHashForm */
 
     if ($model->scenario == CommonHashForm::SCENARIO_CHANGE_DEV)
         $this->title = 'Change developer hash page';

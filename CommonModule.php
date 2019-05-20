@@ -38,6 +38,10 @@ class CommonModule extends AbstractConfigurableModule implements
     public $languageMethod = Language::COOKIE_TYPE;
     /** @var string name of directory for annotation files */
     public $annotationsDirectory = 'Models';
+    /** @var bool keeps true if for this module was generated changeable admin files */
+    public $isGenerated = false;
+    /** @var bool if true generator will be generate in strong mode, even existed files will be replaced */
+    public $strongGenerating = false;
 
     /**
      * Block of fields with various paths
@@ -74,8 +78,11 @@ class CommonModule extends AbstractConfigurableModule implements
 
     /** @inheritdoc */
     public $configurable = [
+        'yicmsLocation',
+        'yicmsNamespace',
         'defaultLanguage',
         'languageMethod',
+        'isGenerated',
     ];
 
     /** @inheritdoc */
@@ -100,6 +107,8 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['files']        = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
+        parent::init();
+
         $this->filesPatch           = Yii::$app->basePath . $this->filesPatch;
         $this->imagesOriginalsPath  = Yii::$app->basePath . $this->imagesOriginalsPath;
         $this->imagesCropPath       = Yii::$app->basePath . $this->imagesCropPath;
@@ -108,8 +117,6 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->imagesOriginalsWebPath  = Yii::$app->homeUrl . $this->imagesOriginalsWebPath;
         $this->imagesCropWebPath       = Yii::$app->homeUrl . $this->imagesCropWebPath;
         $this->imagesThumbnailsWebPath = Yii::$app->homeUrl . $this->imagesThumbnailsWebPath;
-
-        parent::init();
     }
 
     /**
@@ -153,7 +160,11 @@ class CommonModule extends AbstractConfigurableModule implements
 
         $generator = new Generator($this);
         $generator->generate();
+
+        //Yii::error(print_r($this, true));
     }
+
+
 
     /**
      * Returns true is current user is dev
@@ -200,7 +211,15 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function isNeedGenerate()
     {
-        return false;
+        return !!$this->isGenerated;
+    }
+
+    /**
+     * @inherited
+     */
+    public function isGeneratorInStrongMode()
+    {
+        return !!$this->strongGenerating;
     }
 
     /**

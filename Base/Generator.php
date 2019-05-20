@@ -125,6 +125,10 @@ class Generator extends Component
      */
     private function shareFile($file, $namespace, $destinationDir, $fileName)
     {
+        if (!$this->yicmsModule->isGeneratorInStrongMode() &&
+            file_exists($destinationDir . DIRECTORY_SEPARATOR . $fileName))
+            return;
+
         $resource = new \SplFileObject($file, 'r');
 
         $lineNumber = 0;

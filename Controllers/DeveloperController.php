@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
+use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
@@ -512,6 +513,7 @@ class DeveloperController extends Controller
     }
 
     /**
+     * Up free essence order
      * @param $freeEssenceId
      * @return string
      * @throws BadRequestHttpException
@@ -539,6 +541,7 @@ class DeveloperController extends Controller
     }
 
     /**
+     * Down free essence order
      * @param $freeEssenceId
      * @return string
      * @throws BadRequestHttpException
@@ -562,6 +565,31 @@ class DeveloperController extends Controller
 
         return $this->render('/pjax/update-free-essence-list-container', [
             'freeEssences' => $freeEssences
+        ]);
+    }
+
+    /**
+     * Maintenance action for common module
+     * @return string
+     * @throws CommonException
+     */
+    public function actionMaintenance()
+    {
+        $config = CommonConfigDb::getInstance();
+
+        if ($config->load(Yii::$app->request->post()) && $config->validate()) {
+            if ($config->save()) {
+                return $this->render('/developer/maintenance', [
+                    'config'  => $config,
+                    'success' => true,
+                ]);
+            }
+
+            throw new CommonException('Can`t save data in database');
+        }
+
+        return $this->render('/developer/maintenance', [
+            'config' => $config
         ]);
     }
 }

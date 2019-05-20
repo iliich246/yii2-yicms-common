@@ -47,15 +47,50 @@ class m171110_213106_common_init extends Migration
          * common_config table
          */
         $this->createTable('{{%common_config}}', [
-            'id'              => $this->primaryKey(),
-            'defaultLanguage' => $this->string(),
-            'languageMethod'  => $this->string(),
+            'id'                      => $this->primaryKey(),
+            'yicmsLocation'           => $this->string(),
+            'yicmsNamespace'          => $this->string(),
+            'defaultLanguage'         => $this->string(),
+            'languageMethod'          => $this->string(),
+            'annotationsDirectory'    => $this->string(),
+            'filesPatch'              => $this->string(),
+            'imagesOriginalsPath'     => $this->string(),
+            'imagesCropPath'          => $this->string(),
+            'imagesThumbnailsPath'    => $this->string(),
+            'imagesOriginalsWebPath'  => $this->string(),
+            'imagesCropWebPath'       => $this->string(),
+            'imagesThumbnailsWebPath' => $this->string(),
+            'is_generated'            => $this->boolean(),
+            'strongGenerating'        => $this->boolean(),
         ]);
 
         $this->insert('{{%common_config}}', [
-            'id'              => 1,
-            'defaultLanguage' => 'en-EU',
-            'languageMethod'  => 1,
+            'id'                      => 1,
+            'yicmsLocation'           => '@app/yicms',
+            'yicmsNamespace'          => 'app\yicms',
+            'defaultLanguage'         => 'en-EU',
+            'languageMethod'          => 1,
+            'annotationsDirectory'    => 'Models',
+            'filesPatch'              => DIRECTORY_SEPARATOR .
+                                         'web' . DIRECTORY_SEPARATOR .
+                                         'files' . DIRECTORY_SEPARATOR,
+            'imagesOriginalsPath'     => DIRECTORY_SEPARATOR .
+                                         'web' . DIRECTORY_SEPARATOR .
+                                         'images' . DIRECTORY_SEPARATOR .
+                                         'orig' . DIRECTORY_SEPARATOR,
+            'imagesCropPath'          => DIRECTORY_SEPARATOR .
+                                         'web' . DIRECTORY_SEPARATOR .
+                                         'images' . DIRECTORY_SEPARATOR .
+                                         'crop' . DIRECTORY_SEPARATOR,
+            'imagesThumbnailsPath'    => DIRECTORY_SEPARATOR .
+                                         'web' . DIRECTORY_SEPARATOR .
+                                         'images' . DIRECTORY_SEPARATOR .
+                                         'thumb' . DIRECTORY_SEPARATOR,
+            'imagesOriginalsWebPath'  => 'images/orig/',
+            'imagesCropWebPath'       => 'images/crop/',
+            'imagesThumbnailsWebPath' => 'images/thumb/',
+            'isGenerated'             => false,
+            'strongGenerating'        => false
         ]);
 
         /**

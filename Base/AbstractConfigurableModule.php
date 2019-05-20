@@ -76,6 +76,12 @@ abstract class AbstractConfigurableModule extends Module
     abstract public function isNeedGenerate();
 
     /**
+     * Returns true if module generator must work in strong mode
+     * @return bool
+     */
+    abstract public function isGeneratorInStrongMode();
+
+    /**
      * Return name of module
      * @return string
      */
