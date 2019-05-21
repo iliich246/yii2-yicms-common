@@ -101,20 +101,21 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function init()
     {
-        //TODO: change namespace to correct $yicmsLocation
-        $this->controllerMap['admin']        = 'app\yicms\Common\Controllers\AdminController';
-        $this->controllerMap['admin-fields'] = 'app\yicms\Common\Controllers\AdminFieldsController';
-        $this->controllerMap['admin-files']  = 'app\yicms\Common\Controllers\AdminFilesController';
-        $this->controllerMap['files']        = 'app\yicms\Common\Controllers\AdminFilesController';
-        $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
-
-//        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
-//            DIRECTORY_SEPARATOR .
-//            'iliich246' .
-//            DIRECTORY_SEPARATOR .
-//            'yii2-yicms-common');
+        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
+            DIRECTORY_SEPARATOR .
+            'iliich246' .
+            DIRECTORY_SEPARATOR .
+            'yii2-yicms-common');
 
         parent::init();
+
+        $namespace = $this->yicmsNamespace . '\Common\Controllers\\';
+
+        $this->controllerMap['admin']        = $namespace . 'AdminController';
+        $this->controllerMap['admin-fields'] = $namespace . 'AdminFieldsController';
+        $this->controllerMap['admin-files']  = $namespace . 'AdminFilesController';
+        $this->controllerMap['files']        = $namespace . 'AdminFilesController';
+        $this->controllerMap['admin-images'] = $namespace . 'AdminImagesController';
 
         $this->filesPatch           = Yii::$app->basePath . $this->filesPatch;
         $this->imagesOriginalsPath  = Yii::$app->basePath . $this->imagesOriginalsPath;
@@ -167,8 +168,6 @@ class CommonModule extends AbstractConfigurableModule implements
 
         $generator = new Generator($this);
         $generator->generate();
-
-        //Yii::error(print_r($this, true));
     }
 
 
