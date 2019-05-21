@@ -73,7 +73,13 @@ abstract class AbstractConfigurableModule extends Module
      * Return true is module need generate user part of files
      * @return bool
      */
-    abstract public function isNeedGenerate();
+    abstract public function isGenerated();
+
+    /**
+     * Set module state as generated
+     * @return void
+     */
+    abstract public function setAsGenerated();
 
     /**
      * Returns true if module generator must work in strong mode

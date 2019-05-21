@@ -36,7 +36,7 @@ class Generator extends Component
      */
     public function generate()
     {
-        if (!$this->yicmsModule->isNeedGenerate()) return;
+        if ($this->yicmsModule->isGenerated()) return;
 
         $this->generatorDir = $this->yicmsModule->getModuleDir()
             . DIRECTORY_SEPARATOR
@@ -45,12 +45,10 @@ class Generator extends Component
             . 'generator';
 
         if (!file_exists($this->generatorDir) && !is_dir($this->generatorDir)) {
-
             return;
         }
 
         $yicmsDir = Yii::getAlias(CommonModule::getInstance()->yicmsLocation);
-
 
         if (!file_exists($yicmsDir))
             mkdir($yicmsDir);
@@ -59,6 +57,8 @@ class Generator extends Component
 
         if (!file_exists($moduleYicmsDir))
             mkdir($moduleYicmsDir);
+
+        Yii::error($moduleYicmsDir);
 
         $generatorDirs = scandir($this->generatorDir);
         unset($generatorDirs[0]);
@@ -79,6 +79,8 @@ class Generator extends Component
                 continue;
             }
         }
+
+        $this->yicmsModule->setAsGenerated();
     }
 
     /**
@@ -128,6 +130,8 @@ class Generator extends Component
         if (!$this->yicmsModule->isGeneratorInStrongMode() &&
             file_exists($destinationDir . DIRECTORY_SEPARATOR . $fileName))
             return;
+
+        Yii::error('GENERATE ' . $destinationDir . DIRECTORY_SEPARATOR . $fileName);
 
         $resource = new \SplFileObject($file, 'r');
 

@@ -2,6 +2,7 @@
 
 namespace Iliich246\YicmsCommon;
 
+use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\IdentityInterface;
@@ -107,11 +108,11 @@ class CommonModule extends AbstractConfigurableModule implements
         $this->controllerMap['files']        = 'app\yicms\Common\Controllers\AdminFilesController';
         $this->controllerMap['admin-images'] = 'app\yicms\Common\Controllers\AdminImagesController';
 
-        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
-            DIRECTORY_SEPARATOR .
-            'iliich246' .
-            DIRECTORY_SEPARATOR .
-            'yii2-yicms-common');
+//        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
+//            DIRECTORY_SEPARATOR .
+//            'iliich246' .
+//            DIRECTORY_SEPARATOR .
+//            'yii2-yicms-common');
 
         parent::init();
 
@@ -215,9 +216,20 @@ class CommonModule extends AbstractConfigurableModule implements
     /**
      * @inherited
      */
-    public function isNeedGenerate()
+    public function isGenerated()
     {
         return !!$this->isGenerated;
+    }
+
+    /**
+     * @inherited
+     */
+    public function setAsGenerated()
+    {
+        $config = CommonConfigDb::getInstance();
+        $config->isGenerated = true;
+
+        $config->save(false);
     }
 
     /**
