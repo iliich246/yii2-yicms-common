@@ -4,7 +4,7 @@ namespace Iliich246\YicmsCommon\Images;
 
 use Yii;
 use yii\helpers\Json;
-use yii\imagine\Image;
+use yii\imagine\Image as Imagine;
 use yii\base\Component;
 use yii\helpers\FileHelper;
 use Imagine\Image\Box;
@@ -162,7 +162,7 @@ class CropProcessor extends Component
         if (!is_dir(CommonModule::getInstance()->imagesCropPath))
             FileHelper::createDirectory(CommonModule::getInstance()->imagesCropPath);
 
-        $image = Image::getImagine()->open($this->imageEntity->getPath());
+        $image = Imagine::getImagine()->open($this->imageEntity->getPath());
 
         $cropSize  = new Box($this->cropWidth, $this->cropHeight);
         $cropStart = new Point($this->cropX, $this->cropY);

@@ -2,10 +2,10 @@
 
 namespace Iliich246\YicmsCommon\Images;
 
-use yii\imagine\Image;
-use yii\base\Component;
-use yii\helpers\FileHelper;
 use Imagine\Image\Box;
+use yii\base\Component;
+use yii\imagine\Image as Imagine;
+use yii\helpers\FileHelper;
 use Iliich246\YicmsCommon\CommonModule;
 
 /**
@@ -75,8 +75,6 @@ class ThumbnailsProcessor extends Component
 
         if (!$thumbnailsList) return false;
 
-
-
         foreach($thumbnailsList as $thumbnail) {
             $fileName = $thumbnail->program_name . '_' . $oldSystemName;
 
@@ -108,7 +106,7 @@ class ThumbnailsProcessor extends Component
         if (!is_dir($savePath))
             FileHelper::createDirectory($savePath);
 
-        $image = Image::getImagine()->open(CommonModule::getInstance()->imagesOriginalsPath
+        $image = Imagine::getImagine()->open(CommonModule::getInstance()->imagesOriginalsPath
             . $this->imageEntity->getFileName());
 
         foreach($thumbnailsList as $thumbnail) {
@@ -147,7 +145,7 @@ class ThumbnailsProcessor extends Component
         if (!is_dir($savePath))
             FileHelper::createDirectory($savePath);
 
-        $image = Image::getImagine()->open(CommonModule::getInstance()->imagesCropPath
+        $image = Imagine::getImagine()->open(CommonModule::getInstance()->imagesCropPath
             . $this->imageEntity->getFileName());
 
         foreach($thumbnailsList as $thumbnail) {

@@ -131,7 +131,7 @@ class Generator extends Component
             file_exists($destinationDir . DIRECTORY_SEPARATOR . $fileName))
             return;
 
-        Yii::error('GENERATE ' . $destinationDir . DIRECTORY_SEPARATOR . $fileName);
+        //Yii::log('GENERATE ' . $destinationDir . DIRECTORY_SEPARATOR . $fileName);
 
         $resource = new \SplFileObject($file, 'r');
 
@@ -149,7 +149,6 @@ class Generator extends Component
             }
 
             if ($insertNamespace && $lineNumber > 1 && preg_match("/namespace/", $line)) {
-                $line = '';
                 $line = 'namespace ' . $namespace .';' . PHP_EOL;
                 $insertNamespace = false;
             }
