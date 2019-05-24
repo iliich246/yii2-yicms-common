@@ -67,8 +67,6 @@
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        //if (isValidatorResponse) return loadModal($(addImage).data('currentSelectedImageTemplate'));
-
         if (isValidatorResponse) return goBackValidator();
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;

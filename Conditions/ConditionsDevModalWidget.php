@@ -23,6 +23,8 @@ class ConditionsDevModalWidget extends Widget
     public $action;
     /** @var string if true widget must close modal window after save data */
     public $saveAndExit = 'false';
+    /** @var string keeps path for annotating */
+    public $annotatePath;
 
     /**
      * @inheritdoc

@@ -14,7 +14,8 @@ class LodashAsset extends AssetBundle
     public $sourcePath = '@npm/lodash';
 
     public $js = [
-        YII_ENV_DEV ? 'lodash.js' :
-            'lodash.min.js'
+        'template.js'
+//        YII_ENV_DEV ? 'lodash.js' :
+//            'lodash.min.js'
     ];
 }

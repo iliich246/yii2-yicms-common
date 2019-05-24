@@ -49,7 +49,7 @@ $js = <<<JS
     $(addNewFieldButton).on('click', function() {
 
         $(pjaxContainer).data('returnUrlFields', $(fieldsListModal).data('returnUrlFields'));
-
+        console.log($(pjaxContainer).data('annotateUrl'));
         $.pjax({
             url: emptyModalUrl
                  + '?fieldTemplateReference=' + fieldTemplateReference

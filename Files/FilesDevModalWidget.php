@@ -13,7 +13,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
  * @author iliich246 <iliich246@gmail.com>
  */
 class FilesDevModalWidget extends Widget
-{
+{public $annotatePath;
     /** @var DevFilesGroup */
     public $devFilesGroup;
     /** @var bool true means that widget initialized after success data save in DevFilesGroup */
@@ -28,16 +28,22 @@ class FilesDevModalWidget extends Widget
     public $fieldTemplatesSingle;
     /** @var string if true widget must close modal window after save data */
     public $saveAndExit = 'false';
+    /** @var string keeps path for annotating */
+
 
     /**
      * @inheritdoc
      */
     public function init()
     {
+
+
         $this->deleteLink = Url::toRoute(['/common/dev-files/delete-file-block-template']);
 
         if (Yii::$app->request->post('_saveAndExit'))
             $this->saveAndExit = 'true';
+
+        parent::init();
     }
 
     /**

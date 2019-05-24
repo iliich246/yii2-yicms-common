@@ -65,8 +65,6 @@
 
         var isValidatorResponse = !!($('.validator-response').length);
 
-        //if (isValidatorResponse) return loadModal($(addFile).data('currentSelectedFileTemplate'));
-
         if (isValidatorResponse) return goBackValidator();
 
         if (!$(event.target).find('form').is('[data-yicms-saved]')) return false;
@@ -131,7 +129,9 @@
 
     $(document).on('click', '.view-files-block-fields', function() {
 
-        $('#files-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+        var container = $('#files-pjax-container');
+        $(container).data('returnUrl', $(this).data('returnUrl'));
+        $(container).data('annotateUrl', $(this).data('annotateUrl'));
 
         $.pjax({
             url: showFieldsListModal + '?fieldTemplateReference=' + $(this).data('fieldTemplateId')
@@ -146,8 +146,10 @@
     });
 
     $(document).on('click', '.view-files-block-conditions', function() {
+        var container = $('#files-pjax-container');
 
-        $('#files-pjax-container').data('returnUrl', $(this).data('returnUrl'));
+        $(container).data('returnUrl', $(this).data('returnUrl'));
+        $(container).data('annotateUrl', $(this).data('annotateUrl'));
 
         $.pjax({
             url: showConditionsListModal + '?conditionTemplateReference=' + $(this).data('conditionTemplateId')
