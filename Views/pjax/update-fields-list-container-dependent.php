@@ -49,7 +49,7 @@ $js = <<<JS
     $(addNewFieldButton).on('click', function() {
 
         $(pjaxContainer).data('returnUrlFields', $(fieldsListModal).data('returnUrlFields'));
-        console.log($(pjaxContainer).data('annotateUrl'));
+
         $.pjax({
             url: emptyModalUrl
                  + '?fieldTemplateReference=' + fieldTemplateReference
@@ -112,6 +112,14 @@ $js = <<<JS
             push: false,
             type: "POST",
             timeout: 2500
+        });
+    }
+
+    var globalAnnotateUrl = $('#global-annotate-url').val();
+
+    if (globalAnnotateUrl) {
+        $.ajax({
+            url: globalAnnotateUrl
         });
     }
 })();

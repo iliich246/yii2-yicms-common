@@ -140,7 +140,6 @@ else
                 'data-return-url-conditions'       => '0',
                 'data-return-url-conditions-list'  => '0',
                 'data-return-url-conditions-value' => '0',
-                'data-annotate-url'                => '0'
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
@@ -257,15 +256,10 @@ else
                            '/common/dev-files/load-modal',
                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                        ]) ?>"
-                       data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block fields
 
                     </span>
-
-                    <pre>
-                        <?php print_r($widget)?>
-                    </pre>
 
                     <span class="btn btn-primary view-files-block-conditions"
                         data-condition-template-id="<?= $widget->devFilesGroup->filesBlock->getConditionTemplateReference() ?>"
@@ -273,7 +267,6 @@ else
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                         ]) ?>"
-                        data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block conditions
                     </span>

@@ -117,6 +117,9 @@ JS;
         <?php else: ?>
             <h1>Update free essence</h1>
             <h2>IMPORTANT! Do not change free essences in production without serious reason!</h2>
+            <?= Html::hiddenInput('globalAnnotateUrl', Url::toRoute(['/common/dev/annotate-free-essence', 'id' => $freeEssence->id]), [
+                'id' => 'global-annotate-url'
+            ]) ?>
         <?php endif; ?>
     </div>
 
