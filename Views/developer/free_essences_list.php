@@ -25,7 +25,7 @@ FreeEssencesDevAsset::register($this);
                 </div>
             </div>
 
-            <?= $this->render('/pjax/update-free-essence-list-container', [
+            <?= $this->render('@yicms-common/Views/pjax/update-free-essence-list-container', [
                 'freeEssences' => $freeEssences
             ]) ?>
 

@@ -83,7 +83,9 @@ class DeveloperController extends Controller
 
         $languages = LanguagesDb::find()->all();
 
-        return $this->render('/developer/languages_list', [
+       // throw new \Exception(print_r(Yii::getAlias('@yicms-common'),true));
+
+        return $this->render('@yicms-common/Views/developer/languages_list', [
             'pjaxError' => false,
             'languages' => $languages,
             'defaultLanguageModel' => $defaultLanguageForm
@@ -110,7 +112,7 @@ class DeveloperController extends Controller
                 throw new CommonException('Can`t save data in database');
         }
 
-        return $this->render('/developer/create_update_language', [
+        return $this->render('@yicms-common/Views/developer/create_update_language', [
             'model' => $model,
         ]);
     }
@@ -144,7 +146,7 @@ class DeveloperController extends Controller
 
         Url::remember(Url::toRoute(['update-language', 'id' => $id]), 'update-language');
 
-        return $this->render('/developer/create_update_language', [
+        return $this->render('@yicms-common/Views/developer/create_update_language', [
             'model' => $model,
         ]);
     }
@@ -214,7 +216,7 @@ class DeveloperController extends Controller
             throw new CommonException('Can`t change dev hash');
         }
 
-        return $this->render('/developer/change_hash', [
+        return $this->render('@yicms-common/Views/developer/change_hash', [
             'model' => $model
         ]);
     }
@@ -240,7 +242,7 @@ class DeveloperController extends Controller
             throw new CommonException('Can`t change admin hash');
         }
 
-        return $this->render('/developer/change_hash', [
+        return $this->render('@yicms-common/Views/developer/change_hash', [
             'model' => $model
         ]);
     }
@@ -255,7 +257,7 @@ class DeveloperController extends Controller
             'free_essences_order' => SORT_ASC
         ])->all();
 
-        return $this->render('/developer/free_essences_list', [
+        return $this->render('@yicms-common/Views/developer/free_essences_list', [
             'freeEssences' => $freeEssences,
         ]);
     }
@@ -281,7 +283,7 @@ class DeveloperController extends Controller
             }
         }
 
-        return $this->render('/developer/create_update_free_essence', [
+        return $this->render('@yicms-common/Views/developer/create_update_free_essence', [
             'freeEssence' => $freeEssence,
         ]);
     }
@@ -312,7 +314,7 @@ class DeveloperController extends Controller
                 $success = false;
             }
 
-            return $this->render('/developer/create_update_free_essence', [
+            return $this->render('@yicms-common/Views/developer/create_update_free_essence', [
                 'freeEssence' => $freeEssence,
                 'success' => $success
             ]);
@@ -421,7 +423,7 @@ class DeveloperController extends Controller
 
         Url::remember('', 'dev');
 
-        return $this->render('/developer/create_update_free_essence', [
+        return $this->render('@yicms-common/Views/developer/create_update_free_essence', [
             'freeEssence' => $freeEssence,
             'devFieldGroup' => $devFieldGroup,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
@@ -499,14 +501,14 @@ class DeveloperController extends Controller
                 $translateModel->save();
             }
 
-            return $this->render('/developer/free_essence_translates', [
+            return $this->render('@yicms-common/Views/developer/free_essence_translates', [
                 'freeEssence'     => $freeEssence,
                 'translateModels' => $translateModels,
                 'success'         => true,
             ]);
         }
 
-        return $this->render('/developer/free_essence_translates', [
+        return $this->render('@yicms-common/Views/developer/free_essence_translates', [
             'freeEssence'     => $freeEssence,
             'translateModels' => $translateModels,
         ]);
@@ -535,7 +537,7 @@ class DeveloperController extends Controller
             'free_essences_order' => SORT_ASC
         ])->all();
 
-        return $this->render('/pjax/update-free-essence-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-free-essence-list-container', [
             'freeEssences' => $freeEssences
         ]);
     }
@@ -563,7 +565,7 @@ class DeveloperController extends Controller
             'free_essences_order' => SORT_ASC
         ])->all();
 
-        return $this->render('/pjax/update-free-essence-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-free-essence-list-container', [
             'freeEssences' => $freeEssences
         ]);
     }
@@ -579,7 +581,7 @@ class DeveloperController extends Controller
 
         if ($config->load(Yii::$app->request->post()) && $config->validate()) {
             if ($config->save()) {
-                return $this->render('/developer/maintenance', [
+                return $this->render('@yicms-common/Views/developer/maintenance', [
                     'config'  => $config,
                     'success' => true,
                 ]);
@@ -588,7 +590,7 @@ class DeveloperController extends Controller
             throw new CommonException('Can`t save data in database');
         }
 
-        return $this->render('/developer/maintenance', [
+        return $this->render('@yicms-common/Views/developer/maintenance', [
             'config' => $config
         ]);
     }

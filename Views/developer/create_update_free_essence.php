@@ -241,7 +241,7 @@ JS;
 
     <?php if ($freeEssence->scenario == FreeEssences::SCENARIO_CREATE): return; endif; ?>
 
-    <?= $this->render('/pjax/update-fields-list-container', [
+    <?= $this->render('@yicms-common/Views/pjax/update-fields-list-container', [
         'fieldTemplateReference' => $freeEssence->getFieldTemplateReference(),
         'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
         'fieldTemplatesSingle' => $fieldTemplatesSingle
@@ -253,7 +253,7 @@ JS;
     ])
     ?>
 
-    <?= $this->render('/pjax/update-files-list-container', [
+    <?= $this->render('@yicms-common/Views/pjax/update-files-list-container', [
         'fileTemplateReference' => $freeEssence->getFileTemplateReference(),
         'filesBlocks' => $filesBlocks,
     ]) ?>
@@ -263,7 +263,7 @@ JS;
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ]) ?>
 
-    <?= $this->render('/pjax/update-images-list-container', [
+    <?= $this->render('@yicms-common/Views/pjax/update-images-list-container', [
         'imageTemplateReference' => $freeEssence->getImageTemplateReference(),
         'imagesBlocks' => $imagesBlocks,
     ]) ?>
@@ -273,7 +273,7 @@ JS;
         'action' => Url::toRoute(['/common/dev/update-free-essence', 'id' => $freeEssence->id])
     ]) ?>
 
-    <?= $this->render('/pjax/update-conditions-list-container', [
+    <?= $this->render('@yicms-common/Views/pjax/update-conditions-list-container', [
         'conditionTemplateReference' => $freeEssence->getConditionTemplateReference(),
         'conditionsTemplates' => $conditionTemplates,
     ]) ?>

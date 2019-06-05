@@ -189,7 +189,7 @@ class DeveloperConditionsController extends Controller
                 ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
                 ->all();
 
-            return $this->render('/pjax/update-conditions-list-container', [
+            return $this->render('@yicms-common/Views/pjax/update-conditions-list-container', [
                 'conditionTemplateReference' => $conditionTemplateReference,
                 'conditionsTemplates'        => $conditionTemplates,
             ]);
@@ -215,7 +215,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-conditions-list-dependent', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionTemplates'         => $conditionTemplates,
             'pjaxName'                   => $pjaxName,
@@ -255,7 +255,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-conditions-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionsTemplates'        => $conditionTemplates,
         ]);
@@ -286,7 +286,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-conditions-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionsTemplates'        => $conditionTemplates,
         ]);
@@ -317,7 +317,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-conditions-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-conditions-list-container', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionsTemplates'        => $conditionTemplates,
         ]);
@@ -352,7 +352,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-conditions-list-dependent', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionTemplates'         => $conditionTemplates,
             'pjaxName'                   => $pjaxName,
@@ -389,7 +389,7 @@ class DeveloperConditionsController extends Controller
             ->orderBy([ConditionTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-conditions-list-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-conditions-list-dependent', [
             'conditionTemplateReference' => $conditionTemplateReference,
             'conditionTemplates'         => $conditionTemplates,
             'pjaxName'                   => $pjaxName,
@@ -420,7 +420,7 @@ class DeveloperConditionsController extends Controller
             'condition_value_order' => SORT_ASC
         ])->all();
 
-        return $this->renderAjax('/pjax/conditions-value-list-container', [
+        return $this->renderAjax('@yicms-common/Views/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
             'conditionValues'   => $conditionValues
         ]);
@@ -477,7 +477,7 @@ class DeveloperConditionsController extends Controller
                 else
                     $returnBack = false;
 
-                return $this->renderAjax('/pjax/create-update-condition-value', [
+                return $this->renderAjax('@yicms-common/Views/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
@@ -487,7 +487,7 @@ class DeveloperConditionsController extends Controller
             }
         }
 
-        return $this->renderAjax('/pjax/create-update-condition-value', [
+        return $this->renderAjax('@yicms-common/Views/pjax/create-update-condition-value', [
             'conditionTemplate'         => $conditionTemplate,
             'conditionValue'            => $conditionValue,
             'conditionValuesTranslates' => $conditionValuesTranslates
@@ -548,7 +548,7 @@ class DeveloperConditionsController extends Controller
                 else
                     $returnBack = false;
 
-                return $this->renderAjax('/pjax/create-update-condition-value', [
+                return $this->renderAjax('@yicms-common/Views/pjax/create-update-condition-value', [
                     'conditionTemplate'         => $conditionTemplate,
                     'conditionValue'            => $conditionValue,
                     'conditionValuesTranslates' => $conditionValuesTranslates,
@@ -557,7 +557,7 @@ class DeveloperConditionsController extends Controller
             }
         }
 
-        return $this->renderAjax('/pjax/create-update-condition-value', [
+        return $this->renderAjax('@yicms-common/Views/pjax/create-update-condition-value', [
             'conditionTemplate' => $conditionTemplate,
             'conditionValue'            => $conditionValue,
             'conditionValuesTranslates' => $conditionValuesTranslates,
@@ -598,7 +598,7 @@ class DeveloperConditionsController extends Controller
             'condition_value_order' => SORT_ASC
         ])->all();
 
-        return $this->renderAjax('/pjax/conditions-value-list-container', [
+        return $this->renderAjax('@yicms-common/Views/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
             'conditionValues'   => $conditionValues
         ]);
@@ -630,7 +630,7 @@ class DeveloperConditionsController extends Controller
             'condition_value_order' => SORT_ASC
         ])->all();
 
-        return $this->renderAjax('/pjax/conditions-value-list-container', [
+        return $this->renderAjax('@yicms-common/Views/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
             'conditionValues'   => $conditionValues
         ]);
@@ -662,7 +662,7 @@ class DeveloperConditionsController extends Controller
             'condition_value_order' => SORT_ASC
         ])->all();
 
-        return $this->renderAjax('/pjax/conditions-value-list-container', [
+        return $this->renderAjax('@yicms-common/Views/pjax/conditions-value-list-container', [
             'conditionTemplate' => $conditionTemplate,
             'conditionValues'   => $conditionValues
         ]);

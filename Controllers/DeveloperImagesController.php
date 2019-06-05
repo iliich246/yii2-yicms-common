@@ -108,7 +108,7 @@ class DeveloperImagesController extends Controller
                 ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
                 ->all();
 
-            return  $this->render('/pjax/update-images-list-container', [
+            return  $this->render('@yicms-common/Views/pjax/update-images-list-container', [
                 'imageTemplateReference' => $imageTemplateReference,
                 'imagesBlocks'           => $imagesBlocks,
             ]);
@@ -150,7 +150,7 @@ class DeveloperImagesController extends Controller
             ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return  $this->render('/pjax/update-images-list-container', [
+        return  $this->render('@yicms-common/Views/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
             'imagesBlocks'           => $imagesBlocks,
         ]);
@@ -181,7 +181,7 @@ class DeveloperImagesController extends Controller
             ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return  $this->render('/pjax/update-images-list-container', [
+        return  $this->render('@yicms-common/Views/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
             'imagesBlocks'           => $imagesBlocks,
         ]);
@@ -212,7 +212,7 @@ class DeveloperImagesController extends Controller
             ->orderBy([ImagesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return  $this->render('/pjax/update-images-list-container', [
+        return  $this->render('@yicms-common/Views/pjax/update-images-list-container', [
             'imageTemplateReference' => $imageTemplateReference,
             'imagesBlocks'           => $imagesBlocks,
         ]);

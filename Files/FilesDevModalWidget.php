@@ -13,7 +13,7 @@ use Iliich246\YicmsCommon\Fields\FieldTemplate;
  * @author iliich246 <iliich246@gmail.com>
  */
 class FilesDevModalWidget extends Widget
-{public $annotatePath;
+{   public $annotatePath;
     /** @var DevFilesGroup */
     public $devFilesGroup;
     /** @var bool true means that widget initialized after success data save in DevFilesGroup */
@@ -36,7 +36,6 @@ class FilesDevModalWidget extends Widget
      */
     public function init()
     {
-
 
         $this->deleteLink = Url::toRoute(['/common/dev-files/delete-file-block-template']);
 

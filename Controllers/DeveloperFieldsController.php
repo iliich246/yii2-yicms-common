@@ -186,7 +186,7 @@ class DeveloperFieldsController extends Controller
                 ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
                 ->all();
 
-            return $this->render('/pjax/update-fields-list-container', [
+            return $this->render('@yicms-common/Views/pjax/update-fields-list-container', [
                 'fieldTemplateReference'     => $fieldTemplateReference,
                 'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
                 'fieldTemplatesSingle'       => $fieldTemplatesSingle
@@ -218,7 +218,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-fields-list-container-dependent', [
             'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle,
@@ -263,7 +263,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-fields-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-fields-list-container', [
             'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle
@@ -311,7 +311,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-fields-list-container-dependent', [
             'fieldTemplateReference'     => $fieldTemplateReference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle,
@@ -348,7 +348,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-fields-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-fields-list-container', [
             'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle
@@ -383,7 +383,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-fields-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-fields-list-container', [
             'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle
@@ -422,7 +422,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-fields-list-container-dependent', [
             'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle,
@@ -463,7 +463,7 @@ class DeveloperFieldsController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->renderAjax('/pjax/update-fields-list-container-dependent', [
+        return $this->renderAjax('@yicms-common/Views/pjax/update-fields-list-container-dependent', [
             'fieldTemplateReference'     => $fieldTemplate->field_template_reference,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,
             'fieldTemplatesSingle'       => $fieldTemplatesSingle,

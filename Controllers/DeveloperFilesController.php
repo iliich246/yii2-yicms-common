@@ -107,7 +107,7 @@ class DeveloperFilesController extends Controller
                 ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
                 ->all();
 
-            return  $this->render('/pjax/update-files-list-container', [
+            return  $this->render('@yicms-common/Views/pjax/update-files-list-container', [
                 'fileTemplateReference' => $fileTemplateReference,
                 'filesBlocks' => $filesBlocks,
             ]);
@@ -148,7 +148,7 @@ class DeveloperFilesController extends Controller
             ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return  $this->render('/pjax/update-files-list-container', [
+        return  $this->render('@yicms-common/Views/pjax/update-files-list-container', [
             'fileTemplateReference' => $fileTemplateReference,
             'filesBlocks' => $filesBlocks,
         ]);
@@ -178,7 +178,7 @@ class DeveloperFilesController extends Controller
             ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/pjax/update-files-list-container', [
+        return $this->render('@yicms-common/Views/pjax/update-files-list-container', [
             'fileTemplateReference' => $fileTemplateReference,
             'filesBlocks' => $filesBlocks,
         ]);
@@ -208,7 +208,7 @@ class DeveloperFilesController extends Controller
             ->orderBy([FilesBlock::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return  $this->render('/pjax/update-files-list-container', [
+        return  $this->render('@yicms-common/Views/pjax/update-files-list-container', [
             'fileTemplateReference' => $fileTemplateReference,
             'filesBlocks' => $filesBlocks,
         ]);
@@ -256,7 +256,7 @@ class DeveloperFilesController extends Controller
             ->orderBy([FieldTemplate::getOrderFieldName() => SORT_ASC])
             ->all();
 
-        return $this->render('/developer/show-file-block-fields', [
+        return $this->render('@yicms-common/Views/developer/show-file-block-fields', [
             'filesBlock' => $filesBlock,
             'devFieldGroup' => $devFieldGroup,
             'fieldTemplatesTranslatable' => $fieldTemplatesTranslatable,

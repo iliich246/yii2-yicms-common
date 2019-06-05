@@ -121,6 +121,10 @@ if ($redirectToUpdate == 'true')
     $fileBlockIdForRedirect = $widget->devFilesGroup->filesBlock->id;
 else
     $fileBlockIdForRedirect = '0';
+
+
+
+//throw new \Exception(print_r($widget->annotatePath,true));
 ?>
 
 <div class="modal fade"
@@ -140,7 +144,7 @@ else
                 'data-return-url-conditions'       => '0',
                 'data-return-url-conditions-list'  => '0',
                 'data-return-url-conditions-value' => '0',
-                'data-annotate-url'                => '0'
+                'data-annotate-url'                => $widget->annotatePath
             ],
         ]); ?>
         <?php $form = ActiveForm::begin([
@@ -206,7 +210,7 @@ else
                     </div>
                 </div>
                 <?= SimpleTabsTranslatesWidget::widget([
-                    'form' => $form,
+                    'form'            => $form,
                     'translateModels' => $widget->devFilesGroup->filesNameTranslates,
                 ])
                 ?>
@@ -257,15 +261,9 @@ else
                            '/common/dev-files/load-modal',
                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                        ]) ?>"
-                       data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block fields
-
                     </span>
-
-                    <pre>
-                        <?php print_r($widget)?>
-                    </pre>
 
                     <span class="btn btn-primary view-files-block-conditions"
                         data-condition-template-id="<?= $widget->devFilesGroup->filesBlock->getConditionTemplateReference() ?>"
@@ -273,7 +271,6 @@ else
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                         ]) ?>"
-                        data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block conditions
                     </span>
