@@ -594,4 +594,24 @@ class DeveloperController extends Controller
             'config' => $config
         ]);
     }
+
+    /**
+     * Action for annotating free essence
+     * @param $id
+     * @return bool
+     * @throws CommonException
+     * @throws NotFoundHttpException
+     * @throws \ReflectionException
+     */
+    public function actionAnnotateFreeEssence($id)
+    {
+        /** @var FreeEssences $freeEssence */
+        $freeEssence = FreeEssences::findOne($id);
+
+        if (!$freeEssence) throw new NotFoundHttpException('Wrong id = ' . $id);
+
+        $freeEssence->annotate();
+
+        return true;
+    }
 }
