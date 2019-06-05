@@ -110,6 +110,14 @@ $js = <<<JS
             timeout: 2500
         });
     }
+
+    var globalAnnotateUrl = $('#global-annotate-url').val();
+
+    if (globalAnnotateUrl) {
+        $.ajax({
+            url: globalAnnotateUrl
+        });
+    }
 })();
 JS;
 

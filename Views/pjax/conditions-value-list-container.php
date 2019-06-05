@@ -88,6 +88,13 @@ $js = <<<JS
         });
     });
 
+    var globalAnnotateUrl = $('#global-annotate-url').val();
+
+    if (globalAnnotateUrl) {
+        $.ajax({
+            url: globalAnnotateUrl
+        });
+    }
 })();
 JS;
 

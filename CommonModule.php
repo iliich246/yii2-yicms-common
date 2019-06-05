@@ -101,11 +101,11 @@ class CommonModule extends AbstractConfigurableModule implements
      */
     public function init()
     {
-//        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
-//            DIRECTORY_SEPARATOR .
-//            'iliich246' .
-//            DIRECTORY_SEPARATOR .
-//            'yii2-yicms-common');
+        Yii::setAlias('@yicms-common', Yii::getAlias('@vendor') .
+            DIRECTORY_SEPARATOR .
+            'iliich246' .
+            DIRECTORY_SEPARATOR .
+            'yii2-yicms-common');
 
         parent::init();
 

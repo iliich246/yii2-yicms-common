@@ -62,7 +62,6 @@
             return;
         }
 
-
         var isValidatorResponse = !!($('.validator-response').length);
 
         if (isValidatorResponse) return goBackValidator();
@@ -83,6 +82,14 @@
         if (redirectToUpdateNeedSecondPjaxRequest) {
             loadModal(redirectToUpdateNeedSecondPjaxRequest);
             redirectToUpdateNeedSecondPjaxRequest = false;
+
+            return;
+        }
+
+        if ($('#global-annotate-url').val()) {
+            $.ajax({
+                url: $('#global-annotate-url').val()
+            });
         }
     });
 
