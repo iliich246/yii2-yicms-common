@@ -122,7 +122,7 @@ class DeveloperConditionsController extends Controller
             $devConditionsGroup->scenario = DevConditionsGroup::SCENARIO_UPDATE;
         }
 
-        return $this->renderAjax('/../Conditions/views/conditions_dev_for_modals_dependents.php', [
+        return $this->renderAjax('@yicms-common/Conditions/views/conditions_dev_for_modals_dependents.php', [
             'devConditionGroup' => $devConditionsGroup,
             'returnBack'        => $returnBack,
             'pjaxName'          => $pjaxName,
@@ -164,7 +164,7 @@ class DeveloperConditionsController extends Controller
             }
         }
 
-        return $this->renderAjax('/../Conditions/views/conditions_dev_for_modals_dependents.php', [
+        return $this->renderAjax('@yicms-common/Conditions/views/conditions_dev_for_modals_dependents.php', [
             'devConditionGroup' => $devConditionsGroup,
             'returnBack'        => $returnBack,
             'pjaxName'          => $pjaxName,

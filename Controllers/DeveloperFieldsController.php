@@ -114,7 +114,7 @@ class DeveloperFieldsController extends Controller
             $devFieldGroup->scenario = DevFieldsGroup::SCENARIO_UPDATE;
         }
 
-        return $this->renderAjax('/../Fields/views/fields_dev_for_modals_dependents.php', [
+        return $this->renderAjax('@yicms-common/Fields/views/fields_dev_for_modals_dependents.php', [
             'devFieldGroup' => $devFieldGroup,
             'returnBack'    => $returnBack,
             'pjaxName'      => $pjaxName,
@@ -156,7 +156,7 @@ class DeveloperFieldsController extends Controller
             }
         }
 
-        return $this->renderAjax('/../Fields/views/fields_dev_for_modals_dependents.php', [
+        return $this->renderAjax('@yicms-common/Fields/views/fields_dev_for_modals_dependents.php', [
             'devFieldGroup' => $devFieldGroup,
             'returnBack'    => $returnBack,
             'pjaxName'      => $pjaxName,

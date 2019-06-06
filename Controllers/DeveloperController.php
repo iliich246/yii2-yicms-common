@@ -2,7 +2,6 @@
 
 namespace Iliich246\YicmsCommon\Controllers;
 
-use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
@@ -12,6 +11,7 @@ use yii\web\BadRequestHttpException;
 use Iliich246\YicmsCommon\Base\DevFilter;
 use Iliich246\YicmsCommon\Base\CommonUser;
 use Iliich246\YicmsCommon\Base\CommonHashForm;
+use Iliich246\YicmsCommon\Base\CommonConfigDb;
 use Iliich246\YicmsCommon\Base\CommonException;
 use Iliich246\YicmsCommon\Languages\Language;
 use Iliich246\YicmsCommon\Languages\LanguagesDb;
@@ -73,7 +73,7 @@ class DeveloperController extends Controller
 
         if ($defaultLanguageForm->load(Yii::$app->request->post()) && $defaultLanguageForm->validate()) {
             if ($defaultLanguageForm->save())
-                return $this->render('/developer/languages_list', [
+                return $this->render('@yicms-common/Views/developer/languages_list', [
                     'defaultLanguageModel' => $defaultLanguageForm,
                     'success' => true,
                 ]);
@@ -82,8 +82,6 @@ class DeveloperController extends Controller
         }
 
         $languages = LanguagesDb::find()->all();
-
-       // throw new \Exception(print_r(Yii::getAlias('@yicms-common'),true));
 
         return $this->render('@yicms-common/Views/developer/languages_list', [
             'pjaxError' => false,
@@ -136,7 +134,7 @@ class DeveloperController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->save()) {
-                return $this->render('/developer/create_update_language', [
+                return $this->render('@yicms-common/Views/developer/create_update_language', [
                     'model' => $model,
                     'success' => true,
                 ]);
