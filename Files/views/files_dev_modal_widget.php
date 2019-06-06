@@ -258,7 +258,6 @@ else
                            '/common/dev-files/load-modal',
                            'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                        ]) ?>"
-                       data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block fields
 
@@ -270,7 +269,6 @@ else
                             '/common/dev-files/load-modal',
                             'fileTemplateId' => $widget->devFilesGroup->filesBlock->id,
                         ]) ?>"
-                        data-annotate-url="<?= $widget->annotatePath ?>"
                     >
                         View file block conditions
                     </span>
