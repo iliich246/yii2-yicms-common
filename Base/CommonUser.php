@@ -21,6 +21,8 @@ class CommonUser implements
     private $isDev = false;
     /** @var bool admin identification */
     private $isAdmin = false;
+    /** @var string keeps name of user */
+    public $username;
 
     /**
      * Try to login user as developer
@@ -40,6 +42,7 @@ class CommonUser implements
 
         if (!Yii::$app->security->validatePassword($rootHash, $checkHash)) return false;
         $this->isDev = true;
+        $this->username = 'Dev';
 
         Yii::$app->user->login($this);
         return true;
@@ -62,6 +65,7 @@ class CommonUser implements
 
         if (!Yii::$app->security->validatePassword($adminHash, $checkHash)) return false;
         $this->isAdmin = true;
+        $this->username = 'Dev';
 
         Yii::$app->user->login($this);
         return true;
@@ -74,6 +78,7 @@ class CommonUser implements
     public function setAsAdmin()
     {
         $this->isAdmin = true;
+        $this->username = 'Admin';
         return Yii::$app->user->login($this);
     }
 
@@ -127,14 +132,14 @@ class CommonUser implements
         if ($id == -1) {
             $user =  new self();
             $user->isDev = true;
-
+            $user->username = 'Dev';
             return $user;
         }
 
         if ($id == 0) {
             $user =  new self();
             $user->isAdmin = true;
-
+            $user->username = 'Admin';
             return $user;
         }
 
